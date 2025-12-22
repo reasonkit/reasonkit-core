@@ -1,0 +1,495 @@
+# ═══════════════════════════════════════════════════════════════════════════════
+#                    PROOFGUARD DEEP RESEARCH PROTOCOL
+#                    Enhanced Verification & Synthesis Standard
+# ═══════════════════════════════════════════════════════════════════════════════
+#
+# PURPOSE: Standardize deep research workflows with rigorous verification,
+#          structured synthesis, and explicit confidence intervals.
+#
+# VALIDATED: This protocol was derived from successful application on
+#            "BGE-M3 & RAPTOR Hierarchical Chunking" research (2025-12-11)
+#            which produced high-quality, actionable outputs.
+#
+# LICENSE: Apache 2.0 (Open Source)
+#
+# ═══════════════════════════════════════════════════════════════════════════════
+
+version: "1.0.0"
+schema: "reasonkit-proofguard-deep-research-v1"
+created: "2025-12-11"
+last_updated: "2025-12-11"
+license: "Apache-2.0"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# PROTOCOL METADATA
+# ─────────────────────────────────────────────────────────────────────────────
+
+metadata:
+  id: "PROT-PG-DEEP-001"
+  name: "ProofGuard Deep Research Protocol"
+  shortcode: "pg-deep"
+  thinktool: "ProofGuard"
+  priority: 1
+  enforcement: "on_demand"
+
+  triggers:
+    explicit:
+      - "deep research"
+      - "ProofGuard analysis"
+      - "verify claims"
+      - "triangulate sources"
+    implicit:
+      - "uncertainty > 0.5 on technical claim"
+      - "high-stakes decision pending"
+      - "multiple conflicting sources"
+
+  description: |
+    A rigorous research protocol that combines multi-source triangulation,
+    structured synthesis, and explicit confidence intervals to produce
+    high-quality, auditable technical assessments.
+
+# ─────────────────────────────────────────────────────────────────────────────
+# PHASE 1: CONTEXT LOADING
+# ─────────────────────────────────────────────────────────────────────────────
+
+phase_1_context_loading:
+  name: "Context Loading"
+  objective: "Establish baseline understanding before research"
+  duration_estimate: "2-5 minutes"
+
+  steps:
+    - id: "1.1"
+      action: "Search episodic memory for prior work on topic"
+      tool: "mcp__plugin_episodic-memory_episodic-memory__search"
+      fallback: "Proceed without if unavailable"
+
+    - id: "1.2"
+      action: "Read relevant project documentation"
+      tools: ["Read", "Glob"]
+      targets:
+        - "CLAUDE.md / ORCHESTRATOR.md"
+        - "ARCHITECTURE.md"
+        - "Existing implementation files"
+
+    - id: "1.3"
+      action: "Identify existing decisions and constraints"
+      output: "Context summary with known constraints"
+
+  checklist:
+    - "[ ] Prior conversations searched"
+    - "[ ] Project docs reviewed"
+    - "[ ] Existing code examined"
+    - "[ ] Constraints identified"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# PHASE 2: PARALLEL SEARCH INITIATION
+# ─────────────────────────────────────────────────────────────────────────────
+
+phase_2_parallel_search:
+  name: "Parallel Search Initiation"
+  objective: "Cast wide net across multiple source types"
+  duration_estimate: "3-8 minutes"
+
+  search_strategy:
+    minimum_queries: 3
+    parallel_execution: true
+    query_diversity_required: true
+
+  query_templates:
+    technical_specs: "{topic} technical specifications benchmarks {year}"
+    academic_papers: "{topic} research paper arxiv {year}"
+    comparisons: "{topic_a} vs {topic_b} benchmark comparison {year}"
+    implementations: "{topic} implementation {language} integration"
+
+  source_tiers:
+    tier_1_authoritative:
+      description: "Official docs, GitHub repos, peer-reviewed papers"
+      examples:
+        - "HuggingFace model cards"
+        - "arXiv papers"
+        - "Official documentation"
+        - "Nature/Science publications"
+      weight: 1.0
+
+    tier_2_secondary:
+      description: "Reputable tech blogs, industry analysis"
+      examples:
+        - "NVIDIA technical docs"
+        - "Major framework docs (LangChain, LlamaIndex)"
+        - "Research lab blogs"
+      weight: 0.8
+
+    tier_3_independent:
+      description: "Independent validation, community implementations"
+      examples:
+        - "Academic course projects"
+        - "Independent benchmarks"
+        - "Community tutorials"
+      weight: 0.6
+
+  checklist:
+    - "[ ] Minimum 3 parallel searches executed"
+    - "[ ] Multiple source tiers targeted"
+    - "[ ] Current year included in queries"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# PHASE 3: SOURCE VERIFICATION (PROOFGUARD CORE)
+# ─────────────────────────────────────────────────────────────────────────────
+
+phase_3_source_verification:
+  name: "Source Verification (ProofGuard Core)"
+  objective: "Triangulate every major claim with 3+ sources"
+  duration_estimate: "5-15 minutes"
+
+  triangulation_rule:
+    mandatory: true
+    minimum_sources: 3
+    requirement: |
+      EVERY factual claim MUST be verified by:
+      - Source A (Primary): Authoritative/official source
+      - Source B (Secondary): Different domain, same conclusion
+      - Source C (Independent): Different author, same timeframe
+
+  verification_levels:
+    "VERIFIED":
+      symbol: "✓"
+      criteria: "3+ sources agree, all URLs accessed"
+      confidence_boost: "+15%"
+    "LIKELY":
+      symbol: "~"
+      criteria: "2 sources agree, 1 indirect"
+      confidence_boost: "+5%"
+    "UNVERIFIED":
+      symbol: "?"
+      criteria: "Single source or conflicting info"
+      confidence_boost: "0%"
+      action: "MUST disclose in output"
+    "CONTRADICTED":
+      symbol: "✗"
+      criteria: "Sources disagree"
+      confidence_boost: "-20%"
+      action: "MUST investigate further"
+
+  output_format:
+    triangulation_table:
+      required: true
+      template: |
+        | Finding | Source A (Primary) | Source B (Secondary) | Source C (Independent) | Consensus |
+        |---------|-------------------|---------------------|----------------------|-----------|
+        | [Claim] | [URL/Citation]    | [URL/Citation]      | [URL/Citation]       | [Status]  |
+
+  anti_patterns:
+    - "Claiming verification without 3 sources"
+    - "Using same domain for all 3 sources"
+    - "Not actually accessing URLs"
+    - "Ignoring contradicting evidence"
+
+  checklist:
+    - "[ ] Each major claim has 3+ sources"
+    - "[ ] Sources are from different domains/authors"
+    - "[ ] All URLs were actually accessed"
+    - "[ ] Contradictions investigated"
+    - "[ ] Triangulation table created"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# PHASE 4: STRUCTURED SYNTHESIS
+# ─────────────────────────────────────────────────────────────────────────────
+
+phase_4_structured_synthesis:
+  name: "Structured Synthesis"
+  objective: "Transform verified data into structured, actionable output"
+  duration_estimate: "5-10 minutes"
+
+  required_output_elements:
+
+    technical_specifications_table:
+      required: true
+      purpose: "Consolidate verified specs"
+      template: |
+        | Property | Value | Source |
+        |----------|-------|--------|
+        | [Spec]   | [Val] | [Cite] |
+
+    benchmark_comparison_table:
+      required: "when benchmarks exist"
+      purpose: "Quantitative performance comparison"
+      template: |
+        | Benchmark | Subject Score | Baseline | Improvement |
+        |-----------|---------------|----------|-------------|
+        | [Name]    | [Score]       | [Base]   | [Delta]     |
+
+    fit_analysis_matrix:
+      required: "when evaluating adoption"
+      purpose: "Structured decision support"
+      template: |
+        | Criterion | Score | Rationale |
+        |-----------|-------|-----------|
+        | [Factor]  | [✅/⚠️/❌] | [Why] |
+
+    architecture_diagram:
+      required: "when systems involved"
+      purpose: "Visual spatial reasoning"
+      format: "ASCII art within code blocks"
+
+    implementation_roadmap:
+      required: "when action items exist"
+      purpose: "Actionable next steps"
+      template: |
+        PRIORITY 1 (Immediate):
+        ├── [ ] Task 1
+        └── [ ] Task 2
+
+        PRIORITY 2 (Next):
+        └── [ ] Task 3
+
+  confidence_requirements:
+    every_recommendation: true
+    format: "Confidence: XX%"
+    calibration_guidance: |
+      95%+ = Multiple sources agree, tested personally
+      85-94% = Strong triangulation, no contradictions
+      70-84% = Good evidence, some gaps
+      50-69% = Partial evidence, significant uncertainty
+      <50% = Should not recommend without disclaimer
+
+  checklist:
+    - "[ ] Technical specs table created"
+    - "[ ] Benchmarks compared (if applicable)"
+    - "[ ] Fit analysis matrix built"
+    - "[ ] Architecture diagram included"
+    - "[ ] Implementation roadmap provided"
+    - "[ ] All recommendations have confidence %"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# PHASE 5: OUTPUT WITH EXPLICIT CONFIDENCE
+# ─────────────────────────────────────────────────────────────────────────────
+
+phase_5_output:
+  name: "Output with Explicit Confidence"
+  objective: "Deliver auditable, actionable report"
+  duration_estimate: "3-5 minutes"
+
+  required_sections:
+
+    proofguard_verification_summary:
+      position: "top"
+      required: true
+      purpose: "Immediate audit trail"
+
+    detailed_analysis:
+      position: "middle"
+      required: true
+      subsections:
+        - "Technical Specifications"
+        - "Benchmark Results"
+        - "Integration Assessment"
+        - "Production Considerations"
+
+    decision_matrix:
+      position: "before conclusion"
+      required: true
+      purpose: "At-a-glance decision support"
+      template: |
+        | Component | Project A | Project B | Confidence |
+        |-----------|-----------|-----------|------------|
+        | [Item]    | [Y/N/Defer] | [Y/N/Defer] | [%] |
+
+    executive_summary:
+      position: "end"
+      required: true
+      purpose: "Quick reference for decisions"
+      max_length: "5-7 rows in table format"
+
+    sources_section:
+      position: "end"
+      required: true
+      tiers:
+        - "Primary Sources (Tier 1)"
+        - "Secondary Sources (Tier 2)"
+        - "Independent Validation (Tier 3)"
+
+  quality_gates:
+    - gate: "All claims triangulated"
+      required: true
+    - gate: "All recommendations have confidence"
+      required: true
+    - gate: "All sources hyperlinked"
+      required: true
+    - gate: "Executive summary present"
+      required: true
+    - gate: "Actionable roadmap included"
+      required: true
+
+# ─────────────────────────────────────────────────────────────────────────────
+# OBJECTIVE MEASURES FOR TESTING
+# ─────────────────────────────────────────────────────────────────────────────
+
+objective_measures:
+
+  completeness_metrics:
+    - metric: "Triangulation Coverage"
+      formula: "(claims_with_3_sources / total_claims) * 100"
+      target: ">= 90%"
+
+    - metric: "Source Diversity"
+      formula: "unique_domains / total_sources"
+      target: ">= 0.7"
+
+    - metric: "Confidence Explicitness"
+      formula: "(recommendations_with_confidence / total_recommendations) * 100"
+      target: "100%"
+
+  quality_metrics:
+    - metric: "Actionability Score"
+      criteria: "Does output include implementation roadmap with priorities?"
+      scoring: "0-10 scale"
+      target: ">= 8"
+
+    - metric: "Auditability Score"
+      criteria: "Can every claim be traced to source?"
+      scoring: "0-10 scale"
+      target: ">= 9"
+
+    - metric: "Decision Support Score"
+      criteria: "Does output enable yes/no decision?"
+      scoring: "0-10 scale"
+      target: ">= 8"
+
+  efficiency_metrics:
+    - metric: "Research Depth vs Time"
+      formula: "sources_consulted / minutes_elapsed"
+      benchmark: ">= 2 sources/minute"
+
+    - metric: "Output Density"
+      formula: "structured_tables / total_output_sections"
+      target: ">= 0.5"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# INTEGRATION WITH THINKTOOL
+# ─────────────────────────────────────────────────────────────────────────────
+
+thinktool_integration:
+
+  activation:
+    shortcut: "pg-deep"
+    full_command: "--profile paranoid --thinktool ProofGuard"
+    automatic_triggers:
+      - "Research request with technical claims"
+      - "Evaluation of new technology"
+      - "High-stakes architectural decision"
+
+  profile_mapping:
+    paranoid:
+      modules: ["GigaThink", "LaserLogic", "BedRock", "ProofGuard", "BrutalHonesty"]
+      confidence_target: 95%
+      this_protocol: "REQUIRED"
+
+    scientific:
+      modules: ["SciEngine", "AtomicBreak", "BedRock", "ProofGuard"]
+      confidence_target: 85%
+      this_protocol: "RECOMMENDED"
+
+    deep:
+      modules: ["GigaThink", "LaserLogic", "BedRock", "ProofGuard", "HighReflect"]
+      confidence_target: 85%
+      this_protocol: "RECOMMENDED"
+
+  output_template_injection:
+    when: "ProofGuard Deep Research activated"
+    inject:
+      - "Triangulation table at top"
+      - "Decision matrix before conclusion"
+      - "Executive summary at end"
+      - "Sources section with tiers"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# EXAMPLE OUTPUT STRUCTURE (REFERENCE)
+# ─────────────────────────────────────────────────────────────────────────────
+
+example_output_structure: |
+  # DEEP RESEARCH REPORT: [Topic]
+
+  ## ProofGuard Verification Summary
+  | Finding | Source A (Primary) | Source B (Secondary) | Source C (Independent) | Consensus |
+  |---------|-------------------|---------------------|----------------------|-----------|
+  | [Claim] | [URL]             | [URL]               | [URL]                | VERIFIED ✓|
+
+  ---
+  ## 1. [TOPIC A] ANALYSIS
+
+  ### Technical Specifications (VERIFIED)
+  | Property | Value | Source |
+  |----------|-------|--------|
+
+  ### Benchmark Performance (VERIFIED)
+  | Benchmark | Score | Baseline | Improvement |
+  |-----------|-------|----------|-------------|
+
+  ---
+  ## 2. [TOPIC B] ANALYSIS
+  [Same structure...]
+
+  ---
+  ## 3. FIT ANALYSIS FOR [PROJECT]
+
+  ### [Project Name] Assessment
+  | Criterion | Score | Rationale |
+  |-----------|-------|-----------|
+
+  **RECOMMENDATION:** [HIGH/MEDIUM/LOW PRIORITY]
+  ```
+  Confidence: XX%
+  Implementation Path:
+  1. Step 1
+  2. Step 2
+
+  Estimated Effort: [Low/Medium/High]
+  Risk: [Low/Medium/High]
+  ```
+
+  ---
+  ## 4. SYNTHESIS & RECOMMENDATIONS
+
+  ### Decision Matrix
+  | Component | Project A | Project B | Confidence |
+  |-----------|-----------|-----------|------------|
+
+  ### Implementation Priority
+  ```
+  PRIORITY 1 (Immediate):
+  ├── [ ] Task 1
+  └── [ ] Task 2
+  ```
+
+  ---
+  ## 5. SOURCES
+
+  ### Primary Sources (Tier 1)
+  - [URL 1]
+  - [URL 2]
+
+  ### Secondary Sources (Tier 2)
+  - [URL 3]
+
+  ### Independent Validation (Tier 3)
+  - [URL 4]
+
+  ---
+  ## EXECUTIVE SUMMARY
+  | Topic | Recommendation | Project Fit | Confidence |
+  |-------|----------------|-------------|------------|
+
+# ─────────────────────────────────────────────────────────────────────────────
+# CHANGELOG
+# ─────────────────────────────────────────────────────────────────────────────
+
+changelog:
+  - version: "1.0.0"
+    date: "2025-12-11"
+    changes:
+      - "Initial protocol derived from BGE-M3/RAPTOR deep research session"
+      - "Defined 5-phase workflow"
+      - "Established triangulation requirements"
+      - "Created structured output templates"
+      - "Added objective measures for testing"
+      - "Integrated with ThinkTool profiles"

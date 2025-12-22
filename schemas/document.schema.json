@@ -1,0 +1,241 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://reasonkit.sh/schemas/document.schema.json",
+  "title": "ReasonKit Document",
+  "description": "Schema for documents in the ReasonKit knowledge base",
+  "type": "object",
+  "required": ["id", "type", "source", "content", "metadata", "created_at"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Unique document identifier (UUID v4)"
+    },
+    "type": {
+      "type": "string",
+      "enum": ["paper", "documentation", "code", "note", "transcript", "benchmark"],
+      "description": "Document type for categorization"
+    },
+    "source": {
+      "type": "object",
+      "required": ["type"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["arxiv", "github", "website", "local", "api"]
+        },
+        "url": {
+          "type": "string",
+          "format": "uri",
+          "description": "Original source URL"
+        },
+        "path": {
+          "type": "string",
+          "description": "Local file path if applicable"
+        },
+        "arxiv_id": {
+          "type": "string",
+          "pattern": "^\\d{4}\\.\\d{4,5}(v\\d+)?$",
+          "description": "arXiv paper ID (e.g., 2401.18059)"
+        },
+        "github_repo": {
+          "type": "string",
+          "pattern": "^[\\w-]+/[\\w-]+$",
+          "description": "GitHub repository (e.g., anthropics/claude-code)"
+        },
+        "retrieved_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "When the document was retrieved"
+        },
+        "version": {
+          "type": "string",
+          "description": "Version or commit hash"
+        }
+      }
+    },
+    "content": {
+      "type": "object",
+      "required": ["raw"],
+      "properties": {
+        "raw": {
+          "type": "string",
+          "description": "Full extracted text content"
+        },
+        "format": {
+          "type": "string",
+          "enum": ["text", "markdown", "html", "latex"],
+          "default": "text"
+        },
+        "language": {
+          "type": "string",
+          "default": "en",
+          "description": "ISO 639-1 language code"
+        },
+        "word_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "char_count": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "authors": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "affiliation": { "type": "string" },
+              "email": { "type": "string", "format": "email" }
+            },
+            "required": ["name"]
+          }
+        },
+        "abstract": {
+          "type": "string",
+          "description": "Paper abstract or document summary"
+        },
+        "date": {
+          "type": "string",
+          "format": "date",
+          "description": "Publication or creation date"
+        },
+        "venue": {
+          "type": "string",
+          "description": "Publication venue (e.g., NeurIPS 2024, ICLR 2024)"
+        },
+        "citations": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Number of citations (for papers)"
+        },
+        "tags": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "User-defined tags"
+        },
+        "categories": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "ReasonKit categories"
+        },
+        "keywords": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Extracted keywords"
+        },
+        "doi": {
+          "type": "string",
+          "description": "Digital Object Identifier"
+        },
+        "license": {
+          "type": "string",
+          "description": "Content license"
+        }
+      }
+    },
+    "processing": {
+      "type": "object",
+      "description": "Processing state and results",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["pending", "processing", "completed", "failed"]
+        },
+        "chunked": {
+          "type": "boolean",
+          "default": false
+        },
+        "embedded": {
+          "type": "boolean",
+          "default": false
+        },
+        "indexed": {
+          "type": "boolean",
+          "default": false
+        },
+        "raptor_processed": {
+          "type": "boolean",
+          "default": false
+        },
+        "errors": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "chunks": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/chunk"
+      },
+      "description": "Document chunks for embedding"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "definitions": {
+    "chunk": {
+      "type": "object",
+      "required": ["id", "text", "index"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "text": {
+          "type": "string",
+          "description": "Chunk text content"
+        },
+        "index": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Chunk position in document"
+        },
+        "start_char": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "end_char": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "token_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "section": {
+          "type": "string",
+          "description": "Section heading if available"
+        },
+        "page": {
+          "type": "integer",
+          "description": "Page number for PDFs"
+        },
+        "embedding_ids": {
+          "type": "object",
+          "properties": {
+            "dense": { "type": "string" },
+            "sparse": { "type": "string" },
+            "colbert": { "type": "string" }
+          }
+        }
+      }
+    }
+  }
+}

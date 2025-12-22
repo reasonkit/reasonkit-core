@@ -1,0 +1,95 @@
+# ReasonKit Core Configuration
+# Default settings for the knowledge base
+
+[general]
+# Data directory (can be overridden via CLI or environment)
+data_dir = "./data"
+# Log level: trace, debug, info, warn, error
+log_level = "info"
+
+[storage]
+# Storage backend: "qdrant", "local"
+backend = "qdrant"
+
+[storage.qdrant]
+# Qdrant connection settings
+host = "localhost"
+port = 6334
+grpc_port = 6333
+# Use embedded mode (no external server needed)
+embedded = true
+# Collection name for documents
+collection = "reasonkit_docs"
+# Vector dimensions (depends on embedding model)
+vector_size = 1024
+# Distance metric: "Cosine", "Euclid", "Dot"
+distance = "Cosine"
+# Quantization for compression (reduces memory by 4x)
+quantization = true
+
+[storage.local]
+# Local JSON storage settings
+documents_path = "./data/documents"
+index_path = "./data/indexes"
+
+[embedding]
+# Embedding backend: "api", "local"
+backend = "api"
+
+[embedding.api]
+# API provider: "openai", "anthropic", "cohere", "voyage"
+provider = "openai"
+# Model for dense embeddings
+model = "text-embedding-3-small"
+# Dimensions (some models allow customization)
+dimensions = 1536
+# Batch size for embedding requests
+batch_size = 100
+
+[embedding.local]
+# Local embedding using ONNX
+model_path = "./models/bge-m3-onnx"
+device = "cpu"  # or "cuda"
+
+[indexing]
+# BM25 index settings
+bm25_enabled = true
+# HNSW parameters
+hnsw_m = 16
+hnsw_ef_construction = 200
+
+[processing]
+# Chunk settings
+chunk_size = 512  # tokens
+chunk_overlap = 50  # tokens
+# Minimum chunk size to avoid tiny fragments
+min_chunk_size = 100
+
+[retrieval]
+# Default number of results
+top_k = 10
+# Hybrid search alpha (0 = BM25 only, 1 = vector only)
+alpha = 0.7
+# Minimum score threshold
+min_score = 0.0
+# Enable reranking (requires ColBERT or cross-encoder)
+rerank = false
+
+[raptor]
+# RAPTOR tree settings
+enabled = false
+# Maximum tree depth
+max_depth = 3
+# Cluster size for summarization
+cluster_size = 10
+# LLM for summarization
+summarizer = "claude-3-haiku"
+
+[server]
+# API server settings
+host = "127.0.0.1"
+port = 8080
+# Enable CORS
+cors = true
+# Request timeout (seconds)
+timeout = 30

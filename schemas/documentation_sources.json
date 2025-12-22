@@ -1,0 +1,472 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ReasonKit Documentation Sources",
+  "description": "Documentation to index for the ReasonKit knowledge base",
+  "version": "0.1.0",
+  "generated_at": "2025-12-11T00:00:00Z",
+  "documentation": {
+    "cli_tools": [
+      {
+        "id": "claude_code",
+        "name": "Claude Code",
+        "description": "Anthropic's agentic coding tool for terminal",
+        "category": "cli",
+        "priority": 1,
+        "sources": {
+          "github": {
+            "repo": "anthropics/claude-code",
+            "url": "https://github.com/anthropics/claude-code",
+            "branch": "main",
+            "docs_path": "docs/",
+            "readme": true
+          },
+          "official_docs": {
+            "url": "https://docs.anthropic.com/en/docs/claude-code/overview",
+            "type": "web"
+          }
+        },
+        "key_files": [
+          "README.md",
+          "docs/**/*.md",
+          "CLAUDE.md"
+        ],
+        "tags": ["anthropic", "claude", "terminal", "agentic"],
+        "status": "pending"
+      },
+      {
+        "id": "gemini_cli",
+        "name": "Gemini CLI",
+        "description": "Google's open-source AI agent for terminal",
+        "category": "cli",
+        "priority": 1,
+        "sources": {
+          "github": {
+            "repo": "google-gemini/gemini-cli",
+            "url": "https://github.com/google-gemini/gemini-cli",
+            "branch": "main",
+            "docs_path": "docs/"
+          },
+          "official_docs": {
+            "url": "https://google-gemini.github.io/gemini-cli/",
+            "type": "web"
+          },
+          "google_cloud_docs": {
+            "url": "https://docs.cloud.google.com/gemini/docs/codeassist/gemini-cli",
+            "type": "web"
+          }
+        },
+        "key_files": [
+          "README.md",
+          "docs/index.md",
+          "docs/**/*.md"
+        ],
+        "tags": ["google", "gemini", "terminal", "open-source"],
+        "status": "pending"
+      },
+      {
+        "id": "openai_codex",
+        "name": "OpenAI Codex CLI",
+        "description": "OpenAI's coding assistant CLI",
+        "category": "cli",
+        "priority": 2,
+        "sources": {
+          "github": {
+            "repo": "openai/codex",
+            "url": "https://github.com/openai/codex",
+            "branch": "main"
+          },
+          "official_docs": {
+            "url": "https://platform.openai.com/docs/guides/code-generation",
+            "type": "web"
+          }
+        },
+        "key_files": [
+          "README.md",
+          "docs/**/*.md"
+        ],
+        "tags": ["openai", "codex", "terminal"],
+        "status": "pending"
+      },
+      {
+        "id": "continue_cli",
+        "name": "Continue.dev CLI",
+        "description": "Open-source AI code assistant",
+        "category": "cli",
+        "priority": 2,
+        "sources": {
+          "github": {
+            "repo": "continuedev/continue",
+            "url": "https://github.com/continuedev/continue",
+            "branch": "main"
+          },
+          "official_docs": {
+            "url": "https://docs.continue.dev/",
+            "type": "web"
+          }
+        },
+        "tags": ["continue", "open-source", "ide"],
+        "status": "pending"
+      },
+      {
+        "id": "aider",
+        "name": "Aider",
+        "description": "AI pair programming in your terminal",
+        "category": "cli",
+        "priority": 2,
+        "sources": {
+          "github": {
+            "repo": "paul-gauthier/aider",
+            "url": "https://github.com/paul-gauthier/aider",
+            "branch": "main"
+          },
+          "official_docs": {
+            "url": "https://aider.chat/docs/",
+            "type": "web"
+          }
+        },
+        "tags": ["aider", "pair-programming", "terminal"],
+        "status": "pending"
+      },
+      {
+        "id": "opencode",
+        "name": "OpenCode",
+        "description": "Go-based TUI for AI coding",
+        "category": "cli",
+        "priority": 2,
+        "sources": {
+          "github": {
+            "repo": "sst/opencode",
+            "url": "https://github.com/sst/opencode",
+            "branch": "main"
+          },
+          "official_docs": {
+            "url": "https://opencode.ai/",
+            "type": "web"
+          }
+        },
+        "tags": ["opencode", "tui", "go"],
+        "status": "pending"
+      }
+    ],
+    "mcp_protocol": [
+      {
+        "id": "mcp_spec",
+        "name": "Model Context Protocol Specification",
+        "description": "MCP protocol specification and core concepts",
+        "category": "protocol",
+        "priority": 1,
+        "sources": {
+          "github": {
+            "repo": "modelcontextprotocol/specification",
+            "url": "https://github.com/modelcontextprotocol/specification",
+            "branch": "main"
+          },
+          "official_docs": {
+            "url": "https://modelcontextprotocol.io/",
+            "type": "web"
+          }
+        },
+        "tags": ["mcp", "protocol", "anthropic"],
+        "status": "pending"
+      },
+      {
+        "id": "mcp_servers",
+        "name": "MCP Servers",
+        "description": "Reference MCP server implementations",
+        "category": "mcp",
+        "priority": 1,
+        "sources": {
+          "github": {
+            "repo": "modelcontextprotocol/servers",
+            "url": "https://github.com/modelcontextprotocol/servers",
+            "branch": "main",
+            "docs_path": "src/"
+          }
+        },
+        "key_files": [
+          "README.md",
+          "src/sequentialthinking/**/*",
+          "src/*/README.md"
+        ],
+        "tags": ["mcp", "servers", "sequential-thinking"],
+        "status": "pending"
+      },
+      {
+        "id": "sequential_thinking",
+        "name": "Sequential Thinking MCP Server",
+        "description": "Dynamic and reflective problem-solving through thought sequences",
+        "category": "mcp",
+        "priority": 1,
+        "sources": {
+          "github": {
+            "repo": "modelcontextprotocol/servers",
+            "url": "https://github.com/modelcontextprotocol/servers/tree/main/src/sequentialthinking",
+            "branch": "main",
+            "docs_path": "src/sequentialthinking/"
+          }
+        },
+        "tags": ["mcp", "sequential-thinking", "reasoning"],
+        "status": "pending"
+      },
+      {
+        "id": "mcp_python_sdk",
+        "name": "MCP Python SDK",
+        "description": "Python SDK for building MCP servers and clients",
+        "category": "sdk",
+        "priority": 2,
+        "sources": {
+          "github": {
+            "repo": "modelcontextprotocol/python-sdk",
+            "url": "https://github.com/modelcontextprotocol/python-sdk",
+            "branch": "main"
+          }
+        },
+        "tags": ["mcp", "python", "sdk"],
+        "status": "pending"
+      },
+      {
+        "id": "mcp_typescript_sdk",
+        "name": "MCP TypeScript SDK",
+        "description": "TypeScript SDK for building MCP servers and clients",
+        "category": "sdk",
+        "priority": 2,
+        "sources": {
+          "github": {
+            "repo": "modelcontextprotocol/typescript-sdk",
+            "url": "https://github.com/modelcontextprotocol/typescript-sdk",
+            "branch": "main"
+          }
+        },
+        "tags": ["mcp", "typescript", "sdk"],
+        "status": "pending"
+      }
+    ],
+    "api_documentation": [
+      {
+        "id": "anthropic_api",
+        "name": "Anthropic API",
+        "description": "Claude API documentation",
+        "category": "api",
+        "priority": 1,
+        "sources": {
+          "official_docs": {
+            "url": "https://docs.anthropic.com/",
+            "type": "web",
+            "sections": [
+              "https://docs.anthropic.com/en/api/getting-started",
+              "https://docs.anthropic.com/en/api/messages",
+              "https://docs.anthropic.com/en/docs/build-with-claude/tool-use"
+            ]
+          }
+        },
+        "tags": ["anthropic", "claude", "api"],
+        "status": "pending"
+      },
+      {
+        "id": "openai_api",
+        "name": "OpenAI API",
+        "description": "OpenAI API documentation",
+        "category": "api",
+        "priority": 1,
+        "sources": {
+          "official_docs": {
+            "url": "https://platform.openai.com/docs",
+            "type": "web",
+            "sections": [
+              "https://platform.openai.com/docs/api-reference",
+              "https://platform.openai.com/docs/guides/reasoning"
+            ]
+          }
+        },
+        "tags": ["openai", "gpt", "api"],
+        "status": "pending"
+      },
+      {
+        "id": "google_ai_api",
+        "name": "Google AI API",
+        "description": "Gemini API documentation",
+        "category": "api",
+        "priority": 1,
+        "sources": {
+          "official_docs": {
+            "url": "https://ai.google.dev/docs",
+            "type": "web"
+          }
+        },
+        "tags": ["google", "gemini", "api"],
+        "status": "pending"
+      },
+      {
+        "id": "openrouter_api",
+        "name": "OpenRouter API",
+        "description": "OpenRouter unified API documentation",
+        "category": "api",
+        "priority": 2,
+        "sources": {
+          "official_docs": {
+            "url": "https://openrouter.ai/docs",
+            "type": "web"
+          }
+        },
+        "tags": ["openrouter", "unified", "api"],
+        "status": "pending"
+      }
+    ],
+    "frameworks": [
+      {
+        "id": "langchain",
+        "name": "LangChain",
+        "description": "Framework for developing applications powered by LLMs",
+        "category": "framework",
+        "priority": 2,
+        "sources": {
+          "github": {
+            "repo": "langchain-ai/langchain",
+            "url": "https://github.com/langchain-ai/langchain",
+            "branch": "master"
+          },
+          "official_docs": {
+            "url": "https://python.langchain.com/docs/",
+            "type": "web"
+          }
+        },
+        "tags": ["langchain", "framework", "rag"],
+        "status": "pending"
+      },
+      {
+        "id": "llamaindex",
+        "name": "LlamaIndex",
+        "description": "Data framework for LLM applications",
+        "category": "framework",
+        "priority": 2,
+        "sources": {
+          "github": {
+            "repo": "run-llama/llama_index",
+            "url": "https://github.com/run-llama/llama_index",
+            "branch": "main"
+          },
+          "official_docs": {
+            "url": "https://docs.llamaindex.ai/",
+            "type": "web"
+          }
+        },
+        "tags": ["llamaindex", "framework", "rag"],
+        "status": "pending"
+      },
+      {
+        "id": "dspy",
+        "name": "DSPy",
+        "description": "Framework for programming language models",
+        "category": "framework",
+        "priority": 2,
+        "sources": {
+          "github": {
+            "repo": "stanfordnlp/dspy",
+            "url": "https://github.com/stanfordnlp/dspy",
+            "branch": "main"
+          },
+          "official_docs": {
+            "url": "https://dspy-docs.vercel.app/",
+            "type": "web"
+          }
+        },
+        "tags": ["dspy", "stanford", "framework"],
+        "status": "pending"
+      }
+    ],
+    "rust_libraries": [
+      {
+        "id": "qdrant_rust",
+        "name": "Qdrant Rust Client",
+        "description": "Rust client for Qdrant vector database",
+        "category": "library",
+        "priority": 1,
+        "sources": {
+          "github": {
+            "repo": "qdrant/rust-client",
+            "url": "https://github.com/qdrant/rust-client",
+            "branch": "master"
+          },
+          "docs_rs": {
+            "url": "https://docs.rs/qdrant-client/",
+            "type": "web"
+          }
+        },
+        "tags": ["qdrant", "rust", "vector-db"],
+        "status": "pending"
+      },
+      {
+        "id": "tantivy",
+        "name": "Tantivy",
+        "description": "Full-text search engine library written in Rust",
+        "category": "library",
+        "priority": 1,
+        "sources": {
+          "github": {
+            "repo": "quickwit-oss/tantivy",
+            "url": "https://github.com/quickwit-oss/tantivy",
+            "branch": "main"
+          },
+          "docs_rs": {
+            "url": "https://docs.rs/tantivy/",
+            "type": "web"
+          }
+        },
+        "tags": ["tantivy", "rust", "search", "bm25"],
+        "status": "pending"
+      },
+      {
+        "id": "hnswlib_rs",
+        "name": "hnswlib-rs",
+        "description": "Rust implementation of HNSW algorithm",
+        "category": "library",
+        "priority": 1,
+        "sources": {
+          "github": {
+            "repo": "jean-pierreBoth/hnswlib-rs",
+            "url": "https://github.com/jean-pierreBoth/hnswlib-rs",
+            "branch": "master"
+          },
+          "docs_rs": {
+            "url": "https://docs.rs/hnsw_rs/",
+            "type": "web"
+          }
+        },
+        "tags": ["hnsw", "rust", "ann", "vector"],
+        "status": "pending"
+      },
+      {
+        "id": "pdf_oxide",
+        "name": "pdf_oxide",
+        "description": "High-performance PDF parsing library",
+        "category": "library",
+        "priority": 1,
+        "sources": {
+          "crates_io": {
+            "url": "https://crates.io/crates/pdf_oxide",
+            "type": "web"
+          },
+          "docs_rs": {
+            "url": "https://docs.rs/pdf_oxide/",
+            "type": "web"
+          }
+        },
+        "tags": ["pdf", "rust", "parsing"],
+        "status": "pending"
+      }
+    ]
+  },
+  "total_sources": 28,
+  "indexing_priority_order": [
+    "claude_code",
+    "gemini_cli",
+    "mcp_spec",
+    "mcp_servers",
+    "sequential_thinking",
+    "anthropic_api",
+    "openai_api",
+    "qdrant_rust",
+    "tantivy",
+    "hnswlib_rs"
+  ]
+}

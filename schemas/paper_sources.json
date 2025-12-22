@@ -1,0 +1,327 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ReasonKit Paper Sources",
+  "description": "Academic papers for theoretical grounding of ReasonKit",
+  "version": "0.1.0",
+  "generated_at": "2025-12-11T00:00:00Z",
+  "papers": {
+    "core_reasoning": [
+      {
+        "id": "cot_2022",
+        "title": "Chain-of-Thought Prompting Elicits Reasoning in Large Language Models",
+        "authors": ["Jason Wei", "Xuezhi Wang", "Dale Schuurmans", "Maarten Bosma", "Brian Ichter", "Fei Xia", "Ed Chi", "Quoc Le", "Denny Zhou"],
+        "arxiv_id": "2201.11903",
+        "url": "https://arxiv.org/abs/2201.11903",
+        "pdf_url": "https://arxiv.org/pdf/2201.11903.pdf",
+        "year": 2022,
+        "venue": "NeurIPS 2022",
+        "category": "chain_of_thought",
+        "priority": 1,
+        "key_findings": [
+          "+17-25% on reasoning benchmarks",
+          "Elicits intermediate reasoning steps",
+          "Works across model sizes"
+        ],
+        "status": "pending"
+      },
+      {
+        "id": "self_consistency_2022",
+        "title": "Self-Consistency Improves Chain of Thought Reasoning in Language Models",
+        "authors": ["Xuezhi Wang", "Jason Wei", "Dale Schuurmans", "Quoc Le", "Ed Chi", "Denny Zhou"],
+        "arxiv_id": "2203.11171",
+        "url": "https://arxiv.org/abs/2203.11171",
+        "pdf_url": "https://arxiv.org/pdf/2203.11171.pdf",
+        "year": 2022,
+        "venue": "ICLR 2023",
+        "category": "self_consistency",
+        "priority": 1,
+        "key_findings": [
+          "GSM8K +17.9%",
+          "SVAMP +11.0%",
+          "AQuA +12.2%",
+          "Multiple reasoning paths + majority voting"
+        ],
+        "status": "pending"
+      },
+      {
+        "id": "tree_of_thoughts_2023",
+        "title": "Tree of Thoughts: Deliberate Problem Solving with Large Language Models",
+        "authors": ["Shunyu Yao", "Dian Yu", "Jeffrey Zhao", "Izhak Shafran", "Thomas L. Griffiths", "Yuan Cao", "Karthik Narasimhan"],
+        "arxiv_id": "2305.10601",
+        "url": "https://arxiv.org/abs/2305.10601",
+        "pdf_url": "https://arxiv.org/pdf/2305.10601.pdf",
+        "year": 2023,
+        "venue": "NeurIPS 2023",
+        "category": "tree_reasoning",
+        "priority": 1,
+        "key_findings": [
+          "Game of 24: 74% vs 4% (CoT)",
+          "BFS/DFS exploration + backtracking",
+          "State-of-the-art on planning tasks"
+        ],
+        "status": "pending"
+      },
+      {
+        "id": "raptor_2024",
+        "title": "RAPTOR: Recursive Abstractive Processing for Tree-Organized Retrieval",
+        "authors": ["Parth Sarthi", "Salman Abdullah", "Aditi Tuli", "Shubh Khanna", "Anna Goldie", "Christopher D. Manning"],
+        "arxiv_id": "2401.18059",
+        "url": "https://arxiv.org/abs/2401.18059",
+        "pdf_url": "https://arxiv.org/pdf/2401.18059.pdf",
+        "year": 2024,
+        "venue": "ICLR 2024",
+        "category": "retrieval",
+        "priority": 1,
+        "key_findings": [
+          "+20% absolute accuracy on QuALITY",
+          "Hierarchical summarization tree",
+          "State-of-the-art on multi-hop reasoning"
+        ],
+        "status": "pending"
+      },
+      {
+        "id": "reflexion_2023",
+        "title": "Reflexion: Language Agents with Verbal Reinforcement Learning",
+        "authors": ["Noah Shinn", "Federico Cassano", "Ashwin Gopinath", "Karthik Narasimhan", "Shunyu Yao"],
+        "arxiv_id": "2303.11366",
+        "url": "https://arxiv.org/abs/2303.11366",
+        "pdf_url": "https://arxiv.org/pdf/2303.11366.pdf",
+        "year": 2023,
+        "venue": "NeurIPS 2023",
+        "category": "self_correction",
+        "priority": 1,
+        "key_findings": [
+          "HotPotQA +20%",
+          "HumanEval +11%",
+          "Self-reflection + verbal reinforcement"
+        ],
+        "status": "pending"
+      },
+      {
+        "id": "constitutional_ai_2022",
+        "title": "Constitutional AI: Harmlessness from AI Feedback",
+        "authors": ["Yuntao Bai", "Saurav Kadavath", "Sandipan Kundu", "Amanda Askell", "Jackson Kernion", "Andy Jones", "Anna Chen", "Anna Goldie", "Azalia Mirhoseini", "Cameron McKinnon"],
+        "arxiv_id": "2212.08073",
+        "url": "https://arxiv.org/abs/2212.08073",
+        "pdf_url": "https://arxiv.org/pdf/2212.08073.pdf",
+        "year": 2022,
+        "venue": "Anthropic",
+        "category": "alignment",
+        "priority": 1,
+        "key_findings": [
+          "Self-critique + revision based on principles",
+          "RLAIF (RL from AI Feedback)",
+          "CoT improves identifying harmful behavior"
+        ],
+        "status": "pending"
+      },
+      {
+        "id": "process_supervision_2023",
+        "title": "Let's Verify Step by Step",
+        "authors": ["Hunter Lightman", "Vineet Kosaraju", "Yura Burda", "Harri Edwards", "Bowen Baker", "Teddy Lee", "Jan Leike", "John Schulman", "Ilya Sutskever", "Karl Cobbe"],
+        "arxiv_id": null,
+        "url": "https://cdn.openai.com/improving-mathematical-reasoning-with-process-supervision/Lets_Verify_Step_by_Step.pdf",
+        "pdf_url": "https://cdn.openai.com/improving-mathematical-reasoning-with-process-supervision/Lets_Verify_Step_by_Step.pdf",
+        "year": 2023,
+        "venue": "OpenAI",
+        "category": "process_supervision",
+        "priority": 1,
+        "key_findings": [
+          "PRM outperforms ORM",
+          "Step-level verification rewards",
+          "Process supervision > outcome supervision"
+        ],
+        "status": "pending"
+      },
+      {
+        "id": "omegaprm_2024",
+        "title": "Improve Mathematical Reasoning in Language Models by Automated Process Supervision",
+        "authors": ["Xiang Zhang", "et al."],
+        "arxiv_id": "2406.06592",
+        "url": "https://arxiv.org/abs/2406.06592",
+        "pdf_url": "https://arxiv.org/pdf/2406.06592.pdf",
+        "year": 2024,
+        "venue": "arXiv",
+        "category": "process_supervision",
+        "priority": 1,
+        "key_findings": [
+          "Gemini Pro 51% → 69.4% on MATH500",
+          "MCTS-based step annotation",
+          "1.5M+ process supervision annotations"
+        ],
+        "status": "pending"
+      }
+    ],
+    "retrieval_embedding": [
+      {
+        "id": "colbert_2020",
+        "title": "ColBERT: Efficient and Effective Passage Search via Contextualized Late Interaction over BERT",
+        "authors": ["Omar Khattab", "Matei Zaharia"],
+        "arxiv_id": "2004.12832",
+        "url": "https://arxiv.org/abs/2004.12832",
+        "pdf_url": "https://arxiv.org/pdf/2004.12832.pdf",
+        "year": 2020,
+        "venue": "SIGIR 2020",
+        "category": "retrieval",
+        "priority": 2,
+        "key_findings": [
+          "Late interaction architecture",
+          "100x fewer FLOPs than BERT cross-encoders",
+          "Token-level similarity (MaxSim)"
+        ],
+        "status": "pending"
+      },
+      {
+        "id": "bge_m3_2024",
+        "title": "BGE M3-Embedding: Multi-Lingual, Multi-Functionality, Multi-Granularity Text Embeddings Through Self-Knowledge Distillation",
+        "authors": ["Jianlv Chen", "Shitao Xiao", "Peitian Zhang", "Kun Luo", "Defu Lian", "Zheng Liu"],
+        "arxiv_id": "2402.03216",
+        "url": "https://arxiv.org/abs/2402.03216",
+        "pdf_url": "https://arxiv.org/pdf/2402.03216.pdf",
+        "year": 2024,
+        "venue": "arXiv",
+        "category": "embedding",
+        "priority": 2,
+        "key_findings": [
+          "Multilingual (100+ languages)",
+          "Dense + Sparse + Multi-vector",
+          "Long context support"
+        ],
+        "status": "pending"
+      },
+      {
+        "id": "e5_2022",
+        "title": "Text Embeddings by Weakly-Supervised Contrastive Pre-training",
+        "authors": ["Liang Wang", "Nan Yang", "Xiaolong Huang", "Binxing Jiao", "Linjun Yang", "Daxin Jiang", "Rangan Majumder", "Furu Wei"],
+        "arxiv_id": "2212.03533",
+        "url": "https://arxiv.org/abs/2212.03533",
+        "pdf_url": "https://arxiv.org/pdf/2212.03533.pdf",
+        "year": 2022,
+        "venue": "arXiv",
+        "category": "embedding",
+        "priority": 2,
+        "key_findings": [
+          "100% Top-5 accuracy on retrieval",
+          "Weakly-supervised pre-training",
+          "State-of-the-art on MTEB"
+        ],
+        "status": "pending"
+      }
+    ],
+    "hallucination_detection": [
+      {
+        "id": "semantic_entropy_2024",
+        "title": "Detecting hallucinations in large language models using semantic entropy",
+        "authors": ["Sebastian Farquhar", "Jannik Kossen", "Lorenz Kuhn", "Yarin Gal"],
+        "arxiv_id": null,
+        "url": "https://www.nature.com/articles/s41586-024-07421-0",
+        "pdf_url": null,
+        "year": 2024,
+        "venue": "Nature",
+        "category": "hallucination",
+        "priority": 1,
+        "key_findings": [
+          "Semantic-level entropy calculation",
+          "Detects confident-but-wrong outputs",
+          "Published in Nature"
+        ],
+        "status": "pending",
+        "requires_manual_download": true
+      }
+    ],
+    "benchmarks": [
+      {
+        "id": "gsm8k_2021",
+        "title": "Training Verifiers to Solve Math Word Problems",
+        "authors": ["Karl Cobbe", "Vineet Kosaraju", "Mohammad Bavarian", "Mark Chen", "Heewoo Jun", "Lukasz Kaiser", "Matthias Plappert", "Jerry Tworek", "Jacob Hilton", "Reiichiro Nakano", "Christopher Hesse", "John Schulman"],
+        "arxiv_id": "2110.14168",
+        "url": "https://arxiv.org/abs/2110.14168",
+        "pdf_url": "https://arxiv.org/pdf/2110.14168.pdf",
+        "year": 2021,
+        "venue": "arXiv",
+        "category": "benchmark",
+        "priority": 3,
+        "key_findings": [
+          "8,500 grade school math problems",
+          "Standard benchmark for math reasoning",
+          "2-8 step problems"
+        ],
+        "status": "pending"
+      },
+      {
+        "id": "math_benchmark_2021",
+        "title": "Measuring Mathematical Problem Solving With the MATH Dataset",
+        "authors": ["Dan Hendrycks", "Collin Burns", "Saurav Kadavath", "Akul Arora", "Steven Basart", "Eric Tang", "Dawn Song", "Jacob Steinhardt"],
+        "arxiv_id": "2103.03874",
+        "url": "https://arxiv.org/abs/2103.03874",
+        "pdf_url": "https://arxiv.org/pdf/2103.03874.pdf",
+        "year": 2021,
+        "venue": "NeurIPS 2021",
+        "category": "benchmark",
+        "priority": 3,
+        "key_findings": [
+          "12,500 competition-level problems",
+          "7 categories, 5 difficulty levels",
+          "Step-by-step solutions included"
+        ],
+        "status": "pending"
+      }
+    ],
+    "recent_advances": [
+      {
+        "id": "deepseek_r1_2025",
+        "title": "DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via Reinforcement Learning",
+        "authors": ["DeepSeek Team"],
+        "arxiv_id": "2501.12948",
+        "url": "https://arxiv.org/abs/2501.12948",
+        "pdf_url": "https://arxiv.org/pdf/2501.12948.pdf",
+        "year": 2025,
+        "venue": "arXiv",
+        "category": "reasoning_models",
+        "priority": 2,
+        "key_findings": [
+          "Pure RL for reasoning capability",
+          "AIME 2024: 15.6% → 71.0%",
+          "Matches OpenAI o1 performance"
+        ],
+        "status": "pending"
+      },
+      {
+        "id": "cot_decreasing_value_2025",
+        "title": "The Decreasing Value of Chain of Thought in Prompting",
+        "authors": ["Lennart Meincke", "Ethan R. Mollick", "Lilach Mollick", "Dan Shapiro"],
+        "arxiv_id": null,
+        "url": "https://gail.wharton.upenn.edu/research-and-insights/tech-report-chain-of-thought/",
+        "pdf_url": null,
+        "year": 2025,
+        "venue": "Wharton",
+        "category": "chain_of_thought",
+        "priority": 1,
+        "key_findings": [
+          "Only 2.9-3.1% improvement in o3/o4-mini",
+          "Models have built-in reasoning",
+          "CoT decreasing in value"
+        ],
+        "status": "pending",
+        "requires_manual_download": true
+      }
+    ]
+  },
+  "total_papers": 16,
+  "download_priority_order": [
+    "cot_2022",
+    "self_consistency_2022",
+    "tree_of_thoughts_2023",
+    "raptor_2024",
+    "reflexion_2023",
+    "constitutional_ai_2022",
+    "process_supervision_2023",
+    "omegaprm_2024",
+    "colbert_2020",
+    "bge_m3_2024",
+    "semantic_entropy_2024",
+    "deepseek_r1_2025",
+    "gsm8k_2021",
+    "math_benchmark_2021"
+  ]
+}

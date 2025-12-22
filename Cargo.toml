@@ -1,0 +1,127 @@
+[package]
+name = "reasonkit-core"
+version = "0.1.0"
+edition = "2021"
+authors = ["ReasonKit Team"]
+description = "Rust-first knowledge base and RAG system for AI reasoning enhancement"
+license = "Apache-2.0"
+repository = "https://github.com/reasonkit/reasonkit-core"
+keywords = ["rag", "vector-database", "llm", "reasoning", "knowledge-base"]
+categories = ["science", "text-processing", "database"]
+
+[lib]
+name = "reasonkit_core"
+path = "src/lib.rs"
+
+[[bin]]
+name = "rk-core"
+path = "src/main.rs"
+
+[dependencies]
+# Serialization
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+
+# PDF Processing
+# pdf_oxide = "0.1"  # TODO: Evaluate availability
+lopdf = "0.33"  # Alternative: mature PDF library
+
+# Text Processing
+pulldown-cmark = "0.10"
+scraper = "0.18"
+regex = "1.10"
+
+# Vector Database
+qdrant-client = "1.10"
+
+# Full-text Search
+tantivy = "0.22"
+
+# HNSW Index (for local embeddings if not using Qdrant)
+# hnsw_rs = "0.3"  # TODO: Add when needed
+
+# Async Runtime
+tokio = { version = "1", features = ["full"] }
+
+# HTTP Client
+reqwest = { version = "0.12", features = ["json", "stream"] }
+
+# CLI
+clap = { version = "4", features = ["derive", "env"] }
+
+# Error Handling
+anyhow = "1.0"
+thiserror = "1.0"
+
+# Async traits
+async-trait = "0.1"
+
+# Logging
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter", "json"] }
+
+# UUID
+uuid = { version = "1", features = ["v4", "serde"] }
+
+# Date/Time
+chrono = { version = "0.4", features = ["serde"] }
+
+# Configuration
+config = "0.14"
+dotenvy = "0.15"
+
+# JSON Schema Validation
+jsonschema = "0.18"
+
+# File watching (for hot reload)
+notify = "6.1"
+
+# Rayon for parallel processing
+rayon = "1.10"
+
+# Progress bars
+indicatif = "0.17"
+
+# Directories
+directories = "5"
+dirs = "5"
+
+# ONNX Runtime for local embeddings (BGE-M3)
+ort = { version = "2.0.0-rc.10", optional = true }
+
+# HuggingFace tokenizers
+tokenizers = { version = "0.19", optional = true }
+
+# ARF Module dependencies (optional feature)
+sled = { version = "0.34", optional = true }
+wasmtime = { version = "17", optional = true }
+sysinfo = { version = "0.30", optional = true }
+petgraph = { version = "0.6", optional = true }
+rust-bert = { version = "0.22", optional = true }
+parking_lot = { version = "0.12", optional = true }
+
+[dev-dependencies]
+tokio-test = "0.4"
+tempfile = "3.10"
+pretty_assertions = "1.4"
+
+[[bench]]
+name = "retrieval_bench"
+harness = false
+
+[features]
+default = ["cli"]
+cli = []
+embedded-qdrant = []  # For embedded mode without external server
+local-embeddings = ["ort", "tokenizers"]  # BGE-M3 ONNX local inference
+arf = ["sled", "wasmtime", "sysinfo", "petgraph", "rust-bert", "parking_lot"]  # Optional ARF module
+
+[profile.release]
+lto = true
+codegen-units = 1
+opt-level = 3
+strip = true
+
+[profile.bench]
+lto = true
+codegen-units = 1

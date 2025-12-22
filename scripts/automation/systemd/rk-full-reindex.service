@@ -1,0 +1,20 @@
+[Unit]
+Description=ReasonKit Full Knowledge Base Re-index Service
+Documentation=https://github.com/reasonkit/reasonkit-core
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=%i
+WorkingDirectory=/home/%i/RK-PROJECT/reasonkit-core
+ExecStart=/home/%i/RK-PROJECT/reasonkit-core/scripts/automation/full_reindex.sh
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=rk-reindex
+
+# Allow longer runtime for full reindex
+TimeoutStartSec=3600
+# Resource limits
+MemoryMax=2G
+CPUQuota=80%

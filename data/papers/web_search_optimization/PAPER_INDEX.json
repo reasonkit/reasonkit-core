@@ -1,0 +1,127 @@
+{
+  "collection": "Web Search Optimization Research Papers",
+  "created": "2025-12-11",
+  "purpose": "Academic grounding for Web Search Optimization Protocol (WSOP)",
+  "total_papers": 11,
+  "papers": [
+    {
+      "id": "hyde",
+      "title": "Precise Zero-Shot Dense Retrieval without Relevance Labels",
+      "authors": ["Luyu Gao", "Xueguang Ma", "Jimmy Lin", "Jamie Callan"],
+      "arxiv": "2212.10496",
+      "conference": "ACL 2023",
+      "filename": "hyde_2212.10496.pdf",
+      "key_contribution": "HyDE - Hypothetical Document Embeddings for zero-shot retrieval",
+      "relevance": "Query expansion technique"
+    },
+    {
+      "id": "self_rag",
+      "title": "Self-RAG: Learning to Retrieve, Generate, and Critique through Self-Reflection",
+      "authors": ["Akari Asai", "Zeqiu Wu", "Yizhong Wang", "Avirup Sil", "Hannaneh Hajishirzi"],
+      "arxiv": "2310.11511",
+      "conference": "ICLR 2024",
+      "filename": "self_rag_2310.11511.pdf",
+      "key_contribution": "Reflection tokens for adaptive retrieval and self-critique",
+      "relevance": "Adaptive retrieval strategy"
+    },
+    {
+      "id": "crag",
+      "title": "Corrective Retrieval Augmented Generation",
+      "authors": ["Shi-Qi Yan", "Jia-Chen Gu", "Yun Zhu", "Zhen-Hua Ling"],
+      "arxiv": "2401.15884",
+      "filename": "crag_2401.15884.pdf",
+      "key_contribution": "Lightweight retrieval evaluator + web search fallback",
+      "relevance": "Corrective retrieval with web search integration"
+    },
+    {
+      "id": "react",
+      "title": "ReAct: Synergizing Reasoning and Acting in Language Models",
+      "authors": ["Shunyu Yao", "Jeffrey Zhao", "Dian Yu", "Nan Du", "Izhak Shafran", "Karthik Narasimhan", "Yuan Cao"],
+      "arxiv": "2210.03629",
+      "conference": "ICLR 2023",
+      "filename": "react_2210.03629.pdf",
+      "key_contribution": "Interleaved reasoning and action traces",
+      "relevance": "Agent reasoning pattern for search"
+    },
+    {
+      "id": "colbertv2",
+      "title": "ColBERTv2: Effective and Efficient Retrieval via Lightweight Late Interaction",
+      "authors": ["Keshav Santhanam", "Omar Khattab", "et al."],
+      "arxiv": "2112.01488",
+      "conference": "NAACL 2022",
+      "filename": "colbertv2_2112.01488.pdf",
+      "key_contribution": "Late interaction retrieval with residual compression",
+      "relevance": "Efficient neural retrieval"
+    },
+    {
+      "id": "frames",
+      "title": "Fact, Fetch, and Reason: A Unified Evaluation of Retrieval-Augmented Generation",
+      "authors": ["Google Research", "Harvard"],
+      "arxiv": "2409.12941",
+      "filename": "frames_2409.12941.pdf",
+      "key_contribution": "FRAMES benchmark for multi-hop RAG evaluation",
+      "relevance": "Benchmark and multi-step retrieval pipeline"
+    },
+    {
+      "id": "multihop_rag",
+      "title": "MultiHop-RAG: Benchmarking Retrieval-Augmented Generation for Multi-Hop Queries",
+      "authors": ["Yixuan Tang", "Yi Yang"],
+      "arxiv": "2401.15391",
+      "conference": "COLM 2024",
+      "filename": "multihop_rag_2401.15391.pdf",
+      "key_contribution": "Multi-hop RAG benchmark dataset",
+      "relevance": "Complex query evaluation"
+    },
+    {
+      "id": "rag_fusion",
+      "title": "RAG-Fusion: a New Take on Retrieval-Augmented Generation",
+      "authors": ["Adrian Raudaschl"],
+      "arxiv": "2402.03367",
+      "filename": "rag_fusion_2402.03367.pdf",
+      "key_contribution": "Multi-query + Reciprocal Rank Fusion",
+      "relevance": "Ensemble retrieval technique"
+    },
+    {
+      "id": "longllmlingua",
+      "title": "LongLLMLingua: Accelerating and Enhancing LLMs in Long Context Scenarios via Prompt Compression",
+      "authors": ["Microsoft Research"],
+      "arxiv": "2310.06839",
+      "filename": "longllmlingua_2310.06839.pdf",
+      "key_contribution": "Prompt compression for long context",
+      "relevance": "Token optimization and cost reduction"
+    },
+    {
+      "id": "query_rewriting",
+      "title": "Query Rewriting for Retrieval-Augmented Large Language Models",
+      "authors": ["Shanghai Jiao Tong University", "Microsoft Research Asia"],
+      "arxiv": "2305.14283",
+      "conference": "EMNLP 2023",
+      "filename": "query_rewriting_2305.14283.pdf",
+      "key_contribution": "Rewrite-Retrieve-Read framework",
+      "relevance": "Query optimization technique"
+    },
+    {
+      "id": "credibility_survey",
+      "title": "A Survey on Automatic Credibility Assessment Using Textual Credibility Signals in the Era of Large Language Models",
+      "authors": ["Various"],
+      "arxiv": "2410.21360",
+      "filename": "credibility_assessment_2410.21360.pdf",
+      "key_contribution": "Comprehensive credibility assessment survey",
+      "relevance": "Source credibility scoring"
+    }
+  ],
+  "integration_status": {
+    "downloaded": true,
+    "indexed": false,
+    "chunked": false,
+    "embedded": false,
+    "raptor_tree": false
+  },
+  "next_steps": [
+    "Parse PDFs and extract text",
+    "Chunk documents (512-1024 tokens)",
+    "Generate embeddings (BGE-M3 or similar)",
+    "Build RAPTOR hierarchical tree",
+    "Add to RAG knowledge base"
+  ]
+}

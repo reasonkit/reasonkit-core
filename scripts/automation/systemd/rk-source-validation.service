@@ -1,0 +1,18 @@
+[Unit]
+Description=ReasonKit Source Validation Service
+Documentation=https://github.com/reasonkit/reasonkit-core
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=%i
+WorkingDirectory=/home/%i/RK-PROJECT/reasonkit-core
+ExecStart=/home/%i/RK-PROJECT/reasonkit-core/scripts/automation/validate_sources.sh --tier=high --verbose
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=rk-sources
+
+# Resource limits
+MemoryMax=512M
+CPUQuota=50%

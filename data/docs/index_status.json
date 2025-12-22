@@ -1,0 +1,14 @@
+{
+  "generated_at": "2025-12-11T09:44:34+01:00",
+  "total_documents": 840,
+  "sources": [
+    {"name": "aider", "documents": 144},
+    {"name": "claude-code", "documents": 100},
+    {"name": "continue", "documents": 284},
+    {"name": "gemini-cli", "documents": 80},
+    {"name": "mcp-python-sdk", "documents": 35},
+    {"name": "mcp-servers", "documents": 15},
+    {"name": "mcp-spec", "documents": 170},
+    {"name": "mcp-typescript-sdk", "documents": 12}
+  ]
+}

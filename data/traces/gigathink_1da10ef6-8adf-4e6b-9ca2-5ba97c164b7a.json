@@ -1,0 +1,166 @@
+{
+  "id": "1da10ef6-8adf-4e6b-9ca2-5ba97c164b7a",
+  "protocol_id": "gigathink",
+  "protocol_version": "1.0.0",
+  "input": {
+    "query": "What is Rust?"
+  },
+  "steps": [
+    {
+      "step_id": "identify_dimensions",
+      "index": 0,
+      "prompt": "",
+      "raw_response": "",
+      "parsed_output": {
+        "type": "list",
+        "items": [
+          {
+            "content": "Generated perspective 1",
+            "confidence": null,
+            "metadata": {}
+          },
+          {
+            "content": "Generated perspective 2",
+            "confidence": null,
+            "metadata": {}
+          },
+          {
+            "content": "Generated perspective 3",
+            "confidence": null,
+            "metadata": {}
+          },
+          {
+            "content": "Generated perspective 4",
+            "confidence": null,
+            "metadata": {}
+          },
+          {
+            "content": "Generated perspective 5",
+            "confidence": null,
+            "metadata": {}
+          }
+        ]
+      },
+      "confidence": 0.85,
+      "duration_ms": 0,
+      "tokens": {
+        "input_tokens": 100,
+        "output_tokens": 150,
+        "total_tokens": 250,
+        "cost_usd": 0.001
+      },
+      "status": "completed",
+      "error": null,
+      "started_at": "2025-12-11T20:48:05.699174393Z",
+      "completed_at": "2025-12-11T20:48:05.699178262Z"
+    },
+    {
+      "step_id": "explore_perspectives",
+      "index": 1,
+      "prompt": "",
+      "raw_response": "",
+      "parsed_output": {
+        "type": "text",
+        "content": "Analysis:\n- Key finding 1\n- Key finding 2\n- Key finding 3\n\nConfidence: 0.82"
+      },
+      "confidence": 0.82,
+      "duration_ms": 0,
+      "tokens": {
+        "input_tokens": 100,
+        "output_tokens": 150,
+        "total_tokens": 250,
+        "cost_usd": 0.001
+      },
+      "status": "completed",
+      "error": null,
+      "started_at": "2025-12-11T20:48:05.705312028Z",
+      "completed_at": "2025-12-11T20:48:05.705314388Z"
+    },
+    {
+      "step_id": "synthesize",
+      "index": 2,
+      "prompt": "",
+      "raw_response": "",
+      "parsed_output": {
+        "type": "text",
+        "content": "Synthesis: The main themes identified are X, Y, and Z. Key insight: ...\n\nConfidence: 0.88"
+      },
+      "confidence": 0.88,
+      "duration_ms": 0,
+      "tokens": {
+        "input_tokens": 100,
+        "output_tokens": 150,
+        "total_tokens": 250,
+        "cost_usd": 0.001
+      },
+      "status": "completed",
+      "error": null,
+      "started_at": "2025-12-11T20:48:05.711683427Z",
+      "completed_at": "2025-12-11T20:48:05.711685727Z"
+    }
+  ],
+  "output": {
+    "confidence": 0.85,
+    "explore_perspectives": {
+      "content": "Analysis:\n- Key finding 1\n- Key finding 2\n- Key finding 3\n\nConfidence: 0.82",
+      "type": "text"
+    },
+    "identify_dimensions": {
+      "items": [
+        {
+          "confidence": null,
+          "content": "Generated perspective 1",
+          "metadata": {}
+        },
+        {
+          "confidence": null,
+          "content": "Generated perspective 2",
+          "metadata": {}
+        },
+        {
+          "confidence": null,
+          "content": "Generated perspective 3",
+          "metadata": {}
+        },
+        {
+          "confidence": null,
+          "content": "Generated perspective 4",
+          "metadata": {}
+        },
+        {
+          "confidence": null,
+          "content": "Generated perspective 5",
+          "metadata": {}
+        }
+      ],
+      "type": "list"
+    },
+    "synthesize": {
+      "content": "Synthesis: The main themes identified are X, Y, and Z. Key insight: ...\n\nConfidence: 0.88",
+      "type": "text"
+    }
+  },
+  "status": "completed",
+  "timing": {
+    "started_at": "2025-12-11T20:48:05.689866997Z",
+    "completed_at": "2025-12-11T20:48:05.711747777Z",
+    "total_duration_ms": 21,
+    "llm_duration_ms": 0,
+    "processing_duration_ms": 0
+  },
+  "tokens": {
+    "input_tokens": 300,
+    "output_tokens": 450,
+    "total_tokens": 750,
+    "cost_usd": 0.003
+  },
+  "confidence": 0.85,
+  "metadata": {
+    "model": "claude-sonnet-4-20250514",
+    "provider": "Anthropic",
+    "temperature": 0.7,
+    "profile": null,
+    "tags": [],
+    "environment": null
+  }
+}

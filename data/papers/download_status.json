@@ -1,0 +1,20 @@
+{
+  "generated_at": "2025-12-11T09:40:06+01:00",
+  "papers": [
+    {"name": "bge_m3_2024", "size": 794570, "status": "downloaded"},
+    {"name": "colbert_khattab_2020", "size": 4918165, "status": "downloaded"},
+    {"name": "constitutional_ai_anthropic_2022", "size": 2088111, "status": "downloaded"},
+    {"name": "cot_wei_2022", "size": 891773, "status": "downloaded"},
+    {"name": "deepseek_r1_2025", "size": 1312189, "status": "downloaded"},
+    {"name": "e5_embeddings_2022", "size": 484956, "status": "downloaded"},
+    {"name": "gsm8k_cobbe_2021", "size": 2935719, "status": "downloaded"},
+    {"name": "lets_verify_openai_2023", "size": 4498809, "status": "downloaded"},
+    {"name": "math_hendrycks_2021", "size": 2030715, "status": "downloaded"},
+    {"name": "mmlu_hendrycks_2020", "size": 2074939, "status": "downloaded"},
+    {"name": "omegaprm_2024", "size": 1015731, "status": "downloaded"},
+    {"name": "raptor_sarthi_2024", "size": 2547113, "status": "downloaded"},
+    {"name": "reflexion_shinn_2023", "size": 591097, "status": "downloaded"},
+    {"name": "self_consistency_wang_2022", "size": 10505941, "status": "downloaded"},
+    {"name": "tree_of_thoughts_yao_2023", "size": 799685, "status": "downloaded"}
+  ]
+}
