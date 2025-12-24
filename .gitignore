@@ -1,0 +1,42 @@
+# reasonkit-core .gitignore - Public Open Source Rules
+
+# 1. Standard Rust Ignores
+# ------------------------
+/target/
+**/*.rs.bk
+Cargo.lock
+
+# 2. Sensitive/Internal Data (Double-Safety)
+# ------------------------------------------
+*.env
+.env
+.env.local
+private/
+secrets/
+keys/
+*.pem
+*.key
+id_rsa
+id_rsa.pub
+
+# 3. Logs & Artifacts
+# -------------------
+*.log
+crash.log
+perf.data
+perf.data.old
+
+# 4. Internal Documentation (Not for public repo)
+# -----------------------------------------------
+# Filter out anything marked internal in docs
+docs/internal/
+docs/strategy/
+*FINANCIALS*
+*LAUNCH*
+
+# 5. Editor/IDE
+# -------------
+.vscode/
+.idea/
+*.swp
+.DS_Store
