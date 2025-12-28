@@ -1,0 +1,29 @@
+[package]
+name = "arf-core"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[dependencies]
+# Core async runtime
+tokio.workspace = true
+tokio-util.workspace = true
+
+# Error handling
+thiserror.workspace = true
+anyhow.workspace = true
+
+# Logging and tracing
+tracing.workspace = true
+tracing-subscriber.workspace = true
+
+# HTTP client for MCP
+reqwest.workspace = true
+
+# Development tools
+cargo_metadata.workspace = true
+
+# Utilities
+ulid.workspace = true

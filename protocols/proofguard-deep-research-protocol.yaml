@@ -385,12 +385,14 @@ thinktool_integration:
       this_protocol: "REQUIRED"
 
     scientific:
-      modules: ["SciEngine", "AtomicBreak", "BedRock", "ProofGuard"]
+      # Core modules (Pro adds: SciEngine, AtomicBreak)
+      modules: ["GigaThink", "LaserLogic", "BedRock", "ProofGuard"]
       confidence_target: 85%
       this_protocol: "RECOMMENDED"
 
     deep:
-      modules: ["GigaThink", "LaserLogic", "BedRock", "ProofGuard", "HighReflect"]
+      # Core modules (Pro adds: HighReflect)
+      modules: ["GigaThink", "LaserLogic", "BedRock", "ProofGuard", "BrutalHonesty"]
       confidence_target: 85%
       this_protocol: "RECOMMENDED"
 

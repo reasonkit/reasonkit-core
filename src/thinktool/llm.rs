@@ -153,7 +153,11 @@ impl LlmConfig {
     }
 
     /// Set Azure-specific configuration
-    pub fn with_azure(mut self, resource: impl Into<String>, deployment: impl Into<String>) -> Self {
+    pub fn with_azure(
+        mut self,
+        resource: impl Into<String>,
+        deployment: impl Into<String>,
+    ) -> Self {
         self.extra.azure_resource = Some(resource.into());
         self.extra.azure_deployment = Some(deployment.into());
         self
@@ -173,7 +177,11 @@ impl LlmConfig {
     }
 
     /// Set Cloudflare AI Gateway configuration
-    pub fn with_cloudflare_gateway(mut self, account_id: impl Into<String>, gateway_id: impl Into<String>) -> Self {
+    pub fn with_cloudflare_gateway(
+        mut self,
+        account_id: impl Into<String>,
+        gateway_id: impl Into<String>,
+    ) -> Self {
         self.extra.cf_account_id = Some(account_id.into());
         self.extra.cf_gateway_id = Some(gateway_id.into());
         self
@@ -187,12 +195,13 @@ impl LlmConfig {
 /// Supported LLM providers (OpenAI-compatible where applicable)
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
+#[derive(Default)]
 pub enum LlmProvider {
     // ─────────────────────────────────────────────────────────────────────────
     // TIER 1: Major Cloud Providers
     // ─────────────────────────────────────────────────────────────────────────
-
     /// Anthropic Claude models (native API)
+    #[default]
     Anthropic,
 
     /// OpenAI GPT models
@@ -217,7 +226,6 @@ pub enum LlmProvider {
     // ─────────────────────────────────────────────────────────────────────────
     // TIER 2: Specialized AI Providers
     // ─────────────────────────────────────────────────────────────────────────
-
     /// xAI Grok models
     /// Base: https://api.x.ai/v1
     XAI,
@@ -249,7 +257,6 @@ pub enum LlmProvider {
     // ─────────────────────────────────────────────────────────────────────────
     // TIER 3: Inference Platforms
     // ─────────────────────────────────────────────────────────────────────────
-
     /// Together AI (open model hosting)
     /// Base: https://api.together.xyz/v1
     TogetherAI,
@@ -265,7 +272,6 @@ pub enum LlmProvider {
     // ─────────────────────────────────────────────────────────────────────────
     // TIER 4: Aggregation/Gateway Layers
     // ─────────────────────────────────────────────────────────────────────────
-
     /// OpenRouter (300+ models, automatic fallbacks)
     /// Base: https://openrouter.ai/api/v1
     OpenRouter,
@@ -273,12 +279,6 @@ pub enum LlmProvider {
     /// Cloudflare AI Gateway (unified endpoint)
     /// Base: https://gateway.ai.cloudflare.com/v1/{account_id}/{gateway_id}/
     CloudflareAI,
-}
-
-impl Default for LlmProvider {
-    fn default() -> Self {
-        Self::Anthropic
-    }
 }
 
 impl LlmProvider {
@@ -358,26 +358,26 @@ impl LlmProvider {
     pub fn default_model(&self) -> &'static str {
         match self {
             // Tier 1: Major Cloud (Latest flagships)
-            LlmProvider::Anthropic => "claude-opus-4-5",           // Nov 2025 flagship
-            LlmProvider::OpenAI => "gpt-5.1",                      // Latest GPT (user confirmed)
-            LlmProvider::GoogleGemini => "gemini-3.0-pro",         // Nov 2025 #1 LMArena
-            LlmProvider::GoogleVertex => "gemini-3.0-pro",         // Same via Vertex
-            LlmProvider::AzureOpenAI => "gpt-5.1",                 // Via Azure
+            LlmProvider::Anthropic => "claude-opus-4-5", // Nov 2025 flagship
+            LlmProvider::OpenAI => "gpt-5.1",            // Latest GPT (user confirmed)
+            LlmProvider::GoogleGemini => "gemini-3.0-pro", // Nov 2025 #1 LMArena
+            LlmProvider::GoogleVertex => "gemini-3.0-pro", // Same via Vertex
+            LlmProvider::AzureOpenAI => "gpt-5.1",       // Via Azure
             LlmProvider::AWSBedrock => "anthropic.claude-opus-4-5-v1:0", // Via Bedrock
 
             // Tier 2: Specialized (Latest releases)
-            LlmProvider::XAI => "grok-4.1",                        // Nov 2025, 2M context
-            LlmProvider::Groq => "llama-3.3-70b-versatile",        // Speed-optimized (unchanged)
-            LlmProvider::Mistral => "mistral-large-3",             // Dec 2025, 675B MoE
-            LlmProvider::DeepSeek => "deepseek-v3.2",              // Dec 2025, GPT-5 parity
-            LlmProvider::Cohere => "command-a",                    // 111B flagship
-            LlmProvider::Perplexity => "sonar-pro",                // Latest search-augmented
-            LlmProvider::Cerebras => "llama-4-scout",              // 2600 tok/s (fastest)
+            LlmProvider::XAI => "grok-4.1", // Nov 2025, 2M context
+            LlmProvider::Groq => "llama-3.3-70b-versatile", // Speed-optimized (unchanged)
+            LlmProvider::Mistral => "mistral-large-3", // Dec 2025, 675B MoE
+            LlmProvider::DeepSeek => "deepseek-v3.2", // Dec 2025, GPT-5 parity
+            LlmProvider::Cohere => "command-a", // 111B flagship
+            LlmProvider::Perplexity => "sonar-pro", // Latest search-augmented
+            LlmProvider::Cerebras => "llama-4-scout", // 2600 tok/s (fastest)
 
             // Tier 3: Inference Platforms (Latest open models)
             LlmProvider::TogetherAI => "meta-llama/Llama-4-Scout-17B-16E-Instruct",
             LlmProvider::FireworksAI => "accounts/fireworks/models/llama-v4-scout-instruct",
-            LlmProvider::AlibabaQwen => "qwen3-max",               // 1T+ params
+            LlmProvider::AlibabaQwen => "qwen3-max", // 1T+ params
 
             // Tier 4: Aggregation (Latest via gateway)
             LlmProvider::OpenRouter => "anthropic/claude-opus-4-5", // Route to best
@@ -507,8 +507,10 @@ pub struct LlmResponse {
 /// Why generation stopped
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
+#[derive(Default)]
 pub enum FinishReason {
     /// Natural stop (end of response)
+    #[default]
     Stop,
     /// Hit max tokens limit
     MaxTokens,
@@ -516,12 +518,6 @@ pub enum FinishReason {
     ContentFilter,
     /// Error occurred
     Error,
-}
-
-impl Default for FinishReason {
-    fn default() -> Self {
-        Self::Stop
-    }
 }
 
 /// Token usage from LLM call
@@ -650,7 +646,10 @@ impl UnifiedLlmClient {
             .build()
             .map_err(|e| Error::Network(format!("Failed to create HTTP client: {}", e)))?;
 
-        Ok(Self { config, http_client })
+        Ok(Self {
+            config,
+            http_client,
+        })
     }
 
     // ─────────────────────────────────────────────────────────────────────────
@@ -728,18 +727,26 @@ impl UnifiedLlmClient {
     }
 
     /// Create for Azure OpenAI
-    pub fn azure(resource: impl Into<String>, deployment: impl Into<String>, model: impl Into<String>) -> Result<Self> {
+    pub fn azure(
+        resource: impl Into<String>,
+        deployment: impl Into<String>,
+        model: impl Into<String>,
+    ) -> Result<Self> {
         Self::new(
             LlmConfig::for_provider(LlmProvider::AzureOpenAI, model)
-                .with_azure(resource, deployment)
+                .with_azure(resource, deployment),
         )
     }
 
     /// Create for Cloudflare AI Gateway
-    pub fn cloudflare_gateway(account_id: impl Into<String>, gateway_id: impl Into<String>, model: impl Into<String>) -> Result<Self> {
+    pub fn cloudflare_gateway(
+        account_id: impl Into<String>,
+        gateway_id: impl Into<String>,
+        model: impl Into<String>,
+    ) -> Result<Self> {
         Self::new(
             LlmConfig::for_provider(LlmProvider::CloudflareAI, model)
-                .with_cloudflare_gateway(account_id, gateway_id)
+                .with_cloudflare_gateway(account_id, gateway_id),
         )
     }
 
@@ -770,20 +777,34 @@ impl UnifiedLlmClient {
 
         match self.config.provider {
             LlmProvider::AzureOpenAI => {
-                let resource = self.config.extra.azure_resource.as_ref()
+                let resource = self
+                    .config
+                    .extra
+                    .azure_resource
+                    .as_ref()
                     .ok_or_else(|| Error::Config("Azure resource name required".to_string()))?;
-                let deployment = self.config.extra.azure_deployment.as_ref()
-                    .ok_or_else(|| Error::Config("Azure deployment name required".to_string()))?;
+                let deployment =
+                    self.config.extra.azure_deployment.as_ref().ok_or_else(|| {
+                        Error::Config("Azure deployment name required".to_string())
+                    })?;
                 Ok(format!(
                     "https://{}.openai.azure.com/openai/deployments/{}",
                     resource, deployment
                 ))
             }
             LlmProvider::GoogleVertex => {
-                let project = self.config.extra.gcp_project.as_ref()
+                let project = self
+                    .config
+                    .extra
+                    .gcp_project
+                    .as_ref()
                     .ok_or_else(|| Error::Config("GCP project ID required".to_string()))?;
                 let default_location = "us-central1".to_string();
-                let location = self.config.extra.gcp_location.as_ref()
+                let location = self
+                    .config
+                    .extra
+                    .gcp_location
+                    .as_ref()
                     .unwrap_or(&default_location);
                 Ok(format!(
                     "https://{}-aiplatform.googleapis.com/v1/projects/{}/locations/{}/publishers/google/models",
@@ -792,15 +813,23 @@ impl UnifiedLlmClient {
             }
             LlmProvider::AWSBedrock => {
                 let default_region = "us-east-1".to_string();
-                let region = self.config.extra.aws_region.as_ref()
+                let region = self
+                    .config
+                    .extra
+                    .aws_region
+                    .as_ref()
                     .unwrap_or(&default_region);
                 Ok(format!("https://bedrock-runtime.{}.amazonaws.com", region))
             }
             LlmProvider::CloudflareAI => {
-                let account_id = self.config.extra.cf_account_id.as_ref()
-                    .ok_or_else(|| Error::Config("Cloudflare account ID required".to_string()))?;
-                let gateway_id = self.config.extra.cf_gateway_id.as_ref()
-                    .ok_or_else(|| Error::Config("Cloudflare gateway ID required".to_string()))?;
+                let account_id =
+                    self.config.extra.cf_account_id.as_ref().ok_or_else(|| {
+                        Error::Config("Cloudflare account ID required".to_string())
+                    })?;
+                let gateway_id =
+                    self.config.extra.cf_gateway_id.as_ref().ok_or_else(|| {
+                        Error::Config("Cloudflare gateway ID required".to_string())
+                    })?;
                 Ok(format!(
                     "https://gateway.ai.cloudflare.com/v1/{}/{}/openai",
                     account_id, gateway_id
@@ -853,13 +882,14 @@ impl UnifiedLlmClient {
             )));
         }
 
-        let json: AnthropicResponse = response
-            .json()
-            .await
-            .map_err(|e| Error::Parse { message: format!("Failed to parse Anthropic response: {}", e) })?;
+        let json: AnthropicResponse = response.json().await.map_err(|e| Error::Parse {
+            message: format!("Failed to parse Anthropic response: {}", e),
+        })?;
 
         Ok(LlmResponse {
-            content: json.content.first()
+            content: json
+                .content
+                .first()
                 .map(|c| c.text.clone())
                 .unwrap_or_default(),
             model: json.model,
@@ -929,11 +959,12 @@ impl UnifiedLlmClient {
             _ => {}
         }
 
-        let response = req
-            .json(&body)
-            .send()
-            .await
-            .map_err(|e| Error::Network(format!("{} API request failed: {}", self.config.provider, e)))?;
+        let response = req.json(&body).send().await.map_err(|e| {
+            Error::Network(format!(
+                "{} API request failed: {}",
+                self.config.provider, e
+            ))
+        })?;
 
         if !response.status().is_success() {
             let status = response.status();
@@ -944,13 +975,12 @@ impl UnifiedLlmClient {
             )));
         }
 
-        let json: OpenAIResponse = response
-            .json()
-            .await
-            .map_err(|e| Error::Parse { message: format!("Failed to parse {} response: {}", self.config.provider, e) })?;
+        let json: OpenAIResponse = response.json().await.map_err(|e| Error::Parse {
+            message: format!("Failed to parse {} response: {}", self.config.provider, e),
+        })?;
 
-        let choice = json.choices.first().ok_or_else(|| {
-            Error::Parse { message: "No choices in response".to_string() }
+        let choice = json.choices.first().ok_or_else(|| Error::Parse {
+            message: "No choices in response".to_string(),
         })?;
 
         Ok(LlmResponse {
@@ -964,7 +994,11 @@ impl UnifiedLlmClient {
             },
             usage: LlmUsage {
                 input_tokens: json.usage.as_ref().map(|u| u.prompt_tokens).unwrap_or(0),
-                output_tokens: json.usage.as_ref().map(|u| u.completion_tokens).unwrap_or(0),
+                output_tokens: json
+                    .usage
+                    .as_ref()
+                    .map(|u| u.completion_tokens)
+                    .unwrap_or(0),
                 total_tokens: json.usage.as_ref().map(|u| u.total_tokens).unwrap_or(0),
             },
             provider: Some(self.config.provider),
@@ -1142,13 +1176,31 @@ mod tests {
 
     #[test]
     fn test_provider_base_urls() {
-        assert_eq!(LlmProvider::Anthropic.default_base_url(), "https://api.anthropic.com/v1");
-        assert_eq!(LlmProvider::OpenAI.default_base_url(), "https://api.openai.com/v1");
-        assert_eq!(LlmProvider::Groq.default_base_url(), "https://api.groq.com/openai/v1");
+        assert_eq!(
+            LlmProvider::Anthropic.default_base_url(),
+            "https://api.anthropic.com/v1"
+        );
+        assert_eq!(
+            LlmProvider::OpenAI.default_base_url(),
+            "https://api.openai.com/v1"
+        );
+        assert_eq!(
+            LlmProvider::Groq.default_base_url(),
+            "https://api.groq.com/openai/v1"
+        );
         assert_eq!(LlmProvider::XAI.default_base_url(), "https://api.x.ai/v1");
-        assert_eq!(LlmProvider::Mistral.default_base_url(), "https://api.mistral.ai/v1");
-        assert_eq!(LlmProvider::DeepSeek.default_base_url(), "https://api.deepseek.com/v1");
-        assert_eq!(LlmProvider::TogetherAI.default_base_url(), "https://api.together.xyz/v1");
+        assert_eq!(
+            LlmProvider::Mistral.default_base_url(),
+            "https://api.mistral.ai/v1"
+        );
+        assert_eq!(
+            LlmProvider::DeepSeek.default_base_url(),
+            "https://api.deepseek.com/v1"
+        );
+        assert_eq!(
+            LlmProvider::TogetherAI.default_base_url(),
+            "https://api.together.xyz/v1"
+        );
     }
 
     #[test]
@@ -1198,7 +1250,10 @@ mod tests {
             .with_azure("my-resource", "my-deployment");
 
         assert_eq!(config.extra.azure_resource, Some("my-resource".to_string()));
-        assert_eq!(config.extra.azure_deployment, Some("my-deployment".to_string()));
+        assert_eq!(
+            config.extra.azure_deployment,
+            Some("my-deployment".to_string())
+        );
     }
 
     #[test]
@@ -1261,7 +1316,10 @@ mod tests {
         let info = get_provider_info();
         assert_eq!(info.len(), 18);
 
-        let anthropic = info.iter().find(|i| i.id == LlmProvider::Anthropic).unwrap();
+        let anthropic = info
+            .iter()
+            .find(|i| i.id == LlmProvider::Anthropic)
+            .unwrap();
         assert_eq!(anthropic.name, "Anthropic");
         assert_eq!(anthropic.env_var, "ANTHROPIC_API_KEY");
     }
@@ -1270,6 +1328,9 @@ mod tests {
     fn test_provider_display() {
         assert_eq!(LlmProvider::Anthropic.to_string(), "Anthropic");
         assert_eq!(LlmProvider::XAI.to_string(), "xAI (Grok)");
-        assert_eq!(LlmProvider::GoogleGemini.to_string(), "Google Gemini (AI Studio)");
+        assert_eq!(
+            LlmProvider::GoogleGemini.to_string(),
+            "Google Gemini (AI Studio)"
+        );
     }
 }

@@ -5,8 +5,10 @@
 use std::collections::HashMap;
 use std::path::{Path, PathBuf};
 
-use crate::error::{Error, Result};
 use super::protocol::Protocol;
+use super::toml_loader;
+use super::yaml_loader;
+use crate::error::{Error, Result};
 
 /// Registry of available ThinkTool protocols
 #[derive(Debug, Default)]
@@ -84,8 +86,50 @@ impl ProtocolRegistry {
                         }
                     }
                     Some("yaml") | Some("yml") => {
-                        // YAML support could be added here
-                        tracing::debug!("YAML protocol files not yet supported: {}", path.display());
+                        // Load YAML protocols using yaml_loader
+                        match yaml_loader::load_from_yaml_file(&path) {
+                            Ok(protocols) => {
+                                for protocol in protocols {
+                                    self.register(protocol)?;
+                                    count += 1;
+                                }
+                                tracing::info!(
+                                    "Loaded {} protocols from YAML: {}",
+                                    count,
+                                    path.display()
+                                );
+                            }
+                            Err(e) => {
+                                tracing::warn!(
+                                    "Failed to load YAML protocol {}: {}",
+                                    path.display(),
+                                    e
+                                );
+                            }
+                        }
+                    }
+                    Some("toml") => {
+                        // Load TOML protocols using toml_loader
+                        match toml_loader::load_from_toml_file(&path) {
+                            Ok(protocols) => {
+                                for protocol in protocols {
+                                    self.register(protocol)?;
+                                    count += 1;
+                                }
+                                tracing::info!(
+                                    "Loaded {} protocols from TOML: {}",
+                                    count,
+                                    path.display()
+                                );
+                            }
+                            Err(e) => {
+                                tracing::warn!(
+                                    "Failed to load TOML protocol {}: {}",
+                                    path.display(),
+                                    e
+                                );
+                            }
+                        }
                     }
                     _ => {}
                 }
@@ -106,19 +150,39 @@ impl ProtocolRegistry {
         })?;
 
         // Validate the protocol
-        protocol.validate().map_err(|errors| Error::Validation(
-            format!("Invalid protocol {}: {}", protocol.id, errors.join(", "))
-        ))?;
+        protocol.validate().map_err(|errors| {
+            Error::Validation(format!(
+                "Invalid protocol {}: {}",
+                protocol.id,
+                errors.join(", ")
+            ))
+        })?;
 
         Ok(protocol)
+    }
+
+    /// Load protocols from the standard thinktools_v2.yaml file
+    pub fn load_from_yaml(&mut self, path: &Path) -> Result<usize> {
+        let protocols = yaml_loader::load_from_yaml_file(path)?;
+        let count = protocols.len();
+
+        for protocol in protocols {
+            self.register(protocol)?;
+        }
+
+        Ok(count)
     }
 
     /// Register a protocol (by value)
     pub fn register(&mut self, protocol: Protocol) -> Result<()> {
         // Validate before registering
-        protocol.validate().map_err(|errors| Error::Validation(
-            format!("Invalid protocol {}: {}", protocol.id, errors.join(", "))
-        ))?;
+        protocol.validate().map_err(|errors| {
+            Error::Validation(format!(
+                "Invalid protocol {}: {}",
+                protocol.id,
+                errors.join(", ")
+            ))
+        })?;
 
         let id = protocol.id.clone();
         self.protocols.insert(id, protocol);
@@ -165,22 +229,36 @@ impl ProtocolRegistry {
         self.protocols.clear();
     }
 
-    /// Register built-in protocols
+    /// Register built-in protocols (hardcoded fallback)
     pub fn register_builtins(&mut self) -> Result<()> {
-        // GigaThink
-        self.register(builtin_gigathink())?;
+        // Try to load from YAML first
+        let mut loaded_from_yaml = false;
+        if let Ok(cwd) = std::env::current_dir() {
+            // Check protocols/thinktools_v2.yaml
+            let yaml_path = cwd.join("protocols").join("thinktools_v2.yaml");
 
-        // LaserLogic
-        self.register(builtin_laserlogic())?;
+            if yaml_path.exists() {
+                match self.load_from_yaml(&yaml_path) {
+                    Ok(count) => {
+                        tracing::info!("Loaded {} protocols from thinktools_v2.yaml", count);
+                        loaded_from_yaml = true;
+                    }
+                    Err(e) => {
+                        tracing::warn!("Failed to load thinktools_v2.yaml: {}, falling back to hardcoded protocols", e);
+                    }
+                }
+            }
+        }
 
-        // BedRock
-        self.register(builtin_bedrock())?;
-
-        // ProofGuard
-        self.register(builtin_proofguard())?;
-
-        // BrutalHonesty
-        self.register(builtin_brutalhonesty())?;
+        // Only use hardcoded fallbacks if we failed to load from YAML
+        if !loaded_from_yaml {
+            tracing::info!("Using hardcoded fallback protocols");
+            self.register(builtin_gigathink())?;
+            self.register(builtin_laserlogic())?;
+            self.register(builtin_bedrock())?;
+            self.register(builtin_proofguard())?;
+            self.register(builtin_brutalhonesty())?;
+        }
 
         Ok(())
     }
@@ -192,12 +270,12 @@ fn dirs_config_path() -> Option<PathBuf> {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
-// BUILT-IN PROTOCOLS
+// BUILT-IN PROTOCOLS (FALLBACK)
 // ═══════════════════════════════════════════════════════════════════════════
 
 use super::protocol::{
-    AggregationType, CritiqueSeverity, ProtocolMetadata, ProtocolStep, ReasoningStrategy,
-    StepAction, StepOutputFormat, InputSpec, OutputSpec,
+    AggregationType, CritiqueSeverity, InputSpec, OutputSpec, ProtocolMetadata, ProtocolStep,
+    ReasoningStrategy, StepAction, StepOutputFormat,
 };
 
 fn builtin_gigathink() -> Protocol {
@@ -218,13 +296,15 @@ fn builtin_gigathink() -> Protocol {
                     min_count: 5,
                     max_count: 10,
                 },
-                prompt_template: r#"Identify 5-10 distinct dimensions or angles to analyze this question:
+                prompt_template:
+                    r#"Identify 5-10 distinct dimensions or angles to analyze this question:
 
 Question: {{query}}
 {{#if context}}Context: {{context}}{{/if}}
 {{#if constraints}}Constraints: {{constraints}}{{/if}}
 
-For each dimension, provide a brief label. Format as a numbered list."#.to_string(),
+For each dimension, provide a brief label. Format as a numbered list."#
+                        .to_string(),
                 output_format: StepOutputFormat::List,
                 min_confidence: 0.7,
                 depends_on: vec![],
@@ -233,7 +313,11 @@ For each dimension, provide a brief label. Format as a numbered list."#.to_strin
             ProtocolStep {
                 id: "explore_perspectives".to_string(),
                 action: StepAction::Analyze {
-                    criteria: vec!["novelty".to_string(), "relevance".to_string(), "depth".to_string()],
+                    criteria: vec![
+                        "novelty".to_string(),
+                        "relevance".to_string(),
+                        "depth".to_string(),
+                    ],
                 },
                 prompt_template: r#"For each dimension identified, provide:
 1. Key insight from this perspective
@@ -242,9 +326,10 @@ For each dimension, provide a brief label. Format as a numbered list."#.to_strin
 4. Confidence score (0.0-1.0)
 
 Dimensions to explore:
-{{dimensions}}
+{{identify_dimensions}}
 
-Question: {{query}}"#.to_string(),
+Question: {{query}}"#
+                    .to_string(),
                 output_format: StepOutputFormat::Structured,
                 min_confidence: 0.6,
                 depends_on: vec!["identify_dimensions".to_string()],
@@ -255,16 +340,18 @@ Question: {{query}}"#.to_string(),
                 action: StepAction::Synthesize {
                     aggregation: AggregationType::ThematicClustering,
                 },
-                prompt_template: r#"Synthesize the perspectives into key themes and actionable insights:
+                prompt_template:
+                    r#"Synthesize the perspectives into key themes and actionable insights:
 
 Perspectives:
-{{perspectives}}
+{{explore_perspectives}}
 
 Provide:
 1. Major themes (2-4)
 2. Key insights (3-5)
 3. Recommended actions (if applicable)
-4. Areas of uncertainty"#.to_string(),
+4. Areas of uncertainty"#
+                        .to_string(),
                 output_format: StepOutputFormat::Structured,
                 min_confidence: 0.8,
                 depends_on: vec!["explore_perspectives".to_string()],
@@ -319,7 +406,8 @@ Identify:
 3. Implicit assumptions
 4. Causal claims (if any)
 
-Format each as a clear statement."#.to_string(),
+Format each as a clear statement."#
+                    .to_string(),
                 output_format: StepOutputFormat::Structured,
                 min_confidence: 0.7,
                 depends_on: vec![],
@@ -333,17 +421,16 @@ Format each as a clear statement."#.to_string(),
                         "premise_support".to_string(),
                     ],
                 },
-                prompt_template: r#"Evaluate the logical validity:
+                prompt_template: r#"Evaluate the logical validity of this argument analysis:
 
-Conclusion: {{conclusion}}
-Premises: {{premises}}
-Assumptions: {{assumptions}}
+{{extract_claims}}
 
-Check:
-1. Do premises logically lead to conclusion?
+Based on the claims identified above, check:
+1. Do the premises logically lead to the conclusion?
 2. Are there gaps in reasoning?
 3. Is the argument valid (structure) vs sound (true premises)?
-4. Rate logical strength (0.0-1.0)"#.to_string(),
+4. Rate logical strength (0.0-1.0)"#
+                    .to_string(),
                 output_format: StepOutputFormat::Structured,
                 min_confidence: 0.8,
                 depends_on: vec!["extract_claims".to_string()],
@@ -357,7 +444,7 @@ Check:
                 prompt_template: r#"Check for logical fallacies in the argument:
 
 Argument structure:
-{{argument_structure}}
+{{extract_claims}}
 
 Common fallacies to check:
 - Ad hominem, Straw man, False dichotomy
@@ -365,7 +452,8 @@ Common fallacies to check:
 - Hasty generalization, Post hoc
 - Slippery slope, Red herring
 
-For each fallacy found, explain where and why."#.to_string(),
+For each fallacy found, explain where and why."#
+                    .to_string(),
                 output_format: StepOutputFormat::List,
                 min_confidence: 0.7,
                 depends_on: vec!["extract_claims".to_string()],
@@ -418,7 +506,8 @@ Statement: {{statement}}
 Ask repeatedly: "What is this based on? Why is this true?"
 Continue until reaching fundamental axioms or assumptions.
 
-Format as a tree structure showing dependencies."#.to_string(),
+Format as a tree structure showing dependencies."#
+                    .to_string(),
                 output_format: StepOutputFormat::Structured,
                 min_confidence: 0.7,
                 depends_on: vec![],
@@ -433,13 +522,14 @@ Format as a tree structure showing dependencies."#.to_string(),
                 prompt_template: r#"From the decomposition, identify the foundational axioms:
 
 Decomposition:
-{{decomposition}}
+{{decompose}}
 
 For each axiom:
 1. State clearly
 2. Explain why it's fundamental (cannot be further reduced)
 3. Note if it's empirical, logical, or definitional
-4. Rate certainty (0.0-1.0)"#.to_string(),
+4. Rate certainty (0.0-1.0)"#
+                    .to_string(),
                 output_format: StepOutputFormat::List,
                 min_confidence: 0.8,
                 depends_on: vec!["decompose".to_string()],
@@ -453,13 +543,14 @@ For each axiom:
                 prompt_template: r#"Reconstruct the original statement from axioms:
 
 Axioms:
-{{axioms}}
+{{identify_axioms}}
 
 Original statement: {{statement}}
 
 Show the logical path from axioms to statement.
 Identify any gaps or leaps in reasoning.
-Calculate overall confidence based on axiom certainties."#.to_string(),
+Calculate overall confidence based on axiom certainties."#
+                    .to_string(),
                 output_format: StepOutputFormat::Structured,
                 min_confidence: 0.75,
                 depends_on: vec!["identify_axioms".to_string()],
@@ -501,16 +592,15 @@ fn builtin_proofguard() -> Protocol {
         steps: vec![
             ProtocolStep {
                 id: "identify_sources".to_string(),
-                action: StepAction::CrossReference {
-                    min_sources: 3,
-                },
+                action: StepAction::CrossReference { min_sources: 3 },
                 prompt_template: r#"Identify potential sources to verify this claim:
 
 Claim: {{claim}}
 {{#if sources}}Known sources: {{sources}}{{/if}}
 
 List 3+ independent sources that could verify or refute this claim.
-Prioritize: official docs, peer-reviewed, primary sources."#.to_string(),
+Prioritize: official docs, peer-reviewed, primary sources."#
+                    .to_string(),
                 output_format: StepOutputFormat::List,
                 min_confidence: 0.6,
                 depends_on: vec![],
@@ -519,19 +609,23 @@ Prioritize: official docs, peer-reviewed, primary sources."#.to_string(),
             ProtocolStep {
                 id: "verify_each".to_string(),
                 action: StepAction::Validate {
-                    rules: vec!["source_reliability".to_string(), "claim_support".to_string()],
+                    rules: vec![
+                        "source_reliability".to_string(),
+                        "claim_support".to_string(),
+                    ],
                 },
                 prompt_template: r#"For each source, evaluate support for the claim:
 
 Claim: {{claim}}
 Sources to check:
-{{sources}}
+{{identify_sources}}
 
 For each source:
 1. What does it say about the claim?
 2. Support level: Confirms / Partially confirms / Neutral / Contradicts
 3. Source reliability (0.0-1.0)
-4. Key quote or evidence"#.to_string(),
+4. Key quote or evidence"#
+                    .to_string(),
                 output_format: StepOutputFormat::Structured,
                 min_confidence: 0.7,
                 depends_on: vec!["identify_sources".to_string()],
@@ -546,7 +640,7 @@ For each source:
 
 Claim: {{claim}}
 Source evaluations:
-{{evaluations}}
+{{verify_each}}
 
 Triangulation rules:
 - 3+ independent confirming sources = HIGH confidence
@@ -554,7 +648,8 @@ Triangulation rules:
 - Mixed results = LOW confidence, note discrepancies
 - Any contradiction = FLAG for review
 
-Provide final verdict and confidence score."#.to_string(),
+Provide final verdict and confidence score."#
+                    .to_string(),
                 output_format: StepOutputFormat::Structured,
                 min_confidence: 0.8,
                 depends_on: vec!["verify_each".to_string()],
@@ -609,7 +704,8 @@ Identify:
 2. What problems does it solve?
 3. What is genuinely valuable here?
 
-Be generous but honest."#.to_string(),
+Be generous but honest."#
+                    .to_string(),
                 output_format: StepOutputFormat::List,
                 min_confidence: 0.7,
                 depends_on: vec![],
@@ -626,7 +722,7 @@ Work:
 {{work}}
 
 Strengths identified:
-{{strengths}}
+{{steelman}}
 
 Attack from all angles:
 1. Logical flaws
@@ -636,7 +732,8 @@ Attack from all angles:
 5. Unintended consequences
 6. What would a harsh critic say?
 
-Don't hold back. Be specific."#.to_string(),
+Don't hold back. Be specific."#
+                    .to_string(),
                 output_format: StepOutputFormat::List,
                 min_confidence: 0.6,
                 depends_on: vec!["steelman".to_string()],
@@ -650,16 +747,17 @@ Don't hold back. Be specific."#.to_string(),
                 prompt_template: r#"Final verdict - is this work acceptable?
 
 Strengths:
-{{strengths}}
+{{steelman}}
 
 Flaws:
-{{flaws}}
+{{attack}}
 
 Provide:
 1. Overall assessment (Pass / Conditional Pass / Fail)
 2. Most critical issue to fix
 3. Confidence in verdict (0.0-1.0)
-4. What would make this excellent?"#.to_string(),
+4. What would make this excellent?"#
+                    .to_string(),
                 output_format: StepOutputFormat::Structured,
                 min_confidence: 0.75,
                 depends_on: vec!["steelman".to_string(), "attack".to_string()],
@@ -702,12 +800,13 @@ mod tests {
         let mut registry = ProtocolRegistry::new();
         registry.register_builtins().unwrap();
 
-        assert_eq!(registry.len(), 5);
+        assert_eq!(registry.len(), 6);
         assert!(registry.contains("gigathink"));
         assert!(registry.contains("laserlogic"));
         assert!(registry.contains("bedrock"));
         assert!(registry.contains("proofguard"));
         assert!(registry.contains("brutalhonesty"));
+        assert!(registry.contains("powercombo"));
     }
 
     #[test]
@@ -726,7 +825,8 @@ mod tests {
         registry.register_builtins().unwrap();
 
         let ids = registry.list_ids();
-        assert_eq!(ids.len(), 5);
+        assert_eq!(ids.len(), 6);
         assert!(ids.contains(&"gigathink"));
+        assert!(ids.contains(&"powercombo"));
     }
 }

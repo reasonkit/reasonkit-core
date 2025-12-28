@@ -1,42 +1,151 @@
-# reasonkit-core .gitignore - Public Open Source Rules
+# ============================================================
+# REASONKIT-CORE .gitignore - OSS PREPARATION
+# ============================================================
 
-# 1. Standard Rust Ignores
-# ------------------------
+# ============================================================
+# RUST BUILD ARTIFACTS
+# ============================================================
 /target/
 **/*.rs.bk
+**/*.rlib
+**/*.rmeta
+**/*.d
+**/*.o
 Cargo.lock
 
-# 2. Sensitive/Internal Data (Double-Safety)
-# ------------------------------------------
-*.env
+# ============================================================
+# PRIVATE/INTERNAL - NEVER COMMIT
+# ============================================================
+.private/
+*.private
+*-private.*
+*_private.*
+/private/
+/internal/
+/confidential/
+/secret/
+/secrets/
+
+# ============================================================
+# SENSITIVE DOCUMENTS
+# ============================================================
+*LAUNCH*
+*PITCH*
+*STRATEGY*
+*ROADMAP*
+*MARKETING*
+*PRICING_INTERNAL*
+*REVENUE*
+*ARR*
+*MRR*
+*FINANCIALS*
+*INVESTOR*
+*FUNDING*
+*BUSINESS_PLAN*
+*COMPETITIVE*
+*INTERNAL*
+*CONFIDENTIAL*
+*PROPRIETARY*
+*ORCHESTRATOR*
+
+# ============================================================
+# ENVIRONMENT & SECRETS
+# ============================================================
 .env
-.env.local
-private/
-secrets/
-keys/
+.env.*
+*.env
+!.env.example
+.envrc
+*.secret
+*.secrets
+*credentials*
+*api_key*
+*apikey*
 *.pem
 *.key
+*.crt
+*.cert
 id_rsa
 id_rsa.pub
 
-# 3. Logs & Artifacts
-# -------------------
+# ============================================================
+# DATA DIRECTORIES - LOCAL/GENERATED/THIRD PARTY
+# ============================================================
+/data/docs/raw/
+/data/cache/
+/data/embeddings/
+/data/experiments/
+/data/indexes/
+/data/metrics/
+/data/papers/
+/data/processed/
+/data/traces/
+/data/validation_logs/
+/qdrant_data/
+/tantivy_data/
+
+# ============================================================
+# PYTHON VIRTUAL ENV (for maturin builds)
+# ============================================================
+.venv/
+__pycache__/
+*.py[cod]
+
+# ============================================================
+# DATABASE
+# ============================================================
+*.db
+*.sqlite
+*.sqlite3
+
+# ============================================================
+# LOGS & ARTIFACTS
+# ============================================================
 *.log
 crash.log
 perf.data
 perf.data.old
+/results/experiments/
 
-# 4. Internal Documentation (Not for public repo)
-# -----------------------------------------------
-# Filter out anything marked internal in docs
-docs/internal/
-docs/strategy/
-*FINANCIALS*
-*LAUNCH*
-
-# 5. Editor/IDE
-# -------------
+# ============================================================
+# IDE/EDITOR
+# ============================================================
 .vscode/
 .idea/
+*.sublime-*
 *.swp
+*.swo
+*~
 .DS_Store
+Thumbs.db
+
+# ============================================================
+# INTERNAL DOCUMENTATION
+# ============================================================
+docs/internal/
+docs/strategy/
+
+# ============================================================
+# DEMOS (live in reasonkit-site/demos/)
+# ============================================================
+demo_*.sh
+demo_outputs/
+*_demo.sh
+
+# ============================================================
+# BACKUP FILES
+# ============================================================
+*.bak
+*.backup
+*.old
+*.orig
+
+# ============================================================
+# ADDITIONAL INTERNAL/BUSINESS
+# ============================================================
+*KPI*
+*DREAM_TEAMS*
+*DELIVERABLES*
+*BASELINE_AUDIT*
+*_SUMMARY.md
+*_COMPLETE.md

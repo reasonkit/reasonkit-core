@@ -1,0 +1,139 @@
+#!/bin/bash
+# rk-think - ReasonKit ThinkTools Command
+#
+# Quick access to structured reasoning protocols.
+# Usage:
+#   rk-think "your question"           # Uses balanced profile
+#   rk-think --quick "fast analysis"   # Uses quick profile
+#   rk-think --deep "thorough analysis" # Uses deep profile
+#   rk-think --paranoid "critical decision" # Uses paranoid profile
+#
+# Shortcut aliases:
+#   rk-gt "query"  - GigaThink (expansive thinking)
+#   rk-ll "query"  - LaserLogic (precision reasoning)
+#   rk-br "query"  - BedRock (first principles)
+#   rk-pg "query"  - ProofGuard (verification)
+#   rk-bh "query"  - BrutalHonesty (self-critique)
+
+set -e
+
+# Find the rk-core binary
+RK_CORE="${RK_CORE:-rk-core}"
+if ! command -v "$RK_CORE" &> /dev/null; then
+    SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+    WORKSPACE_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
+    if [[ -f "$WORKSPACE_ROOT/target/release/rk-core" ]]; then
+        RK_CORE="$WORKSPACE_ROOT/target/release/rk-core"
+    elif [[ -f "$SCRIPT_DIR/../target/release/rk-core" ]]; then
+        RK_CORE="$SCRIPT_DIR/../target/release/rk-core"
+    else
+        echo "Error: rk-core not found. Build with: cargo build --release" >&2
+        exit 1
+    fi
+fi
+
+# Determine invoked name for protocol shortcuts
+INVOKED_NAME="$(basename "$0")"
+PROTOCOL=""
+PROFILE="balanced"
+QUERY=""
+
+case "$INVOKED_NAME" in
+    rk-gt|rk-gigathink)
+        PROTOCOL="gigathink"
+        ;;
+    rk-ll|rk-laserlogic)
+        PROTOCOL="laserlogic"
+        ;;
+    rk-br|rk-bedrock)
+        PROTOCOL="bedrock"
+        ;;
+    rk-pg|rk-proofguard)
+        PROTOCOL="proofguard"
+        ;;
+    rk-bh|rk-brutalhonesty)
+        PROTOCOL="brutalhonesty"
+        ;;
+esac
+
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        -q|--quick)
+            PROFILE="quick"
+            shift
+            ;;
+        -b|--balanced)
+            PROFILE="balanced"
+            shift
+            ;;
+        -d|--deep)
+            PROFILE="deep"
+            shift
+            ;;
+        -p|--paranoid)
+            PROFILE="paranoid"
+            shift
+            ;;
+        -s|--scientific)
+            PROFILE="scientific"
+            shift
+            ;;
+        --protocol)
+            PROTOCOL="$2"
+            shift 2
+            ;;
+        --list)
+            exec "$RK_CORE" think --list
+            ;;
+        -h|--help)
+            echo "rk-think - ReasonKit ThinkTools"
+            echo ""
+            echo "Usage: rk-think [OPTIONS] \"query\""
+            echo ""
+            echo "Profiles (chains of protocols):"
+            echo "  -q, --quick      Quick 3-step analysis (GigaThink + LaserLogic)"
+            echo "  -b, --balanced   Standard 5-module chain (default)"
+            echo "  -d, --deep       Thorough analysis with all 5 protocols"
+            echo "  -p, --paranoid   Maximum verification with BrutalHonesty loop"
+            echo "  -s, --scientific Research-focused with scientific method"
+            echo ""
+            echo "Protocol shortcuts (symlink this script):"
+            echo "  rk-gt  GigaThink     - Multi-perspective expansion"
+            echo "  rk-ll  LaserLogic    - Precision deductive reasoning"
+            echo "  rk-br  BedRock       - First principles decomposition"
+            echo "  rk-pg  ProofGuard    - Multi-source verification"
+            echo "  rk-bh  BrutalHonesty - Adversarial self-critique"
+            echo ""
+            echo "Other options:"
+            echo "  --protocol NAME  Run specific protocol"
+            echo "  --list           List all protocols and profiles"
+            echo "  -h, --help       Show this help"
+            exit 0
+            ;;
+        -*)
+            echo "Unknown option: $1" >&2
+            exit 1
+            ;;
+        *)
+            QUERY="$1"
+            shift
+            ;;
+    esac
+done
+
+if [[ -z "$QUERY" ]]; then
+    echo "Error: No query provided" >&2
+    echo "Usage: rk-think [OPTIONS] \"query\"" >&2
+    exit 1
+fi
+
+# Build command
+CMD="$RK_CORE think"
+if [[ -n "$PROTOCOL" ]]; then
+    CMD="$CMD --protocol $PROTOCOL"
+else
+    CMD="$CMD --profile $PROFILE"
+fi
+CMD="$CMD \"$QUERY\""
+
+exec $RK_CORE think ${PROTOCOL:+--protocol $PROTOCOL} ${PROTOCOL:---profile $PROFILE} "$QUERY"

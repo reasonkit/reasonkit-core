@@ -1,0 +1,16 @@
+[package]
+name = "arf-plugins"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[lib]
+name = "arf_plugins"
+path = "src/lib.rs"
+
+[dependencies]
+arf-core.workspace = true
+wasmtime.workspace = true
+anyhow.workspace = true

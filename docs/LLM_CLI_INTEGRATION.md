@@ -244,9 +244,367 @@ llm -t rk-scientific "Should ReasonKit integrate with LangGraph or build custom 
 
 ---
 
-## 5. LOCAL MODEL DEPLOYMENT
+## 5. VOICE AND AUDIO PROCESSING
 
-### 5.1 Ollama Integration
+### 5.1 Audio Transcription Plugins
+
+```bash
+# OpenAI Whisper API
+llm install llm-whisper-api
+llm whisper-api recording.mp3 > transcript.txt
+curl -s 'https://example.com/audio.mp3' | llm whisper-api -
+
+# Groq's ultra-fast Whisper (near real-time)
+llm install llm-groq-whisper
+llm keys set groq
+llm groq-whisper interview.mp3 --response-format verbose_json
+llm groq-whisper foreign-audio.mp3 --translate  # Auto-translate to English
+
+# Gemini native audio (under 1 cent for 7+ minutes)
+llm -m gemini-1.5-flash-8b-latest 'Transcribe and summarize key points' \
+  -a https://example.com/podcast.mp3
+```
+
+### 5.2 Podcast Analysis Pipeline
+
+```bash
+#!/bin/bash
+# podcast-analyzer.sh - Complete podcast processing
+EPISODE_URL="$1"
+
+# Download audio
+yt-dlp -x --audio-format mp3 -o episode.mp3 "$EPISODE_URL"
+
+# Transcribe with Groq (fastest)
+llm groq-whisper episode.mp3 > transcript.txt
+
+# Generate show notes
+cat transcript.txt | llm -s "Generate show notes with timestamps, key topics, and notable quotes"
+
+# Extract action items
+cat transcript.txt | llm -s "Extract all action items, recommendations, and resources mentioned"
+
+rm episode.mp3
+```
+
+### 5.3 Meeting Notes Automation
+
+```bash
+#!/bin/bash
+# meeting-notes.sh - Process meeting recordings
+RECORDING="$1"
+
+# Transcribe
+llm groq-whisper "$RECORDING" > raw_transcript.txt
+
+# Process with ReasonKit protocol
+cat raw_transcript.txt | llm -t rk-scientific \
+  "Analyze this meeting transcript:
+   1. Key decisions made
+   2. Action items with owners
+   3. Open questions
+   4. Follow-up required"
+```
+
+---
+
+## 6. IMAGE AND VIDEO ANALYSIS
+
+### 6.1 Vision with Attachments
+
+```bash
+# GPT-4o vision analysis
+llm -m gpt-4o "Describe this architectural style" -a building.jpg
+
+# OCR from scanned documents
+llm -m gpt-4o "Extract all text, preserving formatting" -a document.jpg
+
+# Multiple images comparison
+llm -m claude-sonnet-4.5 "Compare these designs" -a design1.png -a design2.png
+
+# URL-based images
+llm -m gemini-2.0-flash "Analyze this chart" -a https://example.com/chart.png
+
+# Diagram analysis for documentation
+llm -m gpt-4o "Convert this architecture diagram to Mermaid syntax" -a diagram.png
+```
+
+### 6.2 YouTube Video Analysis (Gemini)
+
+```bash
+# Gemini can process YouTube URLs directly
+llm -m gemini-3-pro-preview \
+  -a 'https://www.youtube.com/watch?v=VIDEO_ID' \
+  'Produce a summary with timestamps and key quotes'
+
+# Technical tutorial analysis
+llm -m gemini-2.0-flash \
+  -a 'https://www.youtube.com/watch?v=TUTORIAL_ID' \
+  'Extract step-by-step instructions with code examples'
+```
+
+### 6.3 Video Frame Extraction
+
+```bash
+# For models that don't support direct video
+llm install llm-video-frames
+
+# Extract frames and analyze
+llm -f 'video-frames:presentation.mp4?fps=1&timestamps=1' \
+  'Summarize each slide transition' -m gpt-4o
+
+# YouTube transcript fallback (no Gemini)
+yt-dlp --write-auto-sub --skip-download --sub-format vtt \
+  --output transcript "$VIDEO_URL"
+cat transcript.en.vtt | grep -v "^[0-9]" | awk '!seen[$0]++' | \
+  llm -m claude-3-haiku "Summarize this video"
+```
+
+---
+
+## 7. DEVELOPER PRODUCTIVITY TOOLS
+
+### 7.1 Git Commit Automation
+
+```bash
+# Create global git hooks directory
+mkdir -p ~/.git_hooks
+
+# Auto-generate commit messages from staged changes
+cat > ~/.git_hooks/prepare-commit-msg << 'EOF'
+#!/bin/sh
+if [ -n "$2" ]; then exit 0; fi
+commit_msg=$(git diff --cached | llm -s "Write a conventional commit message (feat/fix/docs/refactor) with scope. First line under 72 chars.")
+echo "$commit_msg" > "$1"
+EOF
+
+chmod +x ~/.git_hooks/prepare-commit-msg
+git config --global core.hooksPath ~/.git_hooks
+```
+
+### 7.2 Shell Command Generation (llm-cmd)
+
+```bash
+llm install llm-cmd
+
+# Generate shell commands from natural language
+llm cmd find all python files modified this week
+llm cmd list kubernetes pods in namespace production
+llm cmd undo last git commit
+llm cmd compress all jpg files in directory to 80% quality
+llm cmd show disk usage sorted by size
+# Returns executable command, no markdown or explanation
+```
+
+### 7.3 Codebase Analysis (files-to-prompt)
+
+```bash
+pip install files-to-prompt
+
+# Generate documentation from source
+files-to-prompt src -e py -c | \
+  llm -m o3-mini -s "Write API documentation with examples"
+
+# Security audit
+files-to-prompt . -e js --line-numbers | \
+  llm -s "Identify security vulnerabilities with line references"
+
+# Test generation
+files-to-prompt myproject -e py -c | \
+  llm -s "Generate pytest test cases for untested functions"
+
+# Architecture analysis
+files-to-prompt src -e rs -c | \
+  llm -m claude-sonnet-4 "Analyze this Rust codebase architecture and suggest improvements"
+```
+
+### 7.4 Vim/Neovim Integration
+
+```vim
+" Select text in visual mode, then pipe through LLM
+:'<,'>!llm -s "Refactor for readability"
+:'<,'>!llm -s "Add comprehensive docstrings"
+:'<,'>!llm -s "Convert to async/await pattern"
+
+" Quick code explanation
+:'<,'>!llm -s "Explain this code in comments"
+```
+
+### 7.5 GitHub Actions Integration
+
+```yaml
+name: LLM Code Review
+on: [pull_request]
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install LLM
+        run: pip install llm llm-github-models
+      - name: Review Changes
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git diff origin/main -- '*.py' | \
+          llm -s "Review these changes for bugs, security issues, and style" \
+          > review.md
+      - name: Post Review
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const review = require('fs').readFileSync('review.md', 'utf8');
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: review
+            });
+```
+
+---
+
+## 8. SECURITY AND ENTERPRISE DEPLOYMENT
+
+### 8.1 Secure Key Management
+
+```bash
+# Store keys securely (interactive prompt, not in shell history)
+llm keys set openai
+llm keys set anthropic
+
+# List configured keys (names only, not values)
+llm keys list
+
+# Key storage location
+llm keys path  # ~/.config/io.datasette.llm/keys.json
+
+# Environment variable alternative (for CI/CD)
+export OPENAI_API_KEY='sk-...'
+export ANTHROPIC_API_KEY='...'
+```
+
+### 8.2 Audit Logging
+
+```bash
+# All prompts logged automatically to SQLite
+llm logs path                # Show database location
+llm logs -n 10               # Recent entries
+llm logs -q "security"       # Full-text search
+llm logs -m gpt-4o           # Filter by model
+
+# Disable for sensitive operations
+llm logs off
+llm "sensitive prompt here"
+llm logs on
+
+# Export logs for compliance
+sqlite3 $(llm logs path) ".mode csv" ".headers on" \
+  "SELECT datetime_utc, model, prompt, response FROM responses" \
+  > audit_log.csv
+```
+
+### 8.3 Privacy with Local Models
+
+```bash
+# Zero data leaves your machine
+llm install llm-ollama
+ollama pull llama3.2
+
+# Process confidential documents locally
+llm -m llama3.2:latest "Analyze this confidential report" -a report.pdf
+
+# Local embeddings (no API calls)
+llm install llm-sentence-transformers
+llm embed-multi docs -d local.db --files docs/ '**/*.md' \
+  -m sentence-transformers/all-MiniLM-L6-v2 --store
+```
+
+### 8.4 Enterprise Compliance Wrapper
+
+```bash
+#!/bin/bash
+# llm-audited.sh - Enterprise compliance wrapper
+AUDIT_LOG="/var/log/llm-audit.log"
+USER=$(whoami)
+TIMESTAMP=$(date -Iseconds)
+
+# Log request
+echo "[$TIMESTAMP] [$USER] Prompt: ${1:0:100}..." >> "$AUDIT_LOG"
+
+# Execute
+RESPONSE=$(llm "$@" 2>&1)
+
+# Log response hash (not content for privacy)
+HASH=$(echo "$RESPONSE" | sha256sum | cut -d' ' -f1)
+echo "[$TIMESTAMP] [$USER] Response hash: $HASH" >> "$AUDIT_LOG"
+
+echo "$RESPONSE"
+```
+
+---
+
+## 9. KNOWLEDGE MANAGEMENT WITH OBSIDIAN
+
+### 9.1 Obsidian Local GPT Setup
+
+```bash
+# 1. Install Ollama
+brew install ollama  # or curl -fsSL https://ollama.com/install.sh | sh
+ollama pull llama3.1
+
+# 2. In Obsidian: Install "Local GPT" from Community Plugins
+# 3. Configure:
+#    - URL: http://127.0.0.1:11434
+#    - Model: llama3.1:latest
+```
+
+### 9.2 Embedding Your Obsidian Vault
+
+```bash
+# Create searchable embeddings from vault
+llm embed-multi notes \
+  -d obsidian-search.db \
+  --files ~/Obsidian/vault/ '**/*.md' \
+  -m sentence-transformers/all-MiniLM-L6-v2 --store
+
+# Semantic search across all notes
+llm similar notes -d obsidian-search.db -c "project management insights"
+
+# RAG over personal knowledge base
+QUERY="How did I solve the authentication problem last month?"
+CONTEXT=$(llm similar notes -d obsidian-search.db -c "$QUERY" -n 5 | jq -r '.[].content')
+echo "$CONTEXT" | llm -s "Answer based on my notes: $QUERY"
+```
+
+### 9.3 Daily Notes Processing
+
+```bash
+#!/bin/bash
+# obsidian-daily.sh - Process daily notes
+
+VAULT="$HOME/Obsidian/vault"
+TODAY=$(date +%Y-%m-%d)
+
+# Summarize today's notes
+cat "$VAULT/Daily Notes/$TODAY.md" | \
+  llm -s "Extract: tasks completed, insights, open questions"
+
+# Find related notes
+llm similar notes -d obsidian-search.db \
+  -c "$(cat $VAULT/Daily\ Notes/$TODAY.md)" -n 3
+
+# Generate weekly review
+cat "$VAULT/Daily Notes"/$(date -d "7 days ago" +%Y-%m-%d).md \
+    "$VAULT/Daily Notes"/$(date +%Y-%m-%d).md | \
+  llm -s "Write a weekly review: accomplishments, learnings, next week focus"
+```
+
+---
+
+## 10. LOCAL MODEL DEPLOYMENT
+
+### 10.1 Ollama Integration
 
 ```bash
 # Install Ollama
@@ -263,7 +621,7 @@ llm -m qwen2.5-coder:7b -f buggy_code.rs "Find and fix the bugs"
 llm -m deepseek-r1:14b "Prove that P implies Q using formal logic"
 ```
 
-### 5.2 GGUF Direct Loading
+### 10.2 GGUF Direct Loading
 
 ```bash
 # Load local GGUF model
@@ -276,7 +634,7 @@ llm -m gguf:/models/codellama-34b-Q4_K_M.gguf \
     "Generate Rust code for async HTTP client"
 ```
 
-### 5.3 Cost Optimization Strategy
+### 10.3 Cost Optimization Strategy
 
 ```
 Model Selection Tiers:
@@ -295,9 +653,9 @@ Model Selection Tiers:
 
 ---
 
-## 6. TOOL PLUGINS FOR DATA WORK
+## 11. TOOL PLUGINS FOR DATA WORK
 
-### 6.1 SQL Database Querying
+### 11.1 SQL Database Querying
 
 ```bash
 # Query research database
@@ -308,7 +666,7 @@ llm -T 'Datasette("https://datasette.example.com/db")' \
     "Find correlations between methodology and result significance"
 ```
 
-### 6.2 Web Search with Citations
+### 11.2 Web Search with Citations
 
 ```bash
 # Search with Exa (returns full content + citations)
@@ -318,7 +676,7 @@ llm -T get_answer "What's the latest on Claude 4 model capabilities?"
 llm -T web_search "MCP protocol implementation best practices 2025"
 ```
 
-### 6.3 Math Calculations
+### 11.3 Math Calculations
 
 ```bash
 # Precise arithmetic (no LLM hallucination)
@@ -328,7 +686,7 @@ llm -T simple_eval "Calculate: (47.5 * 892) / 3.14159"
 llm -T simple_eval "mean([23, 45, 67, 89, 12, 34])"
 ```
 
-### 6.4 RAG Retrieval
+### 11.4 RAG Retrieval
 
 ```bash
 # Query embedded documents
@@ -340,9 +698,9 @@ llm -T 'RAG("papers")' "What embedding models work best for code search?"
 
 ---
 
-## 7. BATCH PROCESSING PATTERNS
+## 12. BATCH PROCESSING PATTERNS
 
-### 7.1 Parallel Processing
+### 12.1 Parallel Processing
 
 ```bash
 # Process files in parallel
@@ -356,7 +714,7 @@ parallel --jobs 4 --delay 0.5 \
     'llm -m claude-haiku "Extract: title, date, author" < {}' ::: papers/*.txt
 ```
 
-### 7.2 Pipeline Chaining
+### 12.2 Pipeline Chaining
 
 ```bash
 # Multi-stage analysis pipeline
@@ -366,7 +724,7 @@ cat raw_data.json | \
     llm -m gpt-4o "Generate knowledge graph in Mermaid format"
 ```
 
-### 7.3 Structured Output Extraction
+### 12.3 Structured Output Extraction
 
 ```bash
 # Extract with schema
@@ -382,9 +740,9 @@ llm -m gpt-4o \
 
 ---
 
-## 8. PYTHON API FOR AUTOMATION
+## 13. PYTHON API FOR AUTOMATION
 
-### 8.1 Basic Usage
+### 13.1 Basic Usage
 
 ```python
 import llm
@@ -406,7 +764,7 @@ conversation.prompt("What is ReasonKit?")
 conversation.prompt("How does it compare to LangChain?")
 ```
 
-### 8.2 Structured Output
+### 13.2 Structured Output
 
 ```python
 import llm
@@ -428,7 +786,7 @@ response = model.prompt(
 paper = PaperMetadata.model_validate_json(response.text())
 ```
 
-### 8.3 Batch Processing
+### 13.3 Batch Processing
 
 ```python
 import llm
@@ -457,9 +815,9 @@ papers = process_papers(Path("research_papers"))
 
 ---
 
-## 9. REASONKIT-SPECIFIC WORKFLOWS
+## 14. REASONKIT-SPECIFIC WORKFLOWS
 
-### 9.1 Research Triangulation Protocol
+### 14.1 Research Triangulation Protocol
 
 ```bash
 #!/bin/bash
@@ -482,7 +840,7 @@ cat source1.txt source2.txt source3.txt | \
     "Synthesize these 3 sources, note conflicts, provide final answer with confidence"
 ```
 
-### 9.2 Reasoning Trace Capture
+### 14.2 Reasoning Trace Capture
 
 ```bash
 # Capture full reasoning for audit
@@ -494,7 +852,7 @@ llm -m claude-opus-4 -o thinking 1 -o thinking_budget 16000 \
 grep -A 1000 '<thinking>' reasoning_trace.txt | grep -B 1000 '</thinking>'
 ```
 
-### 9.3 Automated Literature Review
+### 14.3 Automated Literature Review
 
 ```bash
 #!/bin/bash
@@ -518,9 +876,9 @@ done > literature_review.md
 
 ---
 
-## 10. INTEGRATION CHECKLIST
+## 15. INTEGRATION CHECKLIST
 
-### 10.1 Setup Tasks
+### 15.1 Setup Tasks
 
 - [ ] Install `llm` CLI tool
 - [ ] Install essential plugins (llm-anthropic, llm-ollama, llm-tools-*)
@@ -528,14 +886,14 @@ done > literature_review.md
 - [ ] Create ReasonKit-specific templates
 - [ ] Set up logs.db backup schedule
 
-### 10.2 Daily Workflows
+### 15.2 Daily Workflows
 
 - [ ] Morning: Check logs.db for overnight analysis results
 - [ ] Research: Use RAG + web search with triangulation
 - [ ] Development: Code generation + ProofGuard validation
 - [ ] Evening: Review cost analysis, optimize model selection
 
-### 10.3 Weekly Maintenance
+### 15.3 Weekly Maintenance
 
 - [ ] Archive logs.db to backup
 - [ ] Update embeddings with new documents
@@ -544,9 +902,9 @@ done > literature_review.md
 
 ---
 
-## 11. DATASETTE DEPLOYMENT
+## 16. DATASETTE DEPLOYMENT
 
-### 11.1 Local Exploration
+### 16.1 Local Exploration
 
 ```bash
 # Open LLM logs in Datasette
@@ -559,7 +917,7 @@ datasette research.db --open
 datasette logs.db research.db knowledge.db --open
 ```
 
-### 11.2 Publish to GitHub Pages
+### 16.2 Publish to GitHub Pages
 
 ```bash
 # Install publishing plugin

@@ -3,8 +3,8 @@
 //! Provides comprehensive benchmarking suite for storage operations,
 //! search latency, and resource usage analysis.
 
-use crate::storage::{Storage, AccessContext, AccessLevel, StorageStats};
-use crate::{Document, DocumentType, Source, SourceType, Result, Error};
+use crate::storage::{AccessContext, AccessLevel, Storage};
+use crate::{Document, DocumentType, Result, Source, SourceType};
 use chrono::Utc;
 use serde::{Deserialize, Serialize};
 use std::time::{Duration, Instant};
@@ -133,7 +133,10 @@ impl StorageBenchmarker {
     }
 
     /// Benchmark document storage operations
-    async fn benchmark_document_storage(&self, documents: &[Document]) -> Result<OperationBenchmark> {
+    async fn benchmark_document_storage(
+        &self,
+        documents: &[Document],
+    ) -> Result<OperationBenchmark> {
         let mut latencies = Vec::new();
         let mut error_count = 0;
 
@@ -153,7 +156,10 @@ impl StorageBenchmarker {
     }
 
     /// Benchmark document retrieval operations
-    async fn benchmark_document_retrieval(&self, documents: &[Document]) -> Result<OperationBenchmark> {
+    async fn benchmark_document_retrieval(
+        &self,
+        documents: &[Document],
+    ) -> Result<OperationBenchmark> {
         let mut latencies = Vec::new();
         let mut error_count = 0;
 
@@ -176,13 +182,20 @@ impl StorageBenchmarker {
     }
 
     /// Benchmark embedding storage operations
-    async fn benchmark_embedding_storage(&self, embeddings: &[(Uuid, Vec<f32>)]) -> Result<OperationBenchmark> {
+    async fn benchmark_embedding_storage(
+        &self,
+        embeddings: &[(Uuid, Vec<f32>)],
+    ) -> Result<OperationBenchmark> {
         let mut latencies = Vec::new();
         let mut error_count = 0;
 
         for (chunk_id, embedding) in embeddings {
             let start = Instant::now();
-            match self.storage.store_embeddings(chunk_id, embedding, &self.context).await {
+            match self
+                .storage
+                .store_embeddings(chunk_id, embedding, &self.context)
+                .await
+            {
                 Ok(_) => {
                     latencies.push(start.elapsed());
                 }
@@ -196,7 +209,10 @@ impl StorageBenchmarker {
     }
 
     /// Benchmark embedding retrieval operations
-    async fn benchmark_embedding_retrieval(&self, embeddings: &[(Uuid, Vec<f32>)]) -> Result<OperationBenchmark> {
+    async fn benchmark_embedding_retrieval(
+        &self,
+        embeddings: &[(Uuid, Vec<f32>)],
+    ) -> Result<OperationBenchmark> {
         let mut latencies = Vec::new();
         let mut error_count = 0;
 
@@ -219,7 +235,11 @@ impl StorageBenchmarker {
     }
 
     /// Benchmark vector search operations
-    async fn benchmark_vector_search(&self, embeddings: &[(Uuid, Vec<f32>)], searches_per_embedding: usize) -> Result<OperationBenchmark> {
+    async fn benchmark_vector_search(
+        &self,
+        embeddings: &[(Uuid, Vec<f32>)],
+        searches_per_embedding: usize,
+    ) -> Result<OperationBenchmark> {
         let mut latencies = Vec::new();
         let mut error_count = 0;
 
@@ -227,7 +247,11 @@ impl StorageBenchmarker {
         if let Some((_, query_vector)) = embeddings.first() {
             for _ in 0..(embeddings.len() * searches_per_embedding) {
                 let start = Instant::now();
-                match self.storage.search_by_vector(query_vector, 10, &self.context).await {
+                match self
+                    .storage
+                    .search_by_vector(query_vector, 10, &self.context)
+                    .await
+                {
                     Ok(_) => {
                         latencies.push(start.elapsed());
                     }
@@ -242,7 +266,11 @@ impl StorageBenchmarker {
     }
 
     /// Calculate operation statistics from latency measurements
-    fn calculate_operation_stats(&self, mut latencies: Vec<Duration>, error_count: usize) -> OperationBenchmark {
+    fn calculate_operation_stats(
+        &self,
+        mut latencies: Vec<Duration>,
+        error_count: usize,
+    ) -> OperationBenchmark {
         if latencies.is_empty() {
             return OperationBenchmark {
                 operations_count: 0,
@@ -322,14 +350,16 @@ impl StorageBenchmarker {
     }
 
     /// Generate test embeddings
-    fn generate_test_embeddings(&self, count: usize, vector_size: usize) -> Result<Vec<(Uuid, Vec<f32>)>> {
+    fn generate_test_embeddings(
+        &self,
+        count: usize,
+        vector_size: usize,
+    ) -> Result<Vec<(Uuid, Vec<f32>)>> {
         let mut embeddings = Vec::new();
 
         for _ in 0..count {
             let chunk_id = Uuid::new_v4();
-            let embedding = (0..vector_size)
-                .map(|i| (i as f32 * 0.1).sin())
-                .collect();
+            let embedding = (0..vector_size).map(|i| (i as f32 * 0.1).sin()).collect();
             embeddings.push((chunk_id, embedding));
         }
 
@@ -344,11 +374,10 @@ pub async fn run_storage_benchmarks(
     embedding_count: usize,
     vector_size: usize,
 ) -> Result<StorageBenchmarkResults> {
-    let benchmarker = StorageBenchmarker::new(
-        storage,
-        "benchmark_user".to_string(),
-        AccessLevel::Admin,
-    );
+    let benchmarker =
+        StorageBenchmarker::new(storage, "benchmark_user".to_string(), AccessLevel::Admin);
 
-    benchmarker.run_comprehensive_benchmark(document_count, embedding_count, vector_size).await
+    benchmarker
+        .run_comprehensive_benchmark(document_count, embedding_count, vector_size)
+        .await
 }

@@ -1,0 +1,101 @@
+#!/bin/bash
+# rk-web - ReasonKit Web Research Command
+#
+# Ultra-simple wrapper for deep research with structured reasoning.
+# Usage:
+#   rk-web "your research question"
+#   rk-web --deep "complex topic"
+#   rk-web --exhaustive "critical research"
+#
+# Examples:
+#   rk-web "What is chain-of-thought prompting?"
+#   rk-web --deep "Compare RAPTOR vs ColBERT for RAG"
+#   rk-web --exhaustive "Best practices for LLM reasoning"
+
+set -e
+
+# Find the rk-core binary
+RK_CORE="${RK_CORE:-rk-core}"
+if ! command -v "$RK_CORE" &> /dev/null; then
+    # Try workspace build
+    SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+    WORKSPACE_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
+    if [[ -f "$WORKSPACE_ROOT/target/release/rk-core" ]]; then
+        RK_CORE="$WORKSPACE_ROOT/target/release/rk-core"
+    elif [[ -f "$SCRIPT_DIR/../target/release/rk-core" ]]; then
+        RK_CORE="$SCRIPT_DIR/../target/release/rk-core"
+    else
+        echo "Error: rk-core not found. Build with: cargo build --release" >&2
+        exit 1
+    fi
+fi
+
+# Parse depth shortcuts
+DEPTH="standard"
+QUERY=""
+
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        -q|--quick)
+            DEPTH="quick"
+            shift
+            ;;
+        -s|--standard)
+            DEPTH="standard"
+            shift
+            ;;
+        -d|--deep)
+            DEPTH="deep"
+            shift
+            ;;
+        -e|--exhaustive|--paranoid)
+            DEPTH="exhaustive"
+            shift
+            ;;
+        --no-web)
+            NO_WEB="--web false"
+            shift
+            ;;
+        --no-kb)
+            NO_KB="--kb false"
+            shift
+            ;;
+        -h|--help)
+            echo "rk-web - ReasonKit Web Research"
+            echo ""
+            echo "Usage: rk-web [OPTIONS] \"query\""
+            echo ""
+            echo "Options:"
+            echo "  -q, --quick       Quick analysis (GigaThink only, ~30s)"
+            echo "  -s, --standard    Standard research (GigaThink + LaserLogic, ~2min)"
+            echo "  -d, --deep        Deep research (full balanced profile, ~5min)"
+            echo "  -e, --exhaustive  Exhaustive analysis (paranoid profile, ~10min)"
+            echo "  --no-web          Skip web search"
+            echo "  --no-kb           Skip knowledge base search"
+            echo "  -h, --help        Show this help"
+            echo ""
+            echo "Examples:"
+            echo "  rk-web \"What is RAPTOR retrieval?\""
+            echo "  rk-web --deep \"Compare RAG architectures\""
+            echo "  rk-web --exhaustive \"Critical security analysis\""
+            exit 0
+            ;;
+        -*)
+            echo "Unknown option: $1" >&2
+            exit 1
+            ;;
+        *)
+            QUERY="$1"
+            shift
+            ;;
+    esac
+done
+
+if [[ -z "$QUERY" ]]; then
+    echo "Error: No research query provided" >&2
+    echo "Usage: rk-web [OPTIONS] \"query\"" >&2
+    exit 1
+fi
+
+# Execute the web command
+exec "$RK_CORE" web --depth "$DEPTH" $NO_WEB $NO_KB "$QUERY"

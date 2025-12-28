@@ -1,0 +1,319 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://reasonkit.sh/schemas/thinktools/laserlogic_output.json",
+  "title": "LaserLogic Output Schema",
+  "description": "Structured output for LaserLogic precision deductive reasoning module",
+  "version": "2.0.0",
+  "type": "object",
+  "required": [
+    "module",
+    "version",
+    "timestamp",
+    "query",
+    "premises",
+    "deductive_chains",
+    "fallacies_detected",
+    "conclusion",
+    "confidence",
+    "thinking_trace"
+  ],
+  "properties": {
+    "module": {
+      "type": "string",
+      "const": "laserlogic",
+      "description": "Module identifier"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Module version (semver)"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp of execution"
+    },
+    "query": {
+      "type": "string",
+      "description": "Original user query or argument to analyze"
+    },
+    "premises": {
+      "type": "array",
+      "description": "Extracted premises from input",
+      "items": {
+        "type": "object",
+        "required": ["id", "statement", "validity", "evidence"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^P\\d+$",
+            "description": "Premise identifier (P1, P2, etc.)"
+          },
+          "statement": {
+            "type": "string",
+            "description": "The premise statement"
+          },
+          "validity": {
+            "type": "string",
+            "enum": ["valid", "questionable", "invalid", "unverifiable"],
+            "description": "Validity assessment of premise"
+          },
+          "evidence": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Evidence supporting or refuting this premise"
+          },
+          "assumptions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Hidden assumptions in this premise"
+          }
+        }
+      }
+    },
+    "deductive_chains": {
+      "type": "array",
+      "description": "Logical reasoning chains constructed",
+      "items": {
+        "type": "object",
+        "required": ["chain_id", "steps", "conclusion", "strength"],
+        "properties": {
+          "chain_id": {
+            "type": "integer",
+            "description": "Chain identifier"
+          },
+          "steps": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "required": ["step_num", "statement", "logical_form", "valid"],
+              "properties": {
+                "step_num": {
+                  "type": "integer",
+                  "description": "Step number in chain"
+                },
+                "statement": {
+                  "type": "string",
+                  "description": "Natural language statement"
+                },
+                "logical_form": {
+                  "type": "string",
+                  "description": "Formal logic representation (e.g., P1 ∧ P2 → C)"
+                },
+                "valid": {
+                  "type": "boolean",
+                  "description": "Whether this deductive step is valid"
+                },
+                "rule_applied": {
+                  "type": "string",
+                  "description": "Logical rule used (modus ponens, etc.)"
+                }
+              }
+            }
+          },
+          "conclusion": {
+            "type": "string",
+            "description": "Conclusion reached by this chain"
+          },
+          "strength": {
+            "type": "number",
+            "minimum": 0.0,
+            "maximum": 1.0,
+            "description": "Strength of this logical chain"
+          },
+          "weakest_link": {
+            "type": "integer",
+            "description": "Step number of weakest link in chain"
+          }
+        }
+      }
+    },
+    "fallacies_detected": {
+      "type": "array",
+      "description": "Logical fallacies found in reasoning",
+      "items": {
+        "type": "object",
+        "required": ["type", "location", "description", "severity"],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "ad_hominem",
+              "straw_man",
+              "false_dichotomy",
+              "slippery_slope",
+              "appeal_to_authority",
+              "circular_reasoning",
+              "hasty_generalization",
+              "post_hoc_ergo_propter_hoc",
+              "red_herring",
+              "appeal_to_emotion",
+              "burden_of_proof",
+              "composition_division",
+              "equivocation",
+              "false_cause",
+              "middle_ground",
+              "no_true_scotsman",
+              "special_pleading",
+              "tu_quoque"
+            ],
+            "description": "Type of logical fallacy"
+          },
+          "location": {
+            "type": "string",
+            "description": "Where in the argument this fallacy appears"
+          },
+          "description": {
+            "type": "string",
+            "description": "Detailed explanation of the fallacy"
+          },
+          "severity": {
+            "type": "string",
+            "enum": ["minor", "moderate", "critical"],
+            "description": "How severely this impacts reasoning"
+          },
+          "correction": {
+            "type": "string",
+            "description": "How to correct this fallacy"
+          }
+        }
+      }
+    },
+    "conclusion": {
+      "type": "object",
+      "required": ["statement", "strength", "supporting_chains"],
+      "properties": {
+        "statement": {
+          "type": "string",
+          "description": "Final conclusion from logical analysis"
+        },
+        "strength": {
+          "type": "number",
+          "minimum": 0.0,
+          "maximum": 1.0,
+          "description": "Overall conclusion strength"
+        },
+        "supporting_chains": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          },
+          "description": "Chain IDs that support this conclusion"
+        },
+        "caveats": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Important caveats or limitations"
+        }
+      }
+    },
+    "logical_dependencies": {
+      "type": "object",
+      "description": "Graph of logical dependencies",
+      "properties": {
+        "nodes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {"type": "string"},
+              "type": {"type": "string", "enum": ["premise", "inference", "conclusion"]},
+              "content": {"type": "string"}
+            }
+          }
+        },
+        "edges": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "from": {"type": "string"},
+              "to": {"type": "string"},
+              "relationship": {"type": "string"}
+            }
+          }
+        }
+      }
+    },
+    "confidence": {
+      "type": "object",
+      "required": ["overall", "factors", "breakdown"],
+      "properties": {
+        "overall": {
+          "type": "number",
+          "minimum": 0.0,
+          "maximum": 1.0,
+          "description": "Overall module confidence score"
+        },
+        "factors": {
+          "type": "object",
+          "required": [
+            "premise_validity",
+            "chain_coherence",
+            "fallacy_absence",
+            "conclusion_strength"
+          ],
+          "properties": {
+            "premise_validity": {
+              "type": "number",
+              "minimum": 0.0,
+              "maximum": 1.0,
+              "description": "valid_premises / total_premises"
+            },
+            "chain_coherence": {
+              "type": "number",
+              "minimum": 0.0,
+              "maximum": 1.0,
+              "description": "1.0 - (logical_gaps / chain_length)"
+            },
+            "fallacy_absence": {
+              "type": "number",
+              "minimum": 0.0,
+              "maximum": 1.0,
+              "description": "1.0 - (fallacies_detected / assertions)"
+            },
+            "conclusion_strength": {
+              "type": "number",
+              "minimum": 0.0,
+              "maximum": 1.0,
+              "description": "supporting_evidence / required_evidence"
+            }
+          }
+        },
+        "breakdown": {
+          "type": "string",
+          "description": "Human-readable explanation of confidence calculation"
+        }
+      }
+    },
+    "thinking_trace": {
+      "type": "array",
+      "description": "Step-by-step reasoning trace for transparency",
+      "items": {
+        "type": "object",
+        "required": ["step", "action", "result"],
+        "properties": {
+          "step": {"type": "integer"},
+          "action": {"type": "string"},
+          "result": {"type": "string"},
+          "duration_ms": {"type": "integer"}
+        }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "execution_time_ms": {"type": "integer"},
+        "token_count": {"type": "integer"},
+        "model_used": {"type": "string"}
+      }
+    }
+  }
+}

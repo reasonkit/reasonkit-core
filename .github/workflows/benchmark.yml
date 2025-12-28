@@ -1,0 +1,286 @@
+# ReasonKit Core - Performance Benchmarking
+# Continuous performance monitoring and regression detection
+
+name: Benchmark
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, labeled]
+  workflow_dispatch:
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  # ═══════════════════════════════════════════════════════════════════════════
+  # Criterion Benchmarks
+  # ═══════════════════════════════════════════════════════════════════════════
+  criterion:
+    name: "Criterion Benchmarks"
+    runs-on: ubuntu-latest
+    if: |
+      github.event_name == 'workflow_dispatch' ||
+      github.event_name == 'push' ||
+      contains(github.event.pull_request.labels.*.name, 'performance')
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache cargo
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: ${{ runner.os }}-cargo-bench-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-cargo-bench-
+
+      - name: Install gnuplot (for Criterion plots)
+        run: sudo apt-get update && sudo apt-get install -y gnuplot
+
+      - name: Run benchmarks
+        run: |
+          cargo bench --bench retrieval_bench -- --save-baseline current || echo "⚠️ Benchmarks incomplete (may need data setup)"
+        continue-on-error: true
+
+      - name: Compare with baseline
+        if: github.event_name == 'pull_request'
+        run: |
+          git fetch origin main
+          git checkout origin/main
+          cargo bench --bench retrieval_bench -- --save-baseline main || true
+          git checkout -
+          cargo bench --bench retrieval_bench -- --baseline main || true
+        continue-on-error: true
+
+      - name: Store benchmark results
+        uses: benchmark-action/github-action-benchmark@v1
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        with:
+          tool: "cargo"
+          output-file-path: target/criterion/retrieval_bench/base/estimates.json
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          auto-push: true
+          alert-threshold: "110%"
+          comment-on-alert: true
+          fail-on-alert: false
+          alert-comment-cc-users: "@reasonkit/maintainers"
+        continue-on-error: true
+
+      - name: Upload Criterion plots
+        uses: actions/upload-artifact@v4
+        with:
+          name: criterion-plots
+          path: target/criterion/
+          retention-days: 30
+
+  # ═══════════════════════════════════════════════════════════════════════════
+  # Binary Size Tracking
+  # ═══════════════════════════════════════════════════════════════════════════
+  binary-size:
+    name: "Binary Size"
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache cargo
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: ${{ runner.os }}-cargo-size-${{ hashFiles('**/Cargo.lock') }}
+
+      - name: Build release binary
+        run: cargo build --release
+
+      - name: Measure binary size
+        run: |
+          BINARY_SIZE=$(ls -lh target/release/rk-core | awk '{print $5}')
+          BINARY_SIZE_BYTES=$(stat -c%s target/release/rk-core)
+
+          echo "Binary size: $BINARY_SIZE ($BINARY_SIZE_BYTES bytes)"
+
+          echo "## 📦 Binary Size" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Metric | Value |" >> $GITHUB_STEP_SUMMARY
+          echo "|--------|-------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Binary size (release) | $BINARY_SIZE |" >> $GITHUB_STEP_SUMMARY
+          echo "| Binary size (bytes) | $BINARY_SIZE_BYTES |" >> $GITHUB_STEP_SUMMARY
+
+          # Save for comparison
+          echo "$BINARY_SIZE_BYTES" > binary_size.txt
+
+      - name: Upload binary size
+        uses: actions/upload-artifact@v4
+        with:
+          name: binary-size
+          path: binary_size.txt
+
+  # ═══════════════════════════════════════════════════════════════════════════
+  # Compile Time Tracking
+  # ═══════════════════════════════════════════════════════════════════════════
+  compile-time:
+    name: "Compile Time"
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Clean build
+        run: cargo clean
+
+      - name: Measure clean build time
+        run: |
+          START=$(date +%s)
+          cargo build --release
+          END=$(date +%s)
+          DURATION=$((END - START))
+
+          echo "Clean build time: ${DURATION}s"
+
+          echo "## ⏱️ Compile Time" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Build Type | Duration |" >> $GITHUB_STEP_SUMMARY
+          echo "|------------|----------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Clean build (release) | ${DURATION}s |" >> $GITHUB_STEP_SUMMARY
+
+      - name: Measure incremental build time
+        run: |
+          # Touch a file to trigger incremental build
+          touch src/lib.rs
+
+          START=$(date +%s)
+          cargo build --release
+          END=$(date +%s)
+          DURATION=$((END - START))
+
+          echo "Incremental build time: ${DURATION}s"
+
+          echo "| Incremental build | ${DURATION}s |" >> $GITHUB_STEP_SUMMARY
+
+  # ═══════════════════════════════════════════════════════════════════════════
+  # Dependency Tree Analysis
+  # ═══════════════════════════════════════════════════════════════════════════
+  dependency-analysis:
+    name: "Dependency Analysis"
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Install cargo-tree
+        run: cargo install cargo-tree || true
+
+      - name: Analyze dependency tree
+        run: |
+          echo "## 📊 Dependency Analysis" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          # Count direct dependencies
+          DIRECT_DEPS=$(cargo metadata --no-deps --format-version 1 | jq '.packages | length')
+          echo "| Direct dependencies | $DIRECT_DEPS |" >> $GITHUB_STEP_SUMMARY
+
+          # Count total dependencies
+          TOTAL_DEPS=$(cargo tree --all-features | wc -l)
+          echo "| Total dependencies | $TOTAL_DEPS |" >> $GITHUB_STEP_SUMMARY
+
+          # Identify duplicate versions
+          DUPLICATES=$(cargo tree --duplicates | wc -l)
+          echo "| Duplicate versions | $DUPLICATES |" >> $GITHUB_STEP_SUMMARY
+
+          if [ "$DUPLICATES" -gt 0 ]; then
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "### ⚠️ Duplicate Dependencies" >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+            cargo tree --duplicates >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+          fi
+
+  # ═══════════════════════════════════════════════════════════════════════════
+  # Flamegraph Profiling (Linux only)
+  # ═══════════════════════════════════════════════════════════════════════════
+  flamegraph:
+    name: "Flamegraph Profiling"
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch' || contains(github.event.pull_request.labels.*.name, 'profiling')
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Install flamegraph
+        run: cargo install flamegraph
+
+      - name: Install perf
+        run: sudo apt-get update && sudo apt-get install -y linux-tools-generic
+
+      - name: Generate flamegraph
+        run: |
+          sudo cargo flamegraph --bench retrieval_bench -- --bench || echo "⚠️ Flamegraph generation incomplete"
+        continue-on-error: true
+
+      - name: Upload flamegraph
+        uses: actions/upload-artifact@v4
+        with:
+          name: flamegraph
+          path: flamegraph.svg
+        continue-on-error: true
+
+  # ═══════════════════════════════════════════════════════════════════════════
+  # Performance Summary
+  # ═══════════════════════════════════════════════════════════════════════════
+  performance-summary:
+    name: "Performance Summary"
+    runs-on: ubuntu-latest
+    needs: [criterion, binary-size, compile-time, dependency-analysis]
+    if: always()
+
+    steps:
+      - name: Generate summary
+        run: |
+          echo "## 🚀 Performance Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Check | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|-------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Criterion Benchmarks | ${{ needs.criterion.result == 'success' && '✅' || '⚠️' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Binary Size | ${{ needs.binary-size.result == 'success' && '✅' || '❌' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Compile Time | ${{ needs.compile-time.result == 'success' && '✅' || '❌' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Dependency Analysis | ${{ needs.dependency-analysis.result == 'success' && '✅' || '❌' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          echo "### Target Metrics (from ORCHESTRATOR.md)" >> $GITHUB_STEP_SUMMARY
+          echo "- Search latency: < 5ms (core loops)" >> $GITHUB_STEP_SUMMARY
+          echo "- Binary size: ~8MB (stripped release)" >> $GITHUB_STEP_SUMMARY
+          echo "- Memory safety: No unsafe without approval" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          if [ "${{ needs.criterion.result }}" = "success" ] && \
+             [ "${{ needs.binary-size.result }}" = "success" ]; then
+            echo "✅ **Performance checks passed!**" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "⚠️ **Some performance checks need attention.**" >> $GITHUB_STEP_SUMMARY
+          fi

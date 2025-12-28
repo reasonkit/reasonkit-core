@@ -1,0 +1,234 @@
+//! Example: Using the embedding pipeline with ReasonKit Core
+//!
+//! This example demonstrates how to:
+//! 1. Create an embedding provider (OpenAI or local ONNX)
+//! 2. Initialize a knowledge base with embeddings
+//! 3. Add documents with automatic embedding generation
+//! 4. Perform semantic search queries
+
+use chrono::Utc;
+use reasonkit_core::{
+    embedding::{EmbeddingConfig, EmbeddingPipeline, OpenAIEmbedding},
+    retrieval::{KnowledgeBase, RetrievalConfig},
+    Chunk, Document, DocumentType, EmbeddingIds, Source, SourceType,
+};
+use std::sync::Arc;
+use uuid::Uuid;
+
+#[tokio::main]
+async fn main() -> anyhow::Result<()> {
+    println!("=== ReasonKit Embedding Integration Example ===\n");
+
+    // Example 1: Create an OpenAI embedding provider
+    println!("1. Creating OpenAI embedding provider...");
+    let config = EmbeddingConfig {
+        model: "text-embedding-3-small".to_string(),
+        dimension: 1536,
+        batch_size: 100,
+        enable_cache: true,
+        cache_ttl_secs: 3600, // 1 hour
+        ..Default::default()
+    };
+
+    let provider = Arc::new(OpenAIEmbedding::new(config)?);
+    println!(
+        "   ✓ Provider created with model: {}",
+        provider.model_name()
+    );
+    println!("   ✓ Dimension: {}", provider.dimension());
+
+    // Example 2: Create embedding pipeline
+    println!("\n2. Creating embedding pipeline...");
+    let pipeline = Arc::new(EmbeddingPipeline::new(provider.clone()).with_batch_size(50));
+    println!("   ✓ Pipeline created with batch size: 50");
+
+    // Example 3: Create knowledge base with embeddings
+    println!("\n3. Creating knowledge base with embedding support...");
+    let kb = KnowledgeBase::in_memory()?.with_embedding_pipeline(pipeline.clone());
+    println!("   ✓ Knowledge base ready");
+
+    // Example 4: Create a sample document
+    println!("\n4. Creating sample document...");
+    let doc = create_sample_document();
+    println!("   ✓ Document created with {} chunks", doc.chunks.len());
+    for (i, chunk) in doc.chunks.iter().enumerate() {
+        println!("     Chunk {}: {} chars", i + 1, chunk.text.len());
+    }
+
+    // Example 5: Add document (embeddings generated automatically)
+    println!("\n5. Adding document to knowledge base...");
+    println!("   (This will generate embeddings for all chunks)");
+
+    // Note: This requires OPENAI_API_KEY environment variable
+    match std::env::var("OPENAI_API_KEY") {
+        Ok(_) => {
+            kb.add(&doc).await?;
+            println!("   ✓ Document added with embeddings generated");
+
+            // Example 6: Perform semantic search
+            println!("\n6. Performing semantic search...");
+
+            let queries = vec![
+                "What are neural networks?",
+                "How does deep learning work?",
+                "Explain machine learning concepts",
+            ];
+
+            for query in queries {
+                println!("\n   Query: '{}'", query);
+                let results = kb.query(query, 3).await?;
+
+                println!("   Results (top {}):", results.len());
+                for (i, result) in results.iter().enumerate() {
+                    println!(
+                        "     {}. Score: {:.4} | Source: {:?}",
+                        i + 1,
+                        result.score,
+                        result.match_source
+                    );
+                    println!(
+                        "        Text: {}...",
+                        &result.text.chars().take(80).collect::<String>()
+                    );
+
+                    if let Some(dense_score) = result.dense_score {
+                        println!("        Dense score: {:.4}", dense_score);
+                    }
+                    if let Some(sparse_score) = result.sparse_score {
+                        println!("        Sparse score: {:.4}", sparse_score);
+                    }
+                }
+            }
+
+            // Example 7: Custom retrieval configuration
+            println!("\n7. Custom retrieval with RRF fusion...");
+            let config = RetrievalConfig::default()
+                .with_rrf(100) // RRF with k=100
+                .with_top_k(5);
+
+            let results = kb
+                .query_with_config("artificial intelligence applications", &config)
+                .await?;
+
+            println!("   Retrieved {} results using RRF fusion", results.len());
+
+            // Example 8: Get statistics
+            println!("\n8. Knowledge base statistics:");
+            let stats = kb.stats().await?;
+            println!("   Documents: {}", stats.document_count);
+            println!("   Chunks: {}", stats.chunk_count);
+            println!("   Indexed chunks: {}", stats.indexed_chunks);
+            println!("   Embeddings: {}", stats.embedding_count);
+            println!("   Storage: {} bytes", stats.storage_bytes);
+            println!("   Index: {} bytes", stats.index_bytes);
+        }
+        Err(_) => {
+            println!("   ⚠ OPENAI_API_KEY not set - skipping API calls");
+            println!("     Set OPENAI_API_KEY environment variable to run this example");
+        }
+    }
+
+    // Example 9: Demonstrate cache benefits
+    println!("\n9. Testing cache effectiveness...");
+    println!("   Embedding the same text twice...");
+
+    let test_text = "This is a test for cache effectiveness";
+
+    let start = std::time::Instant::now();
+    let _embedding1 = pipeline.embed_text(test_text).await;
+    let first_duration = start.elapsed();
+
+    let start = std::time::Instant::now();
+    let _embedding2 = pipeline.embed_text(test_text).await;
+    let second_duration = start.elapsed();
+
+    println!("   First call: {:?}", first_duration);
+    println!("   Second call (cached): {:?}", second_duration);
+
+    if second_duration < first_duration / 10 {
+        println!(
+            "   ✓ Cache is working! {}x speedup",
+            first_duration.as_micros() / second_duration.as_micros().max(1)
+        );
+    }
+
+    println!("\n=== Example Complete ===");
+
+    Ok(())
+}
+
+/// Create a sample document about machine learning
+fn create_sample_document() -> Document {
+    let source = Source {
+        source_type: SourceType::Local,
+        url: None,
+        path: Some("/examples/ml_guide.md".to_string()),
+        arxiv_id: None,
+        github_repo: None,
+        retrieved_at: Utc::now(),
+        version: None,
+    };
+
+    let mut doc = Document::new(DocumentType::Documentation, source)
+        .with_content("A comprehensive guide to machine learning concepts.".to_string());
+
+    doc.chunks = vec![
+        Chunk {
+            id: Uuid::new_v4(),
+            text: "Machine learning is a subset of artificial intelligence that enables computers to learn from data without being explicitly programmed. It uses algorithms to identify patterns and make predictions.".to_string(),
+            index: 0,
+            start_char: 0,
+            end_char: 180,
+            token_count: Some(35),
+            section: Some("Introduction".to_string()),
+            page: None,
+            embedding_ids: EmbeddingIds::default(),
+        },
+        Chunk {
+            id: Uuid::new_v4(),
+            text: "Neural networks are computing systems inspired by biological neural networks. They consist of layers of interconnected nodes (neurons) that process and transform data. Deep learning uses neural networks with multiple hidden layers.".to_string(),
+            index: 1,
+            start_char: 181,
+            end_char: 420,
+            token_count: Some(40),
+            section: Some("Neural Networks".to_string()),
+            page: None,
+            embedding_ids: EmbeddingIds::default(),
+        },
+        Chunk {
+            id: Uuid::new_v4(),
+            text: "Common machine learning applications include image recognition, natural language processing, recommendation systems, fraud detection, and autonomous vehicles. These applications rely on training models with large datasets.".to_string(),
+            index: 2,
+            start_char: 421,
+            end_char: 650,
+            token_count: Some(38),
+            section: Some("Applications".to_string()),
+            page: None,
+            embedding_ids: EmbeddingIds::default(),
+        },
+        Chunk {
+            id: Uuid::new_v4(),
+            text: "Supervised learning uses labeled training data where the correct answers are provided. The model learns to map inputs to outputs. Common algorithms include linear regression, logistic regression, decision trees, and support vector machines.".to_string(),
+            index: 3,
+            start_char: 651,
+            end_char: 895,
+            token_count: Some(42),
+            section: Some("Supervised Learning".to_string()),
+            page: None,
+            embedding_ids: EmbeddingIds::default(),
+        },
+        Chunk {
+            id: Uuid::new_v4(),
+            text: "Unsupervised learning finds patterns in unlabeled data. Clustering algorithms group similar data points together. Dimensionality reduction techniques like PCA help visualize high-dimensional data in lower dimensions.".to_string(),
+            index: 4,
+            start_char: 896,
+            end_char: 1115,
+            token_count: Some(36),
+            section: Some("Unsupervised Learning".to_string()),
+            page: None,
+            embedding_ids: EmbeddingIds::default(),
+        },
+    ];
+
+    doc
+}

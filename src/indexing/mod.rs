@@ -2,15 +2,15 @@
 //!
 //! Provides BM25 text indexing using Tantivy for sparse retrieval.
 
-use crate::{Document, Result, Error};
+use crate::{Document, Error, Result};
 use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
 use tantivy::{
     collector::TopDocs,
-    query::QueryParser,
-    schema::{Schema, Field, STORED, TEXT, STRING, Value},
-    Index, ReloadPolicy, TantivyDocument,
     directory::MmapDirectory,
+    query::QueryParser,
+    schema::{Field, Schema, Value, STORED, STRING, TEXT},
+    Index, ReloadPolicy, TantivyDocument,
 };
 use uuid::Uuid;
 
@@ -119,7 +119,9 @@ impl BM25Index {
 
     /// Index a document's chunks
     pub fn index_document(&self, doc: &Document) -> Result<usize> {
-        let mut writer = self.index.writer(self.config.memory_budget)
+        let mut writer = self
+            .index
+            .writer(self.config.memory_budget)
             .map_err(|e| Error::indexing(format!("Failed to create index writer: {}", e)))?;
 
         let mut indexed = 0;
@@ -132,12 +134,14 @@ impl BM25Index {
                 tantivy_doc.add_text(self.fields.section, section);
             }
 
-            writer.add_document(tantivy_doc)
+            writer
+                .add_document(tantivy_doc)
                 .map_err(|e| Error::indexing(format!("Failed to add document: {}", e)))?;
             indexed += 1;
         }
 
-        writer.commit()
+        writer
+            .commit()
             .map_err(|e| Error::indexing(format!("Failed to commit index: {}", e)))?;
 
         Ok(indexed)
@@ -145,7 +149,9 @@ impl BM25Index {
 
     /// Index multiple documents
     pub fn index_documents(&self, docs: &[Document]) -> Result<usize> {
-        let mut writer = self.index.writer(self.config.memory_budget)
+        let mut writer = self
+            .index
+            .writer(self.config.memory_budget)
             .map_err(|e| Error::indexing(format!("Failed to create index writer: {}", e)))?;
 
         let mut total_indexed = 0;
@@ -159,13 +165,15 @@ impl BM25Index {
                     tantivy_doc.add_text(self.fields.section, section);
                 }
 
-                writer.add_document(tantivy_doc)
+                writer
+                    .add_document(tantivy_doc)
                     .map_err(|e| Error::indexing(format!("Failed to add document: {}", e)))?;
                 total_indexed += 1;
             }
         }
 
-        writer.commit()
+        writer
+            .commit()
             .map_err(|e| Error::indexing(format!("Failed to commit index: {}", e)))?;
 
         Ok(total_indexed)
@@ -173,23 +181,29 @@ impl BM25Index {
 
     /// Search the index using BM25
     pub fn search(&self, query: &str, top_k: usize) -> Result<Vec<BM25Result>> {
-        let reader = self.index.reader_builder()
+        let reader = self
+            .index
+            .reader_builder()
             .reload_policy(ReloadPolicy::OnCommitWithDelay)
             .try_into()
             .map_err(|e| Error::indexing(format!("Failed to create reader: {}", e)))?;
 
         let searcher = reader.searcher();
 
-        let query_parser = QueryParser::for_index(&self.index, vec![self.fields.text, self.fields.section]);
-        let query = query_parser.parse_query(query)
+        let query_parser =
+            QueryParser::for_index(&self.index, vec![self.fields.text, self.fields.section]);
+        let query = query_parser
+            .parse_query(query)
             .map_err(|e| Error::query(format!("Failed to parse query: {}", e)))?;
 
-        let top_docs = searcher.search(&query, &TopDocs::with_limit(top_k))
+        let top_docs = searcher
+            .search(&query, &TopDocs::with_limit(top_k))
             .map_err(|e| Error::query(format!("Search failed: {}", e)))?;
 
         let mut results = Vec::new();
         for (score, doc_address) in top_docs {
-            let retrieved_doc: TantivyDocument = searcher.doc(doc_address)
+            let retrieved_doc: TantivyDocument = searcher
+                .doc(doc_address)
                 .map_err(|e| Error::query(format!("Failed to retrieve document: {}", e)))?;
 
             let doc_id = retrieved_doc
@@ -210,11 +224,18 @@ impl BM25Index {
                 .map(|s: &str| s.to_string())
                 .unwrap_or_default();
 
+            let section = retrieved_doc
+                .get_first(self.fields.section)
+                .and_then(|v: &tantivy::schema::OwnedValue| v.as_str())
+                .map(|s: &str| s.to_string())
+                .filter(|s| !s.is_empty());
+
             results.push(BM25Result {
                 doc_id: Uuid::parse_str(&doc_id).unwrap_or_default(),
                 chunk_id: Uuid::parse_str(&chunk_id).unwrap_or_default(),
                 score,
                 text,
+                section,
             });
         }
 
@@ -223,13 +244,16 @@ impl BM25Index {
 
     /// Delete all documents from a specific document ID
     pub fn delete_document(&self, doc_id: &Uuid) -> Result<()> {
-        let mut writer: tantivy::IndexWriter<TantivyDocument> = self.index.writer(self.config.memory_budget)
+        let mut writer: tantivy::IndexWriter<TantivyDocument> = self
+            .index
+            .writer(self.config.memory_budget)
             .map_err(|e| Error::indexing(format!("Failed to create writer: {}", e)))?;
 
         let term = tantivy::Term::from_field_text(self.fields.doc_id, &doc_id.to_string());
         writer.delete_term(term);
 
-        writer.commit()
+        writer
+            .commit()
             .map_err(|e| Error::indexing(format!("Failed to commit delete: {}", e)))?;
 
         Ok(())
@@ -237,7 +261,9 @@ impl BM25Index {
 
     /// Get index statistics
     pub fn stats(&self) -> Result<IndexStats> {
-        let reader = self.index.reader_builder()
+        let reader = self
+            .index
+            .reader_builder()
             .reload_policy(ReloadPolicy::OnCommitWithDelay)
             .try_into()
             .map_err(|e| Error::indexing(format!("Failed to create reader: {}", e)))?;
@@ -252,13 +278,66 @@ impl BM25Index {
         })
     }
 
+    /// Get a chunk by its ID from the index
+    pub fn get_chunk_by_id(&self, chunk_id: &Uuid) -> Option<BM25Result> {
+        let reader = self
+            .index
+            .reader_builder()
+            .reload_policy(ReloadPolicy::OnCommitWithDelay)
+            .try_into()
+            .ok()?;
+
+        let searcher = reader.searcher();
+        let query_parser = QueryParser::for_index(&self.index, vec![self.fields.chunk_id]);
+        let query = query_parser
+            .parse_query(&format!("\"{}\"", chunk_id))
+            .ok()?;
+
+        let top_docs = searcher.search(&query, &TopDocs::with_limit(1)).ok()?;
+
+        if let Some((score, doc_address)) = top_docs.first() {
+            let retrieved_doc: TantivyDocument = searcher.doc(*doc_address).ok()?;
+
+            let doc_id = retrieved_doc
+                .get_first(self.fields.doc_id)
+                .and_then(|v| v.as_str())
+                .and_then(|s| Uuid::parse_str(s).ok())
+                .unwrap_or(Uuid::nil());
+
+            let text = retrieved_doc
+                .get_first(self.fields.text)
+                .and_then(|v| v.as_str())
+                .unwrap_or("")
+                .to_string();
+
+            let section = retrieved_doc
+                .get_first(self.fields.section)
+                .and_then(|v| v.as_str())
+                .map(|s| s.to_string())
+                .filter(|s| !s.is_empty());
+
+            Some(BM25Result {
+                doc_id,
+                chunk_id: *chunk_id,
+                score: *score,
+                text,
+                section,
+            })
+        } else {
+            None
+        }
+    }
+
     /// Optimize the index (merge segments)
     pub fn optimize(&self) -> Result<()> {
-        let writer: tantivy::IndexWriter<TantivyDocument> = self.index.writer(self.config.memory_budget)
+        let writer: tantivy::IndexWriter<TantivyDocument> = self
+            .index
+            .writer(self.config.memory_budget)
             .map_err(|e| Error::indexing(format!("Failed to create writer: {}", e)))?;
 
         // Wait for merging to complete
-        writer.wait_merging_threads()
+        writer
+            .wait_merging_threads()
             .map_err(|e| Error::indexing(format!("Failed to wait for merge: {}", e)))?;
 
         Ok(())
@@ -276,11 +355,14 @@ pub struct BM25Result {
     pub score: f32,
     /// Matched text
     pub text: String,
+    /// Section name (if available)
+    pub section: Option<String>,
 }
 
 /// Index manager for managing multiple index types
 pub struct IndexManager {
     bm25: BM25Index,
+    #[allow(dead_code)]
     base_path: PathBuf,
 }
 
@@ -326,12 +408,17 @@ impl IndexManager {
     pub fn optimize(&self) -> Result<()> {
         self.bm25.optimize()
     }
+
+    /// Get a chunk by its ID
+    pub fn get_chunk_by_id(&self, chunk_id: &Uuid) -> Option<BM25Result> {
+        self.bm25.get_chunk_by_id(chunk_id)
+    }
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::{DocumentType, Source, SourceType, EmbeddingIds, Chunk};
+    use crate::{Chunk, DocumentType, EmbeddingIds, Source, SourceType};
     use chrono::Utc;
 
     fn create_test_document() -> Document {
@@ -345,8 +432,10 @@ mod tests {
             version: None,
         };
 
-        let mut doc = Document::new(DocumentType::Note, source)
-            .with_content("This is a test document about machine learning and artificial intelligence.".to_string());
+        let mut doc = Document::new(DocumentType::Note, source).with_content(
+            "This is a test document about machine learning and artificial intelligence."
+                .to_string(),
+        );
 
         // Add some chunks
         doc.chunks = vec![

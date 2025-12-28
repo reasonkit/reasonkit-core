@@ -1,0 +1,77 @@
+# ReasonKit Core - Docker Ignore
+# Exclude unnecessary files from Docker build context
+
+# Git
+.git
+.gitignore
+.gitattributes
+
+# GitHub
+.github
+
+# CI/CD
+.gitlab-ci.yml
+.travis.yml
+
+# Documentation
+*.md
+!README.md
+docs/
+LICENSES/
+
+# Build artifacts
+target/
+**/*.rs.bk
+**/*.rs.swp
+
+# IDE
+.idea/
+.vscode/
+.vs/
+*.swp
+*.swo
+*~
+.DS_Store
+*.iml
+
+# Rust
+**/*.rs.bk
+Cargo.lock.bak
+
+# Data directories (large files)
+data/papers/raw/
+data/docs/raw/
+*.pdf
+*.jsonl
+
+# Archive
+archive/
+ARCHIVE_INDEX.md
+
+# Temporary files
+*.tmp
+*.temp
+*.log
+.env.local
+.env.*.local
+
+# Test artifacts
+coverage/
+*.profdata
+*.profraw
+flamegraph.svg
+
+# Benchmarks
+criterion/
+target/criterion/
+
+# Development
+scripts/
+justfile
+Makefile
+
+# Other projects
+../reasonkit-pro/
+../reasonkit-mem/
+../reasonkit-sh/
+../reasonkit-x/

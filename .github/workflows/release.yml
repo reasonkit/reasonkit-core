@@ -1,0 +1,981 @@
+# ReasonKit Core - Production Release Pipeline
+# ============================================================================
+# Multi-platform binary builds, Docker images, crates.io, npm, PyPI publishing
+# Triggered on semantic version tags (v*.*.*)
+#
+# Reference: ORCHESTRATOR.md v3.6.0
+# Constraint: CONS-005 (Rust for Performance Paths)
+# ============================================================================
+
+name: Release
+
+on:
+  push:
+    tags:
+      - "v[0-9]+.[0-9]+.[0-9]+" # Stable releases: v1.0.0
+      - "v[0-9]+.[0-9]+.[0-9]+-*" # Pre-releases: v1.0.0-alpha.1
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Dry run (plan only, no publish)"
+        required: false
+        default: "false"
+        type: boolean
+      skip_docker:
+        description: "Skip Docker image build"
+        required: false
+        default: "false"
+        type: boolean
+      skip_npm:
+        description: "Skip npm package publish"
+        required: false
+        default: "false"
+        type: boolean
+      skip_pypi:
+        description: "Skip PyPI publish"
+        required: false
+        default: "false"
+        type: boolean
+
+permissions:
+  contents: write
+  packages: write
+  id-token: write # For trusted publishing to PyPI
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false # Never cancel releases
+
+env:
+  CARGO_TERM_COLOR: always
+  RUSTFLAGS: "-D warnings"
+  RUST_BACKTRACE: 1
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+  # Binary name
+  BINARY_NAME: rk-core
+  # Package names
+  CRATE_NAME: reasonkit-core
+  NPM_PACKAGE: "@reasonkit/cli"
+  PYPI_PACKAGE: "reasonkit"
+
+jobs:
+  # ═══════════════════════════════════════════════════════════════════════════
+  # Stage 1: Pre-Release Validation
+  # ═══════════════════════════════════════════════════════════════════════════
+  validate:
+    name: "Pre-Release Validation"
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      version_short: ${{ steps.version.outputs.version_short }}
+      is_prerelease: ${{ steps.version.outputs.is_prerelease }}
+      changelog: ${{ steps.changelog.outputs.changelog }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Full history for changelog
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Setup Rust cache
+        uses: Swatinem/rust-cache@v2
+        with:
+          cache-on-failure: true
+
+      - name: Extract version information
+        id: version
+        run: |
+          if [[ "$GITHUB_REF" == refs/tags/* ]]; then
+            TAG="${GITHUB_REF#refs/tags/}"
+          else
+            TAG="v0.0.0-dev"
+          fi
+
+          # Extract version without 'v' prefix
+          VERSION="${TAG#v}"
+          VERSION_SHORT=$(echo "$VERSION" | cut -d'-' -f1)
+
+          # Check if prerelease
+          if [[ "$TAG" == *-* ]]; then
+            IS_PRERELEASE="true"
+          else
+            IS_PRERELEASE="false"
+          fi
+
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "version_short=$VERSION_SHORT" >> $GITHUB_OUTPUT
+          echo "is_prerelease=$IS_PRERELEASE" >> $GITHUB_OUTPUT
+
+          echo "## Version Information" >> $GITHUB_STEP_SUMMARY
+          echo "| Property | Value |" >> $GITHUB_STEP_SUMMARY
+          echo "|----------|-------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Tag | $TAG |" >> $GITHUB_STEP_SUMMARY
+          echo "| Version | $VERSION |" >> $GITHUB_STEP_SUMMARY
+          echo "| Pre-release | $IS_PRERELEASE |" >> $GITHUB_STEP_SUMMARY
+
+      - name: Validate version tag matches Cargo.toml
+        if: startsWith(github.ref, 'refs/tags/')
+        run: |
+          TAG=${GITHUB_REF#refs/tags/}
+          CARGO_VERSION="v$(cargo metadata --no-deps --format-version 1 | jq -r '.packages[] | select(.name == "reasonkit-core") | .version')"
+
+          echo "Tag version: $TAG"
+          echo "Cargo.toml version: $CARGO_VERSION"
+
+          if [ "$TAG" != "$CARGO_VERSION" ]; then
+            echo "::error::Version mismatch! Tag=$TAG, Cargo.toml=$CARGO_VERSION"
+            echo "Update Cargo.toml version to match the tag before releasing."
+            exit 1
+          fi
+          echo "Version validated: $TAG"
+
+      - name: Run quality gates (CONS-009)
+        run: |
+          echo "Running all 5 quality gates..."
+
+          echo "Gate 1: Build"
+          cargo build --release --locked
+
+          echo "Gate 2: Clippy"
+          cargo clippy --all-targets -- -D warnings
+
+          echo "Gate 3: Format"
+          cargo fmt --check
+
+          echo "Gate 4: Tests"
+          cargo test --lib --locked
+
+          echo "All quality gates passed!"
+
+      - name: Security audit
+        run: |
+          cargo install cargo-audit --locked || true
+          cargo audit || echo "::warning::Security audit found issues (non-blocking)"
+        continue-on-error: true
+
+      - name: Generate changelog
+        id: changelog
+        run: |
+          # Install git-cliff
+          CLIFF_VERSION="2.4.0"
+          wget -qO- "https://github.com/orhun/git-cliff/releases/download/v${CLIFF_VERSION}/git-cliff-${CLIFF_VERSION}-x86_64-unknown-linux-gnu.tar.gz" | tar xz
+          sudo mv git-cliff-*/git-cliff /usr/local/bin/
+
+          # Generate release notes for this version
+          git-cliff --latest --strip header > RELEASE_NOTES.md 2>/dev/null || {
+            echo "# Release Notes" > RELEASE_NOTES.md
+            echo "" >> RELEASE_NOTES.md
+            echo "## What's Changed" >> RELEASE_NOTES.md
+            git log --oneline -20 >> RELEASE_NOTES.md
+          }
+
+          # Also update full changelog
+          git-cliff -o CHANGELOG.md || true
+
+          echo "Generated changelog:"
+          cat RELEASE_NOTES.md
+
+          # Store changelog for later use
+          CHANGELOG=$(cat RELEASE_NOTES.md)
+          echo "changelog<<EOF" >> $GITHUB_OUTPUT
+          echo "$CHANGELOG" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Upload changelog artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: changelog
+          path: |
+            RELEASE_NOTES.md
+            CHANGELOG.md
+          retention-days: 30
+
+  # ═══════════════════════════════════════════════════════════════════════════
+  # Stage 2: Multi-Platform Binary Builds
+  # ═══════════════════════════════════════════════════════════════════════════
+  build-binaries:
+    name: "Build ${{ matrix.target }}"
+    needs: validate
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # Linux x86_64 (glibc)
+          - os: ubuntu-22.04
+            target: x86_64-unknown-linux-gnu
+            artifact_name: rk-core
+            asset_name: rk-core-linux-x86_64
+            cross: false
+
+          # Linux x86_64 (musl - static, Alpine compatible)
+          - os: ubuntu-22.04
+            target: x86_64-unknown-linux-musl
+            artifact_name: rk-core
+            asset_name: rk-core-linux-x86_64-musl
+            cross: false
+
+          # Linux ARM64 (glibc)
+          - os: ubuntu-22.04
+            target: aarch64-unknown-linux-gnu
+            artifact_name: rk-core
+            asset_name: rk-core-linux-aarch64
+            cross: true
+
+          # Linux ARM64 (musl - static)
+          - os: ubuntu-22.04
+            target: aarch64-unknown-linux-musl
+            artifact_name: rk-core
+            asset_name: rk-core-linux-aarch64-musl
+            cross: true
+
+          # macOS x86_64 (Intel)
+          - os: macos-13
+            target: x86_64-apple-darwin
+            artifact_name: rk-core
+            asset_name: rk-core-macos-x86_64
+            cross: false
+
+          # macOS ARM64 (Apple Silicon)
+          - os: macos-14
+            target: aarch64-apple-darwin
+            artifact_name: rk-core
+            asset_name: rk-core-macos-aarch64
+            cross: false
+
+          # Windows x86_64
+          - os: windows-latest
+            target: x86_64-pc-windows-msvc
+            artifact_name: rk-core.exe
+            asset_name: rk-core-windows-x86_64
+            cross: false
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+
+      - name: Setup Rust cache
+        uses: Swatinem/rust-cache@v2
+        with:
+          key: release-${{ matrix.target }}
+
+      - name: Install cross-compilation dependencies (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          if [ "${{ matrix.target }}" = "x86_64-unknown-linux-musl" ]; then
+            sudo apt-get install -y musl-tools musl-dev
+          elif [ "${{ matrix.target }}" = "aarch64-unknown-linux-gnu" ]; then
+            sudo apt-get install -y gcc-aarch64-linux-gnu libc6-dev-arm64-cross
+          fi
+
+      - name: Install cross (for cross-compilation)
+        if: matrix.cross
+        run: |
+          cargo install cross --git https://github.com/cross-rs/cross
+
+      - name: Build release binary (native)
+        if: "!matrix.cross"
+        run: cargo build --release --target ${{ matrix.target }} --locked
+
+      - name: Build release binary (cross)
+        if: matrix.cross
+        run: cross build --release --target ${{ matrix.target }} --locked
+
+      - name: Strip binary (Unix)
+        if: runner.os != 'Windows'
+        run: |
+          BINARY="target/${{ matrix.target }}/release/${{ matrix.artifact_name }}"
+          if [ "${{ matrix.target }}" = "aarch64-unknown-linux-gnu" ]; then
+            aarch64-linux-gnu-strip "$BINARY" 2>/dev/null || true
+          elif [ "${{ matrix.target }}" = "aarch64-unknown-linux-musl" ]; then
+            # musl-strip for ARM64 musl might not be available, skip
+            true
+          else
+            strip "$BINARY" 2>/dev/null || true
+          fi
+          ls -lh "$BINARY"
+
+      - name: Create archive (Unix)
+        if: runner.os != 'Windows'
+        run: |
+          cd target/${{ matrix.target }}/release
+          tar czf ${{ matrix.asset_name }}.tar.gz ${{ matrix.artifact_name }}
+
+          # Generate SHA256 checksum
+          sha256sum ${{ matrix.asset_name }}.tar.gz > ${{ matrix.asset_name }}.tar.gz.sha256
+          cat ${{ matrix.asset_name }}.tar.gz.sha256
+
+      - name: Create archive (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          cd target/${{ matrix.target }}/release
+          Compress-Archive -Path ${{ matrix.artifact_name }} -DestinationPath ${{ matrix.asset_name }}.zip
+
+          # Generate SHA256 checksum
+          $hash = (Get-FileHash ${{ matrix.asset_name }}.zip -Algorithm SHA256).Hash.ToLower()
+          "$hash  ${{ matrix.asset_name }}.zip" | Out-File -Encoding ASCII ${{ matrix.asset_name }}.zip.sha256
+          Get-Content ${{ matrix.asset_name }}.zip.sha256
+
+      - name: Upload artifact (Unix)
+        if: runner.os != 'Windows'
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.asset_name }}
+          path: |
+            target/${{ matrix.target }}/release/${{ matrix.asset_name }}.tar.gz
+            target/${{ matrix.target }}/release/${{ matrix.asset_name }}.tar.gz.sha256
+          retention-days: 30
+
+      - name: Upload artifact (Windows)
+        if: runner.os == 'Windows'
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.asset_name }}
+          path: |
+            target/${{ matrix.target }}/release/${{ matrix.asset_name }}.zip
+            target/${{ matrix.target }}/release/${{ matrix.asset_name }}.zip.sha256
+          retention-days: 30
+
+  # ═══════════════════════════════════════════════════════════════════════════
+  # Stage 3: Docker Multi-Arch Build
+  # ═══════════════════════════════════════════════════════════════════════════
+  build-docker:
+    name: "Build Docker Images"
+    needs: validate
+    runs-on: ubuntu-latest
+    if: github.event.inputs.skip_docker != 'true'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Log in to Docker Hub (optional)
+        if: secrets.DOCKERHUB_USERNAME != ''
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+        continue-on-error: true
+
+      - name: Extract Docker metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=ref,event=tag
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{major}},enable=${{ !startsWith(github.ref, 'refs/tags/v0.') }}
+            type=raw,value=latest,enable=${{ needs.validate.outputs.is_prerelease == 'false' }}
+          labels: |
+            org.opencontainers.image.title=ReasonKit Core
+            org.opencontainers.image.description=Rust-first RAG/Knowledge Base Engine with ThinkTools
+            org.opencontainers.image.vendor=ReasonKit
+            org.opencontainers.image.licenses=Apache-2.0
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          platforms: linux/amd64,linux/arm64
+          push: ${{ github.event.inputs.dry_run != 'true' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          provenance: true
+          sbom: true
+
+      - name: Generate Docker summary
+        run: |
+          echo "## Docker Images" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Tags" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          echo "${{ steps.meta.outputs.tags }}" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+
+  # ═══════════════════════════════════════════════════════════════════════════
+  # Stage 4: Create GitHub Release
+  # ═══════════════════════════════════════════════════════════════════════════
+  create-release:
+    name: "Create GitHub Release"
+    needs: [validate, build-binaries]
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/') && github.event.inputs.dry_run != 'true'
+    outputs:
+      release_url: ${{ steps.release.outputs.url }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Display artifact structure
+        run: |
+          echo "Downloaded artifacts:"
+          find artifacts -type f | head -50
+
+      - name: Prepare release assets
+        run: |
+          mkdir -p release-assets
+
+          # Copy all binary archives and checksums
+          find artifacts -name "*.tar.gz" -exec cp {} release-assets/ \;
+          find artifacts -name "*.zip" -exec cp {} release-assets/ \;
+          find artifacts -name "*.sha256" -exec cp {} release-assets/ \;
+
+          # Copy changelog
+          cp artifacts/changelog/RELEASE_NOTES.md release-assets/ || true
+
+          # Create combined checksums file
+          cd release-assets
+          cat *.sha256 > SHA256SUMS.txt 2>/dev/null || true
+
+          echo "Release assets:"
+          ls -la
+
+      - name: Generate install script
+        run: |
+          cat > release-assets/install.sh << 'EOFINSTALL'
+          #!/usr/bin/env bash
+          # ReasonKit Core - Universal Installer
+          # curl -fsSL https://reasonkit.sh/install | bash
+          #
+          # Environment variables:
+          #   RK_VERSION    - Specific version to install (default: latest)
+          #   RK_INSTALL_DIR - Installation directory (default: /usr/local/bin or ~/.local/bin)
+
+          set -euo pipefail
+
+          VERSION="${RK_VERSION:-latest}"
+          REPO="reasonkit/reasonkit-core"
+          BINARY="rk-core"
+
+          # Colors
+          RED='\033[0;31m'
+          GREEN='\033[0;32m'
+          CYAN='\033[0;36m'
+          NC='\033[0m'
+
+          info() { echo -e "${CYAN}==>${NC} $1"; }
+          success() { echo -e "${GREEN}==>${NC} $1"; }
+          error() { echo -e "${RED}Error:${NC} $1" >&2; exit 1; }
+
+          # Detect OS and architecture
+          detect_platform() {
+              local os arch
+              os="$(uname -s)"
+              arch="$(uname -m)"
+
+              case "$os" in
+                  Linux)
+                      case "$arch" in
+                          x86_64)  echo "linux-x86_64" ;;
+                          aarch64) echo "linux-aarch64" ;;
+                          *)       error "Unsupported architecture: $arch" ;;
+                      esac
+                      ;;
+                  Darwin)
+                      case "$arch" in
+                          x86_64)  echo "macos-x86_64" ;;
+                          arm64)   echo "macos-aarch64" ;;
+                          *)       error "Unsupported architecture: $arch" ;;
+                      esac
+                      ;;
+                  MINGW*|MSYS*|CYGWIN*)
+                      echo "windows-x86_64"
+                      ;;
+                  *)
+                      error "Unsupported OS: $os"
+                      ;;
+              esac
+          }
+
+          main() {
+              info "Installing ReasonKit Core..."
+
+              PLATFORM=$(detect_platform)
+              info "Detected platform: $PLATFORM"
+
+              # Determine asset name and extension
+              if [[ "$PLATFORM" == windows-* ]]; then
+                  ASSET="${BINARY}-${PLATFORM}.zip"
+                  EXT="zip"
+              else
+                  ASSET="${BINARY}-${PLATFORM}.tar.gz"
+                  EXT="tar.gz"
+              fi
+
+              # Get download URL
+              if [ "$VERSION" = "latest" ]; then
+                  URL="https://github.com/${REPO}/releases/latest/download/${ASSET}"
+              else
+                  URL="https://github.com/${REPO}/releases/download/v${VERSION}/${ASSET}"
+              fi
+
+              info "Downloading from: $URL"
+
+              # Create temp directory
+              TMP_DIR="$(mktemp -d)"
+              trap "rm -rf '$TMP_DIR'" EXIT
+
+              # Download
+              cd "$TMP_DIR"
+              if command -v curl &>/dev/null; then
+                  curl -fsSL "$URL" -o "$ASSET"
+              elif command -v wget &>/dev/null; then
+                  wget -q "$URL" -O "$ASSET"
+              else
+                  error "curl or wget required"
+              fi
+
+              # Extract
+              if [ "$EXT" = "tar.gz" ]; then
+                  tar xzf "$ASSET"
+              else
+                  unzip -q "$ASSET"
+              fi
+
+              # Install
+              INSTALL_DIR="${RK_INSTALL_DIR:-}"
+              if [ -z "$INSTALL_DIR" ]; then
+                  if [ -w /usr/local/bin ]; then
+                      INSTALL_DIR="/usr/local/bin"
+                  else
+                      INSTALL_DIR="$HOME/.local/bin"
+                      mkdir -p "$INSTALL_DIR"
+                  fi
+              fi
+
+              if [[ "$PLATFORM" == windows-* ]]; then
+                  mv "${BINARY}.exe" "$INSTALL_DIR/"
+              else
+                  mv "$BINARY" "$INSTALL_DIR/"
+                  chmod +x "$INSTALL_DIR/$BINARY"
+              fi
+
+              success "ReasonKit Core installed to $INSTALL_DIR/$BINARY"
+              echo ""
+              echo "Run: $BINARY --help"
+              echo "Docs: https://reasonkit.sh/docs"
+          }
+
+          main "$@"
+          EOFINSTALL
+
+          chmod +x release-assets/install.sh
+
+      - name: Create GitHub Release
+        id: release
+        uses: softprops/action-gh-release@v2
+        with:
+          draft: false
+          prerelease: ${{ needs.validate.outputs.is_prerelease == 'true' }}
+          name: "ReasonKit Core v${{ needs.validate.outputs.version }}"
+          body_path: release-assets/RELEASE_NOTES.md
+          files: |
+            release-assets/*.tar.gz
+            release-assets/*.zip
+            release-assets/*.sha256
+            release-assets/SHA256SUMS.txt
+            release-assets/install.sh
+          fail_on_unmatched_files: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # ═══════════════════════════════════════════════════════════════════════════
+  # Stage 5: Publish to crates.io
+  # ═══════════════════════════════════════════════════════════════════════════
+  publish-crates:
+    name: "Publish to crates.io"
+    needs: [validate, create-release]
+    runs-on: ubuntu-latest
+    if: |
+      needs.validate.outputs.is_prerelease == 'false' &&
+      github.event.inputs.dry_run != 'true'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Setup Rust cache
+        uses: Swatinem/rust-cache@v2
+
+      - name: Verify package
+        run: |
+          cargo package --locked --allow-dirty
+          echo "Package contents:"
+          cargo package --list | head -50
+
+      - name: Publish to crates.io
+        run: |
+          if [ -n "${{ secrets.CARGO_REGISTRY_TOKEN }}" ]; then
+            echo "Publishing to crates.io..."
+            cargo publish --token "${{ secrets.CARGO_REGISTRY_TOKEN }}" --locked
+            echo "Published successfully!"
+          else
+            echo "::warning::CARGO_REGISTRY_TOKEN not set, skipping crates.io publish"
+          fi
+        env:
+          CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
+
+  # ═══════════════════════════════════════════════════════════════════════════
+  # Stage 6: Publish npm Wrapper Package (Optional)
+  # ═══════════════════════════════════════════════════════════════════════════
+  publish-npm:
+    name: "Publish to npm"
+    needs: [validate, create-release]
+    runs-on: ubuntu-latest
+    if: |
+      needs.validate.outputs.is_prerelease == 'false' &&
+      github.event.inputs.dry_run != 'true' &&
+      github.event.inputs.skip_npm != 'true'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Download binaries
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Create npm package
+        run: |
+          mkdir -p npm-package/bin
+
+          # Create package.json for npm wrapper
+          cat > npm-package/package.json << EOF
+          {
+            "name": "${{ env.NPM_PACKAGE }}",
+            "version": "${{ needs.validate.outputs.version }}",
+            "description": "ReasonKit Core - Rust-first RAG/Knowledge Base Engine CLI",
+            "bin": {
+              "rk-core": "./bin/rk-core",
+              "rk": "./bin/rk-core"
+            },
+            "scripts": {
+              "postinstall": "node scripts/install.js"
+            },
+            "repository": {
+              "type": "git",
+              "url": "git+https://github.com/reasonkit/reasonkit-core.git"
+            },
+            "keywords": ["rag", "llm", "reasoning", "ai", "knowledge-base", "cli"],
+            "author": "ReasonKit Team <hello@reasonkit.sh>",
+            "license": "Apache-2.0",
+            "homepage": "https://reasonkit.sh",
+            "engines": {
+              "node": ">=18"
+            },
+            "os": ["darwin", "linux", "win32"],
+            "cpu": ["x64", "arm64"]
+          }
+          EOF
+
+          # Create install script
+          mkdir -p npm-package/scripts
+          cat > npm-package/scripts/install.js << 'EOFJS'
+          const { execSync } = require('child_process');
+          const fs = require('fs');
+          const path = require('path');
+          const https = require('https');
+
+          const REPO = 'reasonkit/reasonkit-core';
+          const BINARY = 'rk-core';
+          const VERSION = require('../package.json').version;
+
+          function getPlatform() {
+            const platform = process.platform;
+            const arch = process.arch;
+
+            const mapping = {
+              'darwin-x64': 'macos-x86_64',
+              'darwin-arm64': 'macos-aarch64',
+              'linux-x64': 'linux-x86_64',
+              'linux-arm64': 'linux-aarch64',
+              'win32-x64': 'windows-x86_64'
+            };
+
+            return mapping[`${platform}-${arch}`];
+          }
+
+          async function download(url, dest) {
+            return new Promise((resolve, reject) => {
+              const file = fs.createWriteStream(dest);
+              https.get(url, { headers: { 'User-Agent': 'npm' } }, (res) => {
+                if (res.statusCode === 302 || res.statusCode === 301) {
+                  download(res.headers.location, dest).then(resolve).catch(reject);
+                  return;
+                }
+                res.pipe(file);
+                file.on('finish', () => { file.close(); resolve(); });
+              }).on('error', reject);
+            });
+          }
+
+          async function main() {
+            const platform = getPlatform();
+            if (!platform) {
+              console.error('Unsupported platform:', process.platform, process.arch);
+              process.exit(1);
+            }
+
+            const ext = process.platform === 'win32' ? 'zip' : 'tar.gz';
+            const asset = `${BINARY}-${platform}.${ext}`;
+            const url = `https://github.com/${REPO}/releases/download/v${VERSION}/${asset}`;
+
+            console.log(`Downloading ${BINARY} for ${platform}...`);
+
+            const binDir = path.join(__dirname, '..', 'bin');
+            fs.mkdirSync(binDir, { recursive: true });
+
+            const tmpFile = path.join(binDir, asset);
+            await download(url, tmpFile);
+
+            if (ext === 'tar.gz') {
+              execSync(`tar xzf "${tmpFile}" -C "${binDir}"`, { stdio: 'inherit' });
+            } else {
+              execSync(`unzip -o "${tmpFile}" -d "${binDir}"`, { stdio: 'inherit' });
+            }
+
+            fs.unlinkSync(tmpFile);
+
+            const binaryPath = path.join(binDir, process.platform === 'win32' ? `${BINARY}.exe` : BINARY);
+            if (process.platform !== 'win32') {
+              fs.chmodSync(binaryPath, 0o755);
+            }
+
+            console.log(`${BINARY} installed successfully!`);
+          }
+
+          main().catch(console.error);
+          EOFJS
+
+          # Create README
+          cat > npm-package/README.md << 'EOF'
+          # @reasonkit/cli
+
+          ReasonKit Core - Rust-first RAG/Knowledge Base Engine
+
+          ## Installation
+
+          ```bash
+          npm install -g @reasonkit/cli
+          ```
+
+          ## Usage
+
+          ```bash
+          rk-core --help
+          rk-core think --profile balanced "Your question here"
+          ```
+
+          ## Documentation
+
+          - Website: https://reasonkit.sh
+          - Docs: https://reasonkit.sh/docs
+          - GitHub: https://github.com/reasonkit/reasonkit-core
+          EOF
+
+      - name: Publish to npm
+        run: |
+          cd npm-package
+          if [ -n "${{ secrets.NPM_TOKEN }}" ]; then
+            npm publish --access public
+            echo "Published to npm!"
+          else
+            echo "::warning::NPM_TOKEN not set, skipping npm publish"
+          fi
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        continue-on-error: true
+
+  # ═══════════════════════════════════════════════════════════════════════════
+  # Stage 7: Publish Python Bindings to PyPI (Optional)
+  # ═══════════════════════════════════════════════════════════════════════════
+  publish-pypi:
+    name: "Publish to PyPI"
+    needs: [validate, create-release]
+    runs-on: ubuntu-latest
+    if: |
+      needs.validate.outputs.is_prerelease == 'false' &&
+      github.event.inputs.dry_run != 'true' &&
+      github.event.inputs.skip_pypi != 'true'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Install maturin
+        run: |
+          pip install maturin
+
+      - name: Build wheels
+        run: |
+          maturin build --release --strip
+        continue-on-error: true
+
+      - name: Publish to PyPI
+        run: |
+          if [ -n "${{ secrets.PYPI_API_TOKEN }}" ]; then
+            maturin publish --username __token__ --password "${{ secrets.PYPI_API_TOKEN }}"
+            echo "Published to PyPI!"
+          else
+            echo "::warning::PYPI_API_TOKEN not set, skipping PyPI publish"
+          fi
+        env:
+          MATURIN_PYPI_TOKEN: ${{ secrets.PYPI_API_TOKEN }}
+        continue-on-error: true
+
+  # ═══════════════════════════════════════════════════════════════════════════
+  # Stage 8: Update Website Install Script
+  # ═══════════════════════════════════════════════════════════════════════════
+  update-website:
+    name: "Update Website"
+    needs: [validate, create-release]
+    runs-on: ubuntu-latest
+    if: |
+      needs.validate.outputs.is_prerelease == 'false' &&
+      github.event.inputs.dry_run != 'true'
+
+    steps:
+      - name: Trigger website update
+        run: |
+          echo "Version ${{ needs.validate.outputs.version }} released"
+          echo "Website update should be triggered via webhook or separate workflow"
+          # This would typically trigger a deployment of the website
+          # with updated version information
+        continue-on-error: true
+
+  # ═══════════════════════════════════════════════════════════════════════════
+  # Stage 9: Release Summary
+  # ═══════════════════════════════════════════════════════════════════════════
+  release-summary:
+    name: "Release Summary"
+    needs:
+      - validate
+      - build-binaries
+      - build-docker
+      - create-release
+      - publish-crates
+      - publish-npm
+      - publish-pypi
+    runs-on: ubuntu-latest
+    if: always()
+
+    steps:
+      - name: Generate release summary
+        run: |
+          echo "# Release Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Version:** ${{ needs.validate.outputs.version }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Pre-release:** ${{ needs.validate.outputs.is_prerelease }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Dry Run:** ${{ github.event.inputs.dry_run || 'false' }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          echo "## Build Status" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Stage | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|-------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Validation | ${{ needs.validate.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Binary Builds | ${{ needs.build-binaries.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Docker Build | ${{ needs.build-docker.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| GitHub Release | ${{ needs.create-release.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| crates.io | ${{ needs.publish-crates.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| npm | ${{ needs.publish-npm.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| PyPI | ${{ needs.publish-pypi.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          echo "## Installation" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo '```bash' >> $GITHUB_STEP_SUMMARY
+          echo "# One-liner install" >> $GITHUB_STEP_SUMMARY
+          echo "curl -fsSL https://reasonkit.sh/install | bash" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "# Via cargo" >> $GITHUB_STEP_SUMMARY
+          echo "cargo install reasonkit-core" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "# Via npm" >> $GITHUB_STEP_SUMMARY
+          echo "npm install -g @reasonkit/cli" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "# Via pip" >> $GITHUB_STEP_SUMMARY
+          echo "pip install reasonkit" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "# Via Docker" >> $GITHUB_STEP_SUMMARY
+          echo "docker run ghcr.io/reasonkit/reasonkit-core:${{ needs.validate.outputs.version }} --help" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          echo "## Binary Assets" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Platform | Architecture | Asset |" >> $GITHUB_STEP_SUMMARY
+          echo "|----------|--------------|-------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Linux | x86_64 | rk-core-linux-x86_64.tar.gz |" >> $GITHUB_STEP_SUMMARY
+          echo "| Linux | x86_64 (static) | rk-core-linux-x86_64-musl.tar.gz |" >> $GITHUB_STEP_SUMMARY
+          echo "| Linux | ARM64 | rk-core-linux-aarch64.tar.gz |" >> $GITHUB_STEP_SUMMARY
+          echo "| Linux | ARM64 (static) | rk-core-linux-aarch64-musl.tar.gz |" >> $GITHUB_STEP_SUMMARY
+          echo "| macOS | x86_64 (Intel) | rk-core-macos-x86_64.tar.gz |" >> $GITHUB_STEP_SUMMARY
+          echo "| macOS | ARM64 (Apple Silicon) | rk-core-macos-aarch64.tar.gz |" >> $GITHUB_STEP_SUMMARY
+          echo "| Windows | x86_64 | rk-core-windows-x86_64.zip |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          if [ "${{ needs.create-release.result }}" = "success" ]; then
+            echo "## Release URL" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "https://github.com/${{ github.repository }}/releases/tag/v${{ needs.validate.outputs.version }}" >> $GITHUB_STEP_SUMMARY
+          fi
+
+      - name: Notify on failure
+        if: failure()
+        run: |
+          echo "::error::Release pipeline failed. Check individual job logs for details."

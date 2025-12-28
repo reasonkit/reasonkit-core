@@ -1,0 +1,364 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://reasonkit.sh/schemas/thinktools/proofguard_output.json",
+  "title": "ProofGuard Output Schema",
+  "description": "Structured output for ProofGuard multi-source verification module",
+  "version": "2.0.0",
+  "type": "object",
+  "required": [
+    "module",
+    "version",
+    "timestamp",
+    "query",
+    "claims_extracted",
+    "verification_results",
+    "contradictions",
+    "triangulation_table",
+    "confidence",
+    "thinking_trace"
+  ],
+  "properties": {
+    "module": {
+      "type": "string",
+      "const": "proofguard",
+      "description": "Module identifier"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Module version (semver)"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp of execution"
+    },
+    "query": {
+      "type": "string",
+      "description": "Original content to verify"
+    },
+    "claims_extracted": {
+      "type": "array",
+      "description": "Factual claims extracted from input",
+      "items": {
+        "type": "object",
+        "required": ["claim_id", "statement", "category", "importance"],
+        "properties": {
+          "claim_id": {
+            "type": "string",
+            "pattern": "^C\\d+$",
+            "description": "Claim identifier (C1, C2, etc.)"
+          },
+          "statement": {
+            "type": "string",
+            "description": "The factual claim"
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "technical_spec",
+              "benchmark_result",
+              "historical_fact",
+              "statistical_claim",
+              "causal_claim",
+              "definition",
+              "other"
+            ],
+            "description": "Type of claim"
+          },
+          "importance": {
+            "type": "string",
+            "enum": ["critical", "high", "medium", "low"],
+            "description": "How important this claim is to verify"
+          }
+        }
+      }
+    },
+    "verification_results": {
+      "type": "array",
+      "description": "Verification status for each claim",
+      "items": {
+        "type": "object",
+        "required": [
+          "claim_id",
+          "sources",
+          "verification_level",
+          "consensus"
+        ],
+        "properties": {
+          "claim_id": {
+            "type": "string",
+            "description": "Reference to claim being verified"
+          },
+          "sources": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "required": ["url", "tier", "accessed", "supports"],
+              "properties": {
+                "url": {
+                  "type": "string",
+                  "format": "uri",
+                  "description": "Source URL"
+                },
+                "tier": {
+                  "type": "integer",
+                  "enum": [1, 2, 3],
+                  "description": "Source quality tier (1=authoritative, 2=secondary, 3=independent)"
+                },
+                "title": {
+                  "type": "string",
+                  "description": "Source title or description"
+                },
+                "accessed": {
+                  "type": "boolean",
+                  "description": "Whether URL was actually accessed and verified"
+                },
+                "supports": {
+                  "type": "string",
+                  "enum": ["strongly_supports", "supports", "neutral", "contradicts", "strongly_contradicts"],
+                  "description": "How this source relates to the claim"
+                },
+                "excerpt": {
+                  "type": "string",
+                  "description": "Relevant excerpt from source"
+                },
+                "date_published": {
+                  "type": "string",
+                  "description": "Publication date if available"
+                }
+              }
+            }
+          },
+          "verification_level": {
+            "type": "string",
+            "enum": ["VERIFIED", "LIKELY", "UNVERIFIED", "CONTRADICTED"],
+            "description": "Overall verification status"
+          },
+          "consensus": {
+            "type": "object",
+            "required": ["agreement_level", "source_count", "tier_distribution"],
+            "properties": {
+              "agreement_level": {
+                "type": "number",
+                "minimum": 0.0,
+                "maximum": 1.0,
+                "description": "Proportion of sources that agree"
+              },
+              "source_count": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "Number of sources consulted"
+              },
+              "tier_distribution": {
+                "type": "object",
+                "properties": {
+                  "tier_1": {"type": "integer"},
+                  "tier_2": {"type": "integer"},
+                  "tier_3": {"type": "integer"}
+                }
+              },
+              "confidence_boost": {
+                "type": "number",
+                "description": "Adjustment to confidence based on verification"
+              }
+            }
+          }
+        }
+      }
+    },
+    "contradictions": {
+      "type": "array",
+      "description": "Contradictions found across sources",
+      "items": {
+        "type": "object",
+        "required": ["claim_id", "sources_in_conflict", "nature", "severity"],
+        "properties": {
+          "claim_id": {
+            "type": "string",
+            "description": "Claim with contradicting sources"
+          },
+          "sources_in_conflict": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uri"
+            },
+            "description": "URLs of conflicting sources"
+          },
+          "nature": {
+            "type": "string",
+            "description": "Description of the contradiction"
+          },
+          "severity": {
+            "type": "string",
+            "enum": ["minor", "moderate", "major", "blocking"],
+            "description": "How severe the contradiction is"
+          },
+          "resolution_attempted": {
+            "type": "boolean",
+            "description": "Whether resolution was attempted"
+          },
+          "resolution": {
+            "type": "string",
+            "description": "Explanation or resolution of contradiction"
+          }
+        }
+      }
+    },
+    "triangulation_table": {
+      "type": "array",
+      "description": "Formatted triangulation table for reporting",
+      "items": {
+        "type": "object",
+        "required": ["claim", "source_a", "source_b", "source_c", "consensus"],
+        "properties": {
+          "claim": {
+            "type": "string",
+            "description": "Claim statement"
+          },
+          "source_a": {
+            "type": "object",
+            "properties": {
+              "tier": {"type": "string"},
+              "url": {"type": "string"},
+              "status": {"type": "string"}
+            }
+          },
+          "source_b": {
+            "type": "object",
+            "properties": {
+              "tier": {"type": "string"},
+              "url": {"type": "string"},
+              "status": {"type": "string"}
+            }
+          },
+          "source_c": {
+            "type": "object",
+            "properties": {
+              "tier": {"type": "string"},
+              "url": {"type": "string"},
+              "status": {"type": "string"}
+            }
+          },
+          "consensus": {
+            "type": "string",
+            "enum": ["VERIFIED ✓", "LIKELY ~", "UNVERIFIED ?", "CONTRADICTED ✗"]
+          }
+        }
+      }
+    },
+    "source_quality_analysis": {
+      "type": "object",
+      "properties": {
+        "total_sources": {"type": "integer"},
+        "tier_breakdown": {
+          "type": "object",
+          "properties": {
+            "tier_1_count": {"type": "integer"},
+            "tier_2_count": {"type": "integer"},
+            "tier_3_count": {"type": "integer"}
+          }
+        },
+        "domain_diversity": {
+          "type": "number",
+          "minimum": 0.0,
+          "maximum": 1.0,
+          "description": "unique_domains / total_sources"
+        },
+        "urls_verified": {
+          "type": "integer",
+          "description": "Number of URLs actually accessed"
+        },
+        "weighted_quality_score": {
+          "type": "number",
+          "minimum": 0.0,
+          "maximum": 1.0,
+          "description": "Weighted average of source tiers"
+        }
+      }
+    },
+    "confidence": {
+      "type": "object",
+      "required": ["overall", "factors", "breakdown"],
+      "properties": {
+        "overall": {
+          "type": "number",
+          "minimum": 0.0,
+          "maximum": 1.0,
+          "description": "Overall module confidence score"
+        },
+        "factors": {
+          "type": "object",
+          "required": [
+            "source_count",
+            "source_diversity",
+            "tier_quality",
+            "contradiction_absence",
+            "verification_completeness"
+          ],
+          "properties": {
+            "source_count": {
+              "type": "number",
+              "minimum": 0.0,
+              "maximum": 1.0,
+              "description": "min(sources_used / 3, 1.0)"
+            },
+            "source_diversity": {
+              "type": "number",
+              "minimum": 0.0,
+              "maximum": 1.0,
+              "description": "unique_domains / total_sources"
+            },
+            "tier_quality": {
+              "type": "number",
+              "minimum": 0.0,
+              "maximum": 1.0,
+              "description": "weighted_tier_average"
+            },
+            "contradiction_absence": {
+              "type": "number",
+              "minimum": 0.0,
+              "maximum": 1.0,
+              "description": "1.0 - (contradictions / total_claims)"
+            },
+            "verification_completeness": {
+              "type": "number",
+              "minimum": 0.0,
+              "maximum": 1.0,
+              "description": "verified_claims / total_claims"
+            }
+          }
+        },
+        "breakdown": {
+          "type": "string",
+          "description": "Human-readable explanation of confidence calculation"
+        }
+      }
+    },
+    "thinking_trace": {
+      "type": "array",
+      "description": "Step-by-step reasoning trace for transparency",
+      "items": {
+        "type": "object",
+        "required": ["step", "action", "result"],
+        "properties": {
+          "step": {"type": "integer"},
+          "action": {"type": "string"},
+          "result": {"type": "string"},
+          "duration_ms": {"type": "integer"}
+        }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "execution_time_ms": {"type": "integer"},
+        "token_count": {"type": "integer"},
+        "model_used": {"type": "string"},
+        "searches_performed": {"type": "integer"}
+      }
+    }
+  }
+}

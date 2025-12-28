@@ -1,0 +1,65 @@
+# Cargo configuration for reasonkit-core
+# See: https://doc.rust-lang.org/cargo/reference/config.html
+
+[build]
+# Use all available CPU cores for compilation
+jobs = -1
+
+[term]
+# Enable colored output
+color = "auto"
+
+# Progress bar configuration
+progress.when = "auto"
+progress.width = 80
+
+[alias]
+# Convenient cargo aliases
+xtask = "run --package xtask --"
+qa = "run --bin quality_check"
+
+# Quality gate shortcuts
+gate1 = "build --release"
+gate2 = "clippy -- -D warnings"
+gate3 = "fmt --check"
+gate4 = "test --all-features"
+gate5 = "bench --no-run"
+
+# Run all quality gates
+gates = ["build --release", "clippy -- -D warnings", "fmt --check", "test --all-features", "bench --no-run"]
+
+[target.x86_64-unknown-linux-gnu]
+# Linux-specific optimizations
+rustflags = ["-C", "target-cpu=native"]
+
+[target.x86_64-unknown-linux-musl]
+# Static linking for musl
+rustflags = ["-C", "target-feature=+crt-static"]
+
+[target.x86_64-apple-darwin]
+# macOS Intel optimizations
+rustflags = ["-C", "target-cpu=native"]
+
+[target.aarch64-apple-darwin]
+# macOS ARM64 (Apple Silicon) optimizations
+rustflags = ["-C", "target-cpu=native"]
+
+[target.x86_64-pc-windows-msvc]
+# Windows optimizations
+rustflags = ["-C", "target-cpu=native"]
+
+# Documentation settings
+[doc]
+# Build docs for all features
+all-features = true
+
+# Private items documentation
+private-items = false
+
+# Browser to open docs
+browser = ["firefox", "chrome", "safari"]
+
+# Environment variables for development
+[env]
+RUST_BACKTRACE = { value = "1", force = false, relative = true }
+RUST_LOG = { value = "info", force = false, relative = true }

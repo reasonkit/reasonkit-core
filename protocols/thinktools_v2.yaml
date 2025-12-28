@@ -1,0 +1,99 @@
+version: "2.0.0"
+schema: "thinktool-v2"
+thinktool_modules:
+  gigathink:
+    id: gigathink
+    name: GigaThink
+    version: 1.0.0
+    description: Expansive creative thinking - generate 10+ diverse perspectives
+    category: divergent
+    tier: basic
+    capabilities: [creative, expansive]
+    thinking_pattern:
+      type: linear
+      steps: [identify_dimensions, explore_perspectives, synthesize]
+    typical_duration: 5s
+    token_cost_estimate: medium-high
+    parameters:
+      min_perspectives: 5
+      max_perspectives: 10
+
+  laserlogic:
+    id: laserlogic
+    name: LaserLogic
+    version: 1.0.0
+    description: Precision deductive reasoning with fallacy detection
+    category: convergent
+    tier: basic
+    capabilities: [logical, analytical]
+    thinking_pattern:
+      type: linear
+      steps: [extract_claims, check_validity, detect_fallacies]
+    typical_duration: 4s
+    token_cost_estimate: medium
+    parameters:
+      strictness: high
+
+  bedrock:
+    id: bedrock
+    name: BedRock
+    version: 1.0.0
+    description: First principles decomposition - reduce to fundamental axioms
+    category: foundational
+    tier: basic
+    capabilities: [analytical, foundational]
+    thinking_pattern:
+      type: linear
+      steps: [decompose, identify_axioms, reconstruct]
+    typical_duration: 4.5s
+    token_cost_estimate: medium
+    parameters:
+      depth: deep
+
+  proofguard:
+    id: proofguard
+    name: ProofGuard
+    version: 1.0.0
+    description: Multi-source verification using triangulation protocol
+    category: verification
+    tier: basic
+    capabilities: [verification, fact-checking]
+    thinking_pattern:
+      type: linear
+      steps: [identify_sources, verify_each, triangulate]
+    typical_duration: 5s
+    token_cost_estimate: medium
+    parameters:
+      min_sources: 3
+
+  brutalhonesty:
+    id: brutalhonesty
+    name: BrutalHonesty
+    version: 1.0.0
+    description: Adversarial self-critique - find every flaw
+    category: adversarial
+    tier: basic
+    capabilities: [critique, adversarial]
+    thinking_pattern:
+      type: linear
+      steps: [steelman, attack, verdict]
+    typical_duration: 4.5s
+    token_cost_estimate: medium
+    parameters:
+      severity: brutal
+
+  powercombo:
+    id: powercombo
+    name: PowerCombo (Experimental)
+    version: 0.1.0
+    description: Ultimate reasoning mode - all 5 ThinkTools combined (Currently falls back to GigaThink)
+    category: meta
+    tier: experimental
+    capabilities: [creative, logical, foundational, verification, adversarial]
+    thinking_pattern:
+      type: composite
+      steps: [gigathink] # Placeholder until composite logic is fully implemented in yaml_loader.rs
+    typical_duration: 5s
+    token_cost_estimate: medium
+    parameters:
+      status: experimental

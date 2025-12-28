@@ -1,0 +1,410 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://reasonkit.sh/schemas/thinktools/synthesis_output.json",
+  "title": "ThinkTools Synthesis Output Schema",
+  "description": "Structured output for merged ThinkTools reasoning chain",
+  "version": "2.0.0",
+  "type": "object",
+  "required": [
+    "version",
+    "timestamp",
+    "query",
+    "profile",
+    "modules_executed",
+    "module_outputs",
+    "cross_module_analysis",
+    "final_synthesis",
+    "confidence",
+    "recommendation"
+  ],
+  "properties": {
+    "version": {
+      "type": "string",
+      "const": "2.0.0",
+      "description": "ThinkTools protocol version"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp of execution"
+    },
+    "query": {
+      "type": "string",
+      "description": "Original user query or problem"
+    },
+    "profile": {
+      "type": "object",
+      "required": ["name", "shortcode", "target_confidence"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Profile name used"
+        },
+        "shortcode": {
+          "type": "string",
+          "enum": ["--quick", "--balanced", "--deep", "--paranoid"],
+          "description": "Profile shortcode"
+        },
+        "target_confidence": {
+          "type": "number",
+          "minimum": 0.0,
+          "maximum": 1.0,
+          "description": "Target confidence for this profile"
+        },
+        "modules_activated": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Modules activated by this profile"
+        }
+      }
+    },
+    "modules_executed": {
+      "type": "array",
+      "description": "Order of module execution",
+      "items": {
+        "type": "object",
+        "required": ["module", "started_at", "completed_at", "success"],
+        "properties": {
+          "module": {
+            "type": "string",
+            "enum": ["gigathink", "laserlogic", "bedrock", "proofguard", "brutalhonesty"]
+          },
+          "started_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "completed_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "duration_ms": {
+            "type": "integer"
+          },
+          "success": {
+            "type": "boolean"
+          },
+          "error": {
+            "type": "string",
+            "description": "Error message if success=false"
+          }
+        }
+      }
+    },
+    "module_outputs": {
+      "type": "object",
+      "description": "Raw outputs from each module",
+      "properties": {
+        "gigathink": {
+          "type": "object",
+          "description": "Reference to GigaThink output (see gigathink_output.json schema)"
+        },
+        "laserlogic": {
+          "type": "object",
+          "description": "Reference to LaserLogic output (see laserlogic_output.json schema)"
+        },
+        "bedrock": {
+          "type": "object",
+          "description": "Reference to BedRock output (see bedrock_output.json schema)"
+        },
+        "proofguard": {
+          "type": "object",
+          "description": "Reference to ProofGuard output (see proofguard_output.json schema)"
+        },
+        "brutalhonesty": {
+          "type": "object",
+          "description": "Reference to BrutalHonesty output (see brutalhonesty_output.json schema)"
+        }
+      }
+    },
+    "cross_module_analysis": {
+      "type": "object",
+      "required": ["contradictions", "agreements", "complementary_insights"],
+      "description": "Analysis of relationships between module outputs",
+      "properties": {
+        "contradictions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["modules", "nature", "severity", "resolution"],
+            "properties": {
+              "modules": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Modules in conflict"
+              },
+              "nature": {
+                "type": "string",
+                "description": "Description of contradiction"
+              },
+              "severity": {
+                "type": "string",
+                "enum": ["minor", "moderate", "major", "blocking"]
+              },
+              "resolution": {
+                "type": "string",
+                "description": "How contradiction was resolved"
+              },
+              "confidence_impact": {
+                "type": "number",
+                "description": "Impact on overall confidence"
+              }
+            }
+          }
+        },
+        "agreements": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "modules": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "agreement": {
+                "type": "string",
+                "description": "What modules agree on"
+              },
+              "confidence_boost": {
+                "type": "number",
+                "description": "Boost to confidence from agreement"
+              }
+            }
+          }
+        },
+        "complementary_insights": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "modules": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "insight": {
+                "type": "string",
+                "description": "Insight from combining modules"
+              }
+            }
+          }
+        }
+      }
+    },
+    "final_synthesis": {
+      "type": "object",
+      "required": ["summary", "key_findings", "decision_matrix"],
+      "properties": {
+        "summary": {
+          "type": "string",
+          "description": "Executive summary of all reasoning"
+        },
+        "key_findings": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["finding", "supporting_modules", "confidence"],
+            "properties": {
+              "finding": {
+                "type": "string"
+              },
+              "supporting_modules": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "confidence": {
+                "type": "number",
+                "minimum": 0.0,
+                "maximum": 1.0
+              },
+              "caveats": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "decision_matrix": {
+          "type": "array",
+          "description": "Structured decision support table",
+          "items": {
+            "type": "object",
+            "properties": {
+              "criterion": {"type": "string"},
+              "score": {"type": "string"},
+              "rationale": {"type": "string"},
+              "confidence": {"type": "number"}
+            }
+          }
+        },
+        "implementation_roadmap": {
+          "type": "object",
+          "properties": {
+            "priority_1": {
+              "type": "array",
+              "items": {"type": "string"}
+            },
+            "priority_2": {
+              "type": "array",
+              "items": {"type": "string"}
+            },
+            "priority_3": {
+              "type": "array",
+              "items": {"type": "string"}
+            }
+          }
+        }
+      }
+    },
+    "confidence": {
+      "type": "object",
+      "required": ["overall", "calculation", "calibration_band"],
+      "properties": {
+        "overall": {
+          "type": "number",
+          "minimum": 0.0,
+          "maximum": 1.0,
+          "description": "Final confidence score after all adjustments"
+        },
+        "calculation": {
+          "type": "object",
+          "required": [
+            "module_scores",
+            "weighted_average",
+            "contradiction_penalty",
+            "profile_multiplier",
+            "final_score"
+          ],
+          "properties": {
+            "module_scores": {
+              "type": "object",
+              "properties": {
+                "gigathink": {"type": "number"},
+                "laserlogic": {"type": "number"},
+                "bedrock": {"type": "number"},
+                "proofguard": {"type": "number"},
+                "brutalhonesty": {"type": "number"}
+              }
+            },
+            "module_weights": {
+              "type": "object",
+              "properties": {
+                "gigathink": {"type": "number", "const": 0.15},
+                "laserlogic": {"type": "number", "const": 0.25},
+                "bedrock": {"type": "number", "const": 0.20},
+                "proofguard": {"type": "number", "const": 0.30},
+                "brutalhonesty": {"type": "number", "const": 0.10}
+              }
+            },
+            "weighted_average": {
+              "type": "number",
+              "description": "Weighted average before adjustments"
+            },
+            "contradiction_penalty": {
+              "type": "number",
+              "minimum": 0.5,
+              "maximum": 1.0,
+              "description": "Penalty factor for contradictions"
+            },
+            "profile_multiplier": {
+              "type": "number",
+              "minimum": 1.0,
+              "maximum": 1.15,
+              "description": "Boost for thoroughness of profile"
+            },
+            "final_score": {
+              "type": "number",
+              "description": "weighted_average × contradiction_penalty × profile_multiplier"
+            }
+          }
+        },
+        "calibration_band": {
+          "type": "object",
+          "required": ["label", "recommended_action"],
+          "properties": {
+            "label": {
+              "type": "string",
+              "enum": [
+                "Very High Confidence",
+                "High Confidence",
+                "Moderate Confidence",
+                "Low Confidence",
+                "Insufficient Confidence"
+              ]
+            },
+            "range": {
+              "type": "string",
+              "description": "Confidence range (e.g., '85-94%')"
+            },
+            "recommended_action": {
+              "type": "string",
+              "description": "What to do at this confidence level"
+            }
+          }
+        }
+      }
+    },
+    "recommendation": {
+      "type": "object",
+      "required": ["action", "rationale", "confidence"],
+      "properties": {
+        "action": {
+          "type": "string",
+          "description": "Recommended action based on analysis"
+        },
+        "rationale": {
+          "type": "string",
+          "description": "Why this recommendation"
+        },
+        "confidence": {
+          "type": "number",
+          "minimum": 0.0,
+          "maximum": 1.0
+        },
+        "risks": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Key risks to be aware of"
+        },
+        "success_criteria": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "How to measure success"
+        }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "total_execution_time_ms": {
+          "type": "integer"
+        },
+        "total_token_count": {
+          "type": "integer"
+        },
+        "re_executions": {
+          "type": "integer",
+          "description": "Number of module re-runs due to BrutalHonesty feedback"
+        },
+        "passes_completed": {
+          "type": "integer",
+          "description": "Number of passes (for paranoid profile)"
+        }
+      }
+    }
+  }
+}

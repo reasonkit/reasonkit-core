@@ -67,16 +67,23 @@ impl EvolutionEngine {
     }
 
     /// Record performance metrics for a function
-    pub async fn record_metrics(&self, function_name: &str, execution_time_ns: u64, memory_usage: usize) -> Result<()> {
+    pub async fn record_metrics(
+        &self,
+        function_name: &str,
+        execution_time_ns: u64,
+        memory_usage: usize,
+    ) -> Result<()> {
         let mut store = self.metrics_store.write().await;
 
-        let metrics = store.entry(function_name.to_string()).or_insert(PerformanceMetrics {
-            function_name: function_name.to_string(),
-            execution_time_ns: 0,
-            memory_usage_bytes: 0,
-            call_count: 0,
-            last_executed: chrono::Utc::now(),
-        });
+        let metrics = store
+            .entry(function_name.to_string())
+            .or_insert(PerformanceMetrics {
+                function_name: function_name.to_string(),
+                execution_time_ns: 0,
+                memory_usage_bytes: 0,
+                call_count: 0,
+                last_executed: chrono::Utc::now(),
+            });
 
         // Update running averages
         metrics.call_count += 1;
@@ -85,15 +92,21 @@ impl EvolutionEngine {
         metrics.last_executed = chrono::Utc::now();
 
         // Check if this function needs optimization
-        self.analyze_for_optimization(function_name, metrics.clone()).await?;
+        self.analyze_for_optimization(function_name, metrics.clone())
+            .await?;
 
         Ok(())
     }
 
     /// Analyze a function for optimization opportunities
-    async fn analyze_for_optimization(&self, function_name: &str, metrics: PerformanceMetrics) -> Result<()> {
+    async fn analyze_for_optimization(
+        &self,
+        function_name: &str,
+        metrics: PerformanceMetrics,
+    ) -> Result<()> {
         // Calculate performance score (lower is better)
-        let performance_score = (metrics.execution_time_ns as f64) * (metrics.memory_usage_bytes as f64);
+        let performance_score =
+            (metrics.execution_time_ns as f64) * (metrics.memory_usage_bytes as f64);
 
         // Identify optimization potential
         let baseline_performance = 1_000_000.0; // Baseline for "acceptable" performance
@@ -104,7 +117,8 @@ impl EvolutionEngine {
         };
 
         // If improvement potential is significant, add to candidates
-        if improvement_potential > 0.2 { // 20% improvement potential threshold
+        if improvement_potential > 0.2 {
+            // 20% improvement potential threshold
             let strategy = self.select_optimization_strategy(&metrics);
 
             let candidate = OptimizationCandidate {
@@ -124,9 +138,11 @@ impl EvolutionEngine {
     /// Select the best optimization strategy for given metrics
     fn select_optimization_strategy(&self, metrics: &PerformanceMetrics) -> OptimizationStrategy {
         // Simple heuristic-based selection
-        if metrics.execution_time_ns > 10_000_000 { // > 10ms
+        if metrics.execution_time_ns > 10_000_000 {
+            // > 10ms
             OptimizationStrategy::Parallelization
-        } else if metrics.memory_usage_bytes > 100_000_000 { // > 100MB
+        } else if metrics.memory_usage_bytes > 100_000_000 {
+            // > 100MB
             OptimizationStrategy::MemoryOptimization
         } else if metrics.call_count > 1000 {
             OptimizationStrategy::CachingLayer
@@ -156,7 +172,10 @@ impl EvolutionEngine {
     }
 
     /// Create an optimized version of a function
-    async fn create_optimized_version(&self, candidate: &OptimizationCandidate) -> Result<OptimizedFunction> {
+    async fn create_optimized_version(
+        &self,
+        candidate: &OptimizationCandidate,
+    ) -> Result<OptimizedFunction> {
         // In a real implementation, this would generate optimized WASM code
         // For now, we'll simulate the optimization
 
@@ -246,7 +265,10 @@ mod tests {
     async fn test_metrics_recording() {
         let engine = EvolutionEngine::new().unwrap();
 
-        engine.record_metrics("test_function", 1_000_000, 1024).await.unwrap();
+        engine
+            .record_metrics("test_function", 1_000_000, 1024)
+            .await
+            .unwrap();
 
         let stats = engine.get_statistics().await.unwrap();
         assert_eq!(stats.total_functions_monitored, 1);

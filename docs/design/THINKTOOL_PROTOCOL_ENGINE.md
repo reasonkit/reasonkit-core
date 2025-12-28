@@ -3,7 +3,7 @@
 
 **Version**: 1.0.0
 **Status**: Design Document
-**Author**: Claude Code (MASTER ORCHESTRATOR)
+**Author**: ReasonKit Team
 **Date**: 2025-12-11
 
 ---

@@ -1,0 +1,46 @@
+[package]
+name = "reasonkit-core"
+version = "0.1.0"
+edition = "2021"
+description = "High-performance core for ReasonKit structured reasoning"
+license = "MIT"
+authors = ["ReasonKit Team"]
+
+# This is a standalone crate, not part of parent workspace
+[workspace]
+
+[lib]
+name = "reasonkit_core"
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+# Serialization
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+
+# Python bindings
+pyo3 = { version = "0.23", features = ["extension-module", "serde"] }
+
+# Validation
+jsonschema = "0.26"
+
+# Async runtime
+tokio = { version = "1.0", features = ["full"], optional = true }
+
+# Error handling
+thiserror = "1.0"
+anyhow = "1.0"
+
+# Performance
+ahash = "0.8"
+smallvec = "1.11"
+
+[features]
+default = ["python"]
+python = []
+async = ["tokio"]
+
+[profile.release]
+lto = true
+codegen-units = 1
+opt-level = 3

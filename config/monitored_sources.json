@@ -6,93 +6,233 @@
       "anthropic": {
         "refresh_interval": "daily",
         "urls": [
-          {"url": "https://docs.anthropic.com/", "type": "documentation", "name": "Anthropic Docs"},
-          {"url": "https://github.com/anthropics/anthropic-sdk-python", "type": "github", "name": "Anthropic Python SDK"},
-          {"url": "https://github.com/anthropics/claude-code", "type": "github", "name": "Claude Code CLI"},
-          {"url": "https://www.anthropic.com/news", "type": "blog", "name": "Anthropic News"},
-          {"url": "https://github.com/anthropics/courses", "type": "github", "name": "Anthropic Courses"}
+          {
+            "url": "https://docs.anthropic.com/",
+            "type": "documentation",
+            "name": "Anthropic Docs"
+          },
+          {
+            "url": "https://github.com/anthropics/anthropic-sdk-python",
+            "type": "github",
+            "name": "Anthropic Python SDK"
+          },
+          {
+            "url": "https://github.com/anthropics/claude-code",
+            "type": "github",
+            "name": "Claude Code CLI"
+          },
+          {
+            "url": "https://www.anthropic.com/news",
+            "type": "blog",
+            "name": "Anthropic News"
+          },
+          {
+            "url": "https://github.com/anthropics/courses",
+            "type": "github",
+            "name": "Anthropic Courses"
+          }
         ]
       },
       "openai": {
         "refresh_interval": "daily",
         "urls": [
-          {"url": "https://platform.openai.com/docs", "type": "documentation", "name": "OpenAI Docs"},
-          {"url": "https://github.com/openai/openai-python", "type": "github", "name": "OpenAI Python SDK"},
-          {"url": "https://github.com/openai/codex", "type": "github", "name": "Codex CLI"},
-          {"url": "https://openai.com/blog", "type": "blog", "name": "OpenAI Blog"},
-          {"url": "https://github.com/openai/swarm", "type": "github", "name": "OpenAI Swarm"}
+          {
+            "url": "https://platform.openai.com/docs",
+            "type": "documentation",
+            "name": "OpenAI Docs"
+          },
+          {
+            "url": "https://github.com/openai/openai-python",
+            "type": "github",
+            "name": "OpenAI Python SDK"
+          },
+          {
+            "url": "https://github.com/openai/codex",
+            "type": "github",
+            "name": "Codex CLI"
+          },
+          {
+            "url": "https://openai.com/blog",
+            "type": "blog",
+            "name": "OpenAI Blog"
+          },
+          {
+            "url": "https://github.com/openai/swarm",
+            "type": "github",
+            "name": "OpenAI Swarm"
+          }
         ]
       },
       "google": {
         "refresh_interval": "daily",
         "urls": [
-          {"url": "https://ai.google.dev/docs", "type": "documentation", "name": "Google AI Docs"},
-          {"url": "https://github.com/google-gemini/generative-ai-python", "type": "github", "name": "Gemini Python SDK"},
-          {"url": "https://github.com/google-gemini/gemini-cli", "type": "github", "name": "Gemini CLI"},
-          {"url": "https://aistudio.google.com/", "type": "webapp", "name": "AI Studio"}
+          {
+            "url": "https://ai.google.dev/docs",
+            "type": "documentation",
+            "name": "Google AI Docs"
+          },
+          {
+            "url": "https://github.com/google-gemini/generative-ai-python",
+            "type": "github",
+            "name": "Gemini Python SDK"
+          },
+          {
+            "url": "https://github.com/google-gemini/gemini-cli",
+            "type": "github",
+            "name": "Gemini CLI"
+          },
+          {
+            "url": "https://aistudio.google.com/",
+            "type": "webapp",
+            "name": "AI Studio"
+          }
         ]
       },
       "xai": {
         "refresh_interval": "daily",
         "urls": [
-          {"url": "https://docs.x.ai/", "type": "documentation", "name": "xAI Docs"},
-          {"url": "https://github.com/xai-org/grok", "type": "github", "name": "Grok"},
-          {"url": "https://x.ai/blog", "type": "blog", "name": "xAI Blog"}
+          {
+            "url": "https://docs.x.ai/",
+            "type": "documentation",
+            "name": "xAI Docs"
+          },
+          {
+            "url": "https://github.com/xai-org/grok",
+            "type": "github",
+            "name": "Grok"
+          },
+          { "url": "https://x.ai/blog", "type": "blog", "name": "xAI Blog" }
         ]
       },
       "opencode_ai": {
         "refresh_interval": "daily",
         "priority": "SPECIAL_FOCUS",
         "urls": [
-          {"url": "https://opencode.ai/", "type": "webapp", "name": "OpenCode.ai"},
-          {"url": "https://github.com/opencode-ai/opencode", "type": "github", "name": "OpenCode Repo"},
-          {"url": "https://docs.opencode.ai/", "type": "documentation", "name": "OpenCode Docs"}
+          {
+            "url": "https://opencode.ai/",
+            "type": "webapp",
+            "name": "OpenCode.ai"
+          },
+          {
+            "url": "https://github.com/opencode-ai/opencode",
+            "type": "github",
+            "name": "OpenCode Repo"
+          },
+          {
+            "url": "https://docs.opencode.ai/",
+            "type": "documentation",
+            "name": "OpenCode Docs"
+          }
         ]
       },
       "mcp_protocol": {
         "refresh_interval": "daily",
         "urls": [
-          {"url": "https://modelcontextprotocol.io/", "type": "documentation", "name": "MCP Official Site"},
-          {"url": "https://github.com/modelcontextprotocol/specification", "type": "github", "name": "MCP Spec"},
-          {"url": "https://github.com/modelcontextprotocol/servers", "type": "github", "name": "MCP Servers"},
-          {"url": "https://github.com/modelcontextprotocol/python-sdk", "type": "github", "name": "MCP Python SDK"},
-          {"url": "https://github.com/modelcontextprotocol/typescript-sdk", "type": "github", "name": "MCP TypeScript SDK"}
+          {
+            "url": "https://modelcontextprotocol.io/",
+            "type": "documentation",
+            "name": "MCP Official Site"
+          },
+          {
+            "url": "https://github.com/modelcontextprotocol/specification",
+            "type": "github",
+            "name": "MCP Spec"
+          },
+          {
+            "url": "https://github.com/modelcontextprotocol/servers",
+            "type": "github",
+            "name": "MCP Servers"
+          },
+          {
+            "url": "https://github.com/modelcontextprotocol/python-sdk",
+            "type": "github",
+            "name": "MCP Python SDK"
+          },
+          {
+            "url": "https://github.com/modelcontextprotocol/typescript-sdk",
+            "type": "github",
+            "name": "MCP TypeScript SDK"
+          }
         ]
       },
       "openrouter": {
         "refresh_interval": "daily",
         "urls": [
-          {"url": "https://openrouter.ai/docs", "type": "documentation", "name": "OpenRouter Docs"},
-          {"url": "https://openrouter.ai/models", "type": "api", "name": "OpenRouter Models"}
+          {
+            "url": "https://openrouter.ai/docs",
+            "type": "documentation",
+            "name": "OpenRouter Docs"
+          },
+          {
+            "url": "https://openrouter.ai/models",
+            "type": "api",
+            "name": "OpenRouter Models"
+          }
         ]
       },
       "deepseek": {
         "refresh_interval": "daily",
         "urls": [
-          {"url": "https://www.deepseek.com/", "type": "webapp", "name": "DeepSeek"},
-          {"url": "https://github.com/deepseek-ai/DeepSeek-V3", "type": "github", "name": "DeepSeek V3"},
-          {"url": "https://api-docs.deepseek.com/", "type": "documentation", "name": "DeepSeek API Docs"}
+          {
+            "url": "https://www.deepseek.com/",
+            "type": "webapp",
+            "name": "DeepSeek"
+          },
+          {
+            "url": "https://github.com/deepseek-ai/DeepSeek-V3",
+            "type": "github",
+            "name": "DeepSeek V3"
+          },
+          {
+            "url": "https://api-docs.deepseek.com/",
+            "type": "documentation",
+            "name": "DeepSeek API Docs"
+          }
         ]
       },
       "groq": {
         "refresh_interval": "daily",
         "urls": [
-          {"url": "https://console.groq.com/docs", "type": "documentation", "name": "Groq Docs"},
-          {"url": "https://github.com/groq/groq-python", "type": "github", "name": "Groq Python SDK"}
+          {
+            "url": "https://console.groq.com/docs",
+            "type": "documentation",
+            "name": "Groq Docs"
+          },
+          {
+            "url": "https://github.com/groq/groq-python",
+            "type": "github",
+            "name": "Groq Python SDK"
+          }
         ]
       },
       "cohere": {
         "refresh_interval": "daily",
         "urls": [
-          {"url": "https://docs.cohere.com/", "type": "documentation", "name": "Cohere Docs"},
-          {"url": "https://github.com/cohere-ai/cohere-python", "type": "github", "name": "Cohere Python SDK"}
+          {
+            "url": "https://docs.cohere.com/",
+            "type": "documentation",
+            "name": "Cohere Docs"
+          },
+          {
+            "url": "https://github.com/cohere-ai/cohere-python",
+            "type": "github",
+            "name": "Cohere Python SDK"
+          }
         ]
       },
       "qwen": {
         "refresh_interval": "daily",
         "urls": [
-          {"url": "https://github.com/QwenLM/Qwen", "type": "github", "name": "Qwen"},
-          {"url": "https://qwenlm.github.io/", "type": "documentation", "name": "Qwen Docs"}
+          {
+            "url": "https://github.com/QwenLM/Qwen",
+            "type": "github",
+            "name": "Qwen"
+          },
+          {
+            "url": "https://qwenlm.github.io/",
+            "type": "documentation",
+            "name": "Qwen Docs"
+          }
         ]
       }
     },
@@ -100,38 +240,106 @@
       "cli_tools": {
         "refresh_interval": "weekly",
         "urls": [
-          {"url": "https://github.com/continuedev/continue", "type": "github", "name": "Continue.dev"},
-          {"url": "https://github.com/Aider-AI/aider", "type": "github", "name": "Aider"},
-          {"url": "https://cursor.com/docs", "type": "documentation", "name": "Cursor Docs"},
-          {"url": "https://github.com/getcursor/cursor", "type": "github", "name": "Cursor Repo"},
-          {"url": "https://codeium.com/windsurf", "type": "webapp", "name": "Windsurf"},
-          {"url": "https://www.kiro.dev/", "type": "webapp", "name": "Kiro Code"}
+          {
+            "url": "https://github.com/continuedev/continue",
+            "type": "github",
+            "name": "Continue.dev"
+          },
+          {
+            "url": "https://github.com/Aider-AI/aider",
+            "type": "github",
+            "name": "Aider"
+          },
+          {
+            "url": "https://cursor.com/docs",
+            "type": "documentation",
+            "name": "Cursor Docs"
+          },
+          {
+            "url": "https://github.com/getcursor/cursor",
+            "type": "github",
+            "name": "Cursor Repo"
+          },
+          {
+            "url": "https://codeium.com/windsurf",
+            "type": "webapp",
+            "name": "Windsurf"
+          },
+          {
+            "url": "https://www.kiro.dev/",
+            "type": "webapp",
+            "name": "Kiro Code"
+          }
         ]
       },
       "ide_integration": {
         "refresh_interval": "weekly",
         "urls": [
-          {"url": "https://code.visualstudio.com/docs", "type": "documentation", "name": "VS Code Docs"},
-          {"url": "https://github.com/microsoft/vscode-copilot-release", "type": "github", "name": "Copilot Extension"},
-          {"url": "https://docs.github.com/en/copilot", "type": "documentation", "name": "GitHub Copilot Docs"}
+          {
+            "url": "https://code.visualstudio.com/docs",
+            "type": "documentation",
+            "name": "VS Code Docs"
+          },
+          {
+            "url": "https://github.com/microsoft/vscode-copilot-release",
+            "type": "github",
+            "name": "Copilot Extension"
+          },
+          {
+            "url": "https://docs.github.com/en/copilot",
+            "type": "documentation",
+            "name": "GitHub Copilot Docs"
+          }
         ]
       },
       "frameworks": {
         "refresh_interval": "weekly",
         "urls": [
-          {"url": "https://python.langchain.com/docs", "type": "documentation", "name": "LangChain Docs"},
-          {"url": "https://docs.llamaindex.ai/", "type": "documentation", "name": "LlamaIndex Docs"},
-          {"url": "https://dspy-docs.vercel.app/", "type": "documentation", "name": "DSPy Docs"},
-          {"url": "https://github.com/stanfordnlp/dspy", "type": "github", "name": "DSPy Repo"}
+          {
+            "url": "https://python.langchain.com/docs",
+            "type": "documentation",
+            "name": "LangChain Docs"
+          },
+          {
+            "url": "https://docs.llamaindex.ai/",
+            "type": "documentation",
+            "name": "LlamaIndex Docs"
+          },
+          {
+            "url": "https://dspy-docs.vercel.app/",
+            "type": "documentation",
+            "name": "DSPy Docs"
+          },
+          {
+            "url": "https://github.com/stanfordnlp/dspy",
+            "type": "github",
+            "name": "DSPy Repo"
+          }
         ]
       },
       "rust_libraries": {
         "refresh_interval": "weekly",
         "urls": [
-          {"url": "https://github.com/qdrant/qdrant", "type": "github", "name": "Qdrant"},
-          {"url": "https://github.com/quickwit-oss/tantivy", "type": "github", "name": "Tantivy"},
-          {"url": "https://docs.rs/qdrant-client", "type": "documentation", "name": "qdrant-client docs"},
-          {"url": "https://docs.rs/tantivy", "type": "documentation", "name": "tantivy docs"}
+          {
+            "url": "https://github.com/qdrant/qdrant",
+            "type": "github",
+            "name": "Qdrant"
+          },
+          {
+            "url": "https://github.com/quickwit-oss/tantivy",
+            "type": "github",
+            "name": "Tantivy"
+          },
+          {
+            "url": "https://docs.rs/qdrant-client",
+            "type": "documentation",
+            "name": "qdrant-client docs"
+          },
+          {
+            "url": "https://docs.rs/tantivy",
+            "type": "documentation",
+            "name": "tantivy docs"
+          }
         ]
       }
     },
@@ -139,11 +347,27 @@
       "academic": {
         "refresh_interval": "monthly",
         "urls": [
-          {"url": "https://arxiv.org/list/cs.AI/recent", "type": "academic", "name": "arXiv cs.AI"},
-          {"url": "https://arxiv.org/list/cs.CL/recent", "type": "academic", "name": "arXiv cs.CL"},
-          {"url": "https://arxiv.org/list/cs.LG/recent", "type": "academic", "name": "arXiv cs.LG"},
-          {"url": "https://neurips.cc/", "type": "academic", "name": "NeurIPS"},
-          {"url": "https://iclr.cc/", "type": "academic", "name": "ICLR"}
+          {
+            "url": "https://arxiv.org/list/cs.AI/recent",
+            "type": "academic",
+            "name": "arXiv cs.AI"
+          },
+          {
+            "url": "https://arxiv.org/list/cs.CL/recent",
+            "type": "academic",
+            "name": "arXiv cs.CL"
+          },
+          {
+            "url": "https://arxiv.org/list/cs.LG/recent",
+            "type": "academic",
+            "name": "arXiv cs.LG"
+          },
+          {
+            "url": "https://neurips.cc/",
+            "type": "academic",
+            "name": "NeurIPS"
+          },
+          { "url": "https://iclr.cc/", "type": "academic", "name": "ICLR" }
         ]
       }
     }

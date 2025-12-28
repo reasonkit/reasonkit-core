@@ -1,187 +1,208 @@
 # REASONKIT-CORE PROJECT CONTEXT
-> Rust-first RAG/Knowledge Base Engine | Open Source (Apache 2.0)
 
-**INHERITS FROM:** `../ORCHESTRATOR.md` (master orchestration document)
+> Structured Prompt Engineering Framework | Auditable AI Reasoning
+> "See How Your AI Thinks"
+
 **LICENSE:** Apache 2.0 (fully open source)
-**STATUS:** Primary OSS project - foundation for all ReasonKit products
+**REPOSITORY:** https://github.com/ReasonKit/reasonkit-core
+**WEBSITE:** https://reasonkit.sh
 
 ---
 
-## PROJECT OVERVIEW
+## WHAT REASONKIT ACTUALLY IS
+
+**ReasonKit is a structured prompt engineering framework with execution tracing and metrics.**
+
+It provides reusable reasoning patterns that organize LLM outputs into auditable, traceable chains.
+
+### The Honest Value Proposition
+
+| What We Claim         | What We Deliver                           | Status       |
+| --------------------- | ----------------------------------------- | ------------ |
+| Structured reasoning  | Prompt templates that guide output format | ✅ Delivered |
+| Auditable traces      | Full execution logging with metrics       | ✅ Delivered |
+| Quality measurement   | Confidence scores, grades, reports        | ✅ Delivered |
+| Reasoning improvement | **Run benchmarks to verify**              | 🔬 Testing   |
+
+---
+
+## THE POWERCOMBO PROCESS (CENTRAL VALUE)
+
+This 5-step structured thinking process is the core of ReasonKit:
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    🌈 POWERCOMBO PROCESS                        │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  1. 💡 DIVERGENT THINKING (GigaThink)                          │
+│     → Generate 10+ perspectives, explore widely                 │
+│                                                                 │
+│  2. ⚡ CONVERGENT ANALYSIS (LaserLogic)                        │
+│     → Validate logic, detect fallacies, prioritize             │
+│                                                                 │
+│  3. 🪨 GROUNDING (BedRock)                                     │
+│     → First principles decomposition, find axioms              │
+│                                                                 │
+│  4. 🛡️ VALIDATION (ProofGuard)                                │
+│     → Verify claims, triangulate sources, check evidence       │
+│                                                                 │
+│  5. 🔥 RUTHLESS CUTTING (BrutalHonesty)                        │
+│     → Adversarial critique, cut the fluff, be honest           │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### Why This Process Works
+
+- **Divergent → Convergent**: Explore widely, then focus ruthlessly
+- **Abstract → Concrete**: From ideas to first principles to evidence
+- **Constructive → Destructive**: Build up, then attack your own work
+- **Traceable**: Every step logged, every decision auditable
+
+---
+
+## THINKTOOLS (STRUCTURED PROMPTS)
+
+| Tool              | Icon | Purpose                     | Output               |
+| ----------------- | ---- | --------------------------- | -------------------- |
+| **GigaThink**     | 💡   | Multi-perspective expansion | 10+ viewpoints       |
+| **LaserLogic**    | ⚡   | Logical validation          | Fallacy detection    |
+| **BedRock**       | 🪨   | First principles            | Axiom identification |
+| **ProofGuard**    | 🛡️   | Evidence verification       | Source triangulation |
+| **BrutalHonesty** | 🔥   | Adversarial critique        | Honest assessment    |
+| **PowerCombo**    | 🌈   | All 5 in sequence           | Maximum rigor        |
+
+### Profiles (Pre-configured Chains)
+
+| Profile        | Chain                    | Confidence Target | Use Case      |
+| -------------- | ------------------------ | ----------------- | ------------- |
+| `--quick`      | gt → ll                  | 70%               | Fast analysis |
+| `--balanced`   | gt → ll → br → pg        | 80%               | Standard      |
+| `--deep`       | All 5                    | 85%               | Thorough      |
+| `--paranoid`   | All 5 + validation pass  | 95%               | Maximum rigor |
+| `--powercombo` | All 5 + cross-validation | 95%               | Ultimate mode |
+
+---
+
+## PROVING VALUE (BENCHMARKS)
+
+**We don't claim improvement without evidence.**
+
+```bash
+# Run GSM8K benchmark
+cargo run --release --bin gsm8k_eval -- --samples 100
+
+# A/B comparison
+rk-compare "Should we use microservices?" --profile balanced
+
+# View metrics
+rk-core metrics report
+```
+
+### What We Measure
+
+| Benchmark | What It Tests     | How to Run                    |
+| --------- | ----------------- | ----------------------------- |
+| GSM8K     | Math reasoning    | `cargo run --bin gsm8k_eval`  |
+| ARC-C     | Science reasoning | `cargo run --bin arc_c_eval`  |
+| LogiQA    | Logical deduction | `cargo run --bin logiqa_eval` |
+
+### Interpreting Results
+
+| Delta | Meaning                          |
+| ----- | -------------------------------- |
+| > +5% | ✅ Meaningful improvement        |
+| +1-5% | ⚠️ Marginal, verify cost-benefit |
+| 0%    | ⚪ No measurable difference      |
+| < 0%  | ❌ ThinkTools performed worse    |
+
+---
+
+## THE REAL VALUE
+
+### What ReasonKit IS Good For:
+
+1. **Debugging AI Responses** - See exactly how reasoning unfolded
+2. **Compliance/Audit** - Traceable decision chains for regulated industries
+3. **Structured Output** - Consistent format across queries
+4. **Quality Metrics** - Measure and track reasoning quality over time
+5. **Teaching Tool** - Learn structured thinking patterns
+
+### What ReasonKit is NOT:
+
+- Magic that makes LLMs smarter
+- Novel AI research
+- A replacement for good prompting skills
+- Guaranteed improvement (run benchmarks!)
+
+---
+
+## PROJECT STRUCTURE
 
 ```
 reasonkit-core/
 ├── src/
-│   ├── lib.rs          # Core types: Document, Chunk, SearchResult
-│   ├── main.rs         # CLI: ingest, query, index, stats, serve
-│   ├── error.rs        # Error handling (13 variants)
-│   ├── ingestion/      # PDF, MD, HTML, JSON parsing
-│   ├── embedding/      # OpenAI API + Local ONNX embeddings
-│   ├── retrieval/      # Hybrid search (BM25 + vector)
-│   ├── storage/        # Qdrant + local JSONL
-│   ├── indexing/       # HNSW + Tantivy BM25
-│   └── processing/     # Chunking, cleaning
-├── data/
-│   ├── papers/raw/     # 43 academic PDFs (101MB)
-│   └── docs/           # 840 indexed documents
-├── schemas/            # JSON schemas for documents
-├── config/             # default.toml configuration
-├── scripts/
-│   ├── automation/     # Source validation, reindexing
-│   └── download_*.sh   # Paper/doc downloaders
-└── Cargo.toml          # Rust dependencies
+│   ├── thinktool/       # ThinkTools (structured prompts)
+│   │   ├── executor.rs  # Protocol chain runner
+│   │   ├── profiles.rs  # Profile definitions
+│   │   ├── metrics.rs   # Quality measurement
+│   │   ├── trace.rs     # Execution tracing
+│   │   └── llm.rs       # LLM integration
+│   │
+│   ├── rag/             # Retrieval-Augmented Generation
+│   ├── retrieval/       # Hybrid search, fusion, rerank
+│   └── verification/    # ProofLedger, source tracking
+│
+├── benchmarks/          # Reproducible evaluation
+│   ├── gsm8k_eval.rs    # Math reasoning benchmark
+│   └── README.md        # Benchmark documentation
+│
+└── protocols/           # YAML protocol definitions
 ```
 
 ---
 
-## TECHNOLOGY STACK (PROJECT-SPECIFIC)
-
-| Component | Technology | Version | Purpose |
-|-----------|------------|---------|---------|
-| Vector DB | qdrant-client | 1.10+ | Dense embeddings storage |
-| Full-text | tantivy | 0.22+ | BM25 lexical search |
-| PDF Parser | lopdf | 0.33+ | Academic paper ingestion |
-| Async Runtime | tokio | 1.x | Concurrent operations |
-| CLI | clap | 4.x | Command-line interface |
-| Parallelism | rayon | 1.10+ | Data-parallel processing |
-
-### Build Commands
+## QUICK START
 
 ```bash
-# Primary build
+# Build
 cargo build --release
 
-# Run CLI
-./target/release/rk-core --help
-./target/release/rk-core ingest --path ./data/papers/raw --recursive
-./target/release/rk-core query "chain of thought reasoning" --top-k 10
+# Run with profile
+../target/release/rk-core think --profile balanced "Your question"
 
-# Tests
-cargo test
-cargo clippy -- -D warnings
-cargo fmt --check
+# Compare raw vs enhanced
+../target/release/rk-compare "Your question" --mock
+
+# View metrics
+../target/release/rk-core metrics report
+
+# Run benchmarks
+cargo run --release --bin gsm8k_eval
 ```
-
----
-
-## THINKTOOL ALLOCATION (OSS)
-
-These ThinkTools are included in reasonkit-core (open source):
-
-| Module | Shortcut | Purpose |
-|--------|----------|---------|
-| **GigaThink** | `gt` | Expansive creative thinking |
-| **LaserLogic** | `ll` | Precision deductive reasoning |
-| **BedRock** | `br` | First principles decomposition |
-| **ProofGuard** | `pg` | Multi-source verification |
-| **BrutalHonesty** | `bh` | Adversarial self-critique |
-
-### Profile Mapping
-
-| Profile | Modules | Confidence |
-|---------|---------|------------|
-| `--quick` | gt, ll | 70% |
-| `--balanced` | gt, ll, br, pg | 80% |
-| `--paranoid` | gt, ll, br, pg, bh | 95% |
-
----
-
-## KNOWLEDGE BASE STATUS
-
-### Academic Papers (43 PDFs, 101MB)
-
-| Tier | Category | Count | Key Papers |
-|------|----------|-------|------------|
-| 1 | Revolutionary | 3 | DeepSeek-R1, COCONUT, AGoT |
-| 2 | Advanced Reasoning | 5 | ToT, Self-Consistency, Reflexion |
-| 3 | CoT Foundation | 2 | CoT Prompting, Zero-shot |
-| 4-14 | Various | 33 | See `schemas/master_paper_sources.json` |
-
-### Documentation Index (840 docs)
-
-| Source | Documents |
-|--------|-----------|
-| Claude Code | 100 |
-| Gemini CLI | 80 |
-| Aider | 144 |
-| Continue | 284 |
-| MCP Protocol | 232 |
 
 ---
 
 ## DEVELOPMENT PRIORITIES
 
-1. **RAPTOR Tree Structure** - Hierarchical retrieval (+20% on QuALITY)
-2. **Qdrant Embedded Mode** - Zero-config local deployment
-3. **Hybrid Search** - BM25 + vector with RRF fusion
-4. **Reranking** - Cross-encoder for final precision
+1. **Run benchmarks** - Prove (or disprove) value with data
+2. **Honest documentation** - No claims without evidence
+3. **Tracing/debugging** - This is the proven value
+4. **Enterprise compliance** - Audit trails for regulated industries
 
 ---
 
-## TASKWARRIOR INTEGRATION
+## CONSTRAINTS
 
-All work on this project MUST be tracked:
-
-```bash
-# Project structure
-task project:rk-project.core.{component} "description" priority:{H|M|L}
-
-# Components
-# - rk-project.core.rag       → RAG implementation
-# - rk-project.core.embedding → Embedding pipeline
-# - rk-project.core.indexing  → Search indexes
-# - rk-project.core.cli       → CLI improvements
-
-# Start work
-task {id} start  # Auto-starts timewarrior
-
-# Complete work
-task {id} done
-```
+| Constraint         | Details                                         |
+| ------------------ | ----------------------------------------------- |
+| Evidence required  | All improvement claims must have benchmark data |
+| Honest positioning | "Structured prompts" not "AI enhancement"       |
+| Traceability       | Every execution fully logged                    |
+| Reproducibility    | Benchmarks must be reproducible                 |
 
 ---
 
-## MCP SERVERS & SKILLS
-
-When working on reasonkit-core, leverage:
-
-- **MCP Sequential Thinking** - For complex reasoning chains
-- **MCP Filesystem** - For data operations
-- **pdf skill** - For PDF processing validation
-- **math skill** - For benchmark calculations
-
----
-
-## CONSTRAINTS (PROJECT-SPECIFIC)
-
-| Constraint | Details |
-|------------|---------|
-| No Python in hot paths | All core logic in Rust |
-| Test coverage > 80% | Required for merge |
-| Benchmark regressions | Must not exceed 5% |
-| Apache 2.0 compatible | All dependencies |
-
----
-
-## PROTOCOLS
-
-ThinkTool behavioral protocols are stored in `./protocols/`:
-
-| Protocol | Shortcode | Profile | Description |
-|----------|-----------|---------|-------------|
-| ProofGuard Deep Research | `pg-deep` | paranoid | Multi-source triangulation with 5-phase workflow |
-
-See `./protocols/README.md` for full protocol documentation.
-
----
-
-## RELATED DOCUMENTS
-
-- `../ORCHESTRATOR.md` - Master orchestration (inherited)
-- `./ARCHITECTURE.md` - 5-layer RAG design
-- `./docs/SOURCE_OVERVIEW.md` - All indexed sources
-- `./protocols/` - ThinkTool behavioral protocols
-
----
-
-*reasonkit-core v0.1.0 | Rust-first RAG | Apache 2.0*
+_reasonkit-core v0.1.0 | Structured Prompt Engineering Framework | Apache 2.0_
+_"See How Your AI Thinks"_

@@ -11,8 +11,6 @@
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
-use crate::error::Result;
-
 /// A reasoning profile (composition of protocols)
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ReasoningProfile {
@@ -62,8 +60,10 @@ pub struct ChainStep {
 /// Conditions for conditional execution
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(tag = "type", rename_all = "snake_case")]
+#[derive(Default)]
 pub enum ChainCondition {
     /// Always execute
+    #[default]
     Always,
 
     /// Execute if previous step confidence below threshold
@@ -87,12 +87,6 @@ pub enum ChainCondition {
     },
 }
 
-impl Default for ChainCondition {
-    fn default() -> Self {
-        Self::Always
-    }
-}
-
 /// Configuration overrides for a chain step
 #[derive(Debug, Clone, Default, Serialize, Deserialize)]
 pub struct StepConfigOverride {
@@ -105,6 +99,8 @@ pub struct StepConfigOverride {
     /// Override min confidence
     pub min_confidence: Option<f64>,
 }
+
+use super::yaml_loader;
 
 /// Registry of reasoning profiles
 #[derive(Debug, Default)]
@@ -127,12 +123,40 @@ impl ProfileRegistry {
 
     /// Register built-in profiles
     pub fn register_builtins(&mut self) {
-        self.register(builtin_quick());
-        self.register(builtin_balanced());
-        self.register(builtin_deep());
-        self.register(builtin_paranoid());
-        self.register(builtin_decide());
-        self.register(builtin_scientific());
+        // Try to load from YAML first
+        let mut loaded_from_yaml = false;
+
+        if let Ok(cwd) = std::env::current_dir() {
+            let yaml_path = cwd.join("protocols").join("profiles_v2.yaml");
+            if yaml_path.exists() {
+                match yaml_loader::load_profiles_from_yaml_file(&yaml_path) {
+                    Ok(profiles) => {
+                        for profile in profiles {
+                            self.register(profile);
+                        }
+                        tracing::info!("Loaded profiles from profiles_v2.yaml");
+                        loaded_from_yaml = true;
+                    }
+                    Err(e) => {
+                        tracing::warn!(
+                            "Failed to load profiles_v2.yaml: {}, falling back to built-ins",
+                            e
+                        );
+                    }
+                }
+            }
+        }
+
+        if !loaded_from_yaml {
+            tracing::info!("Using hardcoded fallback profiles");
+            self.register(builtin_quick());
+            self.register(builtin_balanced());
+            self.register(builtin_deep());
+            self.register(builtin_paranoid());
+            self.register(builtin_decide());
+            self.register(builtin_scientific());
+            self.register(builtin_powercombo());
+        }
     }
 
     /// Register a profile
@@ -185,9 +209,7 @@ fn builtin_quick() -> ReasoningProfile {
         chain: vec![
             ChainStep {
                 protocol_id: "gigathink".to_string(),
-                input_mapping: HashMap::from([
-                    ("query".to_string(), "input.query".to_string()),
-                ]),
+                input_mapping: HashMap::from([("query".to_string(), "input.query".to_string())]),
                 condition: None,
                 config_override: Some(StepConfigOverride {
                     max_tokens: Some(1000),
@@ -197,8 +219,11 @@ fn builtin_quick() -> ReasoningProfile {
             ChainStep {
                 protocol_id: "laserlogic".to_string(),
                 input_mapping: HashMap::from([
-                    // Use synthesize step output (matches gigathink step ID)
-                    ("argument".to_string(), "steps.gigathink.synthesize".to_string()),
+                    // Use synthesize step output from gigathink
+                    (
+                        "argument".to_string(),
+                        "steps.gigathink.synthesize".to_string(),
+                    ),
                 ]),
                 condition: None,
                 config_override: None,
@@ -229,25 +254,28 @@ fn builtin_balanced() -> ReasoningProfile {
             },
             ChainStep {
                 protocol_id: "laserlogic".to_string(),
-                input_mapping: HashMap::from([
-                    ("argument".to_string(), "steps.gigathink.synthesize".to_string()),
-                ]),
+                input_mapping: HashMap::from([(
+                    "argument".to_string(),
+                    "steps.gigathink.synthesize".to_string(),
+                )]),
                 condition: None,
                 config_override: None,
             },
             ChainStep {
                 protocol_id: "bedrock".to_string(),
-                input_mapping: HashMap::from([
-                    ("statement".to_string(), "steps.laserlogic.conclusion".to_string()),
-                ]),
+                input_mapping: HashMap::from([(
+                    "statement".to_string(),
+                    "steps.laserlogic.check_validity".to_string(), // Fixed: use actual step ID
+                )]),
                 condition: Some(ChainCondition::ConfidenceBelow { threshold: 0.9 }),
                 config_override: None,
             },
             ChainStep {
                 protocol_id: "proofguard".to_string(),
-                input_mapping: HashMap::from([
-                    ("claim".to_string(), "steps.bedrock.axioms".to_string()),
-                ]),
+                input_mapping: HashMap::from([(
+                    "claim".to_string(),
+                    "steps.bedrock.identify_axioms".to_string(), // Fixed: use actual step ID
+                )]),
                 condition: None,
                 config_override: None,
             },
@@ -259,7 +287,7 @@ fn builtin_balanced() -> ReasoningProfile {
 }
 
 /// Deep: Thorough analysis with meta-cognition
-/// GigaThink → LaserLogic → BedRock → ProofGuard → HighReflect (if available)
+/// GigaThink → LaserLogic → BedRock → ProofGuard → BrutalHonesty (conditional)
 fn builtin_deep() -> ReasoningProfile {
     ReasoningProfile {
         id: "deep".to_string(),
@@ -277,33 +305,37 @@ fn builtin_deep() -> ReasoningProfile {
             },
             ChainStep {
                 protocol_id: "laserlogic".to_string(),
-                input_mapping: HashMap::from([
-                    ("argument".to_string(), "steps.gigathink.synthesize".to_string()),
-                ]),
+                input_mapping: HashMap::from([(
+                    "argument".to_string(),
+                    "steps.gigathink.synthesize".to_string(),
+                )]),
                 condition: None,
                 config_override: None,
             },
             ChainStep {
                 protocol_id: "bedrock".to_string(),
-                input_mapping: HashMap::from([
-                    ("statement".to_string(), "steps.laserlogic.conclusion".to_string()),
-                ]),
+                input_mapping: HashMap::from([(
+                    "statement".to_string(),
+                    "steps.laserlogic.check_validity".to_string(), // Fixed: use actual step ID
+                )]),
                 condition: None,
                 config_override: None,
             },
             ChainStep {
                 protocol_id: "proofguard".to_string(),
-                input_mapping: HashMap::from([
-                    ("claim".to_string(), "steps.bedrock.axioms".to_string()),
-                ]),
+                input_mapping: HashMap::from([(
+                    "claim".to_string(),
+                    "steps.bedrock.identify_axioms".to_string(), // Fixed: use actual step ID
+                )]),
                 condition: None,
                 config_override: None,
             },
             ChainStep {
                 protocol_id: "brutalhonesty".to_string(),
-                input_mapping: HashMap::from([
-                    ("work".to_string(), "steps.proofguard.verdict".to_string()),
-                ]),
+                input_mapping: HashMap::from([(
+                    "work".to_string(),
+                    "steps.proofguard.triangulate".to_string(), // Fixed: use actual step ID
+                )]),
                 condition: Some(ChainCondition::ConfidenceBelow { threshold: 0.85 }),
                 config_override: None,
             },
@@ -320,7 +352,8 @@ fn builtin_paranoid() -> ReasoningProfile {
     ReasoningProfile {
         id: "paranoid".to_string(),
         name: "Paranoid Verification".to_string(),
-        description: "Maximum rigor with adversarial critique and multi-pass verification".to_string(),
+        description: "Maximum rigor with adversarial critique and multi-pass verification"
+            .to_string(),
         chain: vec![
             ChainStep {
                 protocol_id: "gigathink".to_string(),
@@ -333,33 +366,37 @@ fn builtin_paranoid() -> ReasoningProfile {
             },
             ChainStep {
                 protocol_id: "laserlogic".to_string(),
-                input_mapping: HashMap::from([
-                    ("argument".to_string(), "steps.gigathink.synthesize".to_string()),
-                ]),
+                input_mapping: HashMap::from([(
+                    "argument".to_string(),
+                    "steps.gigathink.synthesize".to_string(),
+                )]),
                 condition: None,
                 config_override: None,
             },
             ChainStep {
                 protocol_id: "bedrock".to_string(),
-                input_mapping: HashMap::from([
-                    ("statement".to_string(), "steps.laserlogic.conclusion".to_string()),
-                ]),
+                input_mapping: HashMap::from([(
+                    "statement".to_string(),
+                    "steps.laserlogic.check_validity".to_string(), // Fixed: use actual step ID
+                )]),
                 condition: None,
                 config_override: None,
             },
             ChainStep {
                 protocol_id: "proofguard".to_string(),
-                input_mapping: HashMap::from([
-                    ("claim".to_string(), "steps.bedrock.axioms".to_string()),
-                ]),
+                input_mapping: HashMap::from([(
+                    "claim".to_string(),
+                    "steps.bedrock.identify_axioms".to_string(), // Fixed: use actual step ID
+                )]),
                 condition: None,
                 config_override: None,
             },
             ChainStep {
                 protocol_id: "brutalhonesty".to_string(),
-                input_mapping: HashMap::from([
-                    ("work".to_string(), "steps.proofguard.verdict".to_string()),
-                ]),
+                input_mapping: HashMap::from([(
+                    "work".to_string(),
+                    "steps.proofguard.triangulate".to_string(), // Fixed: use actual step ID
+                )]),
                 condition: None,
                 config_override: Some(StepConfigOverride {
                     temperature: Some(0.3), // Lower temp for more focused critique
@@ -369,16 +406,21 @@ fn builtin_paranoid() -> ReasoningProfile {
             // Second verification pass after critique
             ChainStep {
                 protocol_id: "proofguard".to_string(),
-                input_mapping: HashMap::from([
-                    ("claim".to_string(), "steps.brutalhonesty.verdict".to_string()),
-                ]),
+                input_mapping: HashMap::from([(
+                    "claim".to_string(),
+                    "steps.brutalhonesty.verdict".to_string(), // verdict exists in brutalhonesty
+                )]),
                 condition: Some(ChainCondition::ConfidenceBelow { threshold: 0.95 }),
                 config_override: None,
             },
         ],
         min_confidence: 0.95,
         token_budget: Some(18000),
-        tags: vec!["rigorous".to_string(), "verification".to_string(), "adversarial".to_string()],
+        tags: vec![
+            "rigorous".to_string(),
+            "verification".to_string(),
+            "adversarial".to_string(),
+        ],
     }
 }
 
@@ -392,25 +434,25 @@ fn builtin_decide() -> ReasoningProfile {
         chain: vec![
             ChainStep {
                 protocol_id: "laserlogic".to_string(),
-                input_mapping: HashMap::from([
-                    ("argument".to_string(), "input.query".to_string()),
-                ]),
+                input_mapping: HashMap::from([("argument".to_string(), "input.query".to_string())]),
                 condition: None,
                 config_override: None,
             },
             ChainStep {
                 protocol_id: "bedrock".to_string(),
-                input_mapping: HashMap::from([
-                    ("statement".to_string(), "steps.laserlogic.conclusion".to_string()),
-                ]),
+                input_mapping: HashMap::from([(
+                    "statement".to_string(),
+                    "steps.laserlogic.check_validity".to_string(), // Fixed: use actual step ID
+                )]),
                 condition: None,
                 config_override: None,
             },
             ChainStep {
                 protocol_id: "brutalhonesty".to_string(),
-                input_mapping: HashMap::from([
-                    ("work".to_string(), "steps.bedrock.reconstruction".to_string()),
-                ]),
+                input_mapping: HashMap::from([(
+                    "work".to_string(),
+                    "steps.bedrock.reconstruct".to_string(), // Fixed: use actual step ID
+                )]),
                 condition: None,
                 config_override: None,
             },
@@ -444,7 +486,10 @@ fn builtin_scientific() -> ReasoningProfile {
             ChainStep {
                 protocol_id: "bedrock".to_string(),
                 input_mapping: HashMap::from([
-                    ("statement".to_string(), "steps.gigathink.synthesize".to_string()),
+                    (
+                        "statement".to_string(),
+                        "steps.gigathink.synthesize".to_string(), // synthesize exists
+                    ),
                     ("domain".to_string(), "input.domain".to_string()),
                 ]),
                 condition: None,
@@ -453,7 +498,10 @@ fn builtin_scientific() -> ReasoningProfile {
             ChainStep {
                 protocol_id: "proofguard".to_string(),
                 input_mapping: HashMap::from([
-                    ("claim".to_string(), "steps.bedrock.axioms".to_string()),
+                    (
+                        "claim".to_string(),
+                        "steps.bedrock.identify_axioms".to_string(),
+                    ), // Fixed: use actual step ID
                     ("sources".to_string(), "input.sources".to_string()),
                 ]),
                 condition: None,
@@ -465,7 +513,95 @@ fn builtin_scientific() -> ReasoningProfile {
         ],
         min_confidence: 0.85,
         token_budget: Some(8000),
-        tags: vec!["research".to_string(), "empirical".to_string(), "verification".to_string()],
+        tags: vec![
+            "research".to_string(),
+            "empirical".to_string(),
+            "verification".to_string(),
+        ],
+    }
+}
+
+/// PowerCombo: Ultimate reasoning mode - ALL 5 ThinkTools
+/// 🌈 GigaThink → LaserLogic → BedRock → ProofGuard → BrutalHonesty → ProofGuard (validation)
+fn builtin_powercombo() -> ReasoningProfile {
+    ReasoningProfile {
+        id: "powercombo".to_string(),
+        name: "PowerCombo Ultimate".to_string(),
+        description: "Maximum reasoning power - all 5 ThinkTools in sequence with cross-validation"
+            .to_string(),
+        chain: vec![
+            ChainStep {
+                protocol_id: "gigathink".to_string(),
+                input_mapping: HashMap::from([
+                    ("query".to_string(), "input.query".to_string()),
+                    ("context".to_string(), "input.context".to_string()),
+                ]),
+                condition: None,
+                config_override: Some(StepConfigOverride {
+                    temperature: Some(0.8), // Creative exploration
+                    ..Default::default()
+                }),
+            },
+            ChainStep {
+                protocol_id: "laserlogic".to_string(),
+                input_mapping: HashMap::from([(
+                    "argument".to_string(),
+                    "steps.gigathink.synthesize".to_string(),
+                )]),
+                condition: None,
+                config_override: None,
+            },
+            ChainStep {
+                protocol_id: "bedrock".to_string(),
+                input_mapping: HashMap::from([(
+                    "statement".to_string(),
+                    "steps.laserlogic.check_validity".to_string(),
+                )]),
+                condition: None,
+                config_override: None,
+            },
+            ChainStep {
+                protocol_id: "proofguard".to_string(),
+                input_mapping: HashMap::from([(
+                    "claim".to_string(),
+                    "steps.bedrock.identify_axioms".to_string(),
+                )]),
+                condition: None,
+                config_override: Some(StepConfigOverride {
+                    min_confidence: Some(0.9), // High bar for verification
+                    ..Default::default()
+                }),
+            },
+            ChainStep {
+                protocol_id: "brutalhonesty".to_string(),
+                input_mapping: HashMap::from([(
+                    "work".to_string(),
+                    "steps.proofguard.triangulate".to_string(),
+                )]),
+                condition: None,
+                config_override: Some(StepConfigOverride {
+                    temperature: Some(0.3), // Focused critique
+                    ..Default::default()
+                }),
+            },
+            // Second verification pass - cross-check after critique
+            ChainStep {
+                protocol_id: "proofguard".to_string(),
+                input_mapping: HashMap::from([(
+                    "claim".to_string(),
+                    "steps.brutalhonesty.verdict".to_string(),
+                )]),
+                condition: Some(ChainCondition::ConfidenceBelow { threshold: 0.95 }),
+                config_override: None,
+            },
+        ],
+        min_confidence: 0.95,
+        token_budget: Some(25000),
+        tags: vec![
+            "ultimate".to_string(),
+            "all-tools".to_string(),
+            "maximum-rigor".to_string(),
+        ],
     }
 }
 
@@ -487,13 +623,14 @@ mod tests {
     fn test_builtin_profiles() {
         let registry = ProfileRegistry::with_builtins();
 
-        assert_eq!(registry.len(), 6);
+        assert_eq!(registry.len(), 7);
         assert!(registry.contains("quick"));
         assert!(registry.contains("balanced"));
         assert!(registry.contains("deep"));
         assert!(registry.contains("paranoid"));
         assert!(registry.contains("decide"));
         assert!(registry.contains("scientific"));
+        assert!(registry.contains("powercombo"));
     }
 
     #[test]
@@ -532,7 +669,27 @@ mod tests {
         let registry = ProfileRegistry::with_builtins();
         let ids = registry.list_ids();
 
-        assert_eq!(ids.len(), 6);
+        assert_eq!(ids.len(), 7);
         assert!(ids.contains(&"quick"));
+        assert!(ids.contains(&"powercombo"));
+    }
+
+    #[test]
+    fn test_powercombo_profile() {
+        let registry = ProfileRegistry::with_builtins();
+        let powercombo = registry.get("powercombo").unwrap();
+
+        // Should have 6 steps (all 5 tools + validation pass)
+        assert_eq!(powercombo.chain.len(), 6);
+        assert_eq!(powercombo.min_confidence, 0.95);
+        assert_eq!(powercombo.token_budget, Some(25000));
+
+        // Verify chain order
+        assert_eq!(powercombo.chain[0].protocol_id, "gigathink");
+        assert_eq!(powercombo.chain[1].protocol_id, "laserlogic");
+        assert_eq!(powercombo.chain[2].protocol_id, "bedrock");
+        assert_eq!(powercombo.chain[3].protocol_id, "proofguard");
+        assert_eq!(powercombo.chain[4].protocol_id, "brutalhonesty");
+        assert_eq!(powercombo.chain[5].protocol_id, "proofguard"); // validation pass
     }
 }

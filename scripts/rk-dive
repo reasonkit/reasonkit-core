@@ -1,0 +1,8 @@
+#!/bin/bash
+# rk-dive - Deprecated alias for rk-web
+
+if [[ -t 2 ]]; then
+  echo "rk-dive is deprecated. Use rk-web instead." >&2
+fi
+
+exec rk-web "$@"

@@ -1,0 +1,23 @@
+# ReasonKit CLI Defaults
+
+[defaults]
+profile = "balanced"
+protocol_dir = "protocols"
+
+[tools.claude]
+profile = "balanced"
+
+[tools.gemini]
+profile = "balanced"
+
+[tools.codex]
+profile = "balanced"
+
+[tools.opencode]
+profile = "balanced"
+
+[tools.cursor_agent]
+profile = "balanced"
+
+[tools.copilot]
+profile = "balanced"

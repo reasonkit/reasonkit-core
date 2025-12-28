@@ -1,0 +1,179 @@
+# ThinkTools V2 Reasoning Profiles
+# Fixed step IDs to match actual protocol steps
+
+- id: quick
+  name: Quick Analysis
+  description: Fast 2-step analysis for rapid insights
+  min_confidence: 0.70
+  token_budget: 3000
+  tags: [fast, creative]
+  chain:
+    - protocol_id: gigathink
+      input_mapping:
+        query: input.query
+      config_override:
+        max_tokens: 1000
+    - protocol_id: laserlogic
+      input_mapping:
+        argument: steps.gigathink.synthesize
+
+- id: balanced
+  name: Balanced Analysis
+  description: Standard 4-module chain for thorough but efficient analysis
+  min_confidence: 0.80
+  token_budget: 8000
+  tags: [standard, thorough]
+  chain:
+    - protocol_id: gigathink
+      input_mapping:
+        query: input.query
+        context: input.context
+    - protocol_id: laserlogic
+      input_mapping:
+        argument: steps.gigathink.synthesize
+    - protocol_id: bedrock
+      input_mapping:
+        statement: steps.laserlogic.check_validity  # Fixed: actual step ID
+      condition:
+        type: confidence_below
+        threshold: 0.9
+    - protocol_id: proofguard
+      input_mapping:
+        claim: steps.bedrock.identify_axioms  # Fixed: actual step ID
+
+- id: deep
+  name: Deep Analysis
+  description: Thorough analysis with first principles and verification
+  min_confidence: 0.85
+  token_budget: 12000
+  tags: [thorough, analytical]
+  chain:
+    - protocol_id: gigathink
+      input_mapping:
+        query: input.query
+        context: input.context
+    - protocol_id: laserlogic
+      input_mapping:
+        argument: steps.gigathink.synthesize
+    - protocol_id: bedrock
+      input_mapping:
+        statement: steps.laserlogic.check_validity  # Fixed: actual step ID
+    - protocol_id: proofguard
+      input_mapping:
+        claim: steps.bedrock.identify_axioms  # Fixed: actual step ID
+    - protocol_id: brutalhonesty
+      input_mapping:
+        work: steps.proofguard.triangulate  # Fixed: actual step ID
+      condition:
+        type: confidence_below
+        threshold: 0.85
+
+- id: paranoid
+  name: Paranoid Verification
+  description: Maximum rigor with adversarial critique and multi-pass verification
+  min_confidence: 0.95
+  token_budget: 18000
+  tags: [rigorous, verification, adversarial]
+  chain:
+    - protocol_id: gigathink
+      input_mapping:
+        query: input.query
+        context: input.context
+    - protocol_id: laserlogic
+      input_mapping:
+        argument: steps.gigathink.synthesize
+    - protocol_id: bedrock
+      input_mapping:
+        statement: steps.laserlogic.check_validity  # Fixed: actual step ID
+    - protocol_id: proofguard
+      input_mapping:
+        claim: steps.bedrock.identify_axioms  # Fixed: actual step ID
+    - protocol_id: brutalhonesty
+      input_mapping:
+        work: steps.proofguard.triangulate  # Fixed: actual step ID
+      config_override:
+        temperature: 0.3
+    - protocol_id: proofguard
+      input_mapping:
+        claim: steps.brutalhonesty.verdict  # verdict exists
+      condition:
+        type: confidence_below
+        threshold: 0.95
+
+- id: decide
+  name: Decision Support
+  description: Focused on evaluating options and making decisions
+  min_confidence: 0.85
+  token_budget: 6000
+  tags: [decision, analytical]
+  chain:
+    - protocol_id: laserlogic
+      input_mapping:
+        argument: input.query
+    - protocol_id: bedrock
+      input_mapping:
+        statement: steps.laserlogic.check_validity  # Fixed: actual step ID
+    - protocol_id: brutalhonesty
+      input_mapping:
+        work: steps.bedrock.reconstruct  # Fixed: actual step ID
+
+- id: scientific
+  name: Scientific Method
+  description: For research, hypothesis testing, and empirical analysis
+  min_confidence: 0.85
+  token_budget: 8000
+  tags: [research, empirical, verification]
+  chain:
+    - protocol_id: gigathink
+      input_mapping:
+        query: input.query
+        constraints: input.constraints
+      config_override:
+        temperature: 0.8
+    - protocol_id: bedrock
+      input_mapping:
+        statement: steps.gigathink.synthesize  # synthesize exists
+        domain: input.domain
+    - protocol_id: proofguard
+      input_mapping:
+        claim: steps.bedrock.identify_axioms  # Fixed: actual step ID
+        sources: input.sources
+      config_override:
+        min_confidence: 0.85
+
+- id: powercombo
+  name: PowerCombo Ultimate
+  description: Maximum reasoning power - all 5 ThinkTools in sequence (Experimental)
+  min_confidence: 0.95
+  token_budget: 25000
+  tags: [ultimate, all-tools, maximum-rigor]
+  chain:
+    - protocol_id: gigathink
+      input_mapping:
+        query: input.query
+        context: input.context
+      config_override:
+        temperature: 0.8
+    - protocol_id: laserlogic
+      input_mapping:
+        argument: steps.gigathink.synthesize
+    - protocol_id: bedrock
+      input_mapping:
+        statement: steps.laserlogic.check_validity
+    - protocol_id: proofguard
+      input_mapping:
+        claim: steps.bedrock.identify_axioms
+      config_override:
+        min_confidence: 0.9
+    - protocol_id: brutalhonesty
+      input_mapping:
+        work: steps.proofguard.triangulate
+      config_override:
+        temperature: 0.3
+    # Second pass validation - cross-check with different perspective
+    - protocol_id: proofguard
+      input_mapping:
+        claim: steps.brutalhonesty.verdict
+      condition:
+        type: confidence_below
+        threshold: 0.95

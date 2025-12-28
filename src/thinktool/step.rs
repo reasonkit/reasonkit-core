@@ -31,30 +31,43 @@ pub struct StepResult {
 /// Step output variants
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(tag = "type", rename_all = "snake_case")]
+#[derive(Default)]
 pub enum StepOutput {
     /// Free-form text output
-    Text { content: String },
+    Text {
+        /// The text content
+        content: String,
+    },
 
     /// List of items
-    List { items: Vec<ListItem> },
+    List {
+        /// The list items
+        items: Vec<ListItem>,
+    },
 
     /// Structured key-value output
-    Structured { data: HashMap<String, serde_json::Value> },
+    Structured {
+        /// Key-value data map
+        data: HashMap<String, serde_json::Value>,
+    },
 
     /// Numeric score
-    Score { value: f64 },
+    Score {
+        /// The score value
+        value: f64,
+    },
 
     /// Boolean result
-    Boolean { value: bool, reason: Option<String> },
+    Boolean {
+        /// The boolean value
+        value: bool,
+        /// Optional reason for the boolean
+        reason: Option<String>,
+    },
 
     /// Empty (no output yet)
+    #[default]
     Empty,
-}
-
-impl Default for StepOutput {
-    fn default() -> Self {
-        Self::Empty
-    }
 }
 
 /// A single item in a list output

@@ -1,7 +1,7 @@
 # CLI ARCHITECTURE DESIGN SPECIFICATION
 > ReasonKit Core Command Line Interface
 > Version: 1.0.0 | Status: Design Phase
-> Author: Master Orchestrator (Claude Opus 4.5)
+> Author: ReasonKit Team
 
 ---
 

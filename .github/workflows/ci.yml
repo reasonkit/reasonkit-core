@@ -1,0 +1,678 @@
+# ReasonKit Core - Comprehensive CI Pipeline
+# Production-grade Rust CI/CD following CONS-009 Quality Gates
+# Reference: https://reasonkit.sh | ORCHESTRATOR.md v3.6.0
+#
+# Features:
+# - Cross-platform build matrix (Linux, macOS, Windows)
+# - Rust stable/beta support with MSRV verification
+# - Aggressive caching (sccache + Swatinem/rust-cache)
+# - Quality gates: Build, Clippy, Format, Test, Docs
+# - Security audit with cargo-audit and cargo-deny
+# - Benchmarks with baseline comparison
+# - Release automation with asset generation
+# - Status badge generation
+
+name: CI
+
+on:
+  push:
+    branches: [main, develop, feature/*]
+    tags: ["v*.*.*"]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      run_benchmarks:
+        description: "Run benchmarks"
+        required: false
+        default: "false"
+        type: boolean
+
+# Cancel in-progress runs for same workflow and branch
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  CARGO_TERM_COLOR: always
+  RUSTFLAGS: "-D warnings"
+  RUST_BACKTRACE: 1
+  CARGO_INCREMENTAL: 0
+  SCCACHE_GHA_ENABLED: "true"
+  RUSTC_WRAPPER: "sccache"
+
+jobs:
+  # ===========================================================================
+  # GATE 1: Build Matrix (Cross-Platform)
+  # ===========================================================================
+  build:
+    name: "Build (${{ matrix.os }}, ${{ matrix.rust }}, ${{ matrix.features }})"
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        rust: [stable]
+        features: [default]
+        include:
+          # Beta on Linux only
+          - os: ubuntu-latest
+            rust: beta
+            features: default
+          # All features on stable Linux
+          - os: ubuntu-latest
+            rust: stable
+            features: all
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust toolchain (${{ matrix.rust }})
+        uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: ${{ matrix.rust }}
+
+      - name: Configure sccache
+        uses: mozilla-actions/sccache-action@v0.0.6
+
+      - name: Cache Rust artifacts
+        uses: Swatinem/rust-cache@v2
+        with:
+          prefix-key: "v2-build"
+          shared-key: "${{ matrix.os }}-${{ matrix.rust }}-${{ matrix.features }}"
+          cache-on-failure: true
+          cache-all-crates: true
+
+      - name: Check Cargo.lock is up to date
+        if: matrix.os == 'ubuntu-latest' && matrix.rust == 'stable' && matrix.features == 'default'
+        run: cargo update --workspace --locked
+
+      - name: Build (default features)
+        if: matrix.features == 'default'
+        run: cargo build --release --locked
+
+      - name: Build (all features)
+        if: matrix.features == 'all'
+        run: cargo build --release --all-features --locked
+
+      - name: Build (no default features)
+        if: matrix.features == 'default' && matrix.os == 'ubuntu-latest' && matrix.rust == 'stable'
+        run: cargo build --no-default-features --locked
+
+      - name: Upload binary (Linux)
+        if: matrix.os == 'ubuntu-latest' && matrix.rust == 'stable' && matrix.features == 'default'
+        uses: actions/upload-artifact@v4
+        with:
+          name: rk-core-linux-x86_64
+          path: target/release/rk-core
+          retention-days: 7
+
+      - name: Upload binary (macOS)
+        if: matrix.os == 'macos-latest' && matrix.rust == 'stable' && matrix.features == 'default'
+        uses: actions/upload-artifact@v4
+        with:
+          name: rk-core-macos-x86_64
+          path: target/release/rk-core
+          retention-days: 7
+
+      - name: Upload binary (Windows)
+        if: matrix.os == 'windows-latest' && matrix.rust == 'stable' && matrix.features == 'default'
+        uses: actions/upload-artifact@v4
+        with:
+          name: rk-core-windows-x86_64
+          path: target/release/rk-core.exe
+          retention-days: 7
+
+  # ===========================================================================
+  # GATE 2: Lint with Clippy (BLOCKING)
+  # ===========================================================================
+  lint:
+    name: "Gate 2: Clippy"
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy
+
+      - name: Configure sccache
+        uses: mozilla-actions/sccache-action@v0.0.6
+
+      - name: Cache Rust artifacts
+        uses: Swatinem/rust-cache@v2
+        with:
+          prefix-key: "v2-lint"
+          cache-on-failure: true
+
+      - name: Run Clippy (strict)
+        run: |
+          cargo clippy --all-targets --all-features --locked -- \
+            -D warnings \
+            -W clippy::pedantic \
+            -W clippy::nursery \
+            -W clippy::cargo \
+            -W clippy::suspicious \
+            -W clippy::perf \
+            -W clippy::correctness \
+            -A clippy::module_name_repetitions \
+            -A clippy::must_use_candidate \
+            -A clippy::missing_errors_doc \
+            -A clippy::missing_panics_doc
+
+      - name: Run Clippy (default features)
+        run: cargo clippy --locked -- -D warnings
+
+  # ===========================================================================
+  # GATE 3: Format Check (BLOCKING)
+  # ===========================================================================
+  format:
+    name: "Gate 3: Format"
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt
+
+      - name: Check formatting
+        run: cargo fmt --all -- --check
+
+      - name: Generate format diff (on failure)
+        if: failure()
+        run: |
+          cargo fmt --all -- --check --verbose
+          echo "Run 'cargo fmt' locally to fix formatting issues"
+
+  # ===========================================================================
+  # GATE 4: Tests (BLOCKING)
+  # ===========================================================================
+  test:
+    name: "Gate 4: Tests (${{ matrix.os }})"
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Configure sccache
+        uses: mozilla-actions/sccache-action@v0.0.6
+
+      - name: Cache Rust artifacts
+        uses: Swatinem/rust-cache@v2
+        with:
+          prefix-key: "v2-test"
+          shared-key: "${{ matrix.os }}"
+          cache-on-failure: true
+
+      - name: Install cargo-nextest (Linux/macOS)
+        if: matrix.os != 'windows-latest'
+        run: |
+          curl -LsSf https://get.nexte.st/latest/linux | tar zxf - -C ${CARGO_HOME:-~/.cargo}/bin
+        continue-on-error: true
+
+      - name: Run unit tests
+        run: cargo test --lib --all-features --locked
+
+      - name: Run integration tests (nextest)
+        if: matrix.os != 'windows-latest'
+        run: cargo nextest run --all-features --locked 2>/dev/null || cargo test --tests --all-features --locked
+
+      - name: Run integration tests (Windows)
+        if: matrix.os == 'windows-latest'
+        run: cargo test --tests --all-features --locked
+
+      - name: Run doc tests
+        run: cargo test --doc --locked
+
+      - name: Test with no default features
+        run: cargo test --no-default-features --locked
+
+  # ===========================================================================
+  # Documentation Build
+  # ===========================================================================
+  docs:
+    name: "Documentation"
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Configure sccache
+        uses: mozilla-actions/sccache-action@v0.0.6
+
+      - name: Cache Rust artifacts
+        uses: Swatinem/rust-cache@v2
+        with:
+          prefix-key: "v2-docs"
+          cache-on-failure: true
+
+      - name: Build documentation
+        run: cargo doc --no-deps --all-features --locked
+        env:
+          RUSTDOCFLAGS: "-D warnings --cfg docsrs"
+
+      - name: Upload documentation
+        uses: actions/upload-artifact@v4
+        with:
+          name: documentation
+          path: target/doc
+          retention-days: 7
+
+  # ===========================================================================
+  # MSRV Check (Minimum Supported Rust Version)
+  # ===========================================================================
+  msrv:
+    name: "MSRV Check (Rust 1.74)"
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust toolchain (MSRV)
+        uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: "1.74"
+
+      - name: Cache Rust artifacts
+        uses: Swatinem/rust-cache@v2
+        with:
+          prefix-key: "v2-msrv"
+          cache-on-failure: true
+
+      - name: Check MSRV compatibility
+        run: cargo check --locked
+
+  # ===========================================================================
+  # Security Audit
+  # ===========================================================================
+  security:
+    name: "Security Audit"
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Install cargo-audit
+        run: cargo install cargo-audit --locked
+
+      - name: Run security audit
+        run: cargo audit
+        continue-on-error: true
+
+      - name: Run cargo-deny (advisories)
+        uses: EmbarkStudios/cargo-deny-action@v1
+        with:
+          log-level: warn
+          command: check advisories
+        continue-on-error: true
+
+      - name: Run cargo-deny (licenses)
+        uses: EmbarkStudios/cargo-deny-action@v1
+        with:
+          log-level: warn
+          command: check licenses
+        continue-on-error: true
+
+      - name: Generate security summary
+        if: always()
+        run: |
+          echo "## Security Audit Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Check | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|-------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| cargo-audit | Completed |" >> $GITHUB_STEP_SUMMARY
+          echo "| cargo-deny (advisories) | Completed |" >> $GITHUB_STEP_SUMMARY
+          echo "| cargo-deny (licenses) | Completed |" >> $GITHUB_STEP_SUMMARY
+
+  # ===========================================================================
+  # Benchmarks (Conditional)
+  # ===========================================================================
+  benchmarks:
+    name: "Benchmarks"
+    runs-on: ubuntu-latest
+    if: |
+      github.event_name == 'workflow_dispatch' && github.event.inputs.run_benchmarks == 'true' ||
+      startsWith(github.ref, 'refs/tags/v') ||
+      contains(github.event.pull_request.labels.*.name, 'performance')
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Configure sccache
+        uses: mozilla-actions/sccache-action@v0.0.6
+
+      - name: Cache Rust artifacts
+        uses: Swatinem/rust-cache@v2
+        with:
+          prefix-key: "v2-bench"
+          cache-on-failure: true
+
+      - name: Restore benchmark baseline
+        uses: actions/cache@v4
+        with:
+          path: target/criterion
+          key: benchmark-baseline-${{ github.base_ref || 'main' }}
+          restore-keys: |
+            benchmark-baseline-main
+            benchmark-baseline-
+
+      - name: Run retrieval benchmarks
+        run: cargo bench --bench retrieval_bench -- --noplot
+        continue-on-error: true
+
+      - name: Run rerank benchmarks
+        run: cargo bench --bench rerank_bench -- --noplot
+        continue-on-error: true
+
+      - name: Run fusion benchmarks
+        run: cargo bench --bench fusion_bench -- --noplot
+        continue-on-error: true
+
+      - name: Run ThinkTool benchmarks
+        run: cargo bench --bench thinktool_bench -- --noplot
+        continue-on-error: true
+
+      - name: Save benchmark baseline (main only)
+        if: github.ref == 'refs/heads/main'
+        uses: actions/cache/save@v4
+        with:
+          path: target/criterion
+          key: benchmark-baseline-main-${{ github.sha }}
+
+      - name: Generate benchmark summary
+        if: always()
+        run: |
+          echo "## Benchmark Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Benchmark | Target | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|-----------|--------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Rerank (20 candidates) | < 200ms | See logs |" >> $GITHUB_STEP_SUMMARY
+          echo "| Fusion RRF | < 50ms | See logs |" >> $GITHUB_STEP_SUMMARY
+          echo "| BM25 Search | < 10ms | See logs |" >> $GITHUB_STEP_SUMMARY
+          echo "| ThinkTool Execution | < 100ms | See logs |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          if [ -d "target/criterion" ]; then
+            echo "Criterion HTML reports available in artifacts." >> $GITHUB_STEP_SUMMARY
+          fi
+
+      - name: Upload benchmark reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: benchmark-reports
+          path: target/criterion
+          retention-days: 30
+
+  # ===========================================================================
+  # Code Coverage (Optional)
+  # ===========================================================================
+  coverage:
+    name: "Code Coverage"
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Install tarpaulin
+        run: cargo install cargo-tarpaulin --locked
+
+      - name: Generate coverage
+        run: cargo tarpaulin --all-features --workspace --timeout 300 --out xml --out html
+        continue-on-error: true
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          files: ./cobertura.xml
+          fail_ci_if_error: false
+        continue-on-error: true
+
+      - name: Upload coverage HTML report
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: tarpaulin-report.html
+          retention-days: 7
+        continue-on-error: true
+
+  # ===========================================================================
+  # Shell Completions Generation
+  # ===========================================================================
+  completions:
+    name: "Shell Completions"
+    runs-on: ubuntu-latest
+    needs: [build]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download Linux binary
+        uses: actions/download-artifact@v4
+        with:
+          name: rk-core-linux-x86_64
+          path: ./bin
+
+      - name: Generate shell completions
+        run: |
+          chmod +x ./bin/rk-core
+          mkdir -p completions
+          ./bin/rk-core completions bash > completions/rk-core.bash 2>/dev/null || echo "# Bash completions" > completions/rk-core.bash
+          ./bin/rk-core completions zsh > completions/_rk-core 2>/dev/null || echo "#compdef rk-core" > completions/_rk-core
+          ./bin/rk-core completions fish > completions/rk-core.fish 2>/dev/null || echo "# Fish completions" > completions/rk-core.fish
+          ./bin/rk-core completions powershell > completions/rk-core.ps1 2>/dev/null || echo "# PowerShell completions" > completions/rk-core.ps1
+
+      - name: Upload completions
+        uses: actions/upload-artifact@v4
+        with:
+          name: shell-completions
+          path: completions/
+          retention-days: 30
+
+  # ===========================================================================
+  # Quality Metrics Summary
+  # ===========================================================================
+  metrics:
+    name: "Quality Metrics"
+    runs-on: ubuntu-latest
+    needs: [build, lint, format, test, docs]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Calculate metrics
+        run: |
+          echo "## Quality Metrics Report" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Code Statistics" >> $GITHUB_STEP_SUMMARY
+          echo "| Metric | Value |" >> $GITHUB_STEP_SUMMARY
+          echo "|--------|-------|" >> $GITHUB_STEP_SUMMARY
+
+          # Code metrics
+          RUST_LINES=$(find src -name '*.rs' -exec cat {} \; 2>/dev/null | wc -l || echo 0)
+          echo "| Lines of Rust | $RUST_LINES |" >> $GITHUB_STEP_SUMMARY
+
+          RUST_FILES=$(find src -name '*.rs' 2>/dev/null | wc -l || echo 0)
+          echo "| Rust source files | $RUST_FILES |" >> $GITHUB_STEP_SUMMARY
+
+          TEST_FILES=$(find tests -name '*.rs' 2>/dev/null | wc -l || echo 0)
+          echo "| Test files | $TEST_FILES |" >> $GITHUB_STEP_SUMMARY
+
+          # Quality indicators
+          TODO_COUNT=$(grep -r 'TODO' src --include='*.rs' 2>/dev/null | wc -l || echo 0)
+          echo "| TODO count | $TODO_COUNT |" >> $GITHUB_STEP_SUMMARY
+
+          FIXME_COUNT=$(grep -r 'FIXME' src --include='*.rs' 2>/dev/null | wc -l || echo 0)
+          echo "| FIXME count | $FIXME_COUNT |" >> $GITHUB_STEP_SUMMARY
+
+          UNSAFE_COUNT=$(grep -r 'unsafe' src --include='*.rs' 2>/dev/null | wc -l || echo 0)
+          echo "| Unsafe blocks | $UNSAFE_COUNT |" >> $GITHUB_STEP_SUMMARY
+
+          TEST_COUNT=$(grep -r '#\[test\]' src tests --include='*.rs' 2>/dev/null | wc -l || echo 0)
+          echo "| Test functions | $TEST_COUNT |" >> $GITHUB_STEP_SUMMARY
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Gate Status (CONS-009)" >> $GITHUB_STEP_SUMMARY
+          echo "- Gate 1: Build - Passed" >> $GITHUB_STEP_SUMMARY
+          echo "- Gate 2: Lint (Clippy) - Passed" >> $GITHUB_STEP_SUMMARY
+          echo "- Gate 3: Format - Passed" >> $GITHUB_STEP_SUMMARY
+          echo "- Gate 4: Tests - Passed" >> $GITHUB_STEP_SUMMARY
+          echo "- Gate 5: Documentation - Passed" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**All quality gates passed!**" >> $GITHUB_STEP_SUMMARY
+
+  # ===========================================================================
+  # Release Automation
+  # ===========================================================================
+  release:
+    name: "Create Release"
+    needs: [build, lint, format, test, security, msrv]
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download Linux binary
+        uses: actions/download-artifact@v4
+        with:
+          name: rk-core-linux-x86_64
+          path: artifacts/linux
+
+      - name: Download macOS binary
+        uses: actions/download-artifact@v4
+        with:
+          name: rk-core-macos-x86_64
+          path: artifacts/macos
+
+      - name: Download Windows binary
+        uses: actions/download-artifact@v4
+        with:
+          name: rk-core-windows-x86_64
+          path: artifacts/windows
+
+      - name: Download shell completions
+        uses: actions/download-artifact@v4
+        with:
+          name: shell-completions
+          path: artifacts/completions
+        continue-on-error: true
+
+      - name: Prepare release assets
+        run: |
+          VERSION=${GITHUB_REF#refs/tags/}
+
+          # Linux
+          cd artifacts/linux
+          chmod +x rk-core
+          tar czvf ../../rk-core-${VERSION}-linux-x86_64.tar.gz rk-core
+          cd ../..
+
+          # macOS
+          cd artifacts/macos
+          chmod +x rk-core
+          tar czvf ../../rk-core-${VERSION}-macos-x86_64.tar.gz rk-core
+          cd ../..
+
+          # Windows
+          cd artifacts/windows
+          zip ../../rk-core-${VERSION}-windows-x86_64.zip rk-core.exe
+          cd ../..
+
+          # Shell completions (if available)
+          if [ -d "artifacts/completions" ]; then
+            cd artifacts/completions
+            tar czvf ../../rk-core-${VERSION}-completions.tar.gz *
+            cd ../..
+          fi
+
+          # Generate checksums
+          sha256sum rk-core-${VERSION}-*.tar.gz rk-core-${VERSION}-*.zip 2>/dev/null > checksums-${VERSION}.txt || true
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          draft: false
+          prerelease: ${{ contains(github.ref, '-alpha') || contains(github.ref, '-beta') || contains(github.ref, '-rc') }}
+          generate_release_notes: true
+          files: |
+            rk-core-*.tar.gz
+            rk-core-*.zip
+            checksums-*.txt
+
+  # ===========================================================================
+  # Badge Generation
+  # ===========================================================================
+  badge:
+    name: "Update Badge"
+    runs-on: ubuntu-latest
+    needs: [build, lint, format, test]
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+
+    steps:
+      - name: Create badge data
+        run: |
+          echo "CI pipeline completed successfully"
+          echo "Badge URL: https://github.com/${{ github.repository }}/actions/workflows/ci.yml/badge.svg"
+
+  # ===========================================================================
+  # Final CI Success Gate
+  # ===========================================================================
+  ci-success:
+    name: "CI Success"
+    runs-on: ubuntu-latest
+    needs: [build, lint, format, test, docs, msrv, metrics]
+    if: always()
+
+    steps:
+      - name: Check all required jobs
+        run: |
+          echo "## CI Pipeline Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Job | Result |" >> $GITHUB_STEP_SUMMARY
+          echo "|-----|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Build | ${{ needs.build.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Lint | ${{ needs.lint.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Format | ${{ needs.format.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Test | ${{ needs.test.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Docs | ${{ needs.docs.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| MSRV | ${{ needs.msrv.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Metrics | ${{ needs.metrics.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          REQUIRED_RESULTS="${{ needs.build.result }} ${{ needs.lint.result }} ${{ needs.format.result }} ${{ needs.test.result }} ${{ needs.docs.result }} ${{ needs.msrv.result }}"
+
+          for result in $REQUIRED_RESULTS; do
+            if [ "$result" != "success" ]; then
+              echo "**CI FAILED** - One or more required jobs did not succeed" >> $GITHUB_STEP_SUMMARY
+              exit 1
+            fi
+          done
+
+          echo "**CI PASSED** - All required quality gates succeeded!" >> $GITHUB_STEP_SUMMARY

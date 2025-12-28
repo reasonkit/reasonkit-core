@@ -22,9 +22,9 @@ This directory contains behavioral protocols for ThinkTool modules.
 - LaserLogic deductive chains
 - BedRock first principles
 
-### (Future) Decision Protocols
-- DeciDomatic multi-criteria analysis
-- RiskRadar threat assessment
+### (Future) Decision Protocols (Pro)
+- DeciDomatic multi-criteria analysis *(Pro)*
+- RiskRadar threat assessment *(Pro)*
 
 ## Usage
 

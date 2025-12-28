@@ -1,0 +1,417 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://reasonkit.sh/schemas/thinktools/brutalhonesty_output.json",
+  "title": "BrutalHonesty Output Schema",
+  "description": "Structured output for BrutalHonesty adversarial self-critique module",
+  "version": "2.0.0",
+  "type": "object",
+  "required": [
+    "module",
+    "version",
+    "timestamp",
+    "input_to_critique",
+    "critiques",
+    "edge_cases",
+    "biases_detected",
+    "failure_modes",
+    "overall_assessment",
+    "confidence",
+    "thinking_trace"
+  ],
+  "properties": {
+    "module": {
+      "type": "string",
+      "const": "brutalhonesty",
+      "description": "Module identifier"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Module version (semver)"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp of execution"
+    },
+    "input_to_critique": {
+      "type": "object",
+      "required": ["source", "content"],
+      "description": "What is being critiqued",
+      "properties": {
+        "source": {
+          "type": "string",
+          "description": "Source of input (e.g., 'gigathink', 'laserlogic', 'user_input')"
+        },
+        "content": {
+          "type": "string",
+          "description": "The content being critiqued"
+        },
+        "context": {
+          "type": "string",
+          "description": "Additional context for the critique"
+        }
+      }
+    },
+    "critiques": {
+      "type": "array",
+      "minItems": 5,
+      "description": "Adversarial critiques generated",
+      "items": {
+        "type": "object",
+        "required": [
+          "critique_id",
+          "attack_vector",
+          "target",
+          "criticism",
+          "severity",
+          "remediation"
+        ],
+        "properties": {
+          "critique_id": {
+            "type": "integer",
+            "description": "Critique identifier"
+          },
+          "attack_vector": {
+            "type": "string",
+            "enum": [
+              "assumption_challenge",
+              "edge_case_stress_test",
+              "logical_gap_probing",
+              "evidence_quality_questioning",
+              "bias_detection",
+              "overconfidence_correction",
+              "hidden_dependency_surfacing",
+              "failure_mode_analysis"
+            ],
+            "description": "Type of attack used"
+          },
+          "target": {
+            "type": "string",
+            "description": "What aspect is being critiqued"
+          },
+          "criticism": {
+            "type": "string",
+            "description": "The critique itself"
+          },
+          "severity": {
+            "type": "string",
+            "enum": ["fatal", "critical", "significant", "moderate", "minor"],
+            "description": "How severe this issue is"
+          },
+          "counter_example": {
+            "type": "string",
+            "description": "Counter-example that breaks the reasoning"
+          },
+          "remediation": {
+            "type": "string",
+            "description": "How to address this critique"
+          },
+          "blocks_conclusion": {
+            "type": "boolean",
+            "description": "Whether this critique blocks the original conclusion"
+          }
+        }
+      }
+    },
+    "edge_cases": {
+      "type": "array",
+      "description": "Edge cases that could break the reasoning",
+      "items": {
+        "type": "object",
+        "required": ["scenario", "breaks_at", "likelihood", "impact"],
+        "properties": {
+          "scenario": {
+            "type": "string",
+            "description": "Description of edge case scenario"
+          },
+          "breaks_at": {
+            "type": "string",
+            "description": "Where/how the reasoning breaks"
+          },
+          "likelihood": {
+            "type": "string",
+            "enum": ["very_likely", "likely", "possible", "unlikely", "very_unlikely"],
+            "description": "How likely this edge case is"
+          },
+          "impact": {
+            "type": "string",
+            "enum": ["catastrophic", "severe", "moderate", "minor", "negligible"],
+            "description": "Impact if this edge case occurs"
+          },
+          "mitigation": {
+            "type": "string",
+            "description": "How to handle this edge case"
+          }
+        }
+      }
+    },
+    "biases_detected": {
+      "type": "array",
+      "description": "Cognitive biases identified in reasoning",
+      "items": {
+        "type": "object",
+        "required": ["bias_type", "location", "description", "correction"],
+        "properties": {
+          "bias_type": {
+            "type": "string",
+            "enum": [
+              "confirmation_bias",
+              "anchoring_bias",
+              "availability_heuristic",
+              "hindsight_bias",
+              "overconfidence",
+              "sunk_cost_fallacy",
+              "bandwagon_effect",
+              "dunning_kruger",
+              "status_quo_bias",
+              "optimism_bias"
+            ],
+            "description": "Type of cognitive bias"
+          },
+          "location": {
+            "type": "string",
+            "description": "Where in the reasoning this bias appears"
+          },
+          "description": {
+            "type": "string",
+            "description": "How this bias manifests"
+          },
+          "correction": {
+            "type": "string",
+            "description": "How to correct for this bias"
+          },
+          "severity": {
+            "type": "string",
+            "enum": ["critical", "significant", "moderate", "minor"],
+            "description": "Severity of bias impact"
+          }
+        }
+      }
+    },
+    "failure_modes": {
+      "type": "array",
+      "description": "Predicted failure modes",
+      "items": {
+        "type": "object",
+        "required": ["mode", "trigger", "consequence", "probability"],
+        "properties": {
+          "mode": {
+            "type": "string",
+            "description": "Description of failure mode"
+          },
+          "trigger": {
+            "type": "string",
+            "description": "What would trigger this failure"
+          },
+          "consequence": {
+            "type": "string",
+            "description": "What happens when it fails"
+          },
+          "probability": {
+            "type": "number",
+            "minimum": 0.0,
+            "maximum": 1.0,
+            "description": "Estimated probability of occurrence"
+          },
+          "severity": {
+            "type": "string",
+            "enum": ["catastrophic", "severe", "moderate", "minor"],
+            "description": "Severity of failure"
+          },
+          "prevention": {
+            "type": "string",
+            "description": "How to prevent this failure"
+          }
+        }
+      }
+    },
+    "weakest_links": {
+      "type": "array",
+      "description": "Weakest points in the reasoning",
+      "items": {
+        "type": "object",
+        "required": ["element", "weakness", "strength_score"],
+        "properties": {
+          "element": {
+            "type": "string",
+            "description": "Which element is weak"
+          },
+          "weakness": {
+            "type": "string",
+            "description": "Description of the weakness"
+          },
+          "strength_score": {
+            "type": "number",
+            "minimum": 0.0,
+            "maximum": 1.0,
+            "description": "Strength of this element (lower = weaker)"
+          },
+          "recommended_action": {
+            "type": "string",
+            "description": "What to do about this weakness"
+          }
+        }
+      }
+    },
+    "overall_assessment": {
+      "type": "object",
+      "required": [
+        "verdict",
+        "fatal_flaws_found",
+        "recommended_action",
+        "confidence_adjustment"
+      ],
+      "properties": {
+        "verdict": {
+          "type": "string",
+          "enum": [
+            "accept_as_is",
+            "accept_with_caveats",
+            "revise_and_resubmit",
+            "reject_major_flaws",
+            "reject_fatal_flaws"
+          ],
+          "description": "Overall verdict on the reasoning"
+        },
+        "fatal_flaws_found": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Number of fatal flaws identified"
+        },
+        "recommended_action": {
+          "type": "string",
+          "description": "What should be done based on this critique"
+        },
+        "confidence_adjustment": {
+          "type": "number",
+          "minimum": -1.0,
+          "maximum": 0.0,
+          "description": "Negative adjustment to confidence (0.0 to -1.0)"
+        },
+        "issues_to_address": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "issue": {"type": "string"},
+              "priority": {"type": "string", "enum": ["critical", "high", "medium", "low"]}
+            }
+          }
+        }
+      }
+    },
+    "re_execution_triggers": {
+      "type": "array",
+      "description": "Modules that should re-run based on critiques",
+      "items": {
+        "type": "object",
+        "required": ["module", "reason"],
+        "properties": {
+          "module": {
+            "type": "string",
+            "enum": ["gigathink", "laserlogic", "bedrock", "proofguard"],
+            "description": "Module to re-run"
+          },
+          "reason": {
+            "type": "string",
+            "description": "Why this module should re-run"
+          },
+          "with_constraints": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Additional constraints for re-execution"
+          }
+        }
+      }
+    },
+    "confidence": {
+      "type": "object",
+      "required": ["overall", "factors", "breakdown"],
+      "properties": {
+        "overall": {
+          "type": "number",
+          "minimum": 0.0,
+          "maximum": 1.0,
+          "description": "Overall module confidence score"
+        },
+        "factors": {
+          "type": "object",
+          "required": [
+            "critique_depth",
+            "fatal_flaw_detection",
+            "edge_case_coverage",
+            "bias_identification",
+            "remediation_quality"
+          ],
+          "properties": {
+            "critique_depth": {
+              "type": "number",
+              "minimum": 0.0,
+              "maximum": 1.0,
+              "description": "critiques_generated / min_critiques"
+            },
+            "fatal_flaw_detection": {
+              "type": "number",
+              "minimum": 0.0,
+              "maximum": 1.0,
+              "description": "1.0 if fatal flaws found, 0.5 otherwise"
+            },
+            "edge_case_coverage": {
+              "type": "number",
+              "minimum": 0.0,
+              "maximum": 1.0,
+              "description": "edge_cases_tested / estimated_edge_cases"
+            },
+            "bias_identification": {
+              "type": "number",
+              "minimum": 0.0,
+              "maximum": 1.0,
+              "description": "biases_detected / scan_categories"
+            },
+            "remediation_quality": {
+              "type": "number",
+              "minimum": 0.0,
+              "maximum": 1.0,
+              "description": "issues_addressed / issues_found"
+            }
+          }
+        },
+        "breakdown": {
+          "type": "string",
+          "description": "Human-readable explanation of confidence calculation"
+        }
+      }
+    },
+    "thinking_trace": {
+      "type": "array",
+      "description": "Step-by-step reasoning trace for transparency",
+      "items": {
+        "type": "object",
+        "required": ["step", "action", "result"],
+        "properties": {
+          "step": {"type": "integer"},
+          "action": {"type": "string"},
+          "result": {"type": "string"},
+          "duration_ms": {"type": "integer"}
+        }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "execution_time_ms": {"type": "integer"},
+        "token_count": {"type": "integer"},
+        "model_used": {"type": "string"},
+        "attack_intensity": {
+          "type": "number",
+          "minimum": 0.0,
+          "maximum": 1.0,
+          "description": "How aggressive the critique was"
+        }
+      }
+    }
+  }
+}

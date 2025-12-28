@@ -1,7 +1,7 @@
 //! Configuration loading and management
 
-use crate::error::Result;
 use crate::arf::types::*;
+use crate::error::Result;
 use config::{Config as ConfigLoader, ConfigError, File};
 use serde::{Deserialize, Serialize};
 use std::path::Path;
@@ -27,8 +27,7 @@ impl Config {
 
     /// Load configuration from specific file
     pub fn load_from_file<P: AsRef<Path>>(path: P) -> Result<Self> {
-        let mut loader = ConfigLoader::builder()
-            .add_source(File::from(path.as_ref()));
+        let mut loader = ConfigLoader::builder().add_source(File::from(path.as_ref()));
 
         let config: ArfConfig = loader.build()?.try_deserialize()?;
         Ok(Self { inner: config })
@@ -89,8 +88,9 @@ impl Config {
 
     /// Save configuration to file
     pub fn save_to_file<P: AsRef<Path>>(&self, path: P) -> Result<()> {
-        let content = serde_json::to_string_pretty(&self.inner)
-            .map_err(|e| crate::error::Error::config(format!("Failed to serialize config: {}", e)))?;
+        let content = serde_json::to_string_pretty(&self.inner).map_err(|e| {
+            crate::error::Error::config(format!("Failed to serialize config: {}", e))
+        })?;
 
         std::fs::write(path, content)?;
         Ok(())
@@ -148,6 +148,9 @@ mod tests {
         let loaded_config = Config::load_from_file(temp_file.path()).unwrap();
 
         // Verify they match
-        assert_eq!(config.runtime().max_concurrent_sessions, loaded_config.runtime().max_concurrent_sessions);
+        assert_eq!(
+            config.runtime().max_concurrent_sessions,
+            loaded_config.runtime().max_concurrent_sessions
+        );
     }
 }

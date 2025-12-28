@@ -3,8 +3,8 @@
 //! Persistent knowledge graph for storing and retrieving reasoning patterns.
 //! This module creates a semantic network of concepts, solutions, and relationships.
 
-use crate::error::Result;
 use crate::arf::types::*;
+use crate::error::Result;
 use petgraph::graph::{DiGraph, NodeIndex};
 use petgraph::visit::Dfs;
 use rust_bert::pipelines::sentence_embeddings::SentenceEmbeddingsModel;
@@ -50,13 +50,13 @@ pub struct KnowledgeEdge {
 /// Types of relationships
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum EdgeType {
-    Solves,           // Solution solves problem
-    RelatedTo,        // General relationship
-    SimilarTo,        // Semantic similarity
-    Follows,          // Sequential relationship
-    Contains,         // Hierarchical containment
-    References,       // Citation or reference
-    Contradicts,      // Contradictory relationship
+    Solves,      // Solution solves problem
+    RelatedTo,   // General relationship
+    SimilarTo,   // Semantic similarity
+    Follows,     // Sequential relationship
+    Contains,    // Hierarchical containment
+    References,  // Citation or reference
+    Contradicts, // Contradictory relationship
 }
 
 /// Knowledge graph for storing reasoning patterns
@@ -73,7 +73,9 @@ impl KnowledgeGraph {
         let database = sled::open(database_path)?;
 
         // Try to load existing graph, or create new one
-        let graph = Self::load_graph(&database).await.unwrap_or_else(|_| DiGraph::new());
+        let graph = Self::load_graph(&database)
+            .await
+            .unwrap_or_else(|_| DiGraph::new());
 
         Ok(Self {
             graph: Arc::new(RwLock::new(graph)),
@@ -93,7 +95,10 @@ impl KnowledgeGraph {
             metadata: {
                 let mut meta = HashMap::new();
                 meta.insert("status".to_string(), serde_json::json!(session.status));
-                meta.insert("step_count".to_string(), serde_json::json!(session.steps.len()));
+                meta.insert(
+                    "step_count".to_string(),
+                    serde_json::json!(session.steps.len()),
+                );
                 meta
             },
             embedding: None,
@@ -122,7 +127,8 @@ impl KnowledgeGraph {
             format!("problem_{}", session.id),
             EdgeType::Solves,
             1.0,
-        ).await?;
+        )
+        .await?;
 
         // Add reasoning steps
         for step in &session.steps {
@@ -132,8 +138,14 @@ impl KnowledgeGraph {
                 content: step.instruction.clone(),
                 metadata: {
                     let mut meta = HashMap::new();
-                    meta.insert("step_number".to_string(), serde_json::json!(step.step_number));
-                    meta.insert("cognitive_stance".to_string(), serde_json::json!(step.cognitive_stance));
+                    meta.insert(
+                        "step_number".to_string(),
+                        serde_json::json!(step.step_number),
+                    );
+                    meta.insert(
+                        "cognitive_stance".to_string(),
+                        serde_json::json!(step.cognitive_stance),
+                    );
                     meta
                 },
                 embedding: None,
@@ -149,7 +161,8 @@ impl KnowledgeGraph {
                 format!("session_{}", session.id),
                 EdgeType::Contains,
                 0.8,
-            ).await?;
+            )
+            .await?;
         }
 
         // Save graph to database
@@ -174,7 +187,8 @@ impl KnowledgeGraph {
                 if let Some(node_embedding) = &node.embedding {
                     let similarity = self.cosine_similarity(&query_embedding, node_embedding);
 
-                    if similarity > 0.7 { // Similarity threshold
+                    if similarity > 0.7 {
+                        // Similarity threshold
                         results.push(SearchResult {
                             node_id: node_id.clone(),
                             content: node.content.clone(),
@@ -195,7 +209,10 @@ impl KnowledgeGraph {
     }
 
     /// Find solution patterns for similar problems
-    pub async fn find_solution_patterns(&self, problem_description: &str) -> Result<Vec<SolutionPattern>> {
+    pub async fn find_solution_patterns(
+        &self,
+        problem_description: &str,
+    ) -> Result<Vec<SolutionPattern>> {
         // Search for similar problems
         let similar_problems = self.semantic_search(problem_description, 5).await?;
 
@@ -250,9 +267,11 @@ impl KnowledgeGraph {
         let graph = self.graph.read().await;
         let node_index = self.node_index.read().await;
 
-        let source_idx = *node_index.get(&source_id)
+        let source_idx = *node_index
+            .get(&source_id)
             .ok_or_else(|| ArfError::engine("Source node not found"))?;
-        let target_idx = *node_index.get(&target_id)
+        let target_idx = *node_index
+            .get(&target_id)
             .ok_or_else(|| ArfError::engine("Target node not found"))?;
 
         let edge = KnowledgeEdge {
@@ -282,9 +301,9 @@ impl KnowledgeGraph {
         let hash = hasher.finish();
 
         // Create a simple embedding vector
-        let embedding: Vec<f32> = (0..384).map(|i| {
-            ((hash.wrapping_mul(i as u64)) % 1000) as f32 / 1000.0
-        }).collect();
+        let embedding: Vec<f32> = (0..384)
+            .map(|i| ((hash.wrapping_mul(i as u64)) % 1000) as f32 / 1000.0)
+            .collect();
 
         Ok(embedding)
     }
@@ -335,7 +354,8 @@ impl KnowledgeGraph {
     async fn save_graph(&self) -> Result<()> {
         let graph = self.graph.read().await;
         let serialized = serde_json::to_string(&*graph)?;
-        self.database.insert(b"knowledge_graph", serialized.as_bytes())?;
+        self.database
+            .insert(b"knowledge_graph", serialized.as_bytes())?;
         Ok(())
     }
 
@@ -357,12 +377,11 @@ impl KnowledgeGraph {
         let total_nodes = graph.node_count();
         let total_edges = graph.edge_count();
 
-        let node_types = graph.node_weights()
-            .fold(HashMap::new(), |mut acc, node| {
-                let count = acc.entry(format!("{:?}", node.node_type)).or_insert(0);
-                *count += 1;
-                acc
-            });
+        let node_types = graph.node_weights().fold(HashMap::new(), |mut acc, node| {
+            let count = acc.entry(format!("{:?}", node.node_type)).or_insert(0);
+            *count += 1;
+            acc
+        });
 
         Ok(KnowledgeStats {
             total_nodes,
@@ -411,7 +430,9 @@ mod tests {
         let temp_dir = TempDir::new().unwrap();
         let db_path = temp_dir.path().join("test.db");
 
-        let kg = KnowledgeGraph::new(db_path.to_str().unwrap()).await.unwrap();
+        let kg = KnowledgeGraph::new(db_path.to_str().unwrap())
+            .await
+            .unwrap();
         let stats = kg.get_statistics().await.unwrap();
         assert_eq!(stats.total_nodes, 0);
     }
@@ -421,7 +442,9 @@ mod tests {
         let temp_dir = TempDir::new().unwrap();
         let db_path = temp_dir.path().join("test.db");
 
-        let kg = KnowledgeGraph::new(db_path.to_str().unwrap()).await.unwrap();
+        let kg = KnowledgeGraph::new(db_path.to_str().unwrap())
+            .await
+            .unwrap();
 
         let session = ReasoningSession {
             id: "test_session".to_string(),

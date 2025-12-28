@@ -2,9 +2,9 @@
 //!
 //! Implements hierarchical clustering and summarization for improved retrieval quality.
 
-use crate::{Document, Chunk, Result, Error};
+use crate::{Chunk, Error, Result};
 use serde::{Deserialize, Serialize};
-use std::collections::{HashMap, HashSet};
+use std::collections::HashMap;
 use uuid::Uuid;
 
 /// RAPTOR tree node representing a cluster of chunks
@@ -86,12 +86,9 @@ impl RaptorTree {
                 break;
             }
 
-            let next_level_nodes = self.build_level(
-                &current_level_nodes,
-                level,
-                embedder,
-                summarizer,
-            ).await?;
+            let next_level_nodes = self
+                .build_level(&current_level_nodes, level, embedder, summarizer)
+                .await?;
 
             current_level_nodes = next_level_nodes;
         }
@@ -127,9 +124,7 @@ impl RaptorTree {
             }
 
             // Create cluster summary
-            let cluster_texts: Vec<String> = cluster.iter()
-                .map(|n| n.text.clone())
-                .collect();
+            let cluster_texts: Vec<String> = cluster.iter().map(|n| n.text.clone()).collect();
             let combined_text = cluster_texts.join("\n\n");
 
             let summary = summarizer(&combined_text)?;
@@ -184,7 +179,8 @@ impl RaptorTree {
         // Remove duplicates and sort again
         let mut unique_results = HashMap::new();
         for (leaf_id, score) in leaf_results {
-            unique_results.entry(leaf_id)
+            unique_results
+                .entry(leaf_id)
                 .and_modify(|e: &mut f32| *e = e.max(score))
                 .or_insert(score);
         }
@@ -216,7 +212,10 @@ impl RaptorTree {
 
     /// Get all leaf nodes under a given node
     pub fn get_leaf_nodes(&self, node_id: Uuid) -> Vec<Uuid> {
-        self.expand_to_leaves(node_id, 1.0).into_iter().map(|(id, _)| id).collect()
+        self.expand_to_leaves(node_id, 1.0)
+            .into_iter()
+            .map(|(id, _)| id)
+            .collect()
     }
 
     /// Get node by ID
@@ -264,6 +263,172 @@ pub struct RaptorStats {
     pub root_count: usize,
 }
 
+// ============================================================================
+// Code Graph Structures (merged from Protocol Gamma)
+// ============================================================================
+
+/// Represents a code entity (function, struct, class) in the code graph
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct CodeNode {
+    /// Unique identifier for this code node
+    pub id: Uuid,
+    /// Name of the code entity (e.g., function name, struct name)
+    pub name: String,
+    /// Type of code entity: "function", "struct", "class", "module", etc.
+    pub node_type: String,
+    /// File path where this code entity is defined
+    pub file_path: String,
+    /// Embedding vector for semantic search
+    pub embedding: Vec<f32>,
+}
+
+/// Represents a relationship between code entities
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct CodeEdge {
+    /// Source node UUID
+    pub source_id: Uuid,
+    /// Target node UUID
+    pub target_id: Uuid,
+    /// Type of relationship: "calls", "imports", "defines", "implements", etc.
+    pub relation: String,
+}
+
+/// Code graph for representing code structure and relationships
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct CodeGraph {
+    /// All code nodes indexed by UUID
+    pub nodes: HashMap<Uuid, CodeNode>,
+    /// All relationships between nodes
+    pub edges: Vec<CodeEdge>,
+}
+
+impl CodeGraph {
+    /// Create a new empty code graph
+    pub fn new() -> Self {
+        Self {
+            nodes: HashMap::new(),
+            edges: Vec::new(),
+        }
+    }
+
+    /// Add a code node to the graph
+    pub fn add_node(&mut self, node: CodeNode) -> Result<Uuid> {
+        let id = node.id;
+        self.nodes.insert(id, node);
+        Ok(id)
+    }
+
+    /// Add a relationship edge between two nodes
+    pub fn add_edge(&mut self, source_id: Uuid, target_id: Uuid, relation: String) -> Result<()> {
+        // Validate that both nodes exist
+        if !self.nodes.contains_key(&source_id) {
+            return Err(Error::Validation(format!(
+                "Source node {} not found in graph",
+                source_id
+            )));
+        }
+        if !self.nodes.contains_key(&target_id) {
+            return Err(Error::Validation(format!(
+                "Target node {} not found in graph",
+                target_id
+            )));
+        }
+
+        self.edges.push(CodeEdge {
+            source_id,
+            target_id,
+            relation,
+        });
+        Ok(())
+    }
+
+    /// Get a code node by UUID
+    pub fn get_node(&self, node_id: &Uuid) -> Option<&CodeNode> {
+        self.nodes.get(node_id)
+    }
+
+    /// Get all edges originating from a specific node
+    pub fn get_outgoing_edges(&self, node_id: &Uuid) -> Vec<&CodeEdge> {
+        self.edges
+            .iter()
+            .filter(|e| &e.source_id == node_id)
+            .collect()
+    }
+
+    /// Get all edges pointing to a specific node
+    pub fn get_incoming_edges(&self, node_id: &Uuid) -> Vec<&CodeEdge> {
+        self.edges
+            .iter()
+            .filter(|e| &e.target_id == node_id)
+            .collect()
+    }
+
+    /// Find nodes by type (e.g., all functions, all structs)
+    pub fn find_nodes_by_type(&self, node_type: &str) -> Vec<&CodeNode> {
+        self.nodes
+            .values()
+            .filter(|n| n.node_type == node_type)
+            .collect()
+    }
+
+    /// Find nodes by file path
+    pub fn find_nodes_by_file(&self, file_path: &str) -> Vec<&CodeNode> {
+        self.nodes
+            .values()
+            .filter(|n| n.file_path == file_path)
+            .collect()
+    }
+
+    /// Get graph statistics
+    pub fn stats(&self) -> CodeGraphStats {
+        let mut type_counts = HashMap::new();
+        let mut file_counts = HashMap::new();
+        let mut relation_counts = HashMap::new();
+
+        for node in self.nodes.values() {
+            *type_counts.entry(node.node_type.clone()).or_insert(0) += 1;
+            *file_counts.entry(node.file_path.clone()).or_insert(0) += 1;
+        }
+
+        for edge in &self.edges {
+            *relation_counts.entry(edge.relation.clone()).or_insert(0) += 1;
+        }
+
+        CodeGraphStats {
+            total_nodes: self.nodes.len(),
+            total_edges: self.edges.len(),
+            type_counts,
+            file_counts,
+            relation_counts,
+        }
+    }
+}
+
+impl Default for CodeGraph {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
+/// Statistics for code graph
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct CodeGraphStats {
+    /// Total number of code nodes
+    pub total_nodes: usize,
+    /// Total number of edges
+    pub total_edges: usize,
+    /// Count of nodes by type
+    pub type_counts: HashMap<String, usize>,
+    /// Count of nodes by file
+    pub file_counts: HashMap<String, usize>,
+    /// Count of edges by relation type
+    pub relation_counts: HashMap<String, usize>,
+}
+
+// ============================================================================
+// Utility Functions
+// ============================================================================
+
 /// Compute cosine similarity between two vectors
 fn cosine_similarity(a: &[f32], b: &[f32]) -> f32 {
     if a.len() != b.len() || a.is_empty() {
@@ -290,7 +455,10 @@ mod tests {
     }
 
     fn mock_summarizer(text: &str) -> Result<String> {
-        Ok(format!("Summary of: {}", text.chars().take(50).collect::<String>()))
+        Ok(format!(
+            "Summary of: {}",
+            text.chars().take(50).collect::<String>()
+        ))
     }
 
     #[tokio::test]
@@ -344,7 +512,9 @@ mod tests {
             },
         ];
 
-        tree.build_from_chunks(&chunks, &mock_embedder, &mock_summarizer).await.unwrap();
+        tree.build_from_chunks(&chunks, &mock_embedder, &mock_summarizer)
+            .await
+            .unwrap();
 
         let stats = tree.stats();
         assert!(stats.total_nodes > chunks.len()); // Should have internal nodes
@@ -374,5 +544,152 @@ mod tests {
         assert_eq!(results.len(), 1);
         assert_eq!(results[0].0, node_id);
         assert!((results[0].1 - 1.0).abs() < 0.001);
+    }
+
+    #[test]
+    fn test_code_graph_new() {
+        let graph = CodeGraph::new();
+        assert_eq!(graph.nodes.len(), 0);
+        assert_eq!(graph.edges.len(), 0);
+    }
+
+    #[test]
+    fn test_code_graph_add_node() {
+        let mut graph = CodeGraph::new();
+        let node_id = Uuid::new_v4();
+
+        let node = CodeNode {
+            id: node_id,
+            name: "test_function".to_string(),
+            node_type: "function".to_string(),
+            file_path: "/src/lib.rs".to_string(),
+            embedding: vec![1.0, 2.0, 3.0],
+        };
+
+        graph.add_node(node).unwrap();
+        assert_eq!(graph.nodes.len(), 1);
+        assert!(graph.get_node(&node_id).is_some());
+    }
+
+    #[test]
+    fn test_code_graph_add_edge() {
+        let mut graph = CodeGraph::new();
+        let node1_id = Uuid::new_v4();
+        let node2_id = Uuid::new_v4();
+
+        let node1 = CodeNode {
+            id: node1_id,
+            name: "caller".to_string(),
+            node_type: "function".to_string(),
+            file_path: "/src/lib.rs".to_string(),
+            embedding: vec![1.0, 2.0, 3.0],
+        };
+
+        let node2 = CodeNode {
+            id: node2_id,
+            name: "callee".to_string(),
+            node_type: "function".to_string(),
+            file_path: "/src/lib.rs".to_string(),
+            embedding: vec![4.0, 5.0, 6.0],
+        };
+
+        graph.add_node(node1).unwrap();
+        graph.add_node(node2).unwrap();
+        graph
+            .add_edge(node1_id, node2_id, "calls".to_string())
+            .unwrap();
+
+        assert_eq!(graph.edges.len(), 1);
+        assert_eq!(graph.edges[0].source_id, node1_id);
+        assert_eq!(graph.edges[0].target_id, node2_id);
+        assert_eq!(graph.edges[0].relation, "calls");
+    }
+
+    #[test]
+    fn test_code_graph_add_edge_invalid_node() {
+        let mut graph = CodeGraph::new();
+        let node_id = Uuid::new_v4();
+        let invalid_id = Uuid::new_v4();
+
+        let node = CodeNode {
+            id: node_id,
+            name: "test".to_string(),
+            node_type: "function".to_string(),
+            file_path: "/src/lib.rs".to_string(),
+            embedding: vec![1.0, 2.0, 3.0],
+        };
+
+        graph.add_node(node).unwrap();
+
+        // Should fail - invalid target
+        let result = graph.add_edge(node_id, invalid_id, "calls".to_string());
+        assert!(result.is_err());
+    }
+
+    #[test]
+    fn test_code_graph_find_by_type() {
+        let mut graph = CodeGraph::new();
+
+        let node1 = CodeNode {
+            id: Uuid::new_v4(),
+            name: "func1".to_string(),
+            node_type: "function".to_string(),
+            file_path: "/src/lib.rs".to_string(),
+            embedding: vec![1.0, 2.0, 3.0],
+        };
+
+        let node2 = CodeNode {
+            id: Uuid::new_v4(),
+            name: "MyStruct".to_string(),
+            node_type: "struct".to_string(),
+            file_path: "/src/lib.rs".to_string(),
+            embedding: vec![4.0, 5.0, 6.0],
+        };
+
+        graph.add_node(node1).unwrap();
+        graph.add_node(node2).unwrap();
+
+        let functions = graph.find_nodes_by_type("function");
+        assert_eq!(functions.len(), 1);
+        assert_eq!(functions[0].name, "func1");
+
+        let structs = graph.find_nodes_by_type("struct");
+        assert_eq!(structs.len(), 1);
+        assert_eq!(structs[0].name, "MyStruct");
+    }
+
+    #[test]
+    fn test_code_graph_stats() {
+        let mut graph = CodeGraph::new();
+        let node1_id = Uuid::new_v4();
+        let node2_id = Uuid::new_v4();
+
+        let node1 = CodeNode {
+            id: node1_id,
+            name: "func1".to_string(),
+            node_type: "function".to_string(),
+            file_path: "/src/lib.rs".to_string(),
+            embedding: vec![1.0, 2.0, 3.0],
+        };
+
+        let node2 = CodeNode {
+            id: node2_id,
+            name: "func2".to_string(),
+            node_type: "function".to_string(),
+            file_path: "/src/main.rs".to_string(),
+            embedding: vec![4.0, 5.0, 6.0],
+        };
+
+        graph.add_node(node1).unwrap();
+        graph.add_node(node2).unwrap();
+        graph
+            .add_edge(node1_id, node2_id, "calls".to_string())
+            .unwrap();
+
+        let stats = graph.stats();
+        assert_eq!(stats.total_nodes, 2);
+        assert_eq!(stats.total_edges, 1);
+        assert_eq!(stats.type_counts.get("function"), Some(&2));
+        assert_eq!(stats.relation_counts.get("calls"), Some(&1));
     }
 }

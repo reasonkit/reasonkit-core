@@ -44,12 +44,14 @@ pub struct Protocol {
 /// Reasoning strategy categories
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
+#[derive(Default)]
 pub enum ReasoningStrategy {
     /// Divergent thinking - maximize perspectives
     Expansive,
     /// Convergent thinking - deduce conclusions
     Deductive,
     /// Break down to fundamentals
+    #[default]
     Analytical,
     /// Challenge and critique
     Adversarial,
@@ -59,12 +61,6 @@ pub enum ReasoningStrategy {
     Decision,
     /// Scientific method
     Empirical,
-}
-
-impl Default for ReasoningStrategy {
-    fn default() -> Self {
-        Self::Analytical
-    }
 }
 
 /// Input specification for a protocol
@@ -128,44 +124,52 @@ fn default_min_confidence() -> f64 {
 pub enum StepAction {
     /// Generate perspectives/ideas
     Generate {
+        /// Minimum number of items to generate
         #[serde(default = "default_min_count")]
         min_count: usize,
+        /// Maximum number of items to generate
         #[serde(default = "default_max_count")]
         max_count: usize,
     },
 
     /// Analyze/evaluate input
     Analyze {
+        /// Criteria for analysis
         #[serde(default)]
         criteria: Vec<String>,
     },
 
     /// Synthesize multiple inputs
     Synthesize {
+        /// Aggregation method to use
         #[serde(default)]
         aggregation: AggregationType,
     },
 
     /// Validate against rules
     Validate {
+        /// Validation rules to apply
         #[serde(default)]
         rules: Vec<String>,
     },
 
     /// Challenge/critique
     Critique {
+        /// Severity level for critique
         #[serde(default)]
         severity: CritiqueSeverity,
     },
 
     /// Make decision
     Decide {
+        /// Decision method to use
         #[serde(default)]
         method: DecisionMethod,
     },
 
     /// Cross-reference sources
     CrossReference {
+        /// Minimum number of sources required
         #[serde(default = "default_min_sources")]
         min_sources: usize,
     },
@@ -250,11 +254,22 @@ pub enum DecisionMethod {
 #[serde(tag = "type", rename_all = "snake_case")]
 pub enum BranchCondition {
     /// Branch if confidence below threshold
-    ConfidenceBelow { threshold: f64 },
+    ConfidenceBelow {
+        /// Confidence threshold value
+        threshold: f64,
+    },
     /// Branch if confidence above threshold
-    ConfidenceAbove { threshold: f64 },
+    ConfidenceAbove {
+        /// Confidence threshold value
+        threshold: f64,
+    },
     /// Branch based on output value
-    OutputEquals { field: String, value: String },
+    OutputEquals {
+        /// Field name to check
+        field: String,
+        /// Expected value
+        value: String,
+    },
     /// Always execute (unconditional)
     Always,
 }
@@ -264,15 +279,36 @@ pub enum BranchCondition {
 #[serde(tag = "rule", rename_all = "snake_case")]
 pub enum ValidationRule {
     /// Minimum number of items
-    MinCount { field: String, value: usize },
+    MinCount {
+        /// Field name to validate
+        field: String,
+        /// Minimum count value
+        value: usize,
+    },
     /// Maximum number of items
-    MaxCount { field: String, value: usize },
+    MaxCount {
+        /// Field name to validate
+        field: String,
+        /// Maximum count value
+        value: usize,
+    },
     /// Confidence must be in range
-    ConfidenceRange { min: f64, max: f64 },
+    ConfidenceRange {
+        /// Minimum confidence value
+        min: f64,
+        /// Maximum confidence value
+        max: f64,
+    },
     /// Field must be present
-    Required { field: String },
+    Required {
+        /// Required field name
+        field: String,
+    },
     /// Custom validation (expression)
-    Custom { expression: String },
+    Custom {
+        /// Validation expression
+        expression: String,
+    },
 }
 
 /// Protocol metadata for composition and optimization
@@ -392,7 +428,10 @@ mod tests {
         let protocol = Protocol::new("test", "Test Protocol");
         let result = protocol.validate();
         assert!(result.is_err());
-        assert!(result.unwrap_err().iter().any(|e| e.contains("at least one step")));
+        assert!(result
+            .unwrap_err()
+            .iter()
+            .any(|e| e.contains("at least one step")));
     }
 
     #[test]
@@ -406,7 +445,10 @@ mod tests {
 
         let parsed: StepAction = serde_json::from_str(&json).unwrap();
         match parsed {
-            StepAction::Generate { min_count, max_count } => {
+            StepAction::Generate {
+                min_count,
+                max_count,
+            } => {
                 assert_eq!(min_count, 5);
                 assert_eq!(max_count, 10);
             }

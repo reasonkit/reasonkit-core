@@ -1,16 +1,52 @@
 //! Retrieval module for ReasonKit Core
 //!
-//! Provides hybrid search combining dense (vector) and sparse (BM25) retrieval.
+//! Provides hybrid search combining dense (vector) and sparse (BM25) retrieval,
+//! with optional cross-encoder reranking for improved precision.
+//!
+//! ## Components
+//!
+//! - **HybridRetriever**: Combines BM25 and vector search with RRF fusion
+//! - **ExpansionEngine**: Query expansion for better recall
+//! - **FusionEngine**: Reciprocal Rank Fusion for combining result sets
+//! - **Reranker**: Cross-encoder reranking for precision improvement
+//!
+//! ## Research Foundation
+//!
+//! - **RRF Fusion**: Cormack et al. 2009 - "Reciprocal Rank Fusion"
+//! - **Cross-Encoder**: Nogueira et al. 2020 - arXiv:2010.06467
+
+pub mod expansion;
+pub mod fusion;
+pub mod rerank;
+
+pub use expansion::{ExpansionConfig, ExpansionEngine, MultiQueryStrategy};
+pub use fusion::{FusedResult, FusionEngine, FusionStrategy, RankedResult};
+pub use rerank::{
+    CrossEncoderBackend, HeuristicCrossEncoder, RerankStats, RerankedResult, Reranker,
+    RerankerCandidate, RerankerConfig,
+};
 
 use crate::{
+    embedding::EmbeddingPipeline,
     indexing::IndexManager,
-    storage::{Storage, AccessContext, AccessLevel},
-    raptor::{RaptorTree, RaptorStats},
-    Document, RetrievalConfig, Result, MatchSource,
+    raptor::{RaptorStats, RaptorTree},
+    storage::{AccessContext, AccessLevel, Storage},
+    Document, Error, MatchSource, Result, RetrievalConfig,
 };
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
+use std::sync::Arc;
 use uuid::Uuid;
+
+/// Chunk metadata for fusion reconstruction
+#[derive(Debug, Clone)]
+struct ChunkMetadata {
+    doc_id: Uuid,
+    text: String,
+    sparse_score: Option<f32>,
+    dense_score: Option<f32>,
+    section: Option<String>,
+}
 
 /// Hybrid retriever combining vector and BM25 search
 pub struct HybridRetriever {
@@ -18,6 +54,7 @@ pub struct HybridRetriever {
     index: IndexManager,
     config: RetrievalConfig,
     raptor_tree: Option<RaptorTree>,
+    embedding_pipeline: Option<Arc<EmbeddingPipeline>>,
 }
 
 impl HybridRetriever {
@@ -37,6 +74,7 @@ impl HybridRetriever {
             index: IndexManager::in_memory()?,
             config: RetrievalConfig::default(),
             raptor_tree: None,
+            embedding_pipeline: None,
         })
     }
 
@@ -47,12 +85,19 @@ impl HybridRetriever {
             index,
             config: RetrievalConfig::default(),
             raptor_tree: None,
+            embedding_pipeline: None,
         }
     }
 
     /// Set the retrieval configuration
     pub fn with_config(mut self, config: RetrievalConfig) -> Self {
         self.config = config;
+        self
+    }
+
+    /// Set the embedding pipeline
+    pub fn with_embedding_pipeline(mut self, pipeline: Arc<EmbeddingPipeline>) -> Self {
+        self.embedding_pipeline = Some(pipeline);
         self
     }
 
@@ -66,6 +111,11 @@ impl HybridRetriever {
         &self.index
     }
 
+    /// Get the embedding pipeline
+    pub fn embedding_pipeline(&self) -> Option<&Arc<EmbeddingPipeline>> {
+        self.embedding_pipeline.as_ref()
+    }
+
     /// Index a document for retrieval
     pub async fn add_document(&self, doc: &Document) -> Result<()> {
         // Store the document
@@ -75,7 +125,52 @@ impl HybridRetriever {
         // Index in BM25
         self.index.index_document(doc)?;
 
-        // TODO: Generate and store embeddings for vector search
+        // Generate and store embeddings if pipeline is configured
+        if let Some(ref pipeline) = self.embedding_pipeline {
+            if !doc.chunks.is_empty() {
+                let embeddings = pipeline.embed_chunks(&doc.chunks).await?;
+
+                // Store embeddings in vector database
+                for (chunk, embedding_result) in doc.chunks.iter().zip(embeddings.iter()) {
+                    if let Some(ref embedding) = embedding_result.dense {
+                        self.storage
+                            .store_embeddings(&chunk.id, embedding, &context)
+                            .await?;
+                    }
+                }
+            }
+        }
+
+        Ok(())
+    }
+
+    /// Index a document with pre-computed embeddings
+    pub async fn add_document_with_embeddings(
+        &self,
+        doc: &Document,
+        embeddings: Vec<Vec<f32>>,
+    ) -> Result<()> {
+        if doc.chunks.len() != embeddings.len() {
+            return Err(Error::embedding(format!(
+                "Chunk count ({}) does not match embedding count ({})",
+                doc.chunks.len(),
+                embeddings.len()
+            )));
+        }
+
+        // Store the document
+        let context = self.admin_context("add_document_with_embeddings");
+        self.storage.store_document(doc, &context).await?;
+
+        // Index in BM25
+        self.index.index_document(doc)?;
+
+        // Store embeddings
+        for (chunk, embedding) in doc.chunks.iter().zip(embeddings.iter()) {
+            self.storage
+                .store_embeddings(&chunk.id, embedding, &context)
+                .await?;
+        }
 
         Ok(())
     }
@@ -84,7 +179,8 @@ impl HybridRetriever {
     pub async fn delete_document(&self, doc_id: &Uuid) -> Result<()> {
         let context = self.admin_context("delete_document");
         self.storage.delete_document(doc_id, &context).await?;
-        // TODO: Remove from BM25 index as well
+        // Remove from BM25 index as well
+        self.index.delete_document(doc_id)?;
         Ok(())
     }
 
@@ -94,11 +190,7 @@ impl HybridRetriever {
         let storage_stats = self.storage.stats(&context).await?;
         let index_stats = self.index.stats()?;
 
-        let raptor_stats = if let Some(ref tree) = self.raptor_tree {
-            Some(tree.stats())
-        } else {
-            None
-        };
+        let raptor_stats = self.raptor_tree.as_ref().map(|tree| tree.stats());
 
         Ok(RetrievalStats {
             document_count: storage_stats.document_count,
@@ -137,7 +229,8 @@ impl HybridRetriever {
 
             // Now build the tree
             if let Some(ref mut tree) = self.raptor_tree {
-                tree.build_from_chunks(&all_chunks, embedder, summarizer).await?;
+                tree.build_from_chunks(&all_chunks, embedder, summarizer)
+                    .await?;
             }
         }
 
@@ -146,7 +239,11 @@ impl HybridRetriever {
 
     /// Search using hybrid retrieval (vector + BM25)
     pub async fn search(&self, query: &str, top_k: usize) -> Result<Vec<HybridResult>> {
-        self.search_hybrid(query, None, &RetrievalConfig::default()).await
+        let config = RetrievalConfig {
+            top_k,
+            ..Default::default()
+        };
+        self.search_hybrid(query, None, &config).await
     }
 
     /// Search using sparse retrieval (BM25 only)
@@ -163,73 +260,187 @@ impl HybridRetriever {
                 dense_score: None,
                 sparse_score: Some(result.score),
                 match_source: MatchSource::Sparse,
+                section: result.section,
             })
             .collect();
 
         Ok(results)
     }
 
+    /// Search using dense retrieval (vector only)
+    pub async fn search_dense(&self, query: &str, top_k: usize) -> Result<Vec<HybridResult>> {
+        // Generate query embedding
+        let embedding = if let Some(ref pipeline) = self.embedding_pipeline {
+            pipeline.embed_text(query).await?
+        } else {
+            return Err(Error::retrieval(
+                "Embedding pipeline not configured. Call with_embedding_pipeline() first.",
+            ));
+        };
+
+        // Search using vector
+        let dense_results = self
+            .storage
+            .search_by_vector(&embedding, top_k, &self.admin_context("search_dense"))
+            .await?;
+
+        // Try to enrich results with BM25 metadata when available
+        let mut results = Vec::with_capacity(dense_results.len());
+        for (chunk_id, score) in dense_results {
+            let (doc_id, text, section) = self
+                .index
+                .get_chunk_by_id(&chunk_id)
+                .map(|chunk_info| (chunk_info.doc_id, chunk_info.text, chunk_info.section))
+                .unwrap_or_else(|| (Uuid::nil(), String::new(), None));
+
+            results.push(HybridResult {
+                doc_id,
+                chunk_id,
+                text,
+                score,
+                dense_score: Some(score),
+                sparse_score: None,
+                match_source: MatchSource::Dense,
+                section,
+            });
+        }
+
+        Ok(results)
+    }
+
     /// Search using hybrid retrieval with custom configuration
+    ///
+    /// Uses the configured fusion strategy (RRF by default) to combine
+    /// dense and sparse retrieval results.
     pub async fn search_hybrid(
         &self,
         query: &str,
         query_embedding: Option<&[f32]>,
         config: &RetrievalConfig,
     ) -> Result<Vec<HybridResult>> {
-        let mut all_results = Vec::new();
+        let mut method_results: HashMap<String, Vec<RankedResult>> = HashMap::new();
+
+        // Mapping from chunk_id to full result metadata
+        let mut chunk_metadata: HashMap<Uuid, ChunkMetadata> = HashMap::new();
 
         // Get sparse results (BM25) if alpha allows
         if config.alpha < 1.0 {
             if let Ok(sparse_results) = self.index.search_bm25(query, config.top_k) {
-                let sparse_weight = 1.0 - config.alpha;
-                for result in sparse_results {
-                    all_results.push(HybridResult {
-                        doc_id: result.doc_id,
-                        chunk_id: result.chunk_id,
-                        text: result.text,
-                        score: result.score * sparse_weight,
-                        dense_score: None,
-                        sparse_score: Some(result.score),
-                        match_source: MatchSource::Sparse,
-                    });
-                }
+                let ranked_results: Vec<RankedResult> = sparse_results
+                    .iter()
+                    .enumerate()
+                    .map(|(rank, result)| {
+                        // Store metadata for later reconstruction
+                        chunk_metadata.insert(
+                            result.chunk_id,
+                            ChunkMetadata {
+                                doc_id: result.doc_id,
+                                text: result.text.clone(),
+                                sparse_score: Some(result.score),
+                                dense_score: None,
+                                section: result.section.clone(),
+                            },
+                        );
+
+                        RankedResult {
+                            id: result.chunk_id,
+                            score: result.score,
+                            rank,
+                        }
+                    })
+                    .collect();
+
+                method_results.insert("sparse".to_string(), ranked_results);
             }
         }
 
         // Get dense results (vector search) if alpha allows
         if config.alpha > 0.0 {
+            // Generate or use provided embedding
             let embedding = if let Some(emb) = query_embedding {
                 emb.to_vec()
+            } else if let Some(ref pipeline) = self.embedding_pipeline {
+                // FIXED: Use embedding pipeline instead of placeholder
+                pipeline.embed_text(query).await?
             } else {
-                // TODO: Generate embedding from query
-                vec![0.0; 384] // Placeholder
+                return Err(Error::retrieval(
+                    "No query embedding provided and no embedding pipeline configured. \
+                     Either provide query_embedding or call with_embedding_pipeline().",
+                ));
             };
 
-            if let Ok(dense_results) = self.storage.search_by_vector(
-                &embedding,
-                config.top_k,
-                &self.admin_context("search_hybrid"),
-            ).await {
-                let dense_weight = config.alpha;
-                for (chunk_id, score) in dense_results {
-                    all_results.push(HybridResult {
-                        doc_id: Uuid::nil(), // TODO: Map chunk_id to doc_id
-                        chunk_id,
-                        text: String::new(), // TODO: Get chunk text
-                        score: score * dense_weight,
-                        dense_score: Some(score),
-                        sparse_score: None,
-                        match_source: MatchSource::Dense,
-                    });
-                }
+            if let Ok(dense_results) = self
+                .storage
+                .search_by_vector(
+                    &embedding,
+                    config.top_k,
+                    &self.admin_context("search_hybrid"),
+                )
+                .await
+            {
+                let ranked_results: Vec<RankedResult> = dense_results
+                    .iter()
+                    .enumerate()
+                    .map(|(rank, (chunk_id, score))| {
+                        // Update or insert metadata
+                        chunk_metadata
+                            .entry(*chunk_id)
+                            .and_modify(|meta| meta.dense_score = Some(*score))
+                            .or_insert_with(|| ChunkMetadata {
+                                doc_id: Uuid::nil(), // Will be filled if needed
+                                text: String::new(), // Will be filled if needed
+                                sparse_score: None,
+                                dense_score: Some(*score),
+                                section: None,
+                            });
+
+                        RankedResult {
+                            id: *chunk_id,
+                            score: *score,
+                            rank,
+                        }
+                    })
+                    .collect();
+
+                method_results.insert("dense".to_string(), ranked_results);
             }
         }
 
-        // Combine and rerank results
-        all_results.sort_by(|a, b| b.score.partial_cmp(&a.score).unwrap_or(std::cmp::Ordering::Equal));
-        all_results.truncate(config.top_k);
+        // If no results from either method, return empty
+        if method_results.is_empty() {
+            return Ok(Vec::new());
+        }
 
-        Ok(all_results)
+        // Fuse results using default strategy (RRF)
+        let fusion_engine = FusionEngine::new(FusionStrategy::default());
+        let fused_results = fusion_engine.fuse(method_results)?;
+
+        // Convert fused results to HybridResult
+        let mut hybrid_results = Vec::new();
+        for fused in fused_results.into_iter().take(config.top_k) {
+            if let Some(meta) = chunk_metadata.get(&fused.id) {
+                // Determine match source
+                let match_source = match (meta.dense_score, meta.sparse_score) {
+                    (Some(_), Some(_)) => MatchSource::Hybrid,
+                    (Some(_), None) => MatchSource::Dense,
+                    (None, Some(_)) => MatchSource::Sparse,
+                    (None, None) => MatchSource::Hybrid, // Fallback
+                };
+
+                hybrid_results.push(HybridResult {
+                    doc_id: meta.doc_id,
+                    chunk_id: fused.id,
+                    text: meta.text.clone(),
+                    score: fused.fusion_score,
+                    dense_score: meta.dense_score,
+                    sparse_score: meta.sparse_score,
+                    match_source,
+                    section: meta.section.clone(),
+                });
+            }
+        }
+
+        Ok(hybrid_results)
     }
 }
 
@@ -250,6 +461,8 @@ pub struct HybridResult {
     pub sparse_score: Option<f32>,
     /// Match source
     pub match_source: MatchSource,
+    /// Section name (if available)
+    pub section: Option<String>,
 }
 
 /// Retrieval statistics
@@ -273,7 +486,8 @@ pub struct RetrievalStats {
 
 /// Knowledge base combining all retrieval functionality
 pub struct KnowledgeBase {
-    retriever: HybridRetriever,
+    /// Underlying hybrid retriever
+    pub(crate) retriever: HybridRetriever,
 }
 
 impl KnowledgeBase {
@@ -282,6 +496,12 @@ impl KnowledgeBase {
         Ok(Self {
             retriever: HybridRetriever::in_memory()?,
         })
+    }
+
+    /// Create with embedding pipeline
+    pub fn with_embedding_pipeline(mut self, pipeline: Arc<EmbeddingPipeline>) -> Self {
+        self.retriever = self.retriever.with_embedding_pipeline(pipeline);
+        self
     }
 
     /// Add a document to the knowledge base
@@ -295,7 +515,11 @@ impl KnowledgeBase {
     }
 
     /// Query with custom configuration
-    pub async fn query_with_config(&self, query: &str, config: &RetrievalConfig) -> Result<Vec<HybridResult>> {
+    pub async fn query_with_config(
+        &self,
+        query: &str,
+        config: &RetrievalConfig,
+    ) -> Result<Vec<HybridResult>> {
         self.retriever.search_hybrid(query, None, config).await
     }
 
@@ -307,16 +531,25 @@ impl KnowledgeBase {
     /// Delete a document
     pub async fn delete_document(&self, doc_id: &Uuid) -> Result<()> {
         let context = self.retriever.admin_context("delete_document");
-        self.retriever.storage.delete_document(doc_id, &context).await?;
-        // TODO: Remove from BM25 index as well
+        self.retriever
+            .storage
+            .delete_document(doc_id, &context)
+            .await?;
+        // Remove from BM25 index as well
+        self.retriever.index.delete_document(doc_id)?;
         Ok(())
+    }
+
+    /// Get the retriever
+    pub fn retriever(&self) -> &HybridRetriever {
+        &self.retriever
     }
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::{DocumentType, Source, SourceType, EmbeddingIds, Chunk};
+    use crate::{Chunk, DocumentType, EmbeddingIds, Source, SourceType};
     use chrono::Utc;
 
     fn create_test_document() -> Document {
@@ -369,8 +602,13 @@ mod tests {
         // Add document
         kb.add(&doc).await.unwrap();
 
-        // Query
-        let results = kb.query("machine learning", 5).await.unwrap();
+        // Query using sparse search (no embeddings needed)
+        // Use the underlying retriever for sparse-only search
+        let results = kb
+            .retriever
+            .search_sparse("machine learning", 5)
+            .await
+            .unwrap();
         assert!(!results.is_empty());
         assert!(results[0].text.to_lowercase().contains("machine learning"));
 

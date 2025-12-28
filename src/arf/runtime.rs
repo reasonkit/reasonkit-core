@@ -1,10 +1,6 @@
 //! Async runtime management and core execution engine
 
-use crate::{
-    error::Result,
-    arf::config::Config,
-    arf::types::*,
-};
+use crate::{arf::config::Config, arf::types::*, error::Result};
 use std::sync::Arc;
 use tokio::sync::RwLock;
 
@@ -73,7 +69,10 @@ impl ArfRuntime {
         self.state_manager.save_session(&session).await?;
 
         // Add to active sessions
-        self.active_sessions.write().await.insert(session_id.clone(), session.clone());
+        self.active_sessions
+            .write()
+            .await
+            .insert(session_id.clone(), session.clone());
 
         tracing::info!("Started reasoning session: {}", session_id);
 
@@ -87,10 +86,12 @@ impl ArfRuntime {
         step_output: serde_json::Value,
     ) -> Result<ReasoningStep> {
         let mut sessions = self.active_sessions.write().await;
-        let session = sessions.get_mut(session_id)
+        let session = sessions
+            .get_mut(session_id)
             .ok_or_else(|| ArfError::engine("Session not found"))?;
 
-        if session.status != SessionStatus::Running && session.status != SessionStatus::Initialized {
+        if session.status != SessionStatus::Running && session.status != SessionStatus::Initialized
+        {
             return Err(ArfError::engine("Session not in executable state"));
         }
 
@@ -144,7 +145,8 @@ impl ArfRuntime {
     /// Get current step information for a session
     pub async fn get_current_step(&self, session_id: &str) -> Result<Option<ReasoningStep>> {
         let sessions = self.active_sessions.read().await;
-        let session = sessions.get(session_id)
+        let session = sessions
+            .get(session_id)
             .ok_or_else(|| ArfError::engine("Session not found"))?;
 
         if session.current_step >= session.total_steps {
@@ -173,7 +175,8 @@ impl ArfRuntime {
     /// Get session status
     pub async fn get_session_status(&self, session_id: &str) -> Result<ReasoningSession> {
         let sessions = self.active_sessions.read().await;
-        sessions.get(session_id)
+        sessions
+            .get(session_id)
             .cloned()
             .ok_or_else(|| ArfError::engine("Session not found"))
     }
@@ -191,7 +194,9 @@ impl ArfRuntime {
         match step_number {
             0 => Ok(StepConfig {
                 name: "Define Scope".to_string(),
-                instruction: "Delineate the exact boundaries of the problem. What is IN and what is OUT?".to_string(),
+                instruction:
+                    "Delineate the exact boundaries of the problem. What is IN and what is OUT?"
+                        .to_string(),
                 cognitive_stance: "boundary_setting".to_string(),
                 time_allocation: "10%_of_total_process".to_string(),
                 output_schema: serde_json::json!({
@@ -203,7 +208,8 @@ impl ArfRuntime {
             }),
             1 => Ok(StepConfig {
                 name: "Identify Constraints".to_string(),
-                instruction: "List every limiting factor: resources, time, physics, laws, ethics.".to_string(),
+                instruction: "List every limiting factor: resources, time, physics, laws, ethics."
+                    .to_string(),
                 cognitive_stance: "reality_check".to_string(),
                 time_allocation: "15%_of_total_process".to_string(),
                 output_schema: serde_json::json!({
@@ -218,7 +224,11 @@ impl ArfRuntime {
     }
 
     /// Validate step output against schema
-    fn validate_step_output(&self, step_config: &StepConfig, output: &serde_json::Value) -> Result<()> {
+    fn validate_step_output(
+        &self,
+        step_config: &StepConfig,
+        output: &serde_json::Value,
+    ) -> Result<()> {
         // Basic validation - check if output matches expected structure
         // In a full implementation, this would use JSON schema validation
         if !output.is_object() {
@@ -244,8 +254,10 @@ impl ArfRuntime {
                 let expired_sessions: Vec<SessionId> = sessions_write
                     .iter()
                     .filter(|(_, session)| {
-                        chrono::Utc::now().signed_duration_since(session.updated_at)
-                            .num_hours() > 24
+                        chrono::Utc::now()
+                            .signed_duration_since(session.updated_at)
+                            .num_hours()
+                            > 24
                     })
                     .map(|(id, _)| id.clone())
                     .collect();

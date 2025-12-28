@@ -1,0 +1,14 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Discord Community
+    url: https://discord.gg/reasonkit
+    about: Join our Discord for real-time help and discussions with the community
+  - name: Documentation
+    url: https://reasonkit.sh/docs
+    about: Read the official ReasonKit documentation
+  - name: GitHub Discussions
+    url: https://github.com/reasonkit/reasonkit-core/discussions
+    about: Ask questions and participate in community discussions
+  - name: Security Vulnerabilities
+    url: https://reasonkit.sh/security
+    about: For security issues, please email security@reasonkit.sh instead of opening a public issue

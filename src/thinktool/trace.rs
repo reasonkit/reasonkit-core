@@ -92,8 +92,10 @@ pub struct StepTrace {
 /// Overall execution status
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
+#[derive(Default)]
 pub enum ExecutionStatus {
     /// Execution is running
+    #[default]
     Running,
     /// All steps completed successfully
     Completed,
@@ -107,17 +109,13 @@ pub enum ExecutionStatus {
     Paused,
 }
 
-impl Default for ExecutionStatus {
-    fn default() -> Self {
-        Self::Running
-    }
-}
-
 /// Individual step status
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
+#[derive(Default)]
 pub enum StepStatus {
     /// Waiting to execute
+    #[default]
     Pending,
     /// Currently executing
     Running,
@@ -127,12 +125,6 @@ pub enum StepStatus {
     Failed,
     /// Skipped (condition not met)
     Skipped,
-}
-
-impl Default for StepStatus {
-    fn default() -> Self {
-        Self::Pending
-    }
 }
 
 /// Timing information for execution

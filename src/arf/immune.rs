@@ -6,7 +6,7 @@
 use crate::error::Result;
 use std::collections::HashMap;
 use std::sync::Arc;
-use sysinfo::{System, SystemExt, ProcessExt, Pid};
+use sysinfo::{Pid, ProcessExt, System, SystemExt};
 use tokio::sync::RwLock;
 use tokio::time::{self, Duration};
 
@@ -110,7 +110,9 @@ impl ImmuneSystem {
                     &resource_limits,
                     &active_responses,
                     &threat_patterns,
-                ).await {
+                )
+                .await
+                {
                     tracing::error!("Immune system monitoring error: {}", e);
                 }
             }
@@ -176,15 +178,24 @@ impl ImmuneSystem {
         let mut violations = Vec::new();
 
         if metrics.cpu_usage > limits.max_cpu_percent {
-            violations.push(format!("CPU usage {:.1}% exceeds limit {:.1}%", metrics.cpu_usage, limits.max_cpu_percent));
+            violations.push(format!(
+                "CPU usage {:.1}% exceeds limit {:.1}%",
+                metrics.cpu_usage, limits.max_cpu_percent
+            ));
         }
 
         if metrics.memory_usage_mb > limits.max_memory_mb {
-            violations.push(format!("Memory usage {}MB exceeds limit {}MB", metrics.memory_usage_mb, limits.max_memory_mb));
+            violations.push(format!(
+                "Memory usage {}MB exceeds limit {}MB",
+                metrics.memory_usage_mb, limits.max_memory_mb
+            ));
         }
 
         if metrics.disk_usage_percent > limits.max_disk_percent {
-            violations.push(format!("Disk usage {:.1}% exceeds limit {:.1}%", metrics.disk_usage_percent, limits.max_disk_percent));
+            violations.push(format!(
+                "Disk usage {:.1}% exceeds limit {:.1}%",
+                metrics.disk_usage_percent, limits.max_disk_percent
+            ));
         }
 
         violations
@@ -192,7 +203,9 @@ impl ImmuneSystem {
 
     /// Calculate disk usage percentage
     fn calculate_disk_usage(system: &System) -> f32 {
-        system.disks().iter()
+        system
+            .disks()
+            .iter()
             .map(|disk| {
                 let total = disk.total_space() as f32;
                 let available = disk.available_space() as f32;
@@ -202,7 +215,8 @@ impl ImmuneSystem {
                     0.0
                 }
             })
-            .sum::<f32>() / system.disks().len() as f32
+            .sum::<f32>()
+            / system.disks().len() as f32
     }
 
     /// Respond to detected threats
@@ -224,7 +238,11 @@ impl ImmuneSystem {
                 // Execute response
                 Self::execute_immune_response(&pattern.response, &violation).await?;
 
-                tracing::warn!("Immune response activated: {} for violation: {}", response_key, violation);
+                tracing::warn!(
+                    "Immune response activated: {} for violation: {}",
+                    response_key,
+                    violation
+                );
                 break;
             }
         }
@@ -239,15 +257,27 @@ impl ImmuneSystem {
                 tracing::warn!("IMMUNE WARNING: {} - Context: {}", message, context);
             }
             ImmuneAction::Throttle(resource) => {
-                tracing::warn!("IMMUNE THROTTLE: Throttling {} - Context: {}", resource, context);
+                tracing::warn!(
+                    "IMMUNE THROTTLE: Throttling {} - Context: {}",
+                    resource,
+                    context
+                );
                 // Would implement actual throttling logic
             }
             ImmuneAction::Terminate(process) => {
-                tracing::error!("IMMUNE TERMINATION: Terminating {} - Context: {}", process, context);
+                tracing::error!(
+                    "IMMUNE TERMINATION: Terminating {} - Context: {}",
+                    process,
+                    context
+                );
                 // Would implement process termination
             }
             ImmuneAction::Quarantine(component) => {
-                tracing::error!("IMMUNE QUARANTINE: Isolating {} - Context: {}", component, context);
+                tracing::error!(
+                    "IMMUNE QUARANTINE: Isolating {} - Context: {}",
+                    component,
+                    context
+                );
                 // Would implement component isolation
             }
             ImmuneAction::Log(entry) => {
@@ -270,7 +300,10 @@ impl ImmuneSystem {
         for (pid, process) in system.processes() {
             for pattern in patterns.iter() {
                 if Self::matches_threat_pattern(process, pattern) {
-                    let violation = format!("Threat pattern detected: {} in process {}", pattern.signature, pid);
+                    let violation = format!(
+                        "Threat pattern detected: {} in process {}",
+                        pattern.signature, pid
+                    );
                     Self::respond_to_threat(violation, active_responses, threat_patterns).await?;
                 }
             }
@@ -292,11 +325,10 @@ impl ImmuneSystem {
                 process_name.contains("ssh") && process.cpu_usage() > 50.0
             }
             ThreatType::MaliciousCode => {
-                process_name.contains(&pattern_sig) || process.cmd().iter().any(|arg| arg.contains(&pattern_sig))
+                process_name.contains(&pattern_sig)
+                    || process.cmd().iter().any(|arg| arg.contains(&pattern_sig))
             }
-            ThreatType::SystemInstability => {
-                process.status() == sysinfo::ProcessStatus::Zombie
-            }
+            ThreatType::SystemInstability => process.status() == sysinfo::ProcessStatus::Zombie,
             ThreatType::PluginMisbehavior => {
                 process_name.contains("plugin") && process.cpu_usage() > 80.0
             }
@@ -373,7 +405,8 @@ impl ImmuneSystem {
 
         // Analyze trends
         let cpu_trend = Self::analyze_trend(history.iter().map(|m| m.cpu_usage).collect());
-        let memory_trend = Self::analyze_trend(history.iter().map(|m| m.memory_usage_mb as f32).collect());
+        let memory_trend =
+            Self::analyze_trend(history.iter().map(|m| m.memory_usage_mb as f32).collect());
 
         Ok(DiagnosticReport {
             health_status: health,
@@ -393,8 +426,11 @@ impl ImmuneSystem {
         }
 
         let recent_avg = values.iter().rev().take(5).sum::<f32>() / 5.0;
-        let older_avg = values.iter().take(values.len().saturating_sub(5)).sum::<f32>() /
-                       values.len().saturating_sub(5).max(1) as f32;
+        let older_avg = values
+            .iter()
+            .take(values.len().saturating_sub(5))
+            .sum::<f32>()
+            / values.len().saturating_sub(5).max(1) as f32;
 
         let change_percent = if older_avg > 0.0 {
             ((recent_avg - older_avg) / older_avg) * 100.0
@@ -436,35 +472,52 @@ impl ImmuneSystem {
         }
 
         let mean = values.iter().sum::<f32>() / values.len() as f32;
-        let variance = values.iter()
-            .map(|v| (v - mean).powi(2))
-            .sum::<f32>() / values.len() as f32;
+        let variance = values.iter().map(|v| (v - mean).powi(2)).sum::<f32>() / values.len() as f32;
 
         variance as f64
     }
 
     /// Generate health recommendations
-    fn generate_recommendations(health: &SystemHealth, cpu_trend: &MetricTrend, memory_trend: &MetricTrend) -> Vec<String> {
+    fn generate_recommendations(
+        health: &SystemHealth,
+        cpu_trend: &MetricTrend,
+        memory_trend: &MetricTrend,
+    ) -> Vec<String> {
         let mut recommendations = Vec::new();
 
         if health.current_metrics.cpu_usage > 80.0 {
-            recommendations.push("High CPU usage detected. Consider optimizing compute-intensive operations.".to_string());
+            recommendations.push(
+                "High CPU usage detected. Consider optimizing compute-intensive operations."
+                    .to_string(),
+            );
         }
 
         if matches!(cpu_trend, MetricTrend::Increasing) {
-            recommendations.push("CPU usage is trending upward. Monitor for potential performance issues.".to_string());
+            recommendations.push(
+                "CPU usage is trending upward. Monitor for potential performance issues."
+                    .to_string(),
+            );
         }
 
-        if health.current_metrics.memory_usage_mb > 8000 { // 8GB
-            recommendations.push("High memory usage detected. Consider implementing memory optimization strategies.".to_string());
+        if health.current_metrics.memory_usage_mb > 8000 {
+            // 8GB
+            recommendations.push(
+                "High memory usage detected. Consider implementing memory optimization strategies."
+                    .to_string(),
+            );
         }
 
         if matches!(memory_trend, MetricTrend::Increasing) {
-            recommendations.push("Memory usage is trending upward. Check for potential memory leaks.".to_string());
+            recommendations.push(
+                "Memory usage is trending upward. Check for potential memory leaks.".to_string(),
+            );
         }
 
         if health.active_threats > 0 {
-            recommendations.push(format!("{} active threats detected. Review immune system responses.", health.active_threats));
+            recommendations.push(format!(
+                "{} active threats detected. Review immune system responses.",
+                health.active_threats
+            ));
         }
 
         if recommendations.is_empty() {
@@ -547,7 +600,7 @@ mod tests {
         };
 
         let metrics = HealthMetrics {
-            cpu_usage: 75.0, // Above limit
+            cpu_usage: 75.0,       // Above limit
             memory_usage_mb: 3000, // Below limit
             disk_usage_percent: 85.0,
             network_connections: 500,
@@ -561,7 +614,10 @@ mod tests {
     }
 
     impl ImmuneSystem {
-        fn check_resource_violations_static(metrics: &HealthMetrics, limits: &ResourceLimits) -> Vec<String> {
+        fn check_resource_violations_static(
+            metrics: &HealthMetrics,
+            limits: &ResourceLimits,
+        ) -> Vec<String> {
             Self::check_resource_violations(metrics, limits)
         }
     }

@@ -3,8 +3,8 @@
 //! Autonomous agency and background task management for the ARF platform.
 //! This module enables the system to spawn and manage autonomous agents for long-running tasks.
 
-use crate::error::Result;
 use crate::arf::types::*;
+use crate::error::Result;
 use reqwest::Client;
 use scraper::{Html, Selector};
 use sled::Db;
@@ -27,11 +27,11 @@ pub struct AutonomousAgent {
 /// Types of autonomous tasks
 #[derive(Debug, Clone)]
 pub enum AgentTaskType {
-    Research(String),        // Research a specific topic
-    DataCollection(String),   // Collect data from sources
-    Analysis(String),         // Analyze existing data
-    Monitoring(String),       // Monitor for changes
-    Synthesis(String),        // Synthesize information
+    Research(String),       // Research a specific topic
+    DataCollection(String), // Collect data from sources
+    Analysis(String),       // Analyze existing data
+    Monitoring(String),     // Monitor for changes
+    Synthesis(String),      // Synthesize information
 }
 
 /// Agent execution status
@@ -101,7 +101,11 @@ impl AgencyManager {
     }
 
     /// Spawn a new autonomous agent
-    pub async fn spawn_agent(&self, task_type: AgentTaskType, priority: TaskPriority) -> Result<String> {
+    pub async fn spawn_agent(
+        &self,
+        task_type: AgentTaskType,
+        priority: TaskPriority,
+    ) -> Result<String> {
         let agent_id = format!("agent_{}", uuid::Uuid::new_v4().simple());
 
         let agent = AutonomousAgent {
@@ -116,7 +120,8 @@ impl AgencyManager {
 
         // Check concurrent agent limit
         let agents = self.agents.read().await;
-        let running_count = agents.values()
+        let running_count = agents
+            .values()
             .filter(|a| matches!(a.status, AgentStatus::Running))
             .count();
 
@@ -146,7 +151,8 @@ impl AgencyManager {
     /// Get agent status
     pub async fn get_agent_status(&self, agent_id: &str) -> Result<AgentStatus> {
         let agents = self.agents.read().await;
-        agents.get(agent_id)
+        agents
+            .get(agent_id)
             .map(|a| a.status.clone())
             .ok_or_else(|| ArfError::engine("Agent not found"))
     }
@@ -154,7 +160,8 @@ impl AgencyManager {
     /// Get agent findings
     pub async fn get_agent_findings(&self, agent_id: &str) -> Result<Vec<AgentFinding>> {
         let agents = self.agents.read().await;
-        agents.get(agent_id)
+        agents
+            .get(agent_id)
             .map(|a| a.findings.clone())
             .ok_or_else(|| ArfError::engine("Agent not found"))
     }
@@ -180,7 +187,8 @@ impl AgencyManager {
     /// List all agents
     pub async fn list_agents(&self) -> Vec<(String, AgentStatus)> {
         let agents = self.agents.read().await;
-        agents.iter()
+        agents
+            .iter()
             .map(|(id, agent)| (id.clone(), agent.status.clone()))
             .collect()
     }
@@ -199,12 +207,9 @@ impl AgencyManager {
                 let client_clone = http_client.clone();
 
                 tokio::spawn(async move {
-                    if let Err(e) = Self::execute_agent_task(
-                        task,
-                        agents_clone,
-                        db_clone,
-                        client_clone,
-                    ).await {
+                    if let Err(e) =
+                        Self::execute_agent_task(task, agents_clone, db_clone, client_clone).await
+                    {
                         tracing::error!("Agent task execution failed: {}", e);
                     }
                 });
@@ -221,7 +226,8 @@ impl AgencyManager {
     ) -> Result<()> {
         // Get agent
         let mut agents_lock = agents.write().await;
-        let agent = agents_lock.get_mut(&task.agent_id)
+        let agent = agents_lock
+            .get_mut(&task.agent_id)
             .ok_or_else(|| ArfError::engine("Agent not found during execution"))?;
 
         // Update status
@@ -235,9 +241,7 @@ impl AgencyManager {
             AgentTaskType::DataCollection(source) => {
                 Self::execute_data_collection_task(agent, source, &http_client).await
             }
-            AgentTaskType::Analysis(data) => {
-                Self::execute_analysis_task(agent, data).await
-            }
+            AgentTaskType::Analysis(data) => Self::execute_analysis_task(agent, data).await,
             AgentTaskType::Monitoring(target) => {
                 Self::execute_monitoring_task(agent, target, &http_client).await
             }
@@ -306,15 +310,15 @@ impl AgencyManager {
     }
 
     /// Execute analysis task
-    async fn execute_analysis_task(
-        agent: &mut AutonomousAgent,
-        data: &str,
-    ) -> Result<()> {
+    async fn execute_analysis_task(agent: &mut AutonomousAgent, data: &str) -> Result<()> {
         // Simple analysis - count words, find patterns
         let word_count = data.split_whitespace().count();
         let has_numbers = data.chars().any(|c| c.is_numeric());
 
-        let analysis = format!("Word count: {}, Contains numbers: {}", word_count, has_numbers);
+        let analysis = format!(
+            "Word count: {}, Contains numbers: {}",
+            word_count, has_numbers
+        );
 
         let finding = AgentFinding {
             timestamp: chrono::Utc::now(),
@@ -388,15 +392,13 @@ impl AgencyManager {
     async fn web_search(http_client: &Client, query: &str) -> Result<Vec<AgentFinding>> {
         // In a real implementation, this would search actual web sources
         // For simulation, we'll create mock findings
-        let findings = vec![
-            AgentFinding {
-                timestamp: chrono::Utc::now(),
-                category: "research".to_string(),
-                content: format!("Latest research on {} shows promising developments", query),
-                confidence: 0.8,
-                source: "web_search".to_string(),
-            }
-        ];
+        let findings = vec![AgentFinding {
+            timestamp: chrono::Utc::now(),
+            category: "research".to_string(),
+            content: format!("Latest research on {} shows promising developments", query),
+            confidence: 0.8,
+            source: "web_search".to_string(),
+        }];
 
         Ok(findings)
     }
@@ -419,13 +421,16 @@ impl AgencyManager {
         let agents = self.agents.read().await;
 
         let total_agents = agents.len();
-        let running_agents = agents.values()
+        let running_agents = agents
+            .values()
             .filter(|a| matches!(a.status, AgentStatus::Running))
             .count();
-        let completed_agents = agents.values()
+        let completed_agents = agents
+            .values()
             .filter(|a| matches!(a.status, AgentStatus::Completed))
             .count();
-        let failed_agents = agents.values()
+        let failed_agents = agents
+            .values()
             .filter(|a| matches!(a.status, AgentStatus::Failed(_)))
             .count();
 
@@ -459,7 +464,9 @@ mod tests {
         let temp_dir = TempDir::new().unwrap();
         let db_path = temp_dir.path().join("test.db");
 
-        let manager = AgencyManager::new(db_path.to_str().unwrap(), 5).await.unwrap();
+        let manager = AgencyManager::new(db_path.to_str().unwrap(), 5)
+            .await
+            .unwrap();
         let stats = manager.get_statistics().await.unwrap();
         assert_eq!(stats.total_agents, 0);
     }
@@ -469,12 +476,17 @@ mod tests {
         let temp_dir = TempDir::new().unwrap();
         let db_path = temp_dir.path().join("test.db");
 
-        let manager = AgencyManager::new(db_path.to_str().unwrap(), 5).await.unwrap();
+        let manager = AgencyManager::new(db_path.to_str().unwrap(), 5)
+            .await
+            .unwrap();
 
-        let agent_id = manager.spawn_agent(
-            AgentTaskType::Research("test topic".to_string()),
-            TaskPriority::Normal,
-        ).await.unwrap();
+        let agent_id = manager
+            .spawn_agent(
+                AgentTaskType::Research("test topic".to_string()),
+                TaskPriority::Normal,
+            )
+            .await
+            .unwrap();
 
         assert!(!agent_id.is_empty());
 

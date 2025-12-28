@@ -1,0 +1,65 @@
+# cargo-deny configuration
+# Security, license, and dependency validation
+# Reference: https://embarkstudios.github.io/cargo-deny/
+
+[advisories]
+# Security vulnerability detection
+vulnerability = "deny"
+unmaintained = "warn"
+yanked = "deny"
+notice = "warn"
+ignore = []
+
+[licenses]
+# Apache 2.0 compatible licenses
+unlicensed = "deny"
+allow = [
+    "MIT",
+    "Apache-2.0",
+    "Apache-2.0 WITH LLVM-exception",
+    "BSD-2-Clause",
+    "BSD-3-Clause",
+    "ISC",
+    "Unicode-DFS-2016",
+    "Zlib",
+    "CC0-1.0",
+]
+deny = [
+    "GPL-3.0",
+    "AGPL-3.0",
+]
+copyleft = "warn"
+allow-osi-fsf-free = "both"
+default = "deny"
+confidence-threshold = 0.8
+
+[bans]
+# Dependency banning and duplicate detection
+multiple-versions = "warn"
+wildcards = "allow"
+highlight = "all"
+workspace-default-features = "allow"
+external-default-features = "allow"
+
+# Ban certain crates we want to avoid
+deny = [
+    # Prefer rustls over OpenSSL
+    # { name = "openssl", wrappers = [] },
+]
+
+# Skip checking these crates
+skip = []
+
+# Skip trees rooted at these crates
+skip-tree = []
+
+[sources]
+# Source code origin validation
+unknown-registry = "deny"
+unknown-git = "warn"
+allow-registry = ["https://github.com/rust-lang/crates.io-index"]
+allow-git = []
+
+[sources.allow-org]
+# Allow GitHub organizations
+github = []

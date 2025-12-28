@@ -2,25 +2,56 @@
 name = "reasonkit-core"
 version = "0.1.0"
 edition = "2021"
-authors = ["ReasonKit Team"]
+rust-version = "1.74"
+authors = ["ReasonKit Team <hello@reasonkit.sh>"]
 description = "Rust-first knowledge base and RAG system for AI reasoning enhancement"
 license = "Apache-2.0"
 repository = "https://github.com/reasonkit/reasonkit-core"
+homepage = "https://reasonkit.sh"
+documentation = "https://docs.rs/reasonkit-core"
+readme = "README.md"
 keywords = ["rag", "vector-database", "llm", "reasoning", "knowledge-base"]
 categories = ["science", "text-processing", "database"]
 
+# Include only essential files for crates.io package
+# This approach is more explicit and prevents accidentally including large data directories
+include = [
+    "src/**/*",
+    "benches/**/*",
+    "config/default.toml",
+    "assets/*.svg",
+    ".cargo/config.toml",
+    "Cargo.toml",
+    "Cargo.lock",
+    "README.md",
+    "LICENSE",
+]
+
 [lib]
-name = "reasonkit_core"
+name = "reasonkit"
 path = "src/lib.rs"
+crate-type = ["cdylib", "rlib"]
 
 [[bin]]
 name = "rk-core"
 path = "src/main.rs"
 
+[[bin]]
+name = "rk-compare"
+path = "src/bin/compare.rs"
+
+[[bin]]
+name = "rk-bench"
+path = "src/bin/bench.rs"
+
 [dependencies]
+# Python Integration (0.22+ supports Python 3.13)
+pyo3 = { version = "0.22", features = ["extension-module"] }
+
 # Serialization
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
+serde_yaml = "0.9"
 
 # PDF Processing
 # pdf_oxide = "0.1"  # TODO: Evaluate availability
@@ -31,11 +62,14 @@ pulldown-cmark = "0.10"
 scraper = "0.18"
 regex = "1.10"
 
-# Vector Database
-qdrant-client = "1.10"
+# Vector Database (optional - use reasonkit-mem for full memory features)
+qdrant-client = { version = "1.10", optional = true }
 
-# Full-text Search
-tantivy = "0.22"
+# Full-text Search (optional - use reasonkit-mem for full memory features)
+tantivy = { version = "0.22", optional = true }
+
+# Memory Infrastructure (optional - provides storage, retrieval, embeddings)
+reasonkit-mem = { path = "../reasonkit-mem", optional = true }
 
 # HNSW Index (for local embeddings if not using Qdrant)
 # hnsw_rs = "0.3"  # TODO: Add when needed
@@ -66,6 +100,12 @@ uuid = { version = "1", features = ["v4", "serde"] }
 # Date/Time
 chrono = { version = "0.4", features = ["serde"] }
 
+# Cryptographic hashing for telemetry and caching
+sha2 = "0.10"
+
+# SQLite for local telemetry storage
+rusqlite = { version = "0.32", features = ["bundled"] }
+
 # Configuration
 config = "0.14"
 dotenvy = "0.15"
@@ -79,18 +119,25 @@ notify = "6.1"
 # Rayon for parallel processing
 rayon = "1.10"
 
+# Lazy initialization
+once_cell = "1.19"
+
 # Progress bars
 indicatif = "0.17"
 
 # Directories
 directories = "5"
 dirs = "5"
+walkdir = "2.4"
 
 # ONNX Runtime for local embeddings (BGE-M3)
 ort = { version = "2.0.0-rc.10", optional = true }
 
 # HuggingFace tokenizers
 tokenizers = { version = "0.19", optional = true }
+
+# NDArray for tensor operations (needed by ONNX)
+ndarray = { version = "0.15", optional = true }
 
 # ARF Module dependencies (optional feature)
 sled = { version = "0.34", optional = true }
@@ -99,22 +146,55 @@ sysinfo = { version = "0.30", optional = true }
 petgraph = { version = "0.6", optional = true }
 rust-bert = { version = "0.22", optional = true }
 parking_lot = { version = "0.12", optional = true }
+clap_complete = "4.5.62"
+toml = "0.9.6"
 
 [dev-dependencies]
 tokio-test = "0.4"
 tempfile = "3.10"
 pretty_assertions = "1.4"
+criterion = { version = "0.5", features = ["html_reports", "async_tokio"] }
+futures = "0.3"
 
 [[bench]]
 name = "retrieval_bench"
+harness = false
+
+[[bench]]
+name = "fusion_bench"
+harness = false
+
+[[bench]]
+name = "embedding_bench"
+harness = false
+
+[[bench]]
+name = "raptor_bench"
+harness = false
+
+[[bench]]
+name = "ingestion_bench"
+harness = false
+
+[[bench]]
+name = "rerank_bench"
+harness = false
+
+[[bench]]
+name = "thinktool_bench"
+harness = false
+
+[[bench]]
+name = "harness"
 harness = false
 
 [features]
 default = ["cli"]
 cli = []
 embedded-qdrant = []  # For embedded mode without external server
-local-embeddings = ["ort", "tokenizers"]  # BGE-M3 ONNX local inference
+local-embeddings = ["ort", "tokenizers", "ndarray"]  # BGE-M3 ONNX local inference
 arf = ["sled", "wasmtime", "sysinfo", "petgraph", "rust-bert", "parking_lot"]  # Optional ARF module
+memory = ["dep:reasonkit-mem", "dep:qdrant-client", "dep:tantivy"]  # Optional memory infrastructure
 
 [profile.release]
 lto = true
@@ -125,3 +205,8 @@ strip = true
 [profile.bench]
 lto = true
 codegen-units = 1
+
+# Package metadata for crates.io
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = ["--cfg", "docsrs"]

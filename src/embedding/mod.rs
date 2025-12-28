@@ -5,9 +5,16 @@
 //! - Local ONNX: BGE-M3, E5, etc.
 //! - Hybrid: Dense + Sparse (SPLADE)
 
-use crate::{Result, Error, Chunk};
+pub mod cache;
+#[cfg(feature = "local-embeddings")]
+pub mod local;
+
+use crate::{Chunk, Error, Result};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
+use std::sync::Arc;
+
+pub use cache::EmbeddingCache;
 
 /// Embedding vector type
 pub type EmbeddingVector = Vec<f32>;
@@ -32,6 +39,10 @@ pub struct EmbeddingConfig {
     pub normalize: bool,
     /// Request timeout in seconds
     pub timeout_secs: u64,
+    /// Enable caching
+    pub enable_cache: bool,
+    /// Cache TTL in seconds (0 = no expiration)
+    pub cache_ttl_secs: u64,
 }
 
 impl Default for EmbeddingConfig {
@@ -44,6 +55,42 @@ impl Default for EmbeddingConfig {
             batch_size: 100,
             normalize: true,
             timeout_secs: 30,
+            enable_cache: true,
+            cache_ttl_secs: 86400, // 24 hours
+        }
+    }
+}
+
+impl EmbeddingConfig {
+    /// Create a config for local BGE-M3 model
+    #[cfg(feature = "local-embeddings")]
+    pub fn bge_m3() -> Self {
+        Self {
+            model: "BAAI/bge-m3".to_string(),
+            dimension: 1024,
+            api_endpoint: None,
+            api_key_env: None,
+            batch_size: 32,
+            normalize: true,
+            timeout_secs: 60,
+            enable_cache: true,
+            cache_ttl_secs: 86400,
+        }
+    }
+
+    /// Create a config for local E5-small model
+    #[cfg(feature = "local-embeddings")]
+    pub fn e5_small() -> Self {
+        Self {
+            model: "intfloat/e5-small-v2".to_string(),
+            dimension: 384,
+            api_endpoint: None,
+            api_key_env: None,
+            batch_size: 64,
+            normalize: true,
+            timeout_secs: 60,
+            enable_cache: true,
+            cache_ttl_secs: 86400,
         }
     }
 }
@@ -79,6 +126,7 @@ pub trait EmbeddingProvider: Send + Sync {
 pub struct OpenAIEmbedding {
     config: EmbeddingConfig,
     client: reqwest::Client,
+    cache: Option<Arc<EmbeddingCache>>,
 }
 
 impl OpenAIEmbedding {
@@ -89,7 +137,20 @@ impl OpenAIEmbedding {
             .build()
             .map_err(|e| Error::embedding(format!("Failed to create HTTP client: {}", e)))?;
 
-        Ok(Self { config, client })
+        let cache = if config.enable_cache {
+            Some(Arc::new(EmbeddingCache::new(
+                10000, // max_entries
+                config.cache_ttl_secs,
+            )))
+        } else {
+            None
+        };
+
+        Ok(Self {
+            config,
+            client,
+            cache,
+        })
     }
 
     /// Create with default OpenAI config
@@ -97,12 +158,35 @@ impl OpenAIEmbedding {
         Self::new(EmbeddingConfig::default())
     }
 
+    /// Create with custom cache
+    pub fn with_cache(mut self, cache: Arc<EmbeddingCache>) -> Self {
+        self.cache = Some(cache);
+        self
+    }
+
     /// Get API key from environment
     fn get_api_key(&self) -> Result<String> {
-        let env_var = self.config.api_key_env.as_deref().unwrap_or("OPENAI_API_KEY");
+        let env_var = self
+            .config
+            .api_key_env
+            .as_deref()
+            .unwrap_or("OPENAI_API_KEY");
         std::env::var(env_var).map_err(|_| {
-            Error::embedding(format!("API key not found in environment variable: {}", env_var))
+            Error::embedding(format!(
+                "API key not found in environment variable: {}",
+                env_var
+            ))
         })
+    }
+
+    /// Generate cache key for a text
+    fn cache_key(&self, text: &str) -> String {
+        use sha2::{Digest, Sha256};
+        let mut hasher = Sha256::new();
+        hasher.update(self.config.model.as_bytes());
+        hasher.update(b":");
+        hasher.update(text.as_bytes());
+        format!("{:x}", hasher.finalize())
     }
 }
 
@@ -117,10 +201,24 @@ impl EmbeddingProvider for OpenAIEmbedding {
     }
 
     async fn embed(&self, text: &str) -> Result<EmbeddingResult> {
+        // Check cache first
+        if let Some(ref cache) = self.cache {
+            let key = self.cache_key(text);
+            if let Some(cached) = cache.get(&key) {
+                return Ok(EmbeddingResult {
+                    dense: Some(cached),
+                    sparse: None,
+                    token_count: text.split_whitespace().count(),
+                });
+            }
+        }
+
+        // Fallback to batch embedding
         let results = self.embed_batch(&[text]).await?;
-        results.into_iter().next().ok_or_else(|| {
-            Error::embedding("Empty response from embedding API")
-        })
+        results
+            .into_iter()
+            .next()
+            .ok_or_else(|| Error::embedding("Empty response from embedding API"))
     }
 
     async fn embed_batch(&self, texts: &[&str]) -> Result<Vec<EmbeddingResult>> {
@@ -128,17 +226,50 @@ impl EmbeddingProvider for OpenAIEmbedding {
             return Ok(Vec::new());
         }
 
+        // Check cache for all texts
+        let mut results = Vec::with_capacity(texts.len());
+        let mut uncached_indices = Vec::new();
+        let mut uncached_texts = Vec::new();
+
+        if let Some(ref cache) = self.cache {
+            for (i, text) in texts.iter().enumerate() {
+                let key = self.cache_key(text);
+                if let Some(cached) = cache.get(&key) {
+                    results.push(EmbeddingResult {
+                        dense: Some(cached),
+                        sparse: None,
+                        token_count: text.split_whitespace().count(),
+                    });
+                } else {
+                    uncached_indices.push(i);
+                    uncached_texts.push(*text);
+                }
+            }
+        } else {
+            uncached_indices.extend(0..texts.len());
+            uncached_texts.extend(texts.iter());
+        }
+
+        // If all cached, return early
+        if uncached_texts.is_empty() {
+            return Ok(results);
+        }
+
         let api_key = self.get_api_key()?;
-        let endpoint = self.config.api_endpoint.as_deref()
+        let endpoint = self
+            .config
+            .api_endpoint
+            .as_deref()
             .unwrap_or("https://api.openai.com/v1/embeddings");
 
         // Build request
         let request_body = serde_json::json!({
             "model": self.config.model,
-            "input": texts,
+            "input": uncached_texts,
         });
 
-        let response = self.client
+        let response = self
+            .client
             .post(endpoint)
             .header("Authorization", format!("Bearer {}", api_key))
             .header("Content-Type", "application/json")
@@ -154,26 +285,49 @@ impl EmbeddingProvider for OpenAIEmbedding {
         }
 
         // Parse response
-        let response_body: OpenAIEmbeddingResponse = response.json().await
+        let response_body: OpenAIEmbeddingResponse = response
+            .json()
+            .await
             .map_err(|e| Error::embedding(format!("Failed to parse response: {}", e)))?;
 
-        // Convert to EmbeddingResult
-        let mut results = Vec::with_capacity(texts.len());
-        for data in response_body.data {
+        // Convert to EmbeddingResult and cache
+        let mut new_results = Vec::with_capacity(uncached_texts.len());
+        for (i, data) in response_body.data.iter().enumerate() {
             let embedding = if self.config.normalize {
                 normalize_vector(&data.embedding)
             } else {
-                data.embedding
+                data.embedding.clone()
             };
 
-            results.push(EmbeddingResult {
+            // Cache the embedding
+            if let Some(ref cache) = self.cache {
+                let key = self.cache_key(uncached_texts[i]);
+                cache.put(key, embedding.clone());
+            }
+
+            new_results.push(EmbeddingResult {
                 dense: Some(embedding),
                 sparse: None,
-                token_count: response_body.usage.prompt_tokens / texts.len(),
+                token_count: response_body.usage.prompt_tokens / uncached_texts.len(),
             });
         }
 
-        Ok(results)
+        // Merge cached and new results in correct order
+        if self.cache.is_some() {
+            let mut final_results = Vec::with_capacity(texts.len());
+            let mut new_idx = 0;
+            for i in 0..texts.len() {
+                if uncached_indices.contains(&i) {
+                    final_results.push(new_results[new_idx].clone());
+                    new_idx += 1;
+                } else {
+                    final_results.push(results.remove(0));
+                }
+            }
+            Ok(final_results)
+        } else {
+            Ok(new_results)
+        }
     }
 }
 
@@ -187,58 +341,26 @@ struct OpenAIEmbeddingResponse {
 #[derive(Debug, Deserialize)]
 struct OpenAIEmbeddingData {
     embedding: Vec<f32>,
+    #[allow(dead_code)]
     index: usize,
 }
 
 #[derive(Debug, Deserialize)]
+#[allow(dead_code)]
 struct OpenAIUsage {
     prompt_tokens: usize,
     total_tokens: usize,
 }
 
-/// Local embedding provider (for ONNX models - placeholder)
-pub struct LocalEmbedding {
-    model_path: String,
-    dimension: usize,
-}
-
-impl LocalEmbedding {
-    /// Create a new local embedding provider
-    pub fn new(model_path: String, dimension: usize) -> Self {
-        Self { model_path, dimension }
-    }
-}
-
-#[async_trait::async_trait]
-impl EmbeddingProvider for LocalEmbedding {
-    fn dimension(&self) -> usize {
-        self.dimension
-    }
-
-    fn model_name(&self) -> &str {
-        &self.model_path
-    }
-
-    async fn embed(&self, _text: &str) -> Result<EmbeddingResult> {
-        // TODO: Implement ONNX inference
-        Err(Error::embedding("Local embedding not yet implemented"))
-    }
-
-    async fn embed_batch(&self, _texts: &[&str]) -> Result<Vec<EmbeddingResult>> {
-        // TODO: Implement ONNX batch inference
-        Err(Error::embedding("Local embedding not yet implemented"))
-    }
-}
-
 /// Embedding pipeline for processing documents
 pub struct EmbeddingPipeline {
-    provider: Box<dyn EmbeddingProvider>,
+    provider: Arc<dyn EmbeddingProvider>,
     batch_size: usize,
 }
 
 impl EmbeddingPipeline {
     /// Create a new embedding pipeline
-    pub fn new(provider: Box<dyn EmbeddingProvider>) -> Self {
+    pub fn new(provider: Arc<dyn EmbeddingProvider>) -> Self {
         Self {
             provider,
             batch_size: 100,
@@ -266,14 +388,27 @@ impl EmbeddingPipeline {
         Ok(all_results)
     }
 
+    /// Embed a single text
+    pub async fn embed_text(&self, text: &str) -> Result<EmbeddingVector> {
+        let result = self.provider.embed(text).await?;
+        result
+            .dense
+            .ok_or_else(|| Error::embedding("No dense embedding returned"))
+    }
+
     /// Get the embedding dimension
     pub fn dimension(&self) -> usize {
         self.provider.dimension()
     }
+
+    /// Get the provider
+    pub fn provider(&self) -> &Arc<dyn EmbeddingProvider> {
+        &self.provider
+    }
 }
 
 /// Normalize a vector to unit length
-fn normalize_vector(v: &[f32]) -> Vec<f32> {
+pub fn normalize_vector(v: &[f32]) -> Vec<f32> {
     let magnitude: f32 = v.iter().map(|x| x * x).sum::<f32>().sqrt();
     if magnitude > 0.0 {
         v.iter().map(|x| x / magnitude).collect()
@@ -326,5 +461,19 @@ mod tests {
         let config = EmbeddingConfig::default();
         assert_eq!(config.dimension, 1536);
         assert!(config.api_endpoint.is_some());
+        assert!(config.enable_cache);
+    }
+
+    #[test]
+    #[cfg(feature = "local-embeddings")]
+    fn test_embedding_config_local() {
+        let config = EmbeddingConfig::bge_m3();
+        assert_eq!(config.model, "BAAI/bge-m3");
+        assert_eq!(config.dimension, 1024);
+        assert!(config.api_endpoint.is_none());
+
+        let config = EmbeddingConfig::e5_small();
+        assert_eq!(config.model, "intfloat/e5-small-v2");
+        assert_eq!(config.dimension, 384);
     }
 }

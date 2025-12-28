@@ -1,0 +1,622 @@
+# ═══════════════════════════════════════════════════════════════════════════════
+#                    DEEP RESEARCH PROTOCOLS V2
+#                 Protocol Upgrades from Live-Fire Testing
+# ═══════════════════════════════════════════════════════════════════════════════
+#
+# PURPOSE: Upgraded protocols based on live-fire test results (2025-12-23)
+#          Addresses fatal flaws discovered in Alpha, Beta, and Gamma protocols.
+#
+# TEST RESULTS:
+#   - Alpha (RAT-E): "Observability Blind Spot" - passed tests but unreadable logs
+#   - Beta (Anti-Drift): "Saturation Trap" - zombie researcher finding useless entities
+#   - Gamma (Structural RAG): "Ghost Dependency" - missed raw SQL/Shadow Logic
+#
+# LICENSE: Apache 2.0 (Open Source - reasonkit-core)
+#
+# ═══════════════════════════════════════════════════════════════════════════════
+
+version: "2.1.0"
+schema: "reasonkit-deep-research-protocols-v2"
+created: "2025-12-23"
+last_updated: "2025-12-23"
+license: "Apache-2.0"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# PROTOCOL ALPHA V2: RAT-H (HUMAN-IN-THE-LOOP RAT)
+# ─────────────────────────────────────────────────────────────────────────────
+# STATUS: DEPRECATED (2025-12-23) - Swarm Assessment: "Snake Oil"
+# REASON: Adding an LLM to judge "readability" wastes tokens and creates
+#         a filter for mediocrity. Better solution: few-shot examples in
+#         the original prompt, not a separate Judge step.
+# ─────────────────────────────────────────────────────────────────────────────
+
+protocol_alpha_v2:
+  deprecated: true
+  deprecation_reason: "Swarm assessment deemed 'Snake Oil' - use few-shot prompts instead"
+  deprecation_date: "2025-12-23"
+  id: "PROT-ALPHA-RAT-H"
+  name: "RAT-H (Human-in-the-Loop RAT)"
+  shortcode: "rat-h"
+  version: "2.0.0"
+  previous: "RAT-E (Reasoning-Action-Testing-Evaluation)"
+
+  description: |
+    Upgraded RAT protocol with Human-in-the-Loop UX validation.
+    Evaluates both mechanical correctness AND human utility of outputs.
+
+  fatal_flaw_addressed:
+    name: "Observability Blind Spot"
+    description: |
+      RAT-E optimized for mechanical correctness (exit codes, test passes)
+      but produced unreadable logs and poor error messages. Passed tests
+      but failed usability.
+    solution: "Add UX Check phase where Judge evaluates output QUALITY"
+
+  phases:
+    phase_1_reasoning:
+      name: "Reasoning"
+      steps:
+        - "Analyze task requirements"
+        - "Break down into sub-tasks"
+        - "Identify success criteria"
+        - "Plan implementation approach"
+
+    phase_2_action:
+      name: "Action"
+      steps:
+        - "Execute implementation"
+        - "Generate outputs (code, logs, artifacts)"
+        - "Record execution trace"
+
+    phase_3_testing:
+      name: "Testing"
+      steps:
+        - "Run automated tests"
+        - "Verify functional correctness"
+        - "Check exit codes and assertions"
+
+    phase_4_evaluation:
+      name: "Evaluation"
+      steps:
+        - "Assess test coverage"
+        - "Verify requirements met"
+        - "Check for regressions"
+
+    phase_5_ux_check:
+      name: "UX Check (NEW - Human-in-the-Loop)"
+      description: |
+        CRITICAL ADDITION: Judge agent evaluates output QUALITY for human utility,
+        not just mechanical correctness.
+
+      evaluation_criteria:
+        log_readability:
+          weight: 0.25
+          checks:
+            - "Are log messages human-readable?"
+            - "Do errors include actionable context?"
+            - "Is severity clear (DEBUG/INFO/WARN/ERROR)?"
+            - "Can a developer understand what happened?"
+          scoring: "0-10 scale"
+          minimum_pass: 7
+
+        error_message_quality:
+          weight: 0.25
+          checks:
+            - "Do errors explain WHAT went wrong?"
+            - "Do errors suggest HOW to fix it?"
+            - "Are stack traces formatted for readability?"
+            - "Are user-facing errors non-technical?"
+          scoring: "0-10 scale"
+          minimum_pass: 7
+
+        ui_feedback:
+          weight: 0.20
+          checks:
+            - "Are loading states indicated?"
+            - "Are progress updates provided?"
+            - "Is success/failure clearly communicated?"
+            - "Are empty states handled gracefully?"
+          scoring: "0-10 scale"
+          minimum_pass: 6
+
+        documentation_output:
+          weight: 0.15
+          checks:
+            - "Are generated docs readable?"
+            - "Do comments explain WHY, not just WHAT?"
+            - "Are examples provided where useful?"
+          scoring: "0-10 scale"
+          minimum_pass: 6
+
+        developer_experience:
+          weight: 0.15
+          checks:
+            - "Would a developer understand the output immediately?"
+            - "Is debugging information sufficient?"
+            - "Are warnings actionable?"
+          scoring: "0-10 scale"
+          minimum_pass: 7
+
+      failure_actions:
+        score_below_minimum: |
+          REJECT output. Return to Phase 2 (Action) with feedback:
+          "Output passed tests but failed UX Check. Improve: [specific criteria]"
+
+        all_checks_pass: |
+          APPROVE output. Proceed to synthesis.
+
+  overall_pass_criteria:
+    mechanical: "All tests pass (exit code 0)"
+    ux_quality: "UX Check score >= 7/10 average"
+    combined: "BOTH mechanical AND ux_quality must pass"
+
+  verbose_output:
+    template: |
+      [RAT-H] Phase 1 (Reasoning): [status]
+      [RAT-H] Phase 2 (Action): [status]
+      [RAT-H] Phase 3 (Testing): [status] - Tests: [passed]/[total]
+      [RAT-H] Phase 4 (Evaluation): [status]
+      [RAT-H] Phase 5 (UX Check): [status]
+        - Log Readability: [score]/10
+        - Error Messages: [score]/10
+        - UI Feedback: [score]/10
+        - Documentation: [score]/10
+        - Developer Experience: [score]/10
+        - Average UX Score: [avg]/10
+      [RAT-H] Final Result: [PASS/FAIL] (Mechanical: [Y/N], UX: [Y/N])
+
+# ─────────────────────────────────────────────────────────────────────────────
+# PROTOCOL BETA V2: DYNAMIC BETA (ADAPTIVE ANTI-DRIFT)
+# ─────────────────────────────────────────────────────────────────────────────
+# UPGRADE: Added Saturation Trigger to prevent zombie research
+# FATAL FLAW FIXED: "Saturation Trap"
+# ─────────────────────────────────────────────────────────────────────────────
+
+protocol_beta_v2:
+  id: "PROT-BETA-DYNAMIC"
+  name: "Dynamic Beta (Adaptive Anti-Drift)"
+  shortcode: "dyn-beta"
+  version: "2.0.0"
+  previous: "Beta (Anti-Drift)"
+
+  description: |
+    Upgraded Anti-Drift protocol with Saturation Trigger mechanism.
+    Automatically relaxes anchor when information gain diminishes.
+
+  fatal_flaw_addressed:
+    name: "Saturation Trap"
+    description: |
+      Original Beta forced agent to keep finding entities to satisfy "Map Ecosystem"
+      goal, even when returns were diminishing. Created zombie researchers finding
+      useless/obscure entities instead of pivoting to understand WHY entities matter.
+    solution: "Implement Saturation Trigger that relaxes anchor on diminishing returns"
+
+  core_mechanism:
+    anchor:
+      description: "Primary research goal that prevents drift"
+      example: "Map the AI Agent Framework Ecosystem"
+
+    drift_detection:
+      description: "Monitor for tangential exploration"
+      threshold: "3+ steps without anchor-relevant output"
+
+    saturation_trigger:
+      description: |
+        NEW: Detects when information gain is diminishing and automatically
+        relaxes the anchor to allow productive pivoting.
+
+      parameters:
+        information_gain_threshold: 0.3
+        consecutive_low_gain_steps: 3
+
+      calculation: |
+        information_gain = (new_unique_entities + new_insights) / search_effort
+
+        IF information_gain < threshold FOR 3 consecutive steps:
+          TRIGGER saturation_mode = true
+
+      on_trigger:
+        action: "Relax anchor constraint"
+        pivot_directions:
+          - from: "WHAT exists"
+            to: "WHY it matters"
+          - from: "Map entities"
+            to: "Understand relationships"
+          - from: "Exhaustive listing"
+            to: "Pattern synthesis"
+
+        notification: |
+          [Dynamic Beta] SATURATION DETECTED
+          - Information gain: [value] (threshold: 0.3)
+          - Low-gain steps: 3
+          - ACTION: Relaxing anchor to allow lateral pivot
+          - Pivot direction: [from] → [to]
+
+  execution_flow:
+    step_1:
+      name: "Set Anchor"
+      action: "Define primary research goal"
+
+    step_2:
+      name: "Execute Research"
+      action: "Gather information toward anchor"
+      monitoring:
+        - "Track new entities discovered"
+        - "Track new insights generated"
+        - "Calculate information_gain per step"
+
+    step_3:
+      name: "Drift Check"
+      action: "Verify outputs relate to anchor"
+      on_drift: "Redirect to anchor"
+
+    step_4:
+      name: "Saturation Check (NEW)"
+      action: "Evaluate information gain trend"
+      logic: |
+        IF information_gain < 0.3 for 3 steps:
+          saturation_triggered = true
+          GOTO step_5
+        ELSE:
+          GOTO step_2 (continue research)
+
+    step_5:
+      name: "Adaptive Pivot"
+      action: "Relax anchor, pivot to deeper analysis"
+      pivot_options:
+        - "Synthesize patterns from collected data"
+        - "Analyze relationships between entities"
+        - "Generate insights about ecosystem dynamics"
+        - "Identify gaps in coverage and their significance"
+
+    step_6:
+      name: "Synthesis"
+      action: "Produce final output with both breadth AND depth"
+
+  anti_zombie_protections:
+    max_low_value_entities: 10
+    diminishing_returns_threshold: 0.2
+    forced_pivot_trigger: "5 steps with < 0.2 gain"
+
+    zombie_indicators:
+      - "Finding increasingly obscure entities"
+      - "No new insights despite continued searching"
+      - "Repeating similar sources"
+      - "Tangential connections to anchor"
+
+    on_zombie_detection: |
+      [Dynamic Beta] ZOMBIE RESEARCHER DETECTED
+      - Indicators: [list]
+      - ACTION: FORCED PIVOT to synthesis mode
+      - Output: Consolidate findings and analyze patterns
+
+  verbose_output:
+    template: |
+      [Dynamic Beta] Anchor: "[anchor text]"
+      [Dynamic Beta] Step [N]: Research iteration
+        - New entities: [count]
+        - New insights: [count]
+        - Search effort: [count]
+        - Information gain: [value]
+        - Saturation status: [OK/WARNING/TRIGGERED]
+      [Dynamic Beta] Drift check: [ALIGNED/DRIFTING]
+      [Dynamic Beta] Saturation check:
+        - Low-gain steps: [N]/3
+        - Status: [HEALTHY/SATURATING/TRIGGERED]
+      [Dynamic Beta] Mode: [RESEARCH/PIVOT/SYNTHESIS]
+
+# ─────────────────────────────────────────────────────────────────────────────
+# PROTOCOL GAMMA V2: DATA-AWARE RAG (SHADOW LOGIC DETECTION)
+# ─────────────────────────────────────────────────────────────────────────────
+# UPGRADE: Added Literal Scanner layer for raw SQL/data schema detection
+# FATAL FLAW FIXED: "Ghost Dependency"
+# ─────────────────────────────────────────────────────────────────────────────
+
+protocol_gamma_v2:
+  id: "PROT-GAMMA-DATA-AWARE"
+  name: "Data-Aware RAG (Shadow Logic Detection)"
+  shortcode: "da-rag"
+  version: "2.0.0"
+  previous: "Gamma (Structural RAG)"
+
+  description: |
+    Upgraded Structural RAG with Literal Scanner layer that detects
+    "Shadow Logic" - data access patterns that bypass clean code graphs.
+
+  fatal_flaw_addressed:
+    name: "Ghost Dependency"
+    description: |
+      Original Gamma missed a critical dependency because it used raw SQL
+      (bypassing the Code Graph) and was embedded in a reporting module
+      (hiding from Vector Search). Gamma assumed "Clean Code" and was
+      blind to "Shadow Logic."
+    solution: "Add Literal Scanner layer that greps for data schema usage"
+
+  layers:
+    layer_1_code_graph:
+      name: "Code Graph Analysis"
+      description: "Structural analysis of code dependencies"
+      capabilities:
+        - "Function call graphs"
+        - "Import relationships"
+        - "Class hierarchies"
+        - "Module dependencies"
+      limitation: "Misses inline data access (raw SQL, string templates)"
+
+    layer_2_vector_search:
+      name: "Vector Search"
+      description: "Semantic similarity search across codebase"
+      capabilities:
+        - "Find similar code patterns"
+        - "Locate related functionality"
+        - "Discover implicit relationships"
+      limitation: "Misses literal string matches (table names, column names)"
+
+    layer_3_literal_scanner:
+      name: "Literal Scanner (NEW - Shadow Logic Detection)"
+      description: |
+        CRITICAL ADDITION: Pattern-match layer that greps for data schema
+        usage patterns that bypass the clean Code Graph.
+
+      scan_targets:
+        sql_patterns:
+          description: "Raw SQL queries embedded in code"
+          patterns:
+            - "SELECT\\s+.*\\s+FROM\\s+[a-zA-Z_]+"
+            - "INSERT\\s+INTO\\s+[a-zA-Z_]+"
+            - "UPDATE\\s+[a-zA-Z_]+\\s+SET"
+            - "DELETE\\s+FROM\\s+[a-zA-Z_]+"
+            - "JOIN\\s+[a-zA-Z_]+\\s+ON"
+            - "CREATE\\s+(TABLE|INDEX|VIEW)"
+            - "ALTER\\s+TABLE"
+            - "DROP\\s+(TABLE|INDEX|VIEW)"
+          extract: "table_name, column_names"
+
+        orm_patterns:
+          description: "ORM model references that imply database tables"
+          patterns:
+            - "\\.query\\("
+            - "\\.filter\\("
+            - "\\.find_by\\("
+            - "\\.where\\("
+            - "Model\\.create"
+            - "Model\\.update"
+            - "Table\\."
+          extract: "model_name, operation"
+
+        json_key_patterns:
+          description: "Hardcoded JSON keys that imply data contracts"
+          patterns:
+            - "'[a-z_]+_id'"
+            - "\\[\"[a-z_]+\"\\]"
+            - "\\.get\\(['\"][a-z_]+['\"]\\)"
+            - "data\\[['\"][a-z_]+['\"]\\]"
+          extract: "key_name, access_pattern"
+
+        config_references:
+          description: "Configuration and environment variable access"
+          patterns:
+            - "env\\["
+            - "getenv\\("
+            - "os\\.environ"
+            - "config\\."
+            - "settings\\."
+          extract: "config_key, source"
+
+        api_endpoints:
+          description: "HTTP endpoints that imply external dependencies"
+          patterns:
+            - "https?://[^\\s\"']+"
+            - "/api/v[0-9]+/"
+            - "@(Get|Post|Put|Delete|Patch)\\("
+          extract: "endpoint, method"
+
+        file_paths:
+          description: "Hardcoded file paths that imply data locations"
+          patterns:
+            - "/data/[^\\s\"']+"
+            - "/var/[^\\s\"']+"
+            - "/tmp/[^\\s\"']+"
+            - "\\.csv|\\.json|\\.xml|\\.yaml"
+          extract: "path, file_type"
+
+      output:
+        shadow_dependencies:
+          format: |
+            | Shadow Dependency | Type | Location | Risk |
+            |-------------------|------|----------|------|
+            | [dependency]      | [type] | [file:line] | [HIGH/MED/LOW] |
+
+        hidden_data_contracts:
+          format: |
+            | Data Contract | Access Pattern | Files |
+            |---------------|----------------|-------|
+            | [table/key]   | [SQL/JSON/API] | [files] |
+
+  execution_flow:
+    step_1:
+      name: "Code Graph Analysis"
+      action: "Build structural dependency graph"
+      output: "graph_dependencies[]"
+
+    step_2:
+      name: "Vector Search"
+      action: "Find semantically similar code"
+      output: "semantic_matches[]"
+
+    step_3:
+      name: "Literal Scanner"
+      action: "Grep for Shadow Logic patterns"
+      output: "shadow_dependencies[]"
+
+    step_4:
+      name: "Dependency Merge"
+      action: "Combine all three dependency sources"
+      logic: |
+        all_dependencies = UNION(
+          graph_dependencies,
+          semantic_matches,
+          shadow_dependencies
+        )
+
+        ghost_dependencies = shadow_dependencies - graph_dependencies
+
+        IF ghost_dependencies.length > 0:
+          WARN: "Found [N] Ghost Dependencies not in Code Graph"
+
+    step_5:
+      name: "Risk Assessment"
+      action: "Score risk of each dependency"
+      criteria:
+        high_risk:
+          - "Raw SQL without parameterization"
+          - "Hardcoded API keys"
+          - "Untracked external service calls"
+        medium_risk:
+          - "Hardcoded file paths"
+          - "Magic string JSON keys"
+        low_risk:
+          - "ORM-wrapped database access"
+          - "Config-driven endpoints"
+
+  shadow_logic_handling:
+    on_ghost_dependency_found:
+      action: "Flag and document"
+      output: |
+        [Data-Aware RAG] GHOST DEPENDENCY DETECTED
+        - Type: [SQL/JSON/API/FILE]
+        - Pattern: [matched pattern]
+        - Location: [file:line]
+        - Risk: [HIGH/MED/LOW]
+        - Code Graph: NOT TRACKED
+        - Vector Search: [FOUND/NOT FOUND]
+        - ACTION: Add to dependency analysis
+
+    anti_patterns_to_flag:
+      - name: "Raw SQL in application code"
+        risk: "HIGH"
+        fix: "Use ORM or parameterized queries"
+
+      - name: "Hardcoded JSON keys"
+        risk: "MEDIUM"
+        fix: "Use typed data contracts"
+
+      - name: "Inline API endpoints"
+        risk: "MEDIUM"
+        fix: "Use configuration management"
+
+  verbose_output:
+    template: |
+      [Data-Aware RAG] Analysis for: [target]
+
+      [Layer 1: Code Graph]
+        - Nodes: [count]
+        - Edges: [count]
+        - Dependencies found: [count]
+
+      [Layer 2: Vector Search]
+        - Queries: [count]
+        - Matches: [count]
+        - Semantic dependencies: [count]
+
+      [Layer 3: Literal Scanner]
+        - SQL patterns: [count] matches
+        - JSON keys: [count] matches
+        - API endpoints: [count] matches
+        - File paths: [count] matches
+        - Total shadow dependencies: [count]
+
+      [Dependency Merge]
+        - Total unique dependencies: [count]
+        - In Code Graph: [count]
+        - GHOST (shadow only): [count] <-- CRITICAL
+
+      [Ghost Dependencies]
+        | Type | Location | Risk |
+        |------|----------|------|
+        | [type] | [file:line] | [risk] |
+
+      [Risk Summary]
+        - HIGH risk: [count]
+        - MEDIUM risk: [count]
+        - LOW risk: [count]
+
+# ─────────────────────────────────────────────────────────────────────────────
+# PROTOCOL INTEGRATION
+# ─────────────────────────────────────────────────────────────────────────────
+
+protocol_integration:
+
+  when_to_use:
+    rat_h:
+      triggers:
+        - "Code generation task"
+        - "Output requires human readability"
+        - "Error handling implementation"
+        - "Logging system development"
+      profiles: ["balanced", "deep", "paranoid"]
+
+    dynamic_beta:
+      triggers:
+        - "Ecosystem mapping"
+        - "Research survey"
+        - "Competitive analysis"
+        - "Literature review"
+      profiles: ["deep", "paranoid", "scientific"]
+
+    data_aware_rag:
+      triggers:
+        - "Code refactoring"
+        - "Dependency analysis"
+        - "Legacy code review"
+        - "Database migration planning"
+      profiles: ["balanced", "deep", "paranoid"]
+
+  combination_patterns:
+    code_quality_audit:
+      description: "Full code quality assessment"
+      protocols: ["rat_h", "data_aware_rag"]
+      flow: "da-rag → rat-h → synthesis"
+
+    research_to_implementation:
+      description: "Research then implement"
+      protocols: ["dynamic_beta", "rat_h"]
+      flow: "dyn-beta → (implement) → rat-h"
+
+    full_stack_analysis:
+      description: "Complete analysis pipeline"
+      protocols: ["dynamic_beta", "data_aware_rag", "rat_h"]
+      flow: "dyn-beta → da-rag → rat-h → synthesis"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# CHANGELOG
+# ─────────────────────────────────────────────────────────────────────────────
+
+changelog:
+  - version: "2.1.0"
+    date: "2025-12-23"
+    changes:
+      - "Created V2 protocols based on live-fire test results"
+      - "Alpha V2 (RAT-H): Added UX Check phase for output quality"
+      - "Beta V2 (Dynamic): Added Saturation Trigger for diminishing returns"
+      - "Gamma V2 (Data-Aware): Added Literal Scanner for Shadow Logic"
+      - "Fixed 'Observability Blind Spot' in Alpha"
+      - "Fixed 'Saturation Trap' in Beta"
+      - "Fixed 'Ghost Dependency' in Gamma"
+      - "Added protocol integration patterns"
+
+    test_results_addressed:
+      alpha_rat_e:
+        outcome: "Pass/Fail"
+        fatal_flaw: "Observability Blind Spot"
+        fix: "UX Check step"
+
+      beta_anti_drift:
+        outcome: "Fail"
+        fatal_flaw: "Saturation Trap"
+        fix: "Saturation Trigger"
+
+      gamma_structural_rag:
+        outcome: "Fail"
+        fatal_flaw: "Ghost Dependency"
+        fix: "Literal Scanner layer"

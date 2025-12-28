@@ -5,11 +5,11 @@
 //! and resilience patterns.
 
 pub mod agency;
-pub mod knowledge_graph;
+pub mod config;
 pub mod evolution;
 pub mod immune;
+pub mod knowledge_graph;
 pub mod runtime;
-pub mod config;
 pub mod types;
 
 pub use agency::*;

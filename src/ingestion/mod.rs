@@ -8,9 +8,9 @@
 
 pub mod pdf;
 
-use crate::{Document, DocumentType, Source, SourceType, Metadata, Result, Error};
-use std::path::Path;
+use crate::{Document, DocumentType, Error, Metadata, Result, Source, SourceType};
 use chrono::Utc;
+use std::path::Path;
 
 /// Trait for document ingesters
 pub trait Ingester {
@@ -36,7 +36,8 @@ impl DocumentIngester {
 
     /// Ingest a document from a file path, auto-detecting format
     pub fn ingest(&self, path: &Path) -> Result<Document> {
-        let extension = path.extension()
+        let extension = path
+            .extension()
             .and_then(|e| e.to_str())
             .map(|s| s.to_lowercase());
 
@@ -47,13 +48,16 @@ impl DocumentIngester {
             Some("json") => self.ingest_json(path),
             Some("jsonl") => self.ingest_jsonl(path),
             Some("txt") => self.ingest_text(path),
-            _ => Err(Error::Config(format!("Unsupported file format: {:?}", path))),
+            _ => Err(Error::Config(format!(
+                "Unsupported file format: {:?}",
+                path
+            ))),
         }
     }
 
     /// Ingest a markdown file
     fn ingest_markdown(&self, path: &Path) -> Result<Document> {
-        use pulldown_cmark::{Parser, Options, Event, Tag, TagEnd};
+        use pulldown_cmark::{Event, Options, Parser, Tag, TagEnd};
         use std::fs;
 
         let content = fs::read_to_string(path)?;
@@ -70,7 +74,10 @@ impl DocumentIngester {
 
         for event in parser {
             match event {
-                Event::Start(Tag::Heading { level: pulldown_cmark::HeadingLevel::H1, .. }) => {
+                Event::Start(Tag::Heading {
+                    level: pulldown_cmark::HeadingLevel::H1,
+                    ..
+                }) => {
                     in_heading = true;
                 }
                 Event::End(TagEnd::Heading(pulldown_cmark::HeadingLevel::H1)) => {
@@ -121,13 +128,15 @@ impl DocumentIngester {
 
         // Extract title
         let title_selector = Selector::parse("title").unwrap();
-        let title = document.select(&title_selector)
+        let title = document
+            .select(&title_selector)
             .next()
             .map(|e| e.text().collect::<String>());
 
         // Extract body text
         let body_selector = Selector::parse("body").unwrap();
-        let text = document.select(&body_selector)
+        let text = document
+            .select(&body_selector)
             .next()
             .map(|e| e.text().collect::<Vec<_>>().join(" "))
             .unwrap_or_default();
@@ -175,8 +184,7 @@ impl DocumentIngester {
             version: None,
         };
 
-        Ok(Document::new(DocumentType::Note, source)
-            .with_content(content))
+        Ok(Document::new(DocumentType::Note, source).with_content(content))
     }
 
     /// Ingest a JSONL file (one document per line)
@@ -235,8 +243,7 @@ impl DocumentIngester {
             version: None,
         };
 
-        Ok(Document::new(DocumentType::Note, source)
-            .with_content(content))
+        Ok(Document::new(DocumentType::Note, source).with_content(content))
     }
 }
 

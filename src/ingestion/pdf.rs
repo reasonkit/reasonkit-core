@@ -2,11 +2,11 @@
 //!
 //! Extracts text content from PDF files for indexing in the knowledge base.
 
-use crate::{Document, DocumentType, Source, SourceType, Metadata, Result, Error};
+use crate::{Document, DocumentType, Error, Metadata, Result, Source, SourceType};
+use chrono::Utc;
 use lopdf::Document as PdfDocument;
 use std::path::Path;
-use chrono::Utc;
-use tracing::{info, warn, debug};
+use tracing::{debug, info, warn};
 
 /// PDF document ingester using lopdf
 pub struct PdfIngester {
@@ -73,8 +73,7 @@ impl PdfIngester {
             version: None,
         };
 
-        let mut doc = Document::new(DocumentType::Paper, source)
-            .with_content(cleaned_text);
+        let mut doc = Document::new(DocumentType::Paper, source).with_content(cleaned_text);
 
         doc.metadata = metadata;
 
@@ -88,10 +87,13 @@ impl PdfIngester {
 
     /// Extract text from a single page
     fn extract_page_text(&self, doc: &PdfDocument, page_num: u32) -> Result<String> {
-        let page_id = doc.page_iter().nth((page_num - 1) as usize)
+        let page_id = doc
+            .page_iter()
+            .nth((page_num - 1) as usize)
             .ok_or_else(|| Error::pdf(format!("Page {} not found", page_num)))?;
 
-        let content = doc.get_page_content(page_id)
+        let content = doc
+            .get_page_content(page_id)
             .map_err(|e| Error::pdf(format!("Failed to get page content: {}", e)))?;
 
         // Parse content stream and extract text
@@ -261,12 +263,8 @@ impl PdfIngester {
         // Helper to convert PDF string to Rust string
         let pdf_to_string = |obj: &lopdf::Object| -> Option<String> {
             match obj {
-                lopdf::Object::String(bytes, _) => {
-                    String::from_utf8(bytes.clone()).ok()
-                }
-                lopdf::Object::Name(bytes) => {
-                    String::from_utf8(bytes.clone()).ok()
-                }
+                lopdf::Object::String(bytes, _) => String::from_utf8(bytes.clone()).ok(),
+                lopdf::Object::Name(bytes) => String::from_utf8(bytes.clone()).ok(),
                 _ => None,
             }
         };
@@ -280,7 +278,7 @@ impl PdfIngester {
                         metadata.title = pdf_to_string(title);
                     }
 
-                    // Author
+                    // Author - convert to Author struct
                     if let Ok(author) = info_dict.get(b"Author") {
                         if let Some(author_str) = pdf_to_string(author) {
                             metadata.authors.push(crate::Author {
@@ -291,15 +289,17 @@ impl PdfIngester {
                         }
                     }
 
-                    // Subject -> abstract
+                    // Subject -> store as abstract
                     if let Ok(subject) = info_dict.get(b"Subject") {
-                        metadata.abstract_text = pdf_to_string(subject);
+                        if let Some(abstract_text) = pdf_to_string(subject) {
+                            metadata.abstract_text = Some(abstract_text);
+                        }
                     }
 
-                    // Keywords
+                    // Keywords -> store as tags
                     if let Ok(keywords) = info_dict.get(b"Keywords") {
                         if let Some(keywords_str) = pdf_to_string(keywords) {
-                            metadata.keywords = keywords_str
+                            metadata.tags = keywords_str
                                 .split(',')
                                 .map(|s| s.trim().to_string())
                                 .filter(|s| !s.is_empty())
@@ -312,7 +312,8 @@ impl PdfIngester {
 
         // Fall back to filename for title if not found
         if metadata.title.is_none() {
-            metadata.title = path.file_stem()
+            metadata.title = path
+                .file_stem()
                 .and_then(|s| s.to_str())
                 .map(|s| s.replace('_', " "));
         }
@@ -322,9 +323,7 @@ impl PdfIngester {
 
     /// Detect source type from filename
     fn detect_source_type(&self, path: &Path) -> SourceType {
-        let filename = path.file_name()
-            .and_then(|s| s.to_str())
-            .unwrap_or("");
+        let filename = path.file_name().and_then(|s| s.to_str()).unwrap_or("");
 
         if filename.contains("arxiv") || filename.starts_with("2") {
             SourceType::Arxiv
@@ -335,8 +334,7 @@ impl PdfIngester {
 
     /// Extract arXiv ID from filename
     fn extract_arxiv_id(&self, path: &Path) -> Option<String> {
-        let filename = path.file_stem()
-            .and_then(|s| s.to_str())?;
+        let filename = path.file_stem().and_then(|s| s.to_str())?;
 
         // Pattern: anything_XXXX.XXXXX or arxiv_XXXX.XXXXX
         let re = regex::Regex::new(r"(\d{4}\.\d{4,5})").ok()?;
@@ -384,10 +382,16 @@ mod tests {
         let ingester = PdfIngester::new();
 
         let path = Path::new("/data/papers/arxiv_2401.18059.pdf");
-        assert_eq!(ingester.extract_arxiv_id(path), Some("2401.18059".to_string()));
+        assert_eq!(
+            ingester.extract_arxiv_id(path),
+            Some("2401.18059".to_string())
+        );
 
         let path = Path::new("/data/papers/cot_2201.11903.pdf");
-        assert_eq!(ingester.extract_arxiv_id(path), Some("2201.11903".to_string()));
+        assert_eq!(
+            ingester.extract_arxiv_id(path),
+            Some("2201.11903".to_string())
+        );
 
         let path = Path::new("/data/papers/random_paper.pdf");
         assert_eq!(ingester.extract_arxiv_id(path), None);

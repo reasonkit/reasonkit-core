@@ -1,7 +1,7 @@
 # RAG PIPELINE ARCHITECTURE DESIGN SPECIFICATION
 > ReasonKit Core - 5-Layer Retrieval-Augmented Generation System
 > Version: 1.0.0 | Status: Design Phase
-> Author: Master Orchestrator (Claude Opus 4.5)
+> Author: ReasonKit Team
 
 ---
 
