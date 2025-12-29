@@ -1,6 +1,6 @@
 # ReasonKit Core API Documentation
 
-**Version:** 0.1.0
+**Version:** 1.0.0
 **License:** Apache 2.0
 **Repository:** https://github.com/reasonkit/reasonkit-core
 
