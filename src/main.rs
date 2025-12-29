@@ -10,7 +10,7 @@
 
 use clap::{CommandFactory, Parser, Subcommand, ValueEnum};
 use clap_complete::{generate, Shell};
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 use tracing::{info, Level};
 use tracing_subscriber::FmtSubscriber;
 
@@ -31,6 +31,12 @@ use reasonkit::verification::ProofLedger;
 use reasonkit::web::{SearchConfig, SearchProvider, WebSearcher};
 #[cfg(feature = "memory")]
 use reasonkit::DocumentType;
+
+// Import MCP CLI module
+#[path = "bin/mcp_cli.rs"]
+mod mcp_cli;
+// use mcp_cli::{McpCli, McpCommands, run_mcp_command};
+use mcp_cli::{McpCli, run_mcp_command};
 
 /// ReasonKit - AI Thinking Enhancement System
 ///
@@ -92,6 +98,10 @@ struct Cli {
 
     #[command(subcommand)]
     command: Commands,
+
+    /// Initialize telemetry database (runs automatically on first use)
+    #[arg(long, hide = true)]
+    init_telemetry: bool,
 }
 
 #[derive(Subcommand)]
@@ -257,6 +267,9 @@ enum Commands {
         #[arg(short, long)]
         output: Option<PathBuf>,
     },
+
+    /// Manage MCP (Model Context Protocol) servers and tools
+    Mcp(McpCli),
 
     // ═══════════════════════════════════════════════════════════════════════
     // SUPPORTING: Knowledge Base & Infrastructure (requires 'memory' feature)
@@ -755,6 +768,47 @@ fn setup_logging(verbosity: u8) {
     tracing::subscriber::set_global_default(subscriber).expect("Failed to set tracing subscriber");
 }
 
+/// Initialize telemetry database if enabled
+///
+/// This function ensures the `.rk_telemetry.db` database is created and initialized
+/// on first use. It runs automatically on CLI startup (non-blocking, fails gracefully).
+async fn initialize_telemetry_if_enabled() -> anyhow::Result<()> {
+    use reasonkit::telemetry::{TelemetryConfig, TelemetryStorage};
+
+    // Check if telemetry is enabled via environment or config
+    let config = TelemetryConfig::from_env();
+    
+    if config.enabled {
+        // Use default path if not explicitly set (ensures proper directory structure)
+        let db_path = if config.db_path == Path::new(".rk_telemetry.db") {
+            // Use the proper default path (XDG data directory)
+            TelemetryConfig::default_db_path()
+        } else {
+            config.db_path.clone()
+        };
+
+        // Initialize the database (creates directory and schema if needed)
+        match TelemetryStorage::new(&db_path).await {
+            Ok(_) => {
+                tracing::debug!(
+                    path = %db_path.display(),
+                    "Telemetry database initialized"
+                );
+            }
+            Err(e) => {
+                tracing::warn!(
+                    error = %e,
+                    path = %db_path.display(),
+                    "Failed to initialize telemetry database (continuing without telemetry)"
+                );
+                // Don't fail the CLI if telemetry init fails
+            }
+        }
+    }
+
+    Ok(())
+}
+
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
     let cli = Cli::parse();
@@ -764,7 +818,22 @@ async fn main() -> anyhow::Result<()> {
     info!("ReasonKit Core v{}", env!("CARGO_PKG_VERSION"));
     info!("Data directory: {:?}", cli.data_dir);
 
+    // Initialize telemetry database if enabled (non-blocking, fails gracefully)
+    // This ensures the database is created on first use
+    if cli.init_telemetry {
+        initialize_telemetry_if_enabled().await?;
+    } else {
+        // Initialize in background (non-blocking) - don't block CLI startup
+        tokio::spawn(async move {
+            let _ = initialize_telemetry_if_enabled().await;
+        });
+    }
+
     match cli.command {
+        Commands::Mcp(mcp_cli) => {
+            run_mcp_command(mcp_cli).await?;
+        }
+
         #[cfg(feature = "memory")]
         Commands::Ingest {
             path,

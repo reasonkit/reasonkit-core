@@ -1,6 +1,6 @@
 [package]
 name = "reasonkit-core"
-version = "0.1.0"
+version = "1.0.0"
 edition = "2021"
 rust-version = "1.74"
 authors = ["ReasonKit Team <hello@reasonkit.sh>"]
@@ -69,7 +69,10 @@ qdrant-client = { version = "1.10", optional = true }
 tantivy = { version = "0.22", optional = true }
 
 # Memory Infrastructure (optional - provides storage, retrieval, embeddings)
-reasonkit-mem = { path = "../reasonkit-mem", optional = true }
+# NOTE: reasonkit-mem will be published separately. For now, use --features memory with local build.
+# reasonkit-mem = { path = "../reasonkit-mem", optional = true }
+# TODO: Uncomment and add version when reasonkit-mem is published to crates.io
+# reasonkit-mem = { version = "1.0", optional = true }
 
 # HNSW Index (for local embeddings if not using Qdrant)
 # hnsw_rs = "0.3"  # TODO: Add when needed
@@ -159,26 +162,32 @@ futures = "0.3"
 [[bench]]
 name = "retrieval_bench"
 harness = false
+required-features = ["memory"]
 
 [[bench]]
 name = "fusion_bench"
 harness = false
+required-features = ["memory"]
 
 [[bench]]
 name = "embedding_bench"
 harness = false
+required-features = ["memory"]
 
 [[bench]]
 name = "raptor_bench"
 harness = false
+required-features = ["memory"]
 
 [[bench]]
 name = "ingestion_bench"
 harness = false
+required-features = ["memory"]
 
 [[bench]]
 name = "rerank_bench"
 harness = false
+required-features = ["memory"]
 
 [[bench]]
 name = "thinktool_bench"
@@ -187,6 +196,7 @@ harness = false
 [[bench]]
 name = "harness"
 harness = false
+required-features = ["memory"]
 
 [features]
 default = ["cli"]
@@ -194,7 +204,7 @@ cli = []
 embedded-qdrant = []  # For embedded mode without external server
 local-embeddings = ["ort", "tokenizers", "ndarray"]  # BGE-M3 ONNX local inference
 arf = ["sled", "wasmtime", "sysinfo", "petgraph", "rust-bert", "parking_lot"]  # Optional ARF module
-memory = ["dep:reasonkit-mem", "dep:qdrant-client", "dep:tantivy"]  # Optional memory infrastructure
+memory = ["dep:qdrant-client", "dep:tantivy"]  # Optional memory infrastructure (reasonkit-mem coming soon)
 
 [profile.release]
 lto = true

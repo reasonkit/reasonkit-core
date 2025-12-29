@@ -103,6 +103,10 @@ pub enum Error {
         #[source]
         source: Box<dyn std::error::Error + Send + Sync>,
     },
+
+    /// MCP error
+    #[error("MCP error: {0}")]
+    Mcp(String),
 }
 
 impl Error {

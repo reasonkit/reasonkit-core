@@ -144,6 +144,38 @@ pub struct PromptArgument {
     pub required: bool,
 }
 
+/// Request to get a prompt
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct GetPromptRequest {
+    /// Prompt name
+    pub name: String,
+
+    /// Prompt arguments
+    #[serde(default)]
+    pub arguments: HashMap<String, String>,
+}
+
+/// Result of getting a prompt
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct GetPromptResult {
+    /// Prompt description (optional)
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub description: Option<String>,
+
+    /// Prompt messages
+    pub messages: Vec<PromptMessage>,
+}
+
+/// A message in a prompt
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct PromptMessage {
+    /// Message role (user, assistant, system)
+    pub role: String,
+
+    /// Message content
+    pub content: ToolResultContent,
+}
+
 impl Tool {
     /// Create a simple tool with basic string input
     pub fn simple(name: impl Into<String>, description: impl Into<String>) -> Self {

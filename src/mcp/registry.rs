@@ -3,7 +3,7 @@
 //! Dynamic server discovery, registration, and health monitoring.
 
 use super::server::{McpServerTrait, ServerStatus};
-use super::tools::Tool;
+use super::tools::{GetPromptResult, Prompt, Tool};
 use super::types::*;
 use crate::error::{Error, Result};
 use chrono::{DateTime, Utc};
@@ -206,6 +206,108 @@ impl McpRegistry {
         Ok(all_tools)
     }
 
+    /// List all prompts from all servers
+    pub async fn list_all_prompts(&self) -> Result<Vec<Prompt>> {
+        let servers = self.servers.read().await;
+        let mut all_prompts = Vec::new();
+
+        for (_, server) in servers.iter() {
+            // Query prompts/list from server
+            let request = McpRequest::new(
+                RequestId::String(Uuid::new_v4().to_string()),
+                "prompts/list",
+                None,
+            );
+
+            match server.send_request(request).await {
+                Ok(response) => {
+                    if let Some(result) = response.result {
+                        if let Ok(prompts_response) =
+                            serde_json::from_value::<PromptsListResponse>(result)
+                        {
+                            all_prompts.extend(prompts_response.prompts);
+                        }
+                    }
+                }
+                Err(_) => {
+                    continue;
+                }
+            }
+        }
+
+        Ok(all_prompts)
+    }
+
+    /// Get a prompt from a specific server (or find by name)
+    pub async fn get_prompt(
+        &self,
+        prompt_name: &str,
+        arguments: HashMap<String, String>,
+        server_id: Option<Uuid>,
+    ) -> Result<GetPromptResult> {
+        let servers = self.servers.read().await;
+
+        // If server_id is provided, query that server directly
+        if let Some(id) = server_id {
+            if let Some(server) = servers.get(&id) {
+                return self
+                    .get_prompt_from_server(server.clone(), prompt_name, arguments)
+                    .await;
+            } else {
+                return Err(Error::NotFound {
+                    resource: format!("Server {}", id),
+                });
+            }
+        }
+
+        // Otherwise, broadcast to find the prompt
+        // Note: This is inefficient; in a real registry, we'd cache prompt->server mapping
+        for (_, server) in servers.iter() {
+            if let Ok(result) = self
+                .get_prompt_from_server(server.clone(), prompt_name, arguments.clone())
+                .await
+            {
+                return Ok(result);
+            }
+        }
+
+        Err(Error::NotFound {
+            resource: format!("Prompt {}", prompt_name),
+        })
+    }
+
+    async fn get_prompt_from_server(
+        &self,
+        server: Arc<dyn McpServerTrait>,
+        prompt_name: &str,
+        arguments: HashMap<String, String>,
+    ) -> Result<GetPromptResult> {
+        let params = serde_json::json!({
+            "name": prompt_name,
+            "arguments": arguments
+        });
+
+        let request = McpRequest::new(
+            RequestId::String(Uuid::new_v4().to_string()),
+            "prompts/get",
+            Some(params),
+        );
+
+        let response = server.send_request(request).await?;
+
+        if let Some(error) = response.error {
+            return Err(Error::Mcp(error.message));
+        }
+
+        if let Some(result) = response.result {
+            let prompt_result: GetPromptResult = serde_json::from_value(result)
+                .map_err(Error::Json)?;
+            Ok(prompt_result)
+        } else {
+            Err(Error::Mcp("Empty response from server".to_string()))
+        }
+    }
+
     /// Perform health check on a specific server
     pub async fn check_server_health(&self, id: Uuid) -> Result<HealthCheck> {
         let server = self.get_server(id).await.ok_or_else(|| Error::NotFound {
@@ -389,6 +491,14 @@ pub struct RegistryStatistics {
 #[derive(Debug, Deserialize)]
 struct ToolsListResponse {
     tools: Vec<Tool>,
+    #[allow(dead_code)]
+    next_cursor: Option<String>,
+}
+
+/// Prompts list response (from MCP spec)
+#[derive(Debug, Deserialize)]
+struct PromptsListResponse {
+    prompts: Vec<Prompt>,
     #[allow(dead_code)]
     next_cursor: Option<String>,
 }
