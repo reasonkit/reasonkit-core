@@ -42,8 +42,11 @@ impl ThinkToolModule for ProofGuard {
             module: self.config.name.clone(),
             confidence: 0.95,
             output: serde_json::json!({
+                "verdict": "Pending",
                 "sources": [],
-                "verified_claims": []
+                "evidence": [],
+                "discrepancies": [],
+                "confidence": 0.0
             }),
         })
     }

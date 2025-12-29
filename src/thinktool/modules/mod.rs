@@ -29,6 +29,18 @@
 
 use serde::{Deserialize, Serialize};
 
+pub mod bedrock;
+pub mod brutalhonesty;
+pub mod gigathink;
+pub mod laserlogic;
+pub mod proofguard;
+
+pub use bedrock::BedRock;
+pub use brutalhonesty::BrutalHonesty;
+pub use gigathink::GigaThink;
+pub use laserlogic::LaserLogic;
+pub use proofguard::ProofGuard;
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ThinkToolModuleConfig {
     pub name: String,

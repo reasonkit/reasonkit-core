@@ -42,8 +42,11 @@ impl ThinkToolModule for BrutalHonesty {
             module: self.config.name.clone(),
             confidence: 0.9,
             output: serde_json::json!({
-                "critiques": [],
-                "flaws": []
+                "strengths": [],
+                "flaws": [],
+                "verdict": "Pending",
+                "critical_fix": null,
+                "confidence": 0.0
             }),
         })
     }

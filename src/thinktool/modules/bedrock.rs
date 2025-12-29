@@ -43,7 +43,10 @@ impl ThinkToolModule for BedRock {
             confidence: 0.85,
             output: serde_json::json!({
                 "axioms": [],
-                "decomposition": []
+                "decomposition": [],
+                "reconstruction": null,
+                "gaps": [],
+                "confidence": 0.0
             }),
         })
     }

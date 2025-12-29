@@ -42,8 +42,11 @@ impl ThinkToolModule for LaserLogic {
             module: self.config.name.clone(),
             confidence: 0.9,
             output: serde_json::json!({
-                "chain": [],
-                "fallacies": []
+                "conclusion": null,
+                "premises": [],
+                "validity": "Pending",
+                "fallacies": [],
+                "confidence": 0.0
             }),
         })
     }

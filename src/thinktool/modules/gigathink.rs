@@ -54,8 +54,11 @@ impl ThinkToolModule for GigaThink {
             module: self.config.name.clone(),
             confidence: 0.8, // Placeholder
             output: serde_json::json!({
+                "dimensions": [],
                 "perspectives": [],
-                "insights": []
+                "themes": [],
+                "insights": [],
+                "confidence": 0.0
             }),
         })
     }

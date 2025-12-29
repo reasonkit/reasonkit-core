@@ -155,7 +155,10 @@ pub use metrics::{
     AggregateStats, ExecutionRecord, ExecutionRecordBuilder, MetricsReport, MetricsTracker,
     StepMetric,
 };
-pub use modules::*;
+pub use modules::{
+    BedRock, BrutalHonesty, GigaThink, LaserLogic, ProofGuard, ThinkToolContext, ThinkToolModule,
+    ThinkToolModuleConfig, ThinkToolOutput,
+};
 pub use oscillation::{
     ConvergentCriterion, ConvergentPhase, CriterionScore, DivergentDimension, DivergentPhase, Idea,
     OscillationConfig, OscillationMetrics, OscillationPrompts, OscillationResult,
