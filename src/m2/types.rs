@@ -830,8 +830,15 @@ pub struct SimilarCase { /* ... */ }
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct KnowledgeItem { /* ... */ }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct UserPreferences { /* ... */ }
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
+pub struct UserPreferences {
+    /// Preferred reasoning style
+    pub preferred_reasoning_style: Option<ReasoningStyle>,
+    /// Preferred output format
+    pub preferred_output_format: Option<OutputFormat>,
+    /// Quality requirements
+    pub quality_requirements: Option<QualityStandards>,
+}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct UsageConstraint { /* ... */ }
