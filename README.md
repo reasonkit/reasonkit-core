@@ -6,7 +6,7 @@
 
 > _"Designed, Not Dreamed."_ — Structure beats intelligence. Engineering over hope.
 
-**Industrial-Grade Reasoning Infrastructure | Rust-Native | Auditable AI**
+**Auditable Reasoning for Production AI | Rust-Native | SSR/SSG Compatible**
 
 <img src="./assets/img/hero_reasoning_engine.png" alt="ReasonKit Core - Industrial Reasoning Engine" width="100%" />
 
@@ -118,9 +118,43 @@ rk-core think --profile paranoid "Validate cryptographic implementation"
 
 ## Execution Trace Example
 
-<div align="center">
-<img src="./assets/img/terminal_mockup.png" alt="ReasonKit Terminal - Execution Trace" width="100%" />
-</div>
+```
+$ rk-core think --profile balanced "Should we migrate to microservices?"
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ThinkTool Chain: GigaThink → LaserLogic → BedRock → ProofGuard
+Variance:        85% → 72% → 58% → 42% → 28%
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+[GigaThink] 10 PERSPECTIVES GENERATED                         Variance: 85%
+  1. OPERATIONAL: Maintenance overhead +40% initially
+  2. TEAM TOPOLOGY: Conway's Law - do we have the teams?
+  3. COST ANALYSIS: Infrastructure scales non-linearly
+  ...
+  → Variance after exploration: 72% (-13%)
+
+[LaserLogic] HIDDEN ASSUMPTIONS DETECTED                      Variance: 72%
+  ⚠ Assuming network latency is negligible
+  ⚠ Assuming team has distributed tracing expertise
+  ⚠ Logical gap: No evidence microservices solve stated problem
+  → Variance after validation: 58% (-14%)
+
+[BedRock] FIRST PRINCIPLES DECOMPOSITION                      Variance: 58%
+  • Axiom: Monoliths are simpler to reason about (empirical)
+  • Axiom: Distributed systems introduce partitions (CAP theorem)
+  • Gap: Cannot prove maintainability improvement without data
+  → Variance after grounding: 42% (-16%)
+
+[ProofGuard] TRIANGULATION RESULT                             Variance: 42%
+  • 3/5 sources: Microservices increase complexity initially
+  • 2/5 sources: Some teams report success
+  • Confidence: 0.72 (MEDIUM) - Mixed evidence
+  → Variance after verification: 28% (-14%)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+VERDICT: conditional_yes | Confidence: 87% | Duration: 2.3s
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+```
 
 **What This Shows:**
 
