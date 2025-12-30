@@ -1089,11 +1089,11 @@ When opening an issue, include:
 
 ### Community Resources
 
-| Resource           | URL                                                                                                        | Purpose                  |
-| ------------------ | ---------------------------------------------------------------------------------------------------------- | ------------------------ |
-| GitHub Discussions | [github.com/reasonkit/reasonkit-core/discussions](https://github.com/reasonkit/reasonkit-core/discussions) | Q&A, feature requests    |
-| GitHub Issues      | [github.com/reasonkit/reasonkit-core/issues](https://github.com/reasonkit/reasonkit-core/issues)           | Bug reports              |
-| Documentation      | [reasonkit.sh/docs](https://reasonkit.sh/docs)                                                             | Official docs            |
+| Resource           | URL                                                                                                        | Purpose               |
+| ------------------ | ---------------------------------------------------------------------------------------------------------- | --------------------- |
+| GitHub Discussions | [github.com/reasonkit/reasonkit-core/discussions](https://github.com/reasonkit/reasonkit-core/discussions) | Q&A, feature requests |
+| GitHub Issues      | [github.com/reasonkit/reasonkit-core/issues](https://github.com/reasonkit/reasonkit-core/issues)           | Bug reports           |
+| Documentation      | [reasonkit.sh/docs](https://reasonkit.sh/docs)                                                             | Official docs         |
 
 ### Support Channels
 
