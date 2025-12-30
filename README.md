@@ -59,9 +59,13 @@ rk-core think --profile balanced "Should we migrate to microservices?"
 
 ---
 
-## ThinkTools: Variance Reduction Filters
+## ThinkTools: The 5-Step Reasoning Chain
 
 Each ThinkTool acts as a **variance reduction filter**, transforming probabilistic outputs into increasingly deterministic reasoning paths.
+
+<div align="center">
+<img src="./assets/img/powercombo_process.png" alt="PowerCombo Process - 5-Step Structured Reasoning Chain" width="100%" />
+</div>
 
 | ThinkTool         | Operation    | What It Does                                    |
 | ----------------- | ------------ | ----------------------------------------------- |
@@ -71,7 +75,7 @@ Each ThinkTool acts as a **variance reduction filter**, transforming probabilist
 | **ProofGuard**    | `Verify()`   | Multi-source triangulation, require 3+ sources  |
 | **BrutalHonesty** | `Critique()` | Adversarial red team, attack your own reasoning |
 
-### The Chain Effect
+### Variance Reduction: The Chain Effect
 
 <div align="center">
 <img src="./assets/img/chart_variance_reduction.png" alt="Variance Reduction Through ThinkTool Chain" width="100%" />
@@ -116,7 +120,11 @@ rk-core think --profile paranoid "Validate cryptographic implementation"
 
 ---
 
-## Execution Trace Example
+## See It In Action
+
+<div align="center">
+<img src="./assets/img/terminal_mockup.png" alt="ReasonKit Terminal - Execution Trace" width="100%" />
+</div>
 
 ```
 $ rk-core think --profile balanced "Should we migrate to microservices?"
@@ -167,6 +175,38 @@ VERDICT: conditional_yes | Confidence: 87% | Duration: 2.3s
 
 ## Architecture
 
+<div align="center">
+<img src="./assets/img/architecture_diagram.png" alt="ReasonKit Architecture - Structured Prompt Engineering Framework" width="100%" />
+</div>
+
+**Three-Layer Architecture:**
+
+1. **Probabilistic LLM** (Unavoidable)
+   - LLMs generate tokens probabilistically
+   - Same prompt → different outputs
+   - We **cannot eliminate** this
+
+2. **Deterministic Protocol Engine** (Our Innovation)
+   - Wraps the probabilistic LLM layer
+   - Enforces strict execution paths
+   - Validates outputs against schemas
+   - State machine ensures consistent flow
+
+3. **ThinkTool Chain** (Variance Reduction)
+   - Each ThinkTool reduces variance
+   - Multi-stage validation catches errors
+   - Confidence scoring quantifies uncertainty
+
+**Key Components:**
+
+- **Protocol Engine:** Orchestrates execution with strict state management
+- **ThinkTools:** Modular cognitive operations with defined contracts
+- **LLM Integration:** Unified client (Claude, GPT, Gemini, 18+ providers)
+- **Telemetry:** Local SQLite for execution traces + variance metrics
+
+<details>
+<summary><strong>Architecture (Mermaid Diagram)</strong></summary>
+
 ```mermaid
 flowchart LR
     subgraph CLI["ReasonKit CLI (rk-core)"]
@@ -204,36 +244,17 @@ flowchart LR
     class LLM,llm C1,C2;
 ```
 
-**Three-Layer Architecture:**
-
-1. **Probabilistic LLM** (Unavoidable)
-   - LLMs generate tokens probabilistically
-   - Same prompt → different outputs
-   - We **cannot eliminate** this
-
-2. **Deterministic Protocol Engine** (Our Innovation)
-   - Wraps the probabilistic LLM layer
-   - Enforces strict execution paths
-   - Validates outputs against schemas
-   - State machine ensures consistent flow
-
-3. **ThinkTool Chain** (Variance Reduction)
-   - Each ThinkTool reduces variance
-   - Multi-stage validation catches errors
-   - Confidence scoring quantifies uncertainty
-
-**Key Components:**
-
-- **Protocol Engine:** Orchestrates execution with strict state management
-- **ThinkTools:** Modular cognitive operations with defined contracts
-- **LLM Integration:** Unified client (Claude, GPT, Gemini, 18+ providers)
-- **Telemetry:** Local SQLite for execution traces + variance metrics
+</details>
 
 ---
 
 ## Built for Production
 
 ReasonKit is written in Rust because reasoning infrastructure demands reliability.
+
+<div align="center">
+<img src="./assets/img/chart_speed_comparison.png" alt="Execution Latency - Python 2500ms vs Rust 24ms" width="80%" />
+</div>
 
 | Capability               | What It Means For You                               |
 | ------------------------ | --------------------------------------------------- |
