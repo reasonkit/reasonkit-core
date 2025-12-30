@@ -13,10 +13,11 @@
 4. [Token Efficiency](#4-token-efficiency)
 5. [Latency Optimization](#5-latency-optimization)
 6. [Caching Strategy](#6-caching-strategy)
-7. [Resource Limits](#7-resource-limits)
-8. [Performance Testing](#8-performance-testing)
-9. [Optimization Checklist](#9-optimization-checklist)
-10. [User-Facing Performance](#10-user-facing-performance)
+7. [Storage & Vector Database Optimization](#7-storage--vector-database-optimization)
+8. [Resource Limits](#8-resource-limits)
+9. [Performance Testing](#9-performance-testing)
+10. [Optimization Checklist](#10-optimization-checklist)
+11. [User-Facing Performance](#11-user-facing-performance)
 
 ---
 
@@ -892,7 +893,285 @@ pub async fn warm_cache(common_queries: &[&str]) {
 
 ---
 
-## 7. Resource Limits
+## 7. Storage & Vector Database Optimization
+
+> **Consolidated from:** `src/storage/OPTIMIZATION_GUIDE.md` and `src/storage/OPTIMIZATION_SUMMARY.md`
+
+### Overview
+
+The optimized Qdrant storage module provides significant performance improvements for vector database operations:
+
+- **50-200x faster** batch upsert operations
+- **100-500x faster** repeated query operations (cached)
+- **< 10ms p50 latency** for cached queries (target achieved)
+- **< 100ms p95 latency** for uncached queries (target achieved)
+
+### Architecture
+
+```
+OptimizedQdrantStorage
+├── QueryCache (LRU + TTL)
+│   ├── Cache Key Generation (hash-based)
+│   ├── LRU Eviction Policy
+│   ├── TTL-based Expiration
+│   └── Statistics Tracking
+├── Batch Operations
+│   ├── Configurable Batch Sizing
+│   ├── Parallel Processing (Tokio)
+│   ├── Timeout Management
+│   └── Error Handling
+├── Connection Management
+│   └── Arc<RwLock<Qdrant>> (thread-safe)
+└── Performance Metrics
+    ├── Latency Tracking (avg)
+    ├── Throughput Monitoring
+    ├── Cache Hit Rate
+    └── Batch Efficiency
+```
+
+### Batch Upsert Operations
+
+**Problem**: Individual embedding upserts have high network overhead and slow throughput.
+
+**Solution**: Batch multiple embeddings into single Qdrant API calls.
+
+```rust
+use reasonkit_core::storage::optimized::{
+    OptimizedQdrantStorage, BatchConfig, QueryCacheConfig,
+};
+
+// Configure batching
+let batch_config = BatchConfig {
+    max_batch_size: 100,           // Batch up to 100 embeddings
+    batch_timeout_ms: 1000,        // Wait max 1 second
+    parallel_batching: true,        // Enable parallel processing
+    parallel_workers: 4,            // Use 4 worker threads
+};
+
+let storage = OptimizedQdrantStorage::new(
+    "localhost",
+    6333,
+    "my_collection".to_string(),
+    768,                            // Vector size
+    batch_config,
+    QueryCacheConfig::default(),
+    AccessControlConfig::default(),
+)
+.await?;
+
+// Batch upsert 1000 embeddings efficiently
+let embeddings: Vec<(Uuid, Vec<f32>)> = generate_embeddings(1000, 768);
+storage.batch_upsert_embeddings(embeddings, &context).await?;
+```
+
+**Performance**:
+- Sequential: ~10 embeddings/sec
+- Batched (100): ~500 embeddings/sec (50x improvement)
+- Batched + Parallel: ~2000 embeddings/sec (200x improvement)
+
+### Query Result Caching
+
+**Problem**: Identical or similar queries repeatedly hit Qdrant, adding latency.
+
+**Solution**: LRU cache with TTL for query results.
+
+```rust
+use reasonkit_core::storage::optimized::QueryCacheConfig;
+
+// Configure caching
+let cache_config = QueryCacheConfig {
+    max_cache_entries: 1000,           // Cache up to 1000 queries
+    ttl_secs: 300,                     // 5 minute TTL
+    enable_cache_warming: true,         // Warm cache for hot queries
+    cache_warming_interval_secs: 60,   // Clean expired entries every minute
+};
+
+let storage = OptimizedQdrantStorage::new(
+    "localhost",
+    6333,
+    "my_collection".to_string(),
+    768,
+    BatchConfig::default(),
+    cache_config,
+    AccessControlConfig::default(),
+)
+.await?;
+
+// First query: Cache miss, fetches from Qdrant (~50-100ms)
+let results = storage.search_with_cache(
+    &query_vector,
+    10,
+    None,
+    &context,
+).await?;
+
+// Second identical query: Cache hit (~0.1-1ms, 50-100x faster)
+let cached_results = storage.search_with_cache(
+    &query_vector,
+    10,
+    None,
+    &context,
+).await?;
+```
+
+**Performance**:
+- Uncached query: 50-100ms (network + Qdrant processing)
+- Cached query: < 1ms (memory lookup)
+- Cache hit rate target: > 80% for production workloads
+
+### Performance Targets
+
+| Metric | Target | Status |
+|--------|--------|--------|
+| Cached query p50 | < 1ms | ✅ ACHIEVED |
+| Cached query p95 | < 5ms | ✅ ACHIEVED |
+| Cached query p99 | < 10ms | ✅ ACHIEVED |
+| Uncached query p50 | < 50ms | ✅ ACHIEVED |
+| Uncached query p95 | < 100ms | ✅ ACHIEVED |
+| Batch throughput | > 1000 embeddings/sec | ✅ ACHIEVED (~2000/sec) |
+| Cache hit rate | > 80% | ⏳ Workload-dependent |
+
+### Configuration Recommendations
+
+#### Development
+```rust
+BatchConfig {
+    max_batch_size: 50,
+    batch_timeout_ms: 500,
+    parallel_batching: false,
+    parallel_workers: 1,
+}
+
+QueryCacheConfig {
+    max_cache_entries: 100,
+    ttl_secs: 60,
+    enable_cache_warming: false,
+    cache_warming_interval_secs: 300,
+}
+```
+
+#### Production
+```rust
+BatchConfig {
+    max_batch_size: 100,
+    batch_timeout_ms: 1000,
+    parallel_batching: true,
+    parallel_workers: 8,  // Match CPU cores
+}
+
+QueryCacheConfig {
+    max_cache_entries: 10000,
+    ttl_secs: 300,
+    enable_cache_warming: true,
+    cache_warming_interval_secs: 60,
+}
+```
+
+### Performance Comparison
+
+| Operation | Base Storage | Optimized Storage | Improvement |
+|-----------|-------------|------------------|-------------|
+| Single embedding upsert | 100ms | 100ms | 1x (no change) |
+| Batch upsert (100) | 10s | 200ms | 50x faster |
+| Batch upsert (1000) | 100s | 2s | 50x faster |
+| First query | 50ms | 50ms | 1x (no change) |
+| Repeated query | 50ms | 0.5ms | 100x faster |
+| Hot query (cached) | 50ms | 0.1ms | 500x faster |
+
+### Benchmarking
+
+Run storage optimization benchmarks:
+
+```bash
+# Run all optimization benchmarks
+cargo bench --bench qdrant_optimization_bench
+
+# Run specific benchmark
+cargo bench --bench qdrant_optimization_bench -- batch_upsert
+
+# View HTML report
+open target/criterion/report/index.html
+```
+
+**Benchmark Suite**:
+1. `batch_upsert` - Measures throughput for different batch sizes
+2. `query_cache` - Compares cache hit vs miss performance
+3. `parallel_batching` - Sequential vs parallel batch processing
+4. `cache_warming` - Cache warming overhead for hot queries
+5. `vector_similarity` - Cosine similarity computation performance
+
+### Troubleshooting
+
+#### High Cache Miss Rate
+- **Symptoms**: Cache hit rate < 50%
+- **Solutions**: 
+  - Increase `ttl_secs` to 600-3600
+  - Increase `max_cache_entries` to 10000+
+  - Analyze query patterns and warm cache for common queries
+
+#### Slow Batch Operations
+- **Symptoms**: Batch throughput < 100 embeddings/sec
+- **Solutions**:
+  - Enable parallel batching: `parallel_batching: true`
+  - Optimize batch size (sweet spot: 100-500)
+  - Scale Qdrant cluster horizontally
+
+#### Memory Growth
+- **Symptoms**: Storage memory usage increases over time
+- **Solutions**:
+  - Set reasonable `max_cache_entries` (1000-10000)
+  - Enable cache warming: `enable_cache_warming: true`
+  - Monitor with `get_cache_stats()`
+
+### Migration from Base Storage
+
+```rust
+// Before (base storage)
+use reasonkit_core::storage::Storage;
+
+let storage = Storage::qdrant(
+    "localhost",
+    6333,
+    6334,
+    "my_collection".to_string(),
+    768,
+    false,
+).await?;
+
+// After (optimized storage)
+use reasonkit_core::storage::optimized::{
+    OptimizedQdrantStorage,
+    BatchConfig,
+    QueryCacheConfig,
+};
+
+let storage = OptimizedQdrantStorage::new(
+    "localhost",
+    6333,
+    "my_collection".to_string(),
+    768,
+    BatchConfig::default(),
+    QueryCacheConfig::default(),
+    AccessControlConfig::default(),
+).await?;
+```
+
+**Note**: The optimized storage is a **new type**, not a replacement. Both implementations coexist.
+
+### Future Enhancements
+
+1. **Distributed Caching** - Redis-backed cache for multi-instance deployments
+2. **Adaptive Batch Sizing** - Automatic batch size tuning based on throughput
+3. **Predictive Cache Warming** - ML-based hot query prediction
+4. **Query Result Compression** - Compress cached results to reduce memory
+
+**See Also**: 
+- [Storage Module Documentation](../src/storage/README.md)
+- [Qdrant Optimization Benchmarks](../benches/qdrant_optimization_bench.rs)
+
+---
+
+## 8. Resource Limits
 
 ### Memory Limits
 
@@ -974,7 +1253,7 @@ pub async fn submit_work(tx: &mpsc::Sender<Work>, work: Work) -> Result<()> {
 
 ---
 
-## 8. Performance Testing
+## 9. Performance Testing
 
 ### Load Testing
 
@@ -1117,7 +1396,7 @@ git bisect run bash -c '
 
 ---
 
-## 9. Optimization Checklist
+## 10. Optimization Checklist
 
 ### Before Release
 
@@ -1157,7 +1436,7 @@ git bisect run bash -c '
 
 ---
 
-## 10. User-Facing Performance
+## 11. User-Facing Performance
 
 ### CLI Performance Mode
 
@@ -1321,5 +1600,18 @@ cargo bench -- --baseline main
 
 ---
 
-_ReasonKit Performance Guide v1.0 | Last Updated: December 2025_
+---
+
+## Document Consolidation Note
+
+This document consolidates optimization documentation from:
+- `src/storage/OPTIMIZATION_GUIDE.md` (Qdrant-specific optimizations)
+- `src/storage/OPTIMIZATION_SUMMARY.md` (Optimization summary)
+- `docs/PERFORMANCE_BASELINE.md` (Performance baseline measurements)
+
+**Status**: All optimization documentation is now centralized in this guide. The original files in `src/storage/` are preserved for reference but should be considered superseded by this consolidated document.
+
+---
+
+_ReasonKit Performance Guide v1.1 | Last Updated: December 2025_
 _"Zero-cost abstractions. Measure everything. Optimize what matters."_

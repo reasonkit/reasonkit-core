@@ -89,10 +89,19 @@ if [[ -n "$protocol_dir" ]]; then
 else
   protocol_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/../protocols/cli" && pwd)"
 fi
+
 protocol_file="$protocol_dir/$profile.md"
 if [[ ! -f "$protocol_file" ]]; then
-  echo "ReasonKit protocol not found: $protocol_file" >&2
-  exit 1
+  # Legacy fallback (older repo layout)
+  legacy_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/../config/protocols" && pwd)"
+  legacy_file="$legacy_dir/$profile.md"
+  if [[ -f "$legacy_file" ]]; then
+    protocol_file="$legacy_file"
+  else
+    echo "ReasonKit protocol not found: $protocol_file" >&2
+    echo "Also tried legacy location: $legacy_file" >&2
+    exit 1
+  fi
 fi
 protocol="$(cat "$protocol_file")"
 

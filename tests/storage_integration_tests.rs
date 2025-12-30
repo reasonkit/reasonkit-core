@@ -12,7 +12,7 @@ use std::time::Instant;
 use uuid::Uuid;
 
 // Helper functions
-fn create_test_document(content: &str) -> Document {
+fn create_test_document(content: &str) -> reasonkit_mem::Document {
     let source = Source {
         source_type: SourceType::Local,
         url: None,
@@ -23,7 +23,8 @@ fn create_test_document(content: &str) -> Document {
         version: None,
     };
 
-    Document::new(DocumentType::Note, source).with_content(content.to_string())
+    let doc = Document::new(DocumentType::Note, source).with_content(content.to_string());
+    reasonkit_mem::Document::from(doc)
 }
 
 fn create_test_context(user_id: &str, level: AccessLevel) -> AccessContext {

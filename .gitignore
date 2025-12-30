@@ -76,11 +76,13 @@ id_rsa.pub
 /data/embeddings/
 /data/experiments/
 /data/indexes/
+/data/index/
 /data/metrics/
 /data/papers/
 /data/processed/
 /data/traces/
 /data/validation_logs/
+/data/reindex_logs/
 /qdrant_data/
 /tantivy_data/
 

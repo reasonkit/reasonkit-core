@@ -174,13 +174,13 @@ The color scheme should reflect the ReasonKit brand while providing semantic mea
 
 | Color | ANSI Code | Hex | Usage |
 |-------|-----------|-----|-------|
-| **Cyan (Primary)** | `\x1b[36m` | #00d2ff | Primary brand, borders |
-| **Green (Success)** | `\x1b[32m` | #00ff9d | Success states, high confidence |
+| **Cyan (Primary)** | `\x1b[36m` | #06b6d4 | Primary brand, borders |
+| **Green (Success)** | `\x1b[32m` | #10b981 | Success states, high confidence |
 | **Yellow (Warning)** | `\x1b[33m` | #ffcc00 | Warnings, moderate confidence |
-| **Red (Error)** | `\x1b[31m` | #ff4d00 | Errors, low confidence |
-| **White (Text)** | `\x1b[97m` | #f8fbff | Primary text |
-| **Gray (Dim)** | `\x1b[90m` | #8b949e | Secondary text, metadata |
-| **Magenta (Accent)** | `\x1b[35m` | #bd34fe | Accents, highlights |
+| **Red (Error)** | `\x1b[31m` | #f97316 | Errors, low confidence |
+| **White (Text)** | `\x1b[97m` | #f9fafb | Primary text |
+| **Gray (Dim)** | `\x1b[90m` | #9ca3af | Secondary text, metadata |
+| **Magenta (Accent)** | `\x1b[35m` | #a855f7 | Accents, highlights |
 
 ### 4.2 ThinkTool-Specific Themes
 

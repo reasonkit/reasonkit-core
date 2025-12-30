@@ -8,8 +8,9 @@ use crate::error::Result;
 use petgraph::graph::{DiGraph, NodeIndex};
 use petgraph::visit::Dfs;
 use rust_bert::pipelines::sentence_embeddings::SentenceEmbeddingsModel;
+use serde::{Deserialize, Serialize};
 use sled::Db;
-use std::collections::{HashMap, HashSet};
+use std::collections::HashMap;
 use std::sync::Arc;
 use tokio::sync::RwLock;
 
@@ -119,7 +120,7 @@ impl KnowledgeGraph {
             updated_at: session.updated_at,
         };
 
-        let problem_idx = self.add_node(problem_node).await?;
+        let _problem_idx = self.add_node(problem_node).await?;
 
         // Connect session to problem
         self.add_edge(
@@ -226,7 +227,7 @@ impl KnowledgeGraph {
                 patterns.push(SolutionPattern {
                     problem_description: problem.content.clone(),
                     solution_description: solution.content.clone(),
-                    success_rate: self.calculate_success_rate(&solution.node_id).await?,
+                    success_rate: self.calculate_success_rate(&solution.id).await?,
                     context: solution.metadata.clone(),
                 });
             }
@@ -264,7 +265,6 @@ impl KnowledgeGraph {
         edge_type: EdgeType,
         weight: f64,
     ) -> Result<()> {
-        let graph = self.graph.read().await;
         let node_index = self.node_index.read().await;
 
         let source_idx = *node_index
@@ -345,7 +345,7 @@ impl KnowledgeGraph {
     }
 
     /// Calculate success rate for a solution
-    async fn calculate_success_rate(&self, solution_id: &str) -> Result<f64> {
+    async fn calculate_success_rate(&self, _solution_id: &str) -> Result<f64> {
         // Simplified - in reality would analyze historical success data
         Ok(0.85) // Mock success rate
     }
@@ -372,8 +372,6 @@ impl KnowledgeGraph {
     /// Get knowledge graph statistics
     pub async fn get_statistics(&self) -> Result<KnowledgeStats> {
         let graph = self.graph.read().await;
-        let node_index = self.node_index.read().await;
-
         let total_nodes = graph.node_count();
         let total_edges = graph.edge_count();
 

@@ -13,7 +13,10 @@
 //! Target: MRR@10 > 0.40 on MS MARCO, latency < 200ms for top-20
 
 use super::tools::{Tool, ToolResult, ToolResultContent};
-use crate::retrieval::{RerankStats, RerankedResult, Reranker, RerankerCandidate, RerankerConfig};
+#[cfg(feature = "memory")]
+use reasonkit_mem::retrieval::{
+    RerankStats, RerankedResult, Reranker, RerankerCandidate, RerankerConfig,
+};
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
 use std::sync::Arc;

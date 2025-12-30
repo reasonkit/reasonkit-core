@@ -19,6 +19,8 @@ include = [
     "src/**/*",
     "benches/**/*",
     "config/default.toml",
+    "config/cli_defaults.toml",
+    "protocols/**/*",
     "assets/*.svg",
     ".cargo/config.toml",
     "Cargo.toml",
@@ -69,9 +71,9 @@ qdrant-client = { version = "1.10", optional = true }
 tantivy = { version = "0.22", optional = true }
 
 # Memory Infrastructure (optional - provides storage, retrieval, embeddings)
-# NOTE: reasonkit-mem will be published separately. For now, use --features memory with local build.
-# reasonkit-mem = { path = "../reasonkit-mem", optional = true }
-# TODO: Uncomment and add version when reasonkit-mem is published to crates.io
+# NOTE: Using local path dependency during migration. Will switch to crates.io version after publication.
+reasonkit-mem = { path = "../reasonkit-mem", optional = true }
+# TODO: After reasonkit-mem is published to crates.io, switch to:
 # reasonkit-mem = { version = "1.0", optional = true }
 
 # HNSW Index (for local embeddings if not using Qdrant)
@@ -112,6 +114,7 @@ rusqlite = { version = "0.32", features = ["bundled"] }
 # Configuration
 config = "0.14"
 dotenvy = "0.15"
+num_cpus = "1.16"
 
 # JSON Schema Validation
 jsonschema = "0.18"
@@ -127,6 +130,7 @@ once_cell = "1.19"
 
 # Progress bars
 indicatif = "0.17"
+console = { version = "0.16.2", features = ["std"] }
 
 # Directories
 directories = "5"
@@ -146,11 +150,12 @@ ndarray = { version = "0.15", optional = true }
 sled = { version = "0.34", optional = true }
 wasmtime = { version = "17", optional = true }
 sysinfo = { version = "0.30", optional = true }
-petgraph = { version = "0.6", optional = true }
-rust-bert = { version = "0.22", optional = true }
+petgraph = { version = "0.6", optional = true, features = ["serde-1"] }
+rust-bert = { version = "0.22", optional = true, features = ["download-libtorch"] }
 parking_lot = { version = "0.12", optional = true }
 clap_complete = "4.5.62"
 toml = "0.9.6"
+futures = { version = "0.3", default-features = false, features = ["std"] }
 
 [dev-dependencies]
 tokio-test = "0.4"
@@ -204,7 +209,7 @@ cli = []
 embedded-qdrant = []  # For embedded mode without external server
 local-embeddings = ["ort", "tokenizers", "ndarray"]  # BGE-M3 ONNX local inference
 arf = ["sled", "wasmtime", "sysinfo", "petgraph", "rust-bert", "parking_lot"]  # Optional ARF module
-memory = ["dep:qdrant-client", "dep:tantivy"]  # Optional memory infrastructure (reasonkit-mem coming soon)
+memory = ["dep:reasonkit-mem", "dep:qdrant-client", "dep:tantivy"]  # Optional memory infrastructure via reasonkit-mem
 
 [profile.release]
 lto = true

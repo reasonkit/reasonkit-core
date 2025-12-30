@@ -12,6 +12,9 @@
 
 use crate::{Document, ProcessingState};
 
+/// Document chunking module
+pub mod chunking;
+
 /// Text normalization options
 #[derive(Debug, Clone, Default)]
 pub struct NormalizationOptions {

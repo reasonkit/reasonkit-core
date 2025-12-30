@@ -1,12 +1,13 @@
 //! Async runtime management and core execution engine
 
 use crate::{arf::config::Config, arf::types::*, error::Result};
+use std::collections::HashMap;
 use std::sync::Arc;
 use tokio::sync::RwLock;
 
 /// Main ARF runtime managing all core components
 pub struct ArfRuntime {
-    config: Config,
+    _config: Config,
     state_manager: Arc<StateManager>,
     plugin_manager: Arc<PluginManager>,
     active_sessions: Arc<RwLock<HashMap<SessionId, ReasoningSession>>>,
@@ -20,7 +21,7 @@ impl ArfRuntime {
         plugin_manager: PluginManager,
     ) -> Result<Self> {
         let runtime = Self {
-            config,
+            _config: config,
             state_manager: Arc::new(state_manager),
             plugin_manager: Arc::new(plugin_manager),
             active_sessions: Arc::new(RwLock::new(HashMap::new())),
@@ -199,7 +200,7 @@ impl ArfRuntime {
                         .to_string(),
                 cognitive_stance: "boundary_setting".to_string(),
                 time_allocation: "10%_of_total_process".to_string(),
-                output_schema: serde_json::json!({
+                _output_schema: serde_json::json!({
                     "primary_objective": "string",
                     "boundary_inclusions": ["string"],
                     "boundary_exclusions": ["string"],
@@ -212,7 +213,7 @@ impl ArfRuntime {
                     .to_string(),
                 cognitive_stance: "reality_check".to_string(),
                 time_allocation: "15%_of_total_process".to_string(),
-                output_schema: serde_json::json!({
+                _output_schema: serde_json::json!({
                     "hard_constraints": ["string"],
                     "soft_constraints": ["string"],
                     "resource_limits": {}
@@ -226,7 +227,7 @@ impl ArfRuntime {
     /// Validate step output against schema
     fn validate_step_output(
         &self,
-        step_config: &StepConfig,
+        _step_config: &StepConfig,
         output: &serde_json::Value,
     ) -> Result<()> {
         // Basic validation - check if output matches expected structure
@@ -281,5 +282,5 @@ struct StepConfig {
     instruction: String,
     cognitive_stance: String,
     time_allocation: String,
-    output_schema: serde_json::Value,
+    _output_schema: serde_json::Value,
 }

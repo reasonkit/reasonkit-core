@@ -6,7 +6,7 @@
 use crate::error::Result;
 use std::collections::HashMap;
 use std::sync::Arc;
-use sysinfo::{Pid, ProcessExt, System, SystemExt};
+use sysinfo::{Disks, System};
 use tokio::sync::RwLock;
 use tokio::time::{self, Duration};
 
@@ -51,14 +51,15 @@ pub struct ImmuneSystem {
 }
 
 #[derive(Debug, Clone)]
-struct ThreatPattern {
+pub struct ThreatPattern {
     pattern_type: ThreatType,
     signature: String,
-    severity: ThreatSeverity,
+    _severity: ThreatSeverity,
     response: ImmuneAction,
 }
 
 #[derive(Debug, Clone)]
+#[allow(dead_code)]
 enum ThreatType {
     ResourceAbuse,
     UnauthorizedAccess,
@@ -68,6 +69,7 @@ enum ThreatType {
 }
 
 #[derive(Debug, Clone)]
+#[allow(dead_code)]
 enum ThreatSeverity {
     Low,
     Medium,
@@ -142,7 +144,7 @@ impl ImmuneSystem {
         let metrics = HealthMetrics {
             cpu_usage: system.global_cpu_info().cpu_usage(),
             memory_usage_mb: system.used_memory() / 1024 / 1024,
-            disk_usage_percent: Self::calculate_disk_usage(&system),
+            disk_usage_percent: Self::calculate_disk_usage(),
             network_connections: 0, // Would need network monitoring
             active_processes: system.processes().len(),
             timestamp: chrono::Utc::now(),
@@ -202,21 +204,25 @@ impl ImmuneSystem {
     }
 
     /// Calculate disk usage percentage
-    fn calculate_disk_usage(system: &System) -> f32 {
-        system
-            .disks()
-            .iter()
-            .map(|disk| {
-                let total = disk.total_space() as f32;
-                let available = disk.available_space() as f32;
-                if total > 0.0 {
-                    ((total - available) / total) * 100.0
-                } else {
-                    0.0
-                }
-            })
-            .sum::<f32>()
-            / system.disks().len() as f32
+    fn calculate_disk_usage() -> f32 {
+        let disks = Disks::new_with_refreshed_list();
+        let mut total_percent = 0.0;
+        let mut count = 0u32;
+
+        for disk in disks.iter() {
+            let total = disk.total_space() as f32;
+            let available = disk.available_space() as f32;
+            if total > 0.0 {
+                total_percent += ((total - available) / total) * 100.0;
+                count += 1;
+            }
+        }
+
+        if count == 0 {
+            0.0
+        } else {
+            total_percent / count as f32
+        }
     }
 
     /// Respond to detected threats
@@ -341,25 +347,25 @@ impl ImmuneSystem {
             ThreatPattern {
                 pattern_type: ThreatType::ResourceAbuse,
                 signature: "high_cpu".to_string(),
-                severity: ThreatSeverity::Medium,
+                _severity: ThreatSeverity::Medium,
                 response: ImmuneAction::Throttle("CPU intensive processes".to_string()),
             },
             ThreatPattern {
                 pattern_type: ThreatType::ResourceAbuse,
                 signature: "high_memory".to_string(),
-                severity: ThreatSeverity::High,
+                _severity: ThreatSeverity::High,
                 response: ImmuneAction::Terminate("Memory hog processes".to_string()),
             },
             ThreatPattern {
                 pattern_type: ThreatType::MaliciousCode,
                 signature: "exploit".to_string(),
-                severity: ThreatSeverity::Critical,
+                _severity: ThreatSeverity::Critical,
                 response: ImmuneAction::Quarantine("Suspicious processes".to_string()),
             },
             ThreatPattern {
                 pattern_type: ThreatType::SystemInstability,
                 signature: "zombie".to_string(),
-                severity: ThreatSeverity::High,
+                _severity: ThreatSeverity::High,
                 response: ImmuneAction::Log("Zombie process detected".to_string()),
             },
         ]
@@ -408,14 +414,16 @@ impl ImmuneSystem {
         let memory_trend =
             Self::analyze_trend(history.iter().map(|m| m.memory_usage_mb as f32).collect());
 
+        let recommendations = Self::generate_recommendations(&health, &cpu_trend, &memory_trend);
+
         Ok(DiagnosticReport {
             health_status: health,
             system_trends: SystemTrends {
                 cpu_trend,
                 memory_trend,
-                stability_score: Self::calculate_stability_score(history),
+                stability_score: Self::calculate_stability_score(history.as_slice()),
             },
-            recommendations: Self::generate_recommendations(&health, &cpu_trend, &memory_trend),
+            recommendations,
         })
     }
 
@@ -462,7 +470,7 @@ impl ImmuneSystem {
 
         // Lower variance = higher stability
         let stability = 1.0 / (1.0 + cpu_variance + memory_variance);
-        stability.min(1.0).max(0.0)
+        stability.clamp(0.0, 1.0)
     }
 
     /// Calculate variance of a dataset

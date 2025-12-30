@@ -58,29 +58,32 @@ pub mod web;
 // ============================================================================
 // MEMORY MODULES (optional - enable with `memory` feature)
 // ============================================================================
-
-#[cfg(feature = "memory")]
-pub mod embedding;
-#[cfg(feature = "memory")]
-pub mod indexing;
-#[cfg(feature = "memory")]
-pub mod rag;
-#[cfg(feature = "memory")]
-pub mod raptor;
-#[cfg(feature = "memory")]
-pub mod retrieval;
-#[cfg(feature = "memory")]
-pub mod storage;
-
+// NOTE: Most memory modules (storage, embedding, retrieval, raptor, indexing)
+// are provided by reasonkit-mem crate. The rag module remains in core as it
+// provides the full RAG engine with LLM integration.
 // Re-export reasonkit-mem types when memory feature is enabled
 #[cfg(feature = "memory")]
 pub use reasonkit_mem;
+
+// Re-export commonly used types from reasonkit-mem for convenience
+#[cfg(feature = "memory")]
+pub use reasonkit_mem::{
+    embedding, indexing, raptor, retrieval, storage, Error as MemError, Result as MemResult,
+};
+
+// RAG module remains in core (full engine with LLM integration)
+// It uses reasonkit-mem modules for retrieval/storage/indexing
+#[cfg(feature = "memory")]
+pub mod rag;
 
 #[cfg(feature = "arf")]
 pub mod arf;
 
 // Re-exports
 pub use error::{Error, Result};
+
+/// Crate version string for runtime logging.
+pub const VERSION: &str = env!("CARGO_PKG_VERSION");
 
 use chrono::{DateTime, Utc};
 use pyo3::prelude::*;
@@ -269,6 +272,149 @@ impl Document {
     pub fn with_metadata(mut self, metadata: Metadata) -> Self {
         self.metadata = metadata;
         self
+    }
+}
+
+// Conversion to reasonkit-mem Document type
+#[cfg(feature = "memory")]
+impl From<Document> for reasonkit_mem::Document {
+    fn from(doc: Document) -> Self {
+        use reasonkit_mem::types::{
+            Author as MemAuthor, Chunk as MemChunk, ContentFormat as MemContentFormat,
+            DocumentContent as MemDocumentContent, DocumentType as MemDocumentType,
+            EmbeddingIds as MemEmbeddingIds, Metadata as MemMetadata,
+            ProcessingState as MemProcessingState, ProcessingStatus as MemProcessingStatus,
+            Source as MemSource, SourceType as MemSourceType,
+        };
+
+        // Convert DocumentType
+        let doc_type = match doc.doc_type {
+            DocumentType::Paper => MemDocumentType::Paper,
+            DocumentType::Documentation => MemDocumentType::Documentation,
+            DocumentType::Code => MemDocumentType::Code,
+            DocumentType::Note => MemDocumentType::Note,
+            DocumentType::Transcript => MemDocumentType::Transcript,
+            DocumentType::Benchmark => MemDocumentType::Benchmark,
+        };
+
+        // Convert SourceType
+        let source_type = match doc.source.source_type {
+            SourceType::Arxiv => MemSourceType::Arxiv,
+            SourceType::Github => MemSourceType::Github,
+            SourceType::Website => MemSourceType::Website,
+            SourceType::Local => MemSourceType::Local,
+            SourceType::Api => MemSourceType::Api,
+        };
+
+        // Convert Source
+        let source = MemSource {
+            source_type,
+            url: doc.source.url,
+            path: doc.source.path,
+            arxiv_id: doc.source.arxiv_id,
+            github_repo: doc.source.github_repo,
+            retrieved_at: doc.source.retrieved_at,
+            version: doc.source.version,
+        };
+
+        // Convert ContentFormat
+        let format = match doc.content.format {
+            ContentFormat::Text => MemContentFormat::Text,
+            ContentFormat::Markdown => MemContentFormat::Markdown,
+            ContentFormat::Html => MemContentFormat::Html,
+            ContentFormat::Latex => MemContentFormat::Latex,
+        };
+
+        // Convert DocumentContent
+        let content = MemDocumentContent {
+            raw: doc.content.raw,
+            format,
+            language: doc.content.language,
+            word_count: doc.content.word_count,
+            char_count: doc.content.char_count,
+        };
+
+        // Convert Authors
+        let authors = doc
+            .metadata
+            .authors
+            .into_iter()
+            .map(|a| MemAuthor {
+                name: a.name,
+                affiliation: a.affiliation,
+                email: a.email,
+            })
+            .collect();
+
+        // Convert Metadata
+        let metadata = MemMetadata {
+            title: doc.metadata.title,
+            authors,
+            abstract_text: doc.metadata.abstract_text,
+            date: doc.metadata.date,
+            venue: doc.metadata.venue,
+            citations: doc.metadata.citations,
+            tags: doc.metadata.tags,
+            categories: doc.metadata.categories,
+            keywords: doc.metadata.keywords,
+            doi: doc.metadata.doi,
+            license: doc.metadata.license,
+        };
+
+        // Convert ProcessingState
+        let status = match doc.processing.status {
+            ProcessingState::Pending => MemProcessingState::Pending,
+            ProcessingState::Processing => MemProcessingState::Processing,
+            ProcessingState::Completed => MemProcessingState::Completed,
+            ProcessingState::Failed => MemProcessingState::Failed,
+        };
+
+        // Convert ProcessingStatus
+        let processing = MemProcessingStatus {
+            status,
+            chunked: doc.processing.chunked,
+            embedded: doc.processing.embedded,
+            indexed: doc.processing.indexed,
+            raptor_processed: doc.processing.raptor_processed,
+            errors: doc.processing.errors,
+        };
+
+        // Convert Chunks
+        let chunks = doc
+            .chunks
+            .into_iter()
+            .map(|c| {
+                let embedding_ids = MemEmbeddingIds {
+                    dense: c.embedding_ids.dense,
+                    sparse: c.embedding_ids.sparse,
+                    colbert: c.embedding_ids.colbert,
+                };
+                MemChunk {
+                    id: c.id,
+                    text: c.text,
+                    index: c.index,
+                    start_char: c.start_char,
+                    end_char: c.end_char,
+                    token_count: c.token_count,
+                    section: c.section,
+                    page: c.page,
+                    embedding_ids,
+                }
+            })
+            .collect();
+
+        // Construct reasonkit-mem Document
+        reasonkit_mem::Document {
+            id: doc.id,
+            doc_type,
+            source,
+            content,
+            metadata,
+            processing,
+            chunks,
+            created_at: doc.created_at,
+            updated_at: doc.updated_at,
+        }
     }
 }
 

@@ -6,7 +6,7 @@
 use crate::arf::types::*;
 use crate::error::Result;
 use reqwest::Client;
-use scraper::{Html, Selector};
+use serde::{Deserialize, Serialize};
 use sled::Db;
 use std::collections::HashMap;
 use std::sync::Arc;
@@ -14,6 +14,7 @@ use tokio::sync::{mpsc, RwLock};
 use tokio::task::JoinHandle;
 
 /// Autonomous agent for background task execution
+#[derive(Debug, Serialize, Deserialize)]
 pub struct AutonomousAgent {
     id: String,
     task_type: AgentTaskType,
@@ -21,11 +22,12 @@ pub struct AutonomousAgent {
     progress: f64,
     findings: Vec<AgentFinding>,
     start_time: chrono::DateTime<chrono::Utc>,
+    #[serde(skip, default)]
     handle: Option<JoinHandle<Result<()>>>,
 }
 
 /// Types of autonomous tasks
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum AgentTaskType {
     Research(String),       // Research a specific topic
     DataCollection(String), // Collect data from sources
@@ -35,7 +37,7 @@ pub enum AgentTaskType {
 }
 
 /// Agent execution status
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum AgentStatus {
     Idle,
     Running,
@@ -45,7 +47,7 @@ pub enum AgentStatus {
 }
 
 /// Findings from autonomous agent work
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct AgentFinding {
     pub timestamp: chrono::DateTime<chrono::Utc>,
     pub category: String,
@@ -68,11 +70,11 @@ pub struct AgencyManager {
 struct AgentTask {
     agent_id: String,
     task_type: AgentTaskType,
-    priority: TaskPriority,
+    _priority: TaskPriority,
 }
 
 #[derive(Debug, Clone)]
-enum TaskPriority {
+pub enum TaskPriority {
     Low,
     Normal,
     High,
@@ -138,7 +140,7 @@ impl AgencyManager {
         let task = AgentTask {
             agent_id: agent_id.clone(),
             task_type,
-            priority,
+            _priority: priority,
         };
 
         self.task_queue.send(task)?;
@@ -198,9 +200,19 @@ impl AgencyManager {
         let agents = Arc::clone(&self.agents);
         let database = Arc::clone(&self.database);
         let http_client = self.http_client.clone();
-        let mut receiver = self.task_receiver.write().blocking_lock().take().unwrap();
+        let task_receiver = Arc::clone(&self.task_receiver);
 
         tokio::spawn(async move {
+            let receiver = {
+                let mut guard = task_receiver.write().await;
+                guard.take()
+            };
+
+            let Some(mut receiver) = receiver else {
+                tracing::warn!("Agency task receiver already taken; dispatcher not started");
+                return;
+            };
+
             while let Some(task) = receiver.recv().await {
                 let agents_clone = Arc::clone(&agents);
                 let db_clone = Arc::clone(&database);
@@ -389,7 +401,7 @@ impl AgencyManager {
     }
 
     /// Perform web search (simplified)
-    async fn web_search(http_client: &Client, query: &str) -> Result<Vec<AgentFinding>> {
+    async fn web_search(_http_client: &Client, query: &str) -> Result<Vec<AgentFinding>> {
         // In a real implementation, this would search actual web sources
         // For simulation, we'll create mock findings
         let findings = vec![AgentFinding {

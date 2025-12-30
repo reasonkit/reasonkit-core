@@ -3,7 +3,6 @@ set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 WRAPPER="$ROOT/scripts/rk-cli-wrapper.sh"
-PROTOCOL_DIR="$ROOT/protocols/cli"
 TARGET_DIR="$HOME/.local/bin"
 
 mkdir -p "$TARGET_DIR"

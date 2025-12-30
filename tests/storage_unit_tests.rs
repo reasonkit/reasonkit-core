@@ -22,7 +22,7 @@ use tempfile::TempDir;
 use uuid::Uuid;
 
 // Helper function to create a test document
-fn create_test_document() -> Document {
+fn create_test_document() -> reasonkit_mem::Document {
     let source = Source {
         source_type: SourceType::Local,
         url: None,
@@ -33,7 +33,8 @@ fn create_test_document() -> Document {
         version: None,
     };
 
-    Document::new(DocumentType::Note, source).with_content("Test content".to_string())
+    let doc = Document::new(DocumentType::Note, source).with_content("Test content".to_string());
+    reasonkit_mem::Document::from(doc)
 }
 
 // Helper function to create a test access context

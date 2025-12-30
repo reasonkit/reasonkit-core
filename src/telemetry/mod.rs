@@ -79,6 +79,10 @@ pub enum TelemetryError {
     #[error("IO error: {0}")]
     Io(#[from] std::io::Error),
 
+    /// JSON serialization error
+    #[error("JSON error: {0}")]
+    Json(#[from] serde_json::Error),
+
     /// Telemetry disabled
     #[error("Telemetry is disabled")]
     Disabled,
@@ -111,14 +115,18 @@ impl TelemetryCollector {
             });
         }
 
-        let storage = TelemetryStorage::new(&config.db_path).await?;
+        let mut storage = TelemetryStorage::new(&config.db_path).await?;
         let privacy = PrivacyFilter::new(config.privacy.clone());
+        let session_id = Uuid::new_v4();
+
+        // Insert session record to satisfy foreign key constraints
+        storage.insert_session(session_id).await?;
 
         Ok(Self {
             config: config.clone(),
             storage: Arc::new(RwLock::new(storage)),
             privacy,
-            session_id: Uuid::new_v4(),
+            session_id,
             enabled: true,
         })
     }

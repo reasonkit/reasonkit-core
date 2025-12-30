@@ -94,6 +94,11 @@ pub enum Error {
     #[error("Config library error: {0}")]
     ConfigError(String),
 
+    /// Memory module error (from reasonkit-mem)
+    #[cfg(feature = "memory")]
+    #[error("Memory error: {0}")]
+    Memory(String),
+
     /// Generic error with context
     #[error("{context}: {source}")]
     WithContext {
@@ -186,11 +191,50 @@ impl Error {
     }
 }
 
+/// Convert reqwest errors to our Error type
+impl From<reqwest::Error> for Error {
+    fn from(err: reqwest::Error) -> Self {
+        Self::Network(err.to_string())
+    }
+}
+
 /// Convert config::ConfigError to our Error type
 #[cfg(feature = "arf")]
 impl From<config::ConfigError> for Error {
     fn from(err: config::ConfigError) -> Self {
         Self::ConfigError(err.to_string())
+    }
+}
+
+/// Convert sled errors to our Error type
+#[cfg(feature = "arf")]
+impl From<sled::Error> for Error {
+    fn from(err: sled::Error) -> Self {
+        Self::Storage(err.to_string())
+    }
+}
+
+/// Convert anyhow errors to our Error type
+#[cfg(feature = "arf")]
+impl From<anyhow::Error> for Error {
+    fn from(err: anyhow::Error) -> Self {
+        Self::arf_error(err.to_string())
+    }
+}
+
+/// Convert mpsc send errors to our Error type
+#[cfg(feature = "arf")]
+impl<T> From<tokio::sync::mpsc::error::SendError<T>> for Error {
+    fn from(err: tokio::sync::mpsc::error::SendError<T>) -> Self {
+        Self::arf_error(err.to_string())
+    }
+}
+
+/// Convert reasonkit-mem errors to core Error type
+#[cfg(feature = "memory")]
+impl From<reasonkit_mem::MemError> for Error {
+    fn from(err: reasonkit_mem::MemError) -> Self {
+        Error::Memory(err.to_string())
     }
 }
 

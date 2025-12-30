@@ -32,7 +32,8 @@ fn create_mock_tree(num_leaves: usize, max_depth: usize, cluster_size: usize) ->
 
         for chunk in current_level.chunks(cluster_size) {
             let parent_id = Uuid::new_v4();
-            let parent_text = format!("Summary of {} nodes at level {}", chunk.len(), level);
+            let chunk_len = chunk.len();
+            let parent_text = format!("Summary of {} nodes at level {}", chunk_len, level);
 
             let parent_node = RaptorNode {
                 id: parent_id,
@@ -275,7 +276,7 @@ fn bench_similarity_search(c: &mut Criterion) {
                 .nodes
                 .iter()
                 .filter_map(|(id, node)| {
-                    node.embedding.as_ref().map(|emb| {
+                    node.embedding.as_ref().map(|emb: &Vec<f32>| {
                         let dot: f32 = emb.iter().zip(&query_embedding).map(|(a, b)| a * b).sum();
                         let norm_a: f32 = emb.iter().map(|a| a * a).sum::<f32>().sqrt();
                         let norm_q: f32 = query_embedding.iter().map(|b| b * b).sum::<f32>().sqrt();
@@ -302,7 +303,7 @@ fn bench_similarity_search(c: &mut Criterion) {
                 .iter()
                 .filter(|(_, node)| node.level == 0)
                 .filter_map(|(id, node)| {
-                    node.embedding.as_ref().map(|emb| {
+                    node.embedding.as_ref().map(|emb: &Vec<f32>| {
                         let dot: f32 = emb.iter().zip(&query_embedding).map(|(a, b)| a * b).sum();
                         let norm_a: f32 = emb.iter().map(|a| a * a).sum::<f32>().sqrt();
                         let norm_q: f32 = query_embedding.iter().map(|b| b * b).sum::<f32>().sqrt();

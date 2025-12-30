@@ -7,7 +7,7 @@ use crate::error::Result;
 use std::collections::HashMap;
 use std::sync::Arc;
 use tokio::sync::RwLock;
-use wasmtime::{Engine, Linker, Module, Store};
+use wasmtime::{Engine, Module};
 
 /// Performance metrics for self-optimization
 #[derive(Debug, Clone)]
@@ -48,9 +48,9 @@ pub struct EvolutionEngine {
 
 #[derive(Debug)]
 struct OptimizedFunction {
-    wasm_module: Module,
+    _wasm_module: Module,
     performance_gain: f64,
-    activation_time: chrono::DateTime<chrono::Utc>,
+    _activation_time: chrono::DateTime<chrono::Utc>,
 }
 
 impl EvolutionEngine {
@@ -192,9 +192,9 @@ impl EvolutionEngine {
         let wasm_module = Module::from_binary(&self.wasm_engine, wasm_bytes)?;
 
         Ok(OptimizedFunction {
-            wasm_module,
+            _wasm_module: wasm_module,
             performance_gain,
-            activation_time: chrono::Utc::now(),
+            _activation_time: chrono::Utc::now(),
         })
     }
 

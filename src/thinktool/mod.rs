@@ -95,9 +95,11 @@ pub mod budget;
 pub mod calibration;
 pub mod consistency;
 pub mod debate;
+pub mod deep_logic;
 pub mod executor;
 pub mod fol;
 pub mod llm;
+pub mod llm_cli;
 pub mod metrics;
 pub mod modules;
 pub mod oscillation;
@@ -139,6 +141,11 @@ pub use debate::{
     AgentRole, Argument, Claim as DebateClaim, DebateArena, DebateConfig, DebatePrompts,
     DebateResult, DebateStats, DebateVerdict, Evidence, Rebuttal as DebateRebuttal, VerdictType,
 };
+pub use deep_logic::{
+    ConstraintEvaluator, ConstraintType, ConstraintValidationResult, ContradictionDetector,
+    ContradictionInfo, DeepLogicValidation, DeepLogicValidator, InferenceEngine, InferenceRule,
+    LogicalConstraint, LogicalFact, LogicalOperator, RuleValidationResult, ValidationResult,
+};
 pub use executor::{
     CliToolConfig, ExecutorConfig, ProtocolExecutor, ProtocolInput, ProtocolOutput,
 };
@@ -150,6 +157,9 @@ pub use llm::{
     create_available_client, discover_available_providers, get_provider_info, FinishReason,
     LlmClient, LlmConfig, LlmProvider, LlmRequest, LlmResponse, LlmUsage, ProviderExtra,
     ProviderInfo, UnifiedLlmClient,
+};
+pub use llm_cli::{
+    ClusterConfig, ClusterItem, ClusterResult, EmbeddingConfig, LlmCliClient, LlmCliResponse,
 };
 pub use metrics::{
     AggregateStats, ExecutionRecord, ExecutionRecordBuilder, MetricsReport, MetricsTracker,

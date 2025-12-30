@@ -1,34 +1,34 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
-  <rect width="100%" height="100%" fill="#03060b" />
+  <rect width="100%" height="100%" fill="#030508" />
   
   <!-- Grid Pattern -->
   <defs>
     <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
-      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#00d2ff" stroke-width="0.5" opacity="0.1"/>
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#06b6d4" stroke-width="0.5" opacity="0.1"/>
     </pattern>
   </defs>
   <rect width="100%" height="100%" fill="url(#grid)" />
   
   <!-- Decorative Accent -->
-  <circle cx="1200" cy="0" r="300" fill="#bd34fe" opacity="0.05" />
+  <circle cx="1200" cy="0" r="300" fill="#a855f7" opacity="0.05" />
   
   <!-- Logo Section -->
   <g transform="translate(100, 165) scale(0.6)">
     
-  <g stroke="#00d2ff" stroke-width="7.68" stroke-linecap="round" fill="none">
+  <g stroke="#06b6d4" stroke-width="7.68" stroke-linecap="round" fill="none">
     <path d="M 391.424 256.0 L 369.7474253038007 286.47853075127284 L 373.2806242821038 323.712 L 339.26889455252785 339.26889455252785 L 323.712 373.2806242821038 L 286.47853075127284 369.7474253038007 L 256.0 391.424 L 225.52146924872716 369.7474253038007 L 188.288 373.2806242821038 L 172.73110544747217 339.26889455252785 L 138.71937571789618 323.712 L 142.2525746961993 286.4785307512729 L 120.576 256.0 L 142.2525746961993 225.52146924872716 L 138.71937571789618 188.28799999999998 L 172.73110544747215 172.73110544747217 L 188.28799999999995 138.7193757178962 L 225.52146924872716 142.2525746961993 L 255.99999999999997 120.576 L 286.4785307512728 142.2525746961993 L 323.712 138.71937571789618 L 339.26889455252785 172.73110544747215 L 373.28062428210376 188.28799999999995 L 369.7474253038007 225.52146924872716 Z" opacity="0.3" />
     <circle cx="256.0" cy="256.0" r="117.76" opacity="0.5" />
     
     <!-- Connections -->
-    <path d="M 327.38820608475885 214.784 L 256.0 338.432 L 184.61179391524115 214.784 Z" stroke="#bd34fe" opacity="0.6"/>
-    <path d="M 327.38820608475885 297.216 L 184.61179391524115 297.216 L 255.99999999999997 173.56799999999998 Z" stroke="#00d2ff" opacity="0.6"/>
+    <path d="M 327.38820608475885 214.784 L 256.0 338.432 L 184.61179391524115 214.784 Z" stroke="#a855f7" opacity="0.6"/>
+    <path d="M 327.38820608475885 297.216 L 184.61179391524115 297.216 L 255.99999999999997 173.56799999999998 Z" stroke="#06b6d4" opacity="0.6"/>
     
     <path d="M 256.0 256.0 L 327.38820608475885 214.784" />
     <path d="M 256.0 256.0 L 256.0 338.432" />
     <path d="M 256.0 256.0 L 184.61179391524115 214.784" />
   </g>
   
-  <g fill="#00d2ff">
+  <g fill="#06b6d4">
     <circle cx="256.0" cy="256.0" r="15.36" />
     <circle cx="327.38820608475885" cy="214.784" r="10.24" /><circle cx="327.38820608475885" cy="297.216" r="10.24" /><circle cx="256.0" cy="338.432" r="10.24" /><circle cx="184.61179391524115" cy="297.216" r="10.24" /><circle cx="184.61179391524115" cy="214.784" r="10.24" /><circle cx="255.99999999999997" cy="173.56799999999998" r="10.24" />
   </g>
@@ -36,9 +36,9 @@
   </g>
   
   <!-- Text Section -->
-  <text x="450" y="280" font-family="IBM Plex Serif, serif" font-size="80" font-weight="bold" fill="#00d2ff">ReasonKit</text>
-  <text x="450" y="360" font-family="Space Grotesk, sans-serif" font-size="32" fill="#f8fbff" opacity="0.8">Enhance Reasoning. Open the Chain.</text>
+  <text x="450" y="280" font-family="Inter, serif" font-size="80" font-weight="bold" fill="#06b6d4">ReasonKit</text>
+  <text x="450" y="360" font-family="Inter, sans-serif" font-size="32" fill="#f9fafb" opacity="0.8">Enhance Reasoning. Open the Chain.</text>
   
-  <rect x="450" y="420" width="600" height="2" fill="#00d2ff" opacity="0.3" />
-  <text x="450" y="480" font-family="IBM Plex Mono, monospace" font-size="20" fill="#00d2ff" opacity="0.6">ReasonKit.sh | Designed, Not Dreamed</text>
+  <rect x="450" y="420" width="600" height="2" fill="#06b6d4" opacity="0.3" />
+  <text x="450" y="480" font-family="JetBrains Mono, monospace" font-size="20" fill="#06b6d4" opacity="0.6">ReasonKit.sh | Designed, Not Dreamed</text>
 </svg>

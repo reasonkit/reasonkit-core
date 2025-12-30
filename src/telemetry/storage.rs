@@ -12,6 +12,7 @@ use rusqlite::{params, Connection};
 use sha2::{Digest, Sha256};
 use std::path::Path;
 use std::sync::Mutex;
+use uuid::Uuid;
 
 /// Telemetry storage backend using SQLite
 pub struct TelemetryStorage {
@@ -188,6 +189,35 @@ impl TelemetryStorage {
             .ok_or(TelemetryError::Disabled)?
             .lock()
             .map_err(|e| TelemetryError::Database(format!("Lock poisoned: {}", e)))
+    }
+
+    /// Insert a session record (required before inserting traces/queries)
+    pub async fn insert_session(&mut self, session_id: Uuid) -> TelemetryResult<()> {
+        if self.is_noop {
+            return Ok(());
+        }
+
+        let conn = self.get_conn()?;
+        let now = Utc::now();
+
+        conn.execute(
+            r#"INSERT OR IGNORE INTO sessions (
+                id, started_at, client_version
+            ) VALUES (?1, ?2, ?3)"#,
+            params![
+                session_id.to_string(),
+                now.to_rfc3339(),
+                env!("CARGO_PKG_VERSION"),
+            ],
+        )
+        .map_err(|e| TelemetryError::Database(e.to_string()))?;
+
+        tracing::debug!(
+            session_id = %session_id,
+            "Created telemetry session"
+        );
+
+        Ok(())
     }
 
     /// Hash a query for privacy

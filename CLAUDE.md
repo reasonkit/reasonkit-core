@@ -150,8 +150,7 @@ reasonkit-core/
 │   │   ├── trace.rs     # Execution tracing
 │   │   └── llm.rs       # LLM integration
 │   │
-│   ├── rag/             # Retrieval-Augmented Generation
-│   ├── retrieval/       # Hybrid search, fusion, rerank
+│   │
 │   └── verification/    # ProofLedger, source tracking
 │
 ├── benchmarks/          # Reproducible evaluation
@@ -160,6 +159,17 @@ reasonkit-core/
 │
 └── protocols/           # YAML protocol definitions
 ```
+
+### Memory Infrastructure (Optional)
+
+**Note:** Memory infrastructure (storage, embedding, retrieval, RAPTOR, indexing) has been migrated to the standalone `reasonkit-mem` crate. Enable the `memory` feature to use these modules:
+
+```toml
+[dependencies]
+reasonkit-core = { version = "1.0", features = ["memory"] }
+```
+
+This automatically includes `reasonkit-mem` as a dependency and re-exports its modules for convenience. The RAG engine (with full LLM integration) remains in `reasonkit-core` and uses `reasonkit-mem` for storage/retrieval operations.
 
 ---
 
@@ -190,6 +200,109 @@ cargo run --release --bin gsm8k_eval
 2. **Honest documentation** - No claims without evidence
 3. **Tracing/debugging** - This is the proven value
 4. **Enterprise compliance** - Audit trails for regulated industries
+
+---
+
+## TASK MANAGEMENT (MANDATORY - CONS-007)
+
+> **Axiom:** No work exists without task tracking. ALL AI agents MUST use the full task system.
+
+### Taskwarrior Integration
+
+**ALL AI agents MUST use Taskwarrior for task tracking.**
+
+```bash
+# Create task (MANDATORY format for RK-PROJECT)
+task add project:rk-project.core.{component} "{description}" priority:{H|M|L} due:{date} +{tags}
+
+# Examples:
+task add project:rk-project.core.rag "Implement RAPTOR tree optimization" priority:H due:today +rust +performance
+task add project:rk-project.core.thinktools "Add new ThinkTool module" priority:M due:friday +reasoning
+task add project:rk-project.core.benchmarks "Run GSM8K evaluation" priority:M due:tomorrow +benchmark
+
+# Start working (CRITICAL: Auto-starts timewarrior!)
+task {id} start
+
+# Stop working (pauses time tracking)
+task {id} stop
+
+# Complete task (stops timewarrior, records completion)
+task {id} done
+
+# Add annotations (progress notes, decisions, blockers)
+task {id} annotate "Completed RAG implementation, 15% improvement in retrieval"
+task {id} annotate "BLOCKED: Waiting for API key from vendor"
+task {id} annotate "DECISION: Using Qdrant over Pinecone for cost reasons"
+
+# View status
+task project:rk-project.core list
+task project:rk-project.core summary
+timew summary :week
+```
+
+**Components:**
+
+- `core.rag` → RAG pipeline
+- `core.thinktools` → ThinkTool modules
+- `core.benchmarks` → Evaluation and benchmarks
+- `core.mcp` → MCP server
+- `core.telemetry` → Telemetry and logging
+
+**Full Documentation:** See [Taskwarrior docs](https://taskwarrior.org/docs/) for complete reference.
+
+---
+
+## MCP SERVERS, SKILLS & PLUGINS (MAXIMIZE)
+
+### MCP Server Usage
+
+**Agents MUST leverage MCP servers for all compatible operations.**
+
+```yaml
+MCP_SERVERS_PRIORITY:
+  - sequential-thinking   # ALWAYS use for complex reasoning chains
+  - filesystem            # File operations
+  - github               # Repository operations
+  - memory               # Persistent memory
+  - puppeteer            # Web automation
+  - fetch                # HTTP requests with caching
+
+USAGE_PATTERN:
+  1. Check if MCP server exists for operation
+  2. If yes: USE IT (preferred over direct implementation)
+  3. If no: Implement in Rust, consider creating MCP server
+```
+
+### Skills & Plugins
+
+```yaml
+SKILLS_MAXIMIZATION:
+  - Use pdf skill for PDF operations
+  - Use xlsx skill for spreadsheet operations
+  - Use docx skill for document operations
+  - Use frontend-design skill for UI work
+  - Use mcp-builder skill for MCP server creation
+
+PLUGIN_PRIORITY:
+  - api-contract-sync for API validation
+  - math for deterministic calculations
+  - experienced-engineer agents for specialized tasks
+```
+
+### Extensions
+
+```yaml
+BROWSER_EXTENSIONS:
+  - Use when web research needed
+  - Prefer official provider extensions
+
+IDE_EXTENSIONS:
+  - Cursor: .cursorrules enforcement
+  - VS Code: copilot-instructions.md
+  - Windsurf: .windsurfrules
+```
+
+**Full Reference:** See [ORCHESTRATOR.md](../../ORCHESTRATOR.md#mcp-servers-skills--plugins-maximize) for complete MCP/Skills/Plugins documentation.
 
 ---
 

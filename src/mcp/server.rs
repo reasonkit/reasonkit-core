@@ -313,3 +313,152 @@ mod tests {
         assert_eq!(metrics.errors_total, 0);
     }
 }
+
+/// Server-side Stdio Transport (uses current process stdin/stdout)
+pub struct ServerStdioTransport {
+    stdout: tokio::sync::Mutex<tokio::io::Stdout>,
+}
+
+impl ServerStdioTransport {
+    pub fn new() -> Self {
+        Self {
+            stdout: tokio::sync::Mutex::new(tokio::io::stdout()),
+        }
+    }
+}
+
+impl Default for ServerStdioTransport {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
+#[async_trait]
+impl Transport for ServerStdioTransport {
+    async fn send_request(&self, _request: McpRequest) -> std::io::Result<McpResponse> {
+        // Server sending request to client (e.g. sampling) - not implemented yet
+        Err(std::io::Error::new(
+            std::io::ErrorKind::Unsupported,
+            "Server-to-client requests not supported yet",
+        ))
+    }
+
+    async fn send_notification(&self, notification: McpNotification) -> std::io::Result<()> {
+        use tokio::io::AsyncWriteExt;
+        let json = serde_json::to_string(&notification)
+            .map_err(|e| std::io::Error::new(std::io::ErrorKind::InvalidData, e))?;
+
+        let mut stdout = self.stdout.lock().await;
+        stdout.write_all(json.as_bytes()).await?;
+        stdout.write_all(b"\n").await?;
+        stdout.flush().await?;
+        Ok(())
+    }
+
+    async fn close(&self) -> std::io::Result<()> {
+        Ok(())
+    }
+}
+
+/// Run the MCP server
+pub async fn run_server() -> Result<()> {
+    use tokio::io::AsyncBufReadExt;
+    use tokio::io::AsyncWriteExt;
+
+    let transport = Arc::new(ServerStdioTransport::new());
+
+    let info = ServerInfo {
+        name: "reasonkit-core".to_string(),
+        version: env!("CARGO_PKG_VERSION").to_string(),
+        description: Some("ReasonKit Core MCP Server".to_string()),
+        vendor: Some("ReasonKit Team".to_string()),
+    };
+
+    let capabilities = ServerCapabilities {
+        logging: Some(LoggingCapability {}),
+        prompts: Some(PromptsCapability { list_changed: true }),
+        resources: Some(ResourcesCapability {
+            subscribe: true,
+            list_changed: true,
+        }),
+        tools: Some(ToolsCapability { list_changed: true }),
+    };
+
+    let mut server = McpServer::new("reasonkit-core", info, capabilities, transport.clone());
+
+    // Main loop
+    let stdin = tokio::io::stdin();
+    let mut reader = tokio::io::BufReader::new(stdin);
+    let mut line = String::new();
+
+    eprintln!("ReasonKit Core MCP Server running on stdio...");
+
+    loop {
+        line.clear();
+        let bytes_read = reader
+            .read_line(&mut line)
+            .await
+            .map_err(|e| Error::network(format!("Failed to read line: {}", e)))?;
+
+        if bytes_read == 0 {
+            break; // EOF
+        }
+
+        let msg: serde_json::Value = match serde_json::from_str(&line) {
+            Ok(m) => m,
+            Err(e) => {
+                eprintln!("Failed to parse JSON: {}", e);
+                continue;
+            }
+        };
+
+        // Handle JSON-RPC message
+        if let Some(method) = msg.get("method").and_then(|m| m.as_str()) {
+            // It's a request or notification
+            if let Some(id) = msg.get("id") {
+                // Request
+                let result = match method {
+                    "initialize" => {
+                        let params = msg
+                            .get("params")
+                            .cloned()
+                            .unwrap_or(serde_json::Value::Null);
+                        server.initialize(params).await
+                    }
+                    "shutdown" => server.shutdown().await.map(|_| serde_json::json!(null)),
+                    "ping" => Ok(serde_json::json!({})),
+                    _ => Err(Error::network(format!("Method not found: {}", method))),
+                };
+
+                let response = match result {
+                    Ok(res) => serde_json::json!({
+                        "jsonrpc": "2.0",
+                        "id": id,
+                        "result": res
+                    }),
+                    Err(e) => serde_json::json!({
+                        "jsonrpc": "2.0",
+                        "id": id,
+                        "error": {
+                            "code": -32601,
+                            "message": e.to_string()
+                        }
+                    }),
+                };
+
+                let response_str = serde_json::to_string(&response).unwrap();
+                let mut stdout = tokio::io::stdout();
+                stdout.write_all(response_str.as_bytes()).await.unwrap();
+                stdout.write_all(b"\n").await.unwrap();
+                stdout.flush().await.unwrap();
+            } else {
+                // Notification
+                if method == "notifications/initialized" {
+                    // Handle initialized notification
+                }
+            }
+        }
+    }
+
+    Ok(())
+}

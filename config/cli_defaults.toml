@@ -2,7 +2,7 @@
 
 [defaults]
 profile = "balanced"
-protocol_dir = "protocols"
+protocol_dir = "protocols/cli"
 
 [tools.claude]
 profile = "balanced"

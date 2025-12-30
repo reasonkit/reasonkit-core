@@ -1,5 +1,6 @@
 //! Core type definitions for the ARF system
 
+use crate::error::Result;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
@@ -199,4 +200,44 @@ pub struct McpError {
     pub code: i32,
     pub message: String,
     pub data: Option<serde_json::Value>,
+}
+
+/// ARF-specific error helpers
+#[derive(Debug, Clone)]
+pub struct ArfError;
+
+impl ArfError {
+    /// Create an engine-level ARF error.
+    pub fn engine(msg: impl Into<String>) -> crate::error::Error {
+        crate::error::Error::arf_error(format!("Engine: {}", msg.into()))
+    }
+
+    /// Create a validation error with field context.
+    pub fn validation(field: &str, msg: &str) -> crate::error::Error {
+        crate::error::Error::arf_error(format!("Validation error for {}: {}", field, msg))
+    }
+}
+
+/// Minimal state manager placeholder for ARF runtime.
+#[derive(Debug, Default, Clone)]
+pub struct StateManager;
+
+impl StateManager {
+    pub async fn initialize(&self) -> Result<()> {
+        Ok(())
+    }
+
+    pub async fn save_session(&self, _session: &ReasoningSession) -> Result<()> {
+        Ok(())
+    }
+}
+
+/// Minimal plugin manager placeholder for ARF runtime.
+#[derive(Debug, Default, Clone)]
+pub struct PluginManager;
+
+impl PluginManager {
+    pub async fn load_plugins(&self) -> Result<()> {
+        Ok(())
+    }
 }

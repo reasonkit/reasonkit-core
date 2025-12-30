@@ -16,10 +16,10 @@ use reasonkit::mcp::McpRegistry;
 async fn main() -> anyhow::Result<()> {
     // Initialize logging
     tracing_subscriber::fmt::init();
-    
+
     // Parse arguments
     let cli = McpCli::parse();
-    
+
     // Run command
     run_mcp_command(cli).await
 }
@@ -65,13 +65,13 @@ pub async fn run_mcp_command(cli: McpCli) -> anyhow::Result<()> {
     // demonstrating the commands.
     //
     // For now, we'll instantiate a registry and potentially load config.
-    
+
     // Note: Since we don't have a persistent daemon yet (Task 59), this CLI
     // is currently a placeholder/demonstration of the command structure.
     // We will implement the actual logic to connect to servers or a daemon later.
-    
+
     let registry = McpRegistry::new();
-    
+
     // Example: Register a dummy server for demonstration if needed
     // ...
 
@@ -93,47 +93,43 @@ pub async fn run_mcp_command(cli: McpCli) -> anyhow::Result<()> {
                 }
             }
         }
-        McpCommands::ListTools => {
-            match registry.list_all_tools().await {
-                Ok(tools) => {
-                    if tools.is_empty() {
-                        println!("No tools available.");
-                    } else {
-                        println!("{:<20}  {:<20}  Description", "Tool", "Server");
-                        println!("────────────────────────────────────────────────────────────────");
-                        for tool in tools {
-                            println!(
-                                "{:<20}  {:<20}  {}", 
-                                tool.name, 
-                                tool.server_name.unwrap_or_default(),
-                                tool.description.unwrap_or_default()
-                            );
-                        }
+        McpCommands::ListTools => match registry.list_all_tools().await {
+            Ok(tools) => {
+                if tools.is_empty() {
+                    println!("No tools available.");
+                } else {
+                    println!("{:<20}  {:<20}  Description", "Tool", "Server");
+                    println!("────────────────────────────────────────────────────────────────");
+                    for tool in tools {
+                        println!(
+                            "{:<20}  {:<20}  {}",
+                            tool.name,
+                            tool.server_name.unwrap_or_default(),
+                            tool.description.unwrap_or_default()
+                        );
                     }
                 }
-                Err(e) => eprintln!("Error listing tools: {}", e),
             }
-        }
-        McpCommands::ListPrompts => {
-            match registry.list_all_prompts().await {
-                Ok(prompts) => {
-                    if prompts.is_empty() {
-                        println!("No prompts available.");
-                    } else {
-                        println!("{:<20}  Description", "Prompt");
-                        println!("────────────────────────────────────────────────────────────────");
-                        for prompt in prompts {
-                            println!(
-                                "{:<20}  {}", 
-                                prompt.name, 
-                                prompt.description.unwrap_or_default()
-                            );
-                        }
+            Err(e) => eprintln!("Error listing tools: {}", e),
+        },
+        McpCommands::ListPrompts => match registry.list_all_prompts().await {
+            Ok(prompts) => {
+                if prompts.is_empty() {
+                    println!("No prompts available.");
+                } else {
+                    println!("{:<20}  Description", "Prompt");
+                    println!("────────────────────────────────────────────────────────────────");
+                    for prompt in prompts {
+                        println!(
+                            "{:<20}  {}",
+                            prompt.name,
+                            prompt.description.unwrap_or_default()
+                        );
                     }
                 }
-                Err(e) => eprintln!("Error listing prompts: {}", e),
             }
-        }
+            Err(e) => eprintln!("Error listing prompts: {}", e),
+        },
         McpCommands::CallTool { name, args } => {
             // In a real implementation, we'd find the server for the tool and execute it.
             // Since we don't have the daemon, we can't easily route this yet.
@@ -141,7 +137,7 @@ pub async fn run_mcp_command(cli: McpCli) -> anyhow::Result<()> {
             println!("(Tool execution requires running MCP server daemon - coming soon)");
         }
         McpCommands::GetPrompt { name, args } => {
-             // In a real implementation, we'd find the server for the prompt and execute it.
+            // In a real implementation, we'd find the server for the prompt and execute it.
             println!("Getting prompt '{}' with args: {}", name, args);
             println!("(Prompt retrieval requires running MCP server daemon - coming soon)");
         }

@@ -89,6 +89,18 @@ cargo install cargo-audit      # Security audit
 
 ## Code Guidelines
 
+### The Rust Supremacy Doctrine
+
+ReasonKit Core follows **The Rust Supremacy** - a non-negotiable architectural principle:
+
+- **Zero Overhead**: Rust-native binaries (10-100x faster than Python chains)
+- **Type Safety**: Logic errors caught at build time, not runtime
+- **Memory Safety**: No GC pauses, predictable latency (<5ms core loops)
+- **Concurrency**: Fearless parallelism (run 100+ reasoning chains in parallel)
+- **Determinism**: No undefined behavior, auditable execution traces
+
+See [README.md](README.md#-the-rust-supremacy-doctrine) for details.
+
 ### Rust Style
 
 We use `rustfmt` and `clippy` for consistent code style.
@@ -103,12 +115,15 @@ cargo clippy -- -D warnings
 
 ### Key Rules
 
-| Rule                                  | Rationale                                                   |
-| ------------------------------------- | ----------------------------------------------------------- |
-| **No `unsafe` without justification** | Document the rationale in comments if you must use `unsafe` |
-| **Tests required for new features**   | All new functionality needs test coverage                   |
-| **Document public APIs**              | Use `///` doc comments for public items                     |
-| **Use `Result<T, E>` for errors**     | Prefer `anyhow` for apps, `thiserror` for libraries         |
+| Rule                                       | Rationale                                                                  |
+| ------------------------------------------ | -------------------------------------------------------------------------- |
+| **No `unsafe` without justification**      | Document the rationale in comments if you must use `unsafe`                |
+| **Tests required for new features**        | All new functionality needs test coverage                                  |
+| **Document public APIs**                   | Use `///` doc comments for public items                                    |
+| **Use `Result<T, E>` for errors**          | Prefer `anyhow` for apps, `thiserror` for libraries                        |
+| **Performance target**                     | All core loops < 5ms (see benchmarks/)                                     |
+| **No hardcoded secrets**                   | Use environment variables or config files                                  |
+| **Follow probabilistic battle principles** | See [README.md](README.md#-the-probabilistic-problem-and-how-we-battle-it) |
 
 ### Example Documentation
 
@@ -132,17 +147,39 @@ pub fn hybrid_search(query: &str, top_k: usize) -> Result<Vec<SearchResult>> {
 }
 ```
 
-### Quality Gates
+### Quality Gates (CONS-009 - MANDATORY)
 
-All code must pass these gates before merge:
+All code must pass **The 5 Gates of Quality** before merge. These are non-negotiable.
 
-| Gate   | Command                       | Requirement     |
-| ------ | ----------------------------- | --------------- |
-| Build  | `cargo build --release`       | Exit 0          |
-| Lint   | `cargo clippy -- -D warnings` | 0 warnings      |
-| Format | `cargo fmt --check`           | Pass            |
-| Tests  | `cargo test --all-features`   | 100% pass       |
-| Bench  | `cargo bench`                 | < 5% regression |
+| Gate               | Command                       | Requirement     | Enforcement    |
+| ------------------ | ----------------------------- | --------------- | -------------- |
+| **Gate 1: Build**  | `cargo build --release`       | Exit 0          | HARD BLOCK     |
+| **Gate 2: Lint**   | `cargo clippy -- -D warnings` | 0 warnings      | HARD BLOCK     |
+| **Gate 3: Format** | `cargo fmt --check`           | Pass            | HARD BLOCK     |
+| **Gate 4: Tests**  | `cargo test --all-features`   | 100% pass       | HARD BLOCK     |
+| **Gate 5: Bench**  | `cargo bench`                 | < 5% regression | SOFT (monitor) |
+
+**Quick Quality Check:**
+
+```bash
+# Run all gates (use before every PR)
+just qa
+
+# Or manually:
+cargo build --release        # Gate 1
+cargo clippy -- -D warnings  # Gate 2
+cargo fmt --check            # Gate 3
+cargo test --all-features    # Gate 4
+cargo bench                  # Gate 5
+```
+
+**Known Issue:** The `--all-features` flag may trigger `indicatif` compilation errors due to an upstream dependency issue. If you encounter this:
+
+- Use default features for testing: `cargo test` (without `--all-features`)
+- CI will handle full feature testing
+- See [RELEASE_CHECKLIST.md](docs/RELEASE_CHECKLIST.md) for details
+
+**Quality Score Target:** 8.0/10 minimum for release. See [QA_PLAN.md](QA_PLAN.md) for comprehensive quality metrics.
 
 ---
 
@@ -182,11 +219,16 @@ test(retrieval): add edge case coverage
 
 Before submitting:
 
-- [ ] All quality gates pass locally
+- [ ] **Gate 1**: `cargo build --release` passes
+- [ ] **Gate 2**: `cargo clippy -- -D warnings` has 0 errors
+- [ ] **Gate 3**: `cargo fmt --check` passes
+- [ ] **Gate 4**: `cargo test --all-features` 100% pass (or `cargo test` if --all-features fails)
+- [ ] **Gate 5**: No performance regression > 5% (if applicable)
 - [ ] Tests added for new functionality
 - [ ] Documentation updated if needed
 - [ ] Commit messages follow conventions
 - [ ] PR description explains the changes
+- [ ] PR template checklist completed (see [.github/PULL_REQUEST_TEMPLATE.md](.github/PULL_REQUEST_TEMPLATE.md))
 
 ### Review Process
 

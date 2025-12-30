@@ -2,8 +2,7 @@
 
 use crate::arf::types::*;
 use crate::error::Result;
-use config::{Config as ConfigLoader, ConfigError, File};
-use serde::{Deserialize, Serialize};
+use config::{Config as ConfigLoader, File};
 use std::path::Path;
 
 /// Main configuration structure
@@ -27,7 +26,22 @@ impl Config {
 
     /// Load configuration from specific file
     pub fn load_from_file<P: AsRef<Path>>(path: P) -> Result<Self> {
-        let mut loader = ConfigLoader::builder().add_source(File::from(path.as_ref()));
+        let path_ref = path.as_ref();
+
+        if path_ref.extension().is_none() {
+            let contents = std::fs::read_to_string(path_ref)?;
+            if let Ok(config) = serde_json::from_str::<ArfConfig>(&contents) {
+                return Ok(Self { inner: config });
+            }
+            if let Ok(config) = toml::from_str::<ArfConfig>(&contents) {
+                return Ok(Self { inner: config });
+            }
+            return Err(crate::error::Error::config(
+                "Failed to parse extensionless config file".to_string(),
+            ));
+        }
+
+        let loader = ConfigLoader::builder().add_source(File::from(path_ref));
 
         let config: ArfConfig = loader.build()?.try_deserialize()?;
         Ok(Self { inner: config })
@@ -56,7 +70,7 @@ impl Config {
     }
 
     /// Create default configuration
-    pub fn default() -> Self {
+    pub fn default_config() -> Self {
         Self {
             inner: ArfConfig {
                 version: env!("CARGO_PKG_VERSION").to_string(),
@@ -119,7 +133,7 @@ impl Config {
 
 impl Default for Config {
     fn default() -> Self {
-        Self::default()
+        Self::default_config()
     }
 }
 
@@ -130,7 +144,7 @@ mod tests {
 
     #[test]
     fn test_default_config() {
-        let config = Config::default();
+        let config = Config::default_config();
         assert_eq!(config.runtime().max_concurrent_sessions, 10);
         assert_eq!(config.engine().max_steps_per_session, 50);
         assert!(config.plugins().enabled);
@@ -138,7 +152,7 @@ mod tests {
 
     #[test]
     fn test_config_save_load() {
-        let config = Config::default();
+        let config = Config::default_config();
         let temp_file = NamedTempFile::new().unwrap();
 
         // Save config

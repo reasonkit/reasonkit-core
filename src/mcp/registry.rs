@@ -300,8 +300,8 @@ impl McpRegistry {
         }
 
         if let Some(result) = response.result {
-            let prompt_result: GetPromptResult = serde_json::from_value(result)
-                .map_err(Error::Json)?;
+            let prompt_result: GetPromptResult =
+                serde_json::from_value(result).map_err(Error::Json)?;
             Ok(prompt_result)
         } else {
             Err(Error::Mcp("Empty response from server".to_string()))

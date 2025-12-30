@@ -212,13 +212,39 @@ fn build_gigathink_steps() -> Vec<ProtocolStep> {
                 max_count: 10,
             },
             prompt_template:
-                r#"Identify 5-10 distinct dimensions or angles to analyze this question:
+                r#"# GigaThink: Identify Analysis Dimensions
 
-Question: {{query}}
-{{#if context}}Context: {{context}}{{/if}}
-{{#if constraints}}Constraints: {{constraints}}{{/if}}
+Your task is to identify 5-10 distinct dimensions or angles from which to analyze this question. Think expansively and creatively - consider technical, business, ethical, social, temporal, and other perspectives.
 
-For each dimension, provide a brief label. Format as a numbered list."#
+## Question
+{{query}}
+
+{{#if context}}
+## Additional Context
+{{context}}
+{{/if}}
+
+{{#if constraints}}
+## Constraints
+{{constraints}}
+{{/if}}
+
+## Instructions
+1. Generate 5-10 distinct analytical dimensions
+2. Each dimension should offer a unique perspective on the question
+3. Consider diverse angles: technical, business, ethical, social, temporal, strategic, tactical, user-focused, system-focused, etc.
+4. For each dimension, provide:
+   - A clear, descriptive label (2-5 words)
+   - A brief explanation of why this dimension matters
+
+## Output Format
+Provide a numbered list. For each dimension:
+
+1. [Dimension Label]: [Brief explanation of why this perspective matters]
+2. [Dimension Label]: [Brief explanation]
+...
+
+Be specific and actionable. Avoid generic dimensions like "cost" or "quality" - instead, think about what specific aspect of cost or quality is most relevant."#
                     .to_string(),
             output_format: StepFmt::List,
             min_confidence: 0.7,
@@ -234,16 +260,39 @@ For each dimension, provide a brief label. Format as a numbered list."#
                     "depth".to_string(),
                 ],
             },
-            prompt_template: r#"For each dimension identified, provide:
-1. Key insight from this perspective
-2. Supporting evidence or example
-3. Implications or consequences
-4. Confidence score (0.0-1.0)
+            prompt_template: r#"# GigaThink: Explore Perspectives
 
-Dimensions to explore:
+Now explore each identified dimension in depth. For each dimension, provide a comprehensive analysis from that perspective.
+
+## Question
+{{query}}
+
+## Dimensions to Explore
 {{identify_dimensions}}
 
-Question: {{query}}"#
+{{#if context}}
+## Additional Context
+{{context}}
+{{/if}}
+
+## Instructions
+For each dimension identified above, provide:
+
+1. **Key Insight**: What is the most important insight from this perspective?
+2. **Supporting Evidence**: What evidence, examples, or reasoning supports this insight?
+3. **Implications**: What are the practical implications or consequences of this perspective?
+4. **Confidence Score**: Rate your confidence in this analysis (0.0-1.0) with a brief justification
+
+## Output Format
+For each dimension, provide:
+
+### [Dimension Label]
+- **Key Insight**: [Your insight]
+- **Supporting Evidence**: [Evidence or reasoning]
+- **Implications**: [Practical consequences]
+- **Confidence**: [0.0-1.0] - [Justification]
+
+Be thorough but concise. Each perspective should add unique value to the overall analysis."#
                 .to_string(),
             output_format: StepFmt::Structured,
             min_confidence: 0.6,
@@ -256,16 +305,51 @@ Question: {{query}}"#
                 aggregation: AggType::ThematicClustering,
             },
             prompt_template:
-                r#"Synthesize the perspectives into key themes and actionable insights:
+                r#"# GigaThink: Synthesize Insights
 
-Perspectives:
+Synthesize all perspectives into coherent themes, actionable insights, and a clear conclusion.
+
+## Question
+{{query}}
+
+## Perspectives Analyzed
 {{explore_perspectives}}
 
-Provide:
-1. Major themes (2-4)
-2. Key insights (3-5)
-3. Recommended actions (if applicable)
-4. Areas of uncertainty"#
+## Instructions
+Synthesize the diverse perspectives into:
+
+1. **Major Themes** (2-4 themes): What patterns or themes emerge across perspectives?
+2. **Key Insights** (3-5 insights): What are the most important takeaways?
+3. **Recommended Actions** (if applicable): What should be done based on this analysis?
+4. **Areas of Uncertainty**: What remains unclear or requires further investigation?
+5. **Overall Confidence**: What is your overall confidence in this synthesis? (0.0-1.0)
+
+## Output Format
+
+### Major Themes
+1. [Theme Name]: [Description and why it matters]
+2. [Theme Name]: [Description]
+...
+
+### Key Insights
+1. [Insight]: [Explanation]
+2. [Insight]: [Explanation]
+...
+
+### Recommended Actions (if applicable)
+- [Action 1]: [Why this action is recommended]
+- [Action 2]: [Why this action is recommended]
+...
+
+### Areas of Uncertainty
+- [Uncertainty 1]: [Why this is uncertain]
+- [Uncertainty 2]: [Why this is uncertain]
+...
+
+### Overall Confidence
+[0.0-1.0] - [Justification]
+
+Ensure your synthesis is coherent, actionable, and acknowledges both strengths and limitations of the analysis."#
                     .to_string(),
             output_format: StepFmt::Structured,
             min_confidence: 0.8,
@@ -282,17 +366,51 @@ fn build_laserlogic_steps() -> Vec<ProtocolStep> {
             action: StepAction::Analyze {
                 criteria: vec!["clarity".to_string(), "completeness".to_string()],
             },
-            prompt_template: r#"Extract the logical structure from this argument:
+            prompt_template: r#"# LaserLogic: Extract Logical Structure
 
-Argument: {{argument}}
+Extract the logical structure from this argument. Identify all claims, premises, and assumptions.
 
-Identify:
-1. Main conclusion
-2. Supporting premises
-3. Implicit assumptions
-4. Causal claims (if any)
+## Argument
+{{argument}}
 
-Format each as a clear statement."#
+{{#if context}}
+## Additional Context
+{{context}}
+{{/if}}
+
+## Instructions
+Identify and extract:
+
+1. **Main Conclusion**: What is the primary claim being made?
+2. **Supporting Premises**: What explicit reasons or evidence support the conclusion?
+3. **Implicit Assumptions**: What unstated assumptions are necessary for the argument to work?
+4. **Causal Claims**: Are there any causal relationships claimed? (If A, then B)
+5. **Logical Structure**: What is the logical form? (e.g., modus ponens, modus tollens, syllogism, etc.)
+
+## Output Format
+
+### Main Conclusion
+[State the conclusion clearly]
+
+### Supporting Premises
+1. [Premise 1]
+2. [Premise 2]
+...
+
+### Implicit Assumptions
+1. [Assumption 1]
+2. [Assumption 2]
+...
+
+### Causal Claims (if any)
+- [Claim 1]: [Description]
+- [Claim 2]: [Description]
+...
+
+### Logical Structure
+[Identify the logical form or pattern]
+
+Be precise and explicit. Format each claim as a clear, unambiguous statement."#
                 .to_string(),
             output_format: StepFmt::Structured,
             min_confidence: 0.7,
@@ -307,15 +425,52 @@ Format each as a clear statement."#
                     "premise_support".to_string(),
                 ],
             },
-            prompt_template: r#"Evaluate the logical validity of this argument analysis:
+            prompt_template: r#"# LaserLogic: Check Logical Validity
 
+Evaluate the logical validity of the argument structure. Determine if the premises logically lead to the conclusion.
+
+## Argument Structure
 {{extract_claims}}
 
-Based on the claims identified above, check:
-1. Do the premises logically lead to the conclusion?
-2. Are there gaps in the reasoning chain?
-3. Is the argument valid (logical structure) vs sound (true premises)?
-4. Rate the logical strength (0.0-1.0) with justification"#
+## Instructions
+Evaluate the logical validity:
+
+1. **Premise-to-Conclusion Flow**: Do the premises logically lead to the conclusion?
+   - Check for logical gaps
+   - Identify missing steps in the reasoning chain
+   - Determine if the conclusion follows necessarily from the premises
+
+2. **Logical Structure Assessment**:
+   - Is the argument **valid**? (If premises are true, conclusion must be true)
+   - Is the argument **sound**? (Valid + premises are actually true)
+   - What type of reasoning is used? (Deductive, inductive, abductive)
+
+3. **Reasoning Chain Integrity**:
+   - Are there any logical leaps?
+   - Are all necessary intermediate steps present?
+   - Could the conclusion be false even if premises are true?
+
+4. **Logical Strength Rating**: Rate the logical strength (0.0-1.0) with detailed justification
+
+## Output Format
+
+### Premise-to-Conclusion Flow
+[Analysis of whether premises support conclusion]
+
+### Logical Structure Assessment
+- **Validity**: [Valid/Invalid] - [Explanation]
+- **Soundness**: [Sound/Unsound] - [Explanation]
+- **Reasoning Type**: [Deductive/Inductive/Abductive] - [Explanation]
+
+### Reasoning Chain Integrity
+- **Gaps Identified**: [List any logical gaps]
+- **Missing Steps**: [List any missing intermediate steps]
+- **Logical Leaps**: [List any unjustified leaps]
+
+### Logical Strength
+[0.0-1.0] - [Detailed justification]
+
+Be rigorous. A valid argument can still be unsound if premises are false."#
                 .to_string(),
             output_format: StepFmt::Structured,
             min_confidence: 0.8,
@@ -327,18 +482,60 @@ Based on the claims identified above, check:
             action: StepAction::Critique {
                 severity: CritiqueSeverity::Standard,
             },
-            prompt_template: r#"Check for logical fallacies in the argument:
+            prompt_template: r#"# LaserLogic: Detect Logical Fallacies
 
-Argument structure:
+Check for logical fallacies in the argument. Identify any errors in reasoning.
+
+## Argument Structure
 {{extract_claims}}
 
-Common fallacies to check:
-- Ad hominem, Straw man, False dichotomy
-- Appeal to authority, Circular reasoning
-- Hasty generalization, Post hoc
-- Slippery slope, Red herring
+## Common Fallacies to Check
 
-For each fallacy found, explain where and why."#
+**Informal Fallacies:**
+- **Ad Hominem**: Attacking the person instead of the argument
+- **Straw Man**: Misrepresenting the opponent's position
+- **False Dichotomy**: Presenting only two options when more exist
+- **Slippery Slope**: Assuming one thing will lead to extreme consequences
+- **Red Herring**: Introducing irrelevant information
+- **Appeal to Authority**: Using authority as proof without justification
+- **Appeal to Emotion**: Using emotion instead of logic
+- **Circular Reasoning**: Using the conclusion as a premise
+- **Hasty Generalization**: Drawing conclusions from insufficient evidence
+- **Post Hoc**: Assuming causation from correlation
+- **Begging the Question**: Assuming what you're trying to prove
+- **False Cause**: Incorrectly identifying cause and effect
+
+**Formal Fallacies:**
+- **Affirming the Consequent**: If P then Q, Q, therefore P (invalid)
+- **Denying the Antecedent**: If P then Q, not P, therefore not Q (invalid)
+- **Undistributed Middle**: All A are B, all C are B, therefore all A are C (invalid)
+
+## Instructions
+For each fallacy found:
+1. Identify the specific fallacy
+2. Explain where it occurs in the argument
+3. Explain why it's a fallacy
+4. Suggest how the argument could be corrected
+
+## Output Format
+
+### Fallacies Detected
+
+**1. [Fallacy Name]**
+- **Location**: [Where in the argument this occurs]
+- **Explanation**: [Why this is a fallacy]
+- **Correction**: [How to fix this]
+
+**2. [Fallacy Name]**
+- [Same format]
+...
+
+### Summary
+- **Total Fallacies Found**: [Number]
+- **Severity**: [Low/Medium/High] - [Justification]
+- **Impact on Argument**: [How do these fallacies affect the argument's validity?]
+
+If no fallacies are found, state: "No logical fallacies detected. The argument structure is logically sound.""#
                 .to_string(),
             output_format: StepFmt::List,
             min_confidence: 0.7,
@@ -355,15 +552,60 @@ fn build_bedrock_steps() -> Vec<ProtocolStep> {
             action: StepAction::Analyze {
                 criteria: vec!["fundamentality".to_string(), "independence".to_string()],
             },
-            prompt_template: r#"Decompose this statement to first principles:
+            prompt_template: r#"# BedRock: Decompose to First Principles
 
-Statement: {{statement}}
-{{#if domain}}Domain: {{domain}}{{/if}}
+Decompose this statement to its fundamental axioms or assumptions. Ask "Why?" repeatedly until you reach irreducible truths.
 
-Ask repeatedly: "What is this based on? Why is this true?"
-Continue until reaching fundamental axioms or assumptions.
+## Statement
+{{statement}}
 
-Format as a tree structure showing dependencies."#
+{{#if domain}}
+## Domain Context
+{{domain}}
+{{/if}}
+
+{{#if context}}
+## Additional Context
+{{context}}
+{{/if}}
+
+## Instructions
+Use the "5 Whys" technique or similar first-principles thinking:
+
+1. Start with the statement
+2. For each component, ask: "What is this based on? Why is this true?"
+3. Continue decomposing until you reach:
+   - Fundamental axioms (self-evident truths)
+   - Empirical facts (observable, verifiable)
+   - Definitions (by definition true)
+   - Assumptions (must be accepted as given)
+
+4. Build a tree structure showing dependencies
+5. Identify what can be further decomposed vs. what is fundamental
+
+## Output Format
+
+### Decomposition Tree
+
+```
+[Statement]
+├── [Component 1]
+│   ├── [Sub-component 1.1]
+│   │   └── [Axiom/Fact/Definition/Assumption]
+│   └── [Sub-component 1.2]
+│       └── [Axiom/Fact/Definition/Assumption]
+└── [Component 2]
+    └── [Axiom/Fact/Definition/Assumption]
+```
+
+### Component Analysis
+For each major component:
+- **Component**: [Name]
+- **Decomposed From**: [What it's based on]
+- **Type**: [Axiom/Empirical Fact/Definition/Assumption/Further Decomposable]
+- **Certainty**: [0.0-1.0] - [Justification]
+
+Be thorough. Don't stop at surface-level explanations - dig deeper."#
                 .to_string(),
             output_format: StepFmt::Structured,
             min_confidence: 0.7,
@@ -376,16 +618,49 @@ Format as a tree structure showing dependencies."#
                 min_count: 3,
                 max_count: 7,
             },
-            prompt_template: r#"From the decomposition, identify the foundational axioms:
+            prompt_template: r#"# BedRock: Identify Foundational Axioms
 
-Decomposition:
+From the decomposition, identify the foundational axioms - the irreducible truths that everything else depends on.
+
+## Decomposition
 {{decompose}}
 
-For each axiom:
-1. State clearly
-2. Explain why it's fundamental (cannot be further reduced)
-3. Note if it's empirical, logical, or definitional
-4. Rate certainty (0.0-1.0)"#
+## Instructions
+Identify all foundational axioms, facts, definitions, and assumptions:
+
+1. **Axioms**: Self-evident truths that cannot be proven but are accepted as true
+2. **Empirical Facts**: Observable, verifiable truths about the world
+3. **Definitions**: Truths by definition (e.g., "a triangle has three sides")
+4. **Assumptions**: Things that must be accepted as given for the statement to hold
+
+For each foundational element:
+- State it clearly
+- Explain why it's fundamental (cannot be further reduced)
+- Classify its type (axiom, empirical fact, definition, assumption)
+- Rate certainty (0.0-1.0)
+- Note any dependencies or prerequisites
+
+## Output Format
+
+### Foundational Axioms
+
+**1. [Axiom/Fact/Definition/Assumption Name]**
+- **Statement**: [Clear statement of the axiom]
+- **Type**: [Axiom/Empirical Fact/Definition/Assumption]
+- **Why Fundamental**: [Explanation of why this cannot be further reduced]
+- **Certainty**: [0.0-1.0] - [Justification]
+- **Dependencies**: [What this depends on, if anything]
+
+**2. [Next Axiom]**
+- [Same format]
+...
+
+### Summary
+- **Total Foundational Elements**: [Number]
+- **Breakdown**: [X axioms, Y facts, Z definitions, W assumptions]
+- **Overall Certainty**: [0.0-1.0] - [Based on the certainty of foundational elements]
+
+Be precise. Distinguish between what is truly fundamental vs. what could be further decomposed."#
                 .to_string(),
             output_format: StepFmt::List,
             min_confidence: 0.8,
@@ -397,16 +672,58 @@ For each axiom:
             action: StepAction::Synthesize {
                 aggregation: AggType::WeightedMerge,
             },
-            prompt_template: r#"Reconstruct the original statement from axioms:
+            prompt_template: r#"# BedRock: Reconstruct from Axioms
 
-Axioms:
+Reconstruct the original statement from the foundational axioms. Show the logical path and identify any gaps.
+
+## Foundational Axioms
 {{identify_axioms}}
 
-Original statement: {{statement}}
+## Original Statement
+{{statement}}
 
-Show the logical path from axioms to statement.
-Identify any gaps or leaps in reasoning.
-Calculate overall confidence based on axiom certainties."#
+## Instructions
+Reconstruct the statement by:
+
+1. **Building the Logical Path**: Show how the axioms logically lead to the statement
+2. **Identifying Gaps**: Note any logical leaps or missing steps
+3. **Assessing Completeness**: Determine if the axioms fully support the statement
+4. **Calculating Confidence**: Compute overall confidence based on axiom certainties
+
+## Output Format
+
+### Reconstruction Path
+
+```
+[Axiom 1] + [Axiom 2] + [Axiom 3]
+↓
+[Intermediate Conclusion 1]
+↓
+[Intermediate Conclusion 2]
+↓
+[Original Statement]
+```
+
+### Step-by-Step Logic
+1. **From Axioms**: [How axioms combine]
+2. **To Intermediate 1**: [First logical step]
+3. **To Intermediate 2**: [Second logical step]
+4. **To Final Statement**: [Final logical step]
+
+### Gaps and Leaps
+- **Gaps Identified**: [List any logical gaps]
+- **Missing Steps**: [What steps are missing?]
+- **Unjustified Leaps**: [Any leaps that need justification]
+
+### Completeness Assessment
+- **Axioms Support Statement**: [Yes/Partially/No] - [Explanation]
+- **Missing Axioms**: [Are additional axioms needed?]
+- **Over-Determined**: [Are there unnecessary axioms?]
+
+### Overall Confidence
+[0.0-1.0] - [Calculation based on axiom certainties and gap analysis]
+
+Be honest about gaps. Not all statements can be fully reconstructed from axioms alone."#
                 .to_string(),
             output_format: StepFmt::Structured,
             min_confidence: 0.75,
@@ -421,13 +738,63 @@ fn build_proofguard_steps() -> Vec<ProtocolStep> {
         ProtocolStep {
             id: "identify_sources".to_string(),
             action: StepAction::CrossReference { min_sources: 3 },
-            prompt_template: r#"Identify potential sources to verify this claim:
+            prompt_template: r#"# ProofGuard: Identify Verification Sources
 
-Claim: {{claim}}
-{{#if sources}}Known sources: {{sources}}{{/if}}
+Identify 3+ independent sources that could verify or refute this claim. Prioritize high-quality, authoritative sources.
 
-List 3+ independent sources that could verify or refute this claim.
-Prioritize: official docs, peer-reviewed, primary sources."#
+## Claim to Verify
+{{claim}}
+
+{{#if sources}}
+## Known Sources (Optional)
+{{sources}}
+{{/if}}
+
+{{#if context}}
+## Additional Context
+{{context}}
+{{/if}}
+
+## Instructions
+Identify potential verification sources:
+
+1. **Source Types to Consider**:
+   - Official documentation (product docs, API docs, standards)
+   - Peer-reviewed research (academic papers, studies)
+   - Primary sources (original research, official statements)
+   - Authoritative references (expert opinions, industry standards)
+   - Reputable news/media (if applicable)
+   - Direct observation or testing (if applicable)
+
+2. **Quality Criteria**:
+   - Independence: Sources should be independent of each other
+   - Authority: Sources should be authoritative in the domain
+   - Recency: Prefer recent sources when applicable
+   - Reliability: Prefer sources with good track records
+
+3. **Diversity**: Include different types of sources (not all from the same category)
+
+## Output Format
+
+### Potential Sources
+
+**1. [Source Name/Title]**
+- **Type**: [Official Docs/Research Paper/Primary Source/Expert Opinion/etc.]
+- **URL/Reference**: [If available]
+- **Authority Level**: [High/Medium/Low] - [Justification]
+- **Relevance**: [How relevant is this source to verifying the claim?]
+
+**2. [Next Source]**
+- [Same format]
+...
+
+### Source Quality Assessment
+- **Total Sources Identified**: [Number]
+- **High Authority Sources**: [Number]
+- **Source Diversity**: [Assessment of diversity]
+- **Overall Source Quality**: [High/Medium/Low]
+
+Aim for at least 3 sources, preferably 5+. Prioritize quality over quantity."#
                 .to_string(),
             output_format: StepFmt::List,
             min_confidence: 0.6,
@@ -442,17 +809,55 @@ Prioritize: official docs, peer-reviewed, primary sources."#
                     "claim_support".to_string(),
                 ],
             },
-            prompt_template: r#"For each source, evaluate support for the claim:
+            prompt_template: r#"# ProofGuard: Verify Each Source
 
-Claim: {{claim}}
-Sources to check:
+For each source, evaluate what it says about the claim. Determine support level and source reliability.
+
+## Claim
+{{claim}}
+
+## Sources to Check
 {{identify_sources}}
 
-For each source:
-1. What does it say about the claim?
-2. Support level: Confirms / Partially confirms / Neutral / Contradicts
-3. Source reliability (0.0-1.0)
-4. Key quote or evidence"#
+## Instructions
+For each source identified:
+
+1. **What Does It Say?**: What does the source explicitly state about the claim?
+2. **Support Level**: 
+   - **Confirms**: Source directly supports the claim
+   - **Partially Confirms**: Source supports part of the claim
+   - **Neutral**: Source doesn't address the claim directly
+   - **Contradicts**: Source contradicts the claim
+   - **Unclear**: Source is ambiguous or unclear
+3. **Source Reliability**: Rate the source's reliability (0.0-1.0) based on:
+   - Authority and expertise
+   - Track record and reputation
+   - Methodology (for research)
+   - Recency and relevance
+4. **Key Evidence**: Extract key quotes, data, or evidence from the source
+
+## Output Format
+
+### Source Evaluations
+
+**Source 1: [Source Name]**
+- **What It Says**: [Direct quote or summary of what the source states about the claim]
+- **Support Level**: [Confirms/Partially Confirms/Neutral/Contradicts/Unclear]
+- **Source Reliability**: [0.0-1.0] - [Justification]
+- **Key Evidence**: [Key quote, data point, or evidence]
+- **Notes**: [Any additional relevant information]
+
+**Source 2: [Next Source]**
+- [Same format]
+...
+
+### Summary
+- **Confirming Sources**: [Number and list]
+- **Contradicting Sources**: [Number and list]
+- **Neutral/Unclear Sources**: [Number and list]
+- **Average Source Reliability**: [0.0-1.0]
+
+Be objective. Report what sources actually say, not what you want them to say."#
                 .to_string(),
             output_format: StepFmt::Structured,
             min_confidence: 0.7,
@@ -464,19 +869,83 @@ For each source:
             action: StepAction::Synthesize {
                 aggregation: AggType::Consensus,
             },
-            prompt_template: r#"Apply triangulation to determine claim validity:
+            prompt_template: r#"# ProofGuard: Triangulate Claim Validity
 
-Claim: {{claim}}
-Source evaluations:
+Apply triangulation to determine the overall validity of the claim based on multiple independent sources.
+
+## Claim
+{{claim}}
+
+## Source Evaluations
 {{verify_each}}
 
-Triangulation rules:
-- 3+ independent confirming sources = HIGH confidence
-- 2 confirming, 1 neutral = MEDIUM confidence
-- Mixed results = LOW confidence, note discrepancies
-- Any contradiction = FLAG for review
+## Triangulation Rules
 
-Provide final verdict and confidence score."#
+**High Confidence (0.8-1.0)**:
+- 3+ independent sources all confirm the claim
+- Sources are high reliability (0.8+)
+- No contradictions
+
+**Medium Confidence (0.6-0.8)**:
+- 2+ sources confirm, 1 neutral
+- Sources are medium-high reliability (0.6+)
+- Minor contradictions that can be resolved
+
+**Low Confidence (0.4-0.6)**:
+- Mixed results (some confirm, some contradict)
+- Sources have varying reliability
+- Significant contradictions
+
+**Very Low Confidence (<0.4)**:
+- Majority of sources contradict
+- Sources are low reliability
+- Claim cannot be verified
+
+**Flag for Review**:
+- Any direct contradiction between high-reliability sources
+- Claim contradicts established facts
+- Sources are all low reliability
+
+## Instructions
+Apply triangulation:
+
+1. **Count Confirmations**: How many sources confirm vs. contradict?
+2. **Weight by Reliability**: Give more weight to high-reliability sources
+3. **Resolve Contradictions**: Can contradictions be explained or resolved?
+4. **Determine Confidence**: Apply triangulation rules above
+5. **Note Discrepancies**: Document any contradictions or uncertainties
+6. **Final Verdict**: Is the claim verified, partially verified, unverified, or refuted?
+
+## Output Format
+
+### Triangulation Analysis
+
+**Confirmation Count**:
+- Confirming: [Number] sources
+- Contradicting: [Number] sources
+- Neutral/Unclear: [Number] sources
+
+**Weighted Assessment** (by source reliability):
+- Weighted confirmation score: [0.0-1.0]
+- Weighted contradiction score: [0.0-1.0]
+
+**Contradiction Analysis**:
+- Contradictions identified: [Yes/No]
+- Can contradictions be resolved? [Yes/No/Partially] - [Explanation]
+- Key discrepancies: [List any significant discrepancies]
+
+### Final Verdict
+- **Claim Status**: [Verified/Partially Verified/Unverified/Refuted]
+- **Confidence Score**: [0.0-1.0] - [Justification based on triangulation rules]
+- **Key Evidence**: [Summary of strongest evidence for/against]
+- **Recommendations**: [Should this claim be accepted, rejected, or require further investigation?]
+
+### Flags and Warnings
+- [List any flags for review]
+- [Note any significant uncertainties]
+- [Recommend additional sources if needed]
+
+Be rigorous. Triangulation requires multiple independent sources agreeing. One source is not enough."#
                 .to_string(),
             output_format: StepFmt::Structured,
             min_confidence: 0.8,
@@ -493,17 +962,62 @@ fn build_brutalhonesty_steps() -> Vec<ProtocolStep> {
             action: StepAction::Analyze {
                 criteria: vec!["strengths".to_string()],
             },
-            prompt_template: r#"First, steelman the work - what are its genuine strengths?
+            prompt_template: r#"# BrutalHonesty: Steelman the Work
 
-Work to critique:
+First, steelman the work - present it in the strongest possible light. Identify genuine strengths and value.
+
+## Work to Critique
 {{work}}
 
-Identify:
-1. What does this do well?
-2. What problems does it solve?
-3. What is genuinely valuable here?
+{{#if context}}
+## Additional Context
+{{context}}
+{{/if}}
 
-Be generous but honest."#
+## Instructions
+Before critiquing, steelman the work:
+
+1. **What Does This Do Well?**: Identify genuine strengths, not just politeness
+2. **What Problems Does It Solve?**: What real problems or needs does this address?
+3. **What Is Genuinely Valuable?**: What unique value does this provide?
+4. **What Are the Best Arguments For It?**: What are the strongest arguments in favor?
+5. **What Would Supporters Say?**: How would advocates defend this work?
+
+Be generous but honest. A good steelman helps identify what's worth preserving even after critique.
+
+## Output Format
+
+### Strengths
+
+**1. [Strength Category]**
+- **What**: [What does this do well?]
+- **Why It Matters**: [Why is this valuable?]
+- **Evidence**: [What demonstrates this strength?]
+
+**2. [Next Strength]**
+- [Same format]
+...
+
+### Problems Solved
+- [Problem 1]: [How this work addresses it]
+- [Problem 2]: [How this work addresses it]
+...
+
+### Genuine Value
+- [Value 1]: [Explanation]
+- [Value 2]: [Explanation]
+...
+
+### Best Arguments For
+1. [Argument 1]: [Explanation]
+2. [Argument 2]: [Explanation]
+...
+
+### Summary
+- **Overall Assessment of Strengths**: [Brief summary]
+- **Core Value Proposition**: [What is the core value this work provides?]
+
+Be thorough. A strong steelman makes the subsequent critique more credible and useful."#
                 .to_string(),
             output_format: StepFmt::List,
             min_confidence: 0.7,
@@ -515,23 +1029,88 @@ Be generous but honest."#
             action: StepAction::Critique {
                 severity: CritiqueSeverity::Brutal,
             },
-            prompt_template: r#"Now be brutally honest - what's wrong with this?
+            prompt_template: r#"# BrutalHonesty: Attack the Work
 
-Work:
+Now be brutally honest. Attack the work from all angles. Find every flaw, weakness, and problem.
+
+## Work
 {{work}}
 
-Strengths identified:
+## Strengths Identified (from Steelman)
 {{steelman}}
 
-Attack from all angles:
-1. Logical flaws
-2. Missing considerations
-3. Weak assumptions
-4. Implementation problems
-5. Unintended consequences
-6. What would a harsh critic say?
+## Instructions
+Attack the work from all angles. Don't hold back:
 
-Don't hold back. Be specific."#
+1. **Logical Flaws**: Are there errors in reasoning, logic, or argumentation?
+2. **Missing Considerations**: What important factors, perspectives, or consequences are overlooked?
+3. **Weak Assumptions**: What assumptions are questionable, unstated, or unsupported?
+4. **Implementation Problems**: What practical problems would arise in implementation?
+5. **Unintended Consequences**: What negative side effects or unintended outcomes might occur?
+6. **Competing Alternatives**: What better alternatives exist? Why isn't this the best approach?
+7. **Resource Concerns**: Are there cost, time, or resource issues?
+8. **Scalability Issues**: Will this work at scale? Under stress? Over time?
+9. **User Experience Problems**: Will users actually want or use this?
+10. **What Would Critics Say?**: What would harsh but fair critics point out?
+
+Be specific. Vague criticism is useless. Point to exact problems and explain why they matter.
+
+## Output Format
+
+### Logical Flaws
+- **Flaw 1**: [Specific flaw] - [Why this is a problem]
+- **Flaw 2**: [Specific flaw] - [Why this is a problem]
+...
+
+### Missing Considerations
+- **Missing 1**: [What's missing] - [Why this matters]
+- **Missing 2**: [What's missing] - [Why this matters]
+...
+
+### Weak Assumptions
+- **Assumption 1**: [Questionable assumption] - [Why it's weak]
+- **Assumption 2**: [Questionable assumption] - [Why it's weak]
+...
+
+### Implementation Problems
+- **Problem 1**: [Implementation issue] - [Impact]
+- **Problem 2**: [Implementation issue] - [Impact]
+...
+
+### Unintended Consequences
+- **Consequence 1**: [Negative outcome] - [Likelihood and impact]
+- **Consequence 2**: [Negative outcome] - [Likelihood and impact]
+...
+
+### Competing Alternatives
+- **Alternative 1**: [Better approach] - [Why it's better]
+- **Alternative 2**: [Better approach] - [Why it's better]
+...
+
+### Resource Concerns
+- [Concern 1]: [Explanation]
+- [Concern 2]: [Explanation]
+...
+
+### Scalability Issues
+- [Issue 1]: [Explanation]
+- [Issue 2]: [Explanation]
+...
+
+### User Experience Problems
+- [Problem 1]: [Explanation]
+- [Problem 2]: [Explanation]
+...
+
+### Harsh Critic's Perspective
+[What would a harsh but fair critic say? Be direct and unsparing.]
+
+### Summary
+- **Total Flaws Identified**: [Number]
+- **Severity**: [Critical/High/Medium/Low] - [Justification]
+- **Most Critical Issues**: [List top 3-5 most critical problems]
+
+Don't hold back. The goal is to find problems before they cause real damage."#
                 .to_string(),
             output_format: StepFmt::List,
             min_confidence: 0.6,
@@ -543,19 +1122,63 @@ Don't hold back. Be specific."#
             action: StepAction::Decide {
                 method: DecisionMethod::ProsCons,
             },
-            prompt_template: r#"Final verdict - is this work acceptable?
+            prompt_template: r#"# BrutalHonesty: Final Verdict
 
-Strengths:
+Provide a final verdict on whether this work is acceptable. Balance strengths against flaws.
+
+## Strengths
 {{steelman}}
 
-Flaws:
+## Flaws
 {{attack}}
 
-Provide:
-1. Overall assessment (Pass / Conditional Pass / Fail)
-2. Most critical issue to fix
-3. Confidence in verdict (0.0-1.0)
-4. What would make this excellent?"#
+## Instructions
+Provide a final assessment:
+
+1. **Overall Assessment**: Pass, Conditional Pass, or Fail?
+2. **Most Critical Issue**: What is the single most critical problem that must be fixed?
+3. **Confidence in Verdict**: How confident are you in this assessment? (0.0-1.0)
+4. **What Would Make This Excellent?**: What changes would elevate this from acceptable to excellent?
+5. **Recommendation**: Should this work proceed, be revised, or be rejected?
+
+Balance is key. Consider both strengths and flaws. A work with minor flaws but strong value might pass. A work with critical flaws but good intentions should fail.
+
+## Output Format
+
+### Overall Assessment
+**Verdict**: [Pass/Conditional Pass/Fail]
+
+**Reasoning**: [Detailed explanation of why this verdict was reached, considering both strengths and flaws]
+
+### Most Critical Issue
+**Issue**: [The single most critical problem]
+
+**Why Critical**: [Why this issue is the most important]
+
+**Impact**: [What happens if this isn't fixed?]
+
+### Confidence in Verdict
+**[0.0-1.0]** - [Justification]
+
+### What Would Make This Excellent?
+- [Improvement 1]: [How this would elevate the work]
+- [Improvement 2]: [How this would elevate the work]
+- [Improvement 3]: [How this would elevate the work]
+...
+
+### Recommendation
+**Action**: [Proceed/Revise and Resubmit/Reject]
+
+**Next Steps**: [What should happen next?]
+
+**Timeline**: [If revision is needed, what's a reasonable timeline?]
+
+### Balanced Summary
+- **Strengths to Preserve**: [What should be kept even if revising?]
+- **Flaws to Fix**: [What must be addressed?]
+- **Nice-to-Haves**: [What would be good to improve but isn't critical?]
+
+Be fair but firm. The goal is improvement, not destruction. But don't sugarcoat critical problems."#
                 .to_string(),
             output_format: StepFmt::Structured,
             min_confidence: 0.75,

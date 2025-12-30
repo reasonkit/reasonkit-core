@@ -35,11 +35,14 @@
 //! ```
 
 use crate::{
+    thinktool::{LlmClient, LlmRequest, UnifiedLlmClient},
+    Document, Error, Result, RetrievalConfig,
+};
+#[cfg(feature = "memory")]
+use reasonkit_mem::{
     indexing::IndexManager,
     retrieval::{HybridResult, HybridRetriever, RetrievalStats},
     storage::Storage,
-    thinktool::{LlmClient, LlmRequest, UnifiedLlmClient},
-    Document, Error, Result, RetrievalConfig,
 };
 use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
@@ -229,14 +232,17 @@ impl RagEngine {
 
     /// Add a document to the knowledge base
     pub async fn add_document(&self, doc: &Document) -> Result<()> {
-        self.retriever.add_document(doc).await
+        let mem_doc: reasonkit_mem::Document = doc.clone().into();
+        self.retriever.add_document(&mem_doc).await?;
+        Ok(())
     }
 
     /// Add multiple documents
     pub async fn add_documents(&self, docs: &[Document]) -> Result<usize> {
         let mut count = 0;
         for doc in docs {
-            self.retriever.add_document(doc).await?;
+            let mem_doc: reasonkit_mem::Document = doc.clone().into();
+            self.retriever.add_document(&mem_doc).await?;
             count += 1;
         }
         Ok(count)
@@ -281,7 +287,7 @@ impl RagEngine {
                 chunk_id: r.chunk_id,
                 text: truncate_text(&r.text, 200),
                 score: r.score,
-                section: r.section.clone(),
+                section: None, // Section field removed in reasonkit-mem HybridResult
             })
             .collect();
 
@@ -340,17 +346,23 @@ impl RagEngine {
 
     /// Retrieve without generation (for inspection)
     pub async fn retrieve(&self, query: &str, top_k: usize) -> Result<Vec<HybridResult>> {
-        self.retriever.search_sparse(query, top_k).await
+        self.retriever
+            .search_sparse(query, top_k)
+            .await
+            .map_err(Error::from)
     }
 
     /// Get knowledge base statistics
     pub async fn stats(&self) -> Result<RetrievalStats> {
-        self.retriever.stats().await
+        self.retriever.stats().await.map_err(Error::from)
     }
 
     /// Delete a document from the knowledge base
     pub async fn delete_document(&self, doc_id: &Uuid) -> Result<()> {
-        self.retriever.delete_document(doc_id).await
+        self.retriever
+            .delete_document(doc_id)
+            .await
+            .map_err(Error::from)
     }
 
     /// Build context string from retrieved results

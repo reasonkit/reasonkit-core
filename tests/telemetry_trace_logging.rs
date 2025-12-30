@@ -3,10 +3,8 @@
 //! Tests that reasoning traces are correctly logged to SQLite database.
 
 use reasonkit::telemetry::{
-    TelemetryCollector, TelemetryConfig, TraceEvent, TelemetryResult,
+    TelemetryCollector, TelemetryConfig, TelemetryError, TelemetryResult, TraceEvent,
 };
-use uuid::Uuid;
-use chrono::Utc;
 use tempfile::TempDir;
 
 #[tokio::test]
@@ -26,7 +24,10 @@ async fn test_trace_logging_basic() -> TelemetryResult<()> {
     let trace_event = TraceEvent::new(session_id, "GigaThink".to_string())
         .with_execution(5, 1234)
         .with_quality(0.85, 0.92)
-        .with_steps(vec!["identify_dimensions".to_string(), "explore_perspectives".to_string()]);
+        .with_steps(vec![
+            "identify_dimensions".to_string(),
+            "explore_perspectives".to_string(),
+        ]);
     let trace_event_id = trace_event.id;
     let trace_event_session_id = trace_event.session_id;
 
@@ -35,8 +36,7 @@ async fn test_trace_logging_basic() -> TelemetryResult<()> {
 
     // Verify trace was written to database
     use rusqlite::Connection;
-    let conn = Connection::open(&db_path)
-        .map_err(|e| TelemetryError::Database(e.to_string()))?;
+    let conn = Connection::open(&db_path).map_err(|e| TelemetryError::Database(e.to_string()))?;
 
     // Query the reasoning_traces table
     let mut stmt = conn.prepare(
@@ -46,21 +46,19 @@ async fn test_trace_logging_basic() -> TelemetryResult<()> {
     )
     .map_err(|e| TelemetryError::Database(e.to_string()))?;
 
-    let trace_row = stmt.query_row(
-        &[&trace_event_id.to_string()],
-        |row| {
+    let trace_row = stmt
+        .query_row(&[&trace_event_id.to_string()], |row| {
             Ok((
-                row.get::<_, String>(0)?,  // id
-                row.get::<_, String>(1)?,  // session_id
-                row.get::<_, String>(2)?,  // thinktool_name
-                row.get::<_, i64>(3)?,     // step_count
-                row.get::<_, i64>(4)?,     // total_ms
-                row.get::<_, f64>(5)?,     // coherence_score
-                row.get::<_, f64>(6)?,     // depth_score
+                row.get::<_, String>(0)?, // id
+                row.get::<_, String>(1)?, // session_id
+                row.get::<_, String>(2)?, // thinktool_name
+                row.get::<_, i64>(3)?,    // step_count
+                row.get::<_, i64>(4)?,    // total_ms
+                row.get::<_, f64>(5)?,    // coherence_score
+                row.get::<_, f64>(6)?,    // depth_score
             ))
-        }
-    )
-    .map_err(|e| TelemetryError::Database(e.to_string()))?;
+        })
+        .map_err(|e| TelemetryError::Database(e.to_string()))?;
 
     // Verify all fields match
     assert_eq!(trace_row.0, trace_event_id.to_string());
@@ -87,10 +85,10 @@ async fn test_trace_logging_multiple_traces() -> TelemetryResult<()> {
 
     // Record multiple traces
     let thinktools = vec!["GigaThink", "LaserLogic", "BedRock", "ProofGuard"];
-    
+
     for (i, thinktool) in thinktools.iter().enumerate() {
         let trace_event = TraceEvent::new(session_id, thinktool.to_string())
-            .with_execution((i + 1) * 2, (i + 1) * 100)
+            .with_execution(((i + 1) * 2) as u32, ((i + 1) * 100) as u64)
             .with_quality(0.8 + (i as f64 * 0.05), 0.75 + (i as f64 * 0.05))
             .with_steps(vec!["step1".to_string(), "step2".to_string()]);
 
@@ -99,24 +97,26 @@ async fn test_trace_logging_multiple_traces() -> TelemetryResult<()> {
 
     // Verify all traces were written
     use rusqlite::Connection;
-    let conn = Connection::open(&db_path)?;
+    let conn = Connection::open(&db_path).map_err(|e| TelemetryError::Database(e.to_string()))?;
 
-    let count: i64 = conn.query_row(
-        "SELECT COUNT(*) FROM reasoning_traces WHERE session_id = ?1",
-        &[&session_id.to_string()],
-        |row| row.get(0)
-    )
-    .map_err(|e| TelemetryError::Database(e.to_string()))?;
+    let count: i64 = conn
+        .query_row(
+            "SELECT COUNT(*) FROM reasoning_traces WHERE session_id = ?1",
+            &[&session_id.to_string()],
+            |row| row.get(0),
+        )
+        .map_err(|e| TelemetryError::Database(e.to_string()))?;
 
     assert_eq!(count, 4);
 
     // Verify we can query by thinktool
-    let gigathink_count: i64 = conn.query_row(
-        "SELECT COUNT(*) FROM reasoning_traces WHERE thinktool_name = 'GigaThink'",
-        &[],
-        |row| row.get(0)
-    )
-    .map_err(|e| TelemetryError::Database(e.to_string()))?;
+    let gigathink_count: i64 = conn
+        .query_row(
+            "SELECT COUNT(*) FROM reasoning_traces WHERE thinktool_name = 'GigaThink'",
+            [],
+            |row| row.get(0),
+        )
+        .map_err(|e| TelemetryError::Database(e.to_string()))?;
 
     assert_eq!(gigathink_count, 1);
 
@@ -133,7 +133,6 @@ async fn test_trace_logging_with_query() -> TelemetryResult<()> {
 
     let collector = TelemetryCollector::new(config).await?;
     let session_id = collector.session_id();
-    let query_id = Uuid::new_v4();
 
     // Record query event
     use reasonkit::telemetry::{QueryEvent, QueryType};
@@ -141,6 +140,7 @@ async fn test_trace_logging_with_query() -> TelemetryResult<()> {
         .with_type(QueryType::Reason)
         .with_latency(500)
         .with_tools(vec!["GigaThink".to_string()]);
+    let query_id = query_event.id; // Use the actual query event's ID
 
     collector.record_query(query_event).await?;
 
@@ -148,7 +148,11 @@ async fn test_trace_logging_with_query() -> TelemetryResult<()> {
     let mut trace_event = TraceEvent::new(session_id, "GigaThink".to_string())
         .with_execution(3, 450)
         .with_quality(0.88, 0.91)
-        .with_steps(vec!["identify".to_string(), "explore".to_string(), "synthesize".to_string()]);
+        .with_steps(vec![
+            "identify".to_string(),
+            "explore".to_string(),
+            "synthesize".to_string(),
+        ]);
     trace_event.query_id = Some(query_id);
     let trace_event_id = trace_event.id;
 
@@ -156,14 +160,15 @@ async fn test_trace_logging_with_query() -> TelemetryResult<()> {
 
     // Verify trace is linked to query
     use rusqlite::Connection;
-    let conn = Connection::open(&db_path)?;
+    let conn = Connection::open(&db_path).map_err(|e| TelemetryError::Database(e.to_string()))?;
 
-    let linked_query_id: Option<String> = conn.query_row(
-        "SELECT query_id FROM reasoning_traces WHERE id = ?1",
-        &[&trace_event_id.to_string()],
-        |row| row.get(0)
-    )
-    .map_err(|e| TelemetryError::Database(e.to_string()))?;
+    let linked_query_id: Option<String> = conn
+        .query_row(
+            "SELECT query_id FROM reasoning_traces WHERE id = ?1",
+            &[&trace_event_id.to_string()],
+            |row| row.get(0),
+        )
+        .map_err(|e| TelemetryError::Database(e.to_string()))?;
 
     assert_eq!(linked_query_id, Some(query_id.to_string()));
 
@@ -177,7 +182,7 @@ async fn test_trace_logging_disabled() -> TelemetryResult<()> {
     let db_path = temp_dir.path().join(".rk_telemetry.db");
 
     let mut config = TelemetryConfig::minimal();
-    config.enabled = false;  // Disabled
+    config.enabled = false; // Disabled
     config.db_path = db_path.clone();
 
     let collector = TelemetryCollector::new(config).await?;
@@ -224,14 +229,15 @@ async fn test_trace_logging_step_types_json() -> TelemetryResult<()> {
 
     // Verify step_types JSON is stored correctly
     use rusqlite::Connection;
-    let conn = Connection::open(&db_path)?;
+    let conn = Connection::open(&db_path).map_err(|e| TelemetryError::Database(e.to_string()))?;
 
-    let step_types_json: String = conn.query_row(
-        "SELECT step_types FROM reasoning_traces WHERE id = ?1",
-        &[&trace_event_id.to_string()],
-        |row| row.get(0)
-    )
-    .map_err(|e| TelemetryError::Database(e.to_string()))?;
+    let step_types_json: String = conn
+        .query_row(
+            "SELECT step_types FROM reasoning_traces WHERE id = ?1",
+            &[&trace_event_id.to_string()],
+            |row| row.get(0),
+        )
+        .map_err(|e| TelemetryError::Database(e.to_string()))?;
 
     // Parse JSON and verify
     let parsed: Vec<String> = serde_json::from_str(&step_types_json)?;
@@ -276,4 +282,3 @@ async fn test_trace_logging_performance() -> TelemetryResult<()> {
 
     Ok(())
 }
-

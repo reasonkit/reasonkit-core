@@ -375,8 +375,8 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for complete guidelines.
 
 **Industrial Cyberpunk Aesthetic:**
 
-- **Colors:** Cyan (`#00d2ff`) primary, Void Black (`#03060b`) background
-- **Typography:** IBM Plex Serif (headlines), Space Grotesk (body), IBM Plex Mono (code)
+- **Colors:** Cyan (`#06b6d4`) primary, Void Black (`#030508`) background
+- **Typography:** Inter (headlines), Inter (body), JetBrains Mono (code)
 - **Voice:** Authoritative, technical, clear, confident, transparent
 - **Principle:** "Designed, Not Dreamed" — Structure beats intelligence. Engineering over hope.
 

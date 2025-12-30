@@ -22,10 +22,67 @@
 //! - **LiteLLM**: Python proxy for 100+ providers (external dependency)
 
 use async_trait::async_trait;
+use once_cell::sync::Lazy;
 use serde::{Deserialize, Serialize};
+use std::collections::HashMap;
+use std::sync::RwLock;
 use std::time::Duration;
 
 use crate::error::{Error, Result};
+
+// ═══════════════════════════════════════════════════════════════════════════
+// HTTP CLIENT POOL (PERFORMANCE OPTIMIZATION)
+// ═══════════════════════════════════════════════════════════════════════════
+
+/// Global HTTP client pool - reuses connections across all LLM clients
+/// This eliminates TLS handshake overhead (100-500ms per call)
+static HTTP_CLIENT_POOL: Lazy<RwLock<HashMap<u64, reqwest::Client>>> =
+    Lazy::new(|| RwLock::new(HashMap::new()));
+
+/// Default HTTP client with standard timeout (120s)
+/// Used when no custom timeout is specified
+static DEFAULT_HTTP_CLIENT: Lazy<reqwest::Client> = Lazy::new(|| {
+    reqwest::Client::builder()
+        .timeout(Duration::from_secs(120))
+        .pool_max_idle_per_host(10)
+        .pool_idle_timeout(Duration::from_secs(90))
+        .tcp_keepalive(Duration::from_secs(60))
+        .build()
+        .expect("Failed to create default HTTP client")
+});
+
+/// Get or create an HTTP client for a specific timeout duration
+/// Clients are cached and reused to maintain connection pools
+fn get_pooled_client(timeout_secs: u64) -> reqwest::Client {
+    // Fast path: use default client for standard timeout
+    if timeout_secs == 120 {
+        return DEFAULT_HTTP_CLIENT.clone();
+    }
+
+    // Check if we have a cached client for this timeout
+    {
+        let pool = HTTP_CLIENT_POOL.read().unwrap();
+        if let Some(client) = pool.get(&timeout_secs) {
+            return client.clone();
+        }
+    }
+
+    // Create new client and cache it
+    let client = reqwest::Client::builder()
+        .timeout(Duration::from_secs(timeout_secs))
+        .pool_max_idle_per_host(10)
+        .pool_idle_timeout(Duration::from_secs(90))
+        .tcp_keepalive(Duration::from_secs(60))
+        .build()
+        .expect("Failed to create HTTP client");
+
+    {
+        let mut pool = HTTP_CLIENT_POOL.write().unwrap();
+        pool.insert(timeout_secs, client.clone());
+    }
+
+    client
+}
 
 // ═══════════════════════════════════════════════════════════════════════════
 // PROVIDER CONFIGURATION
@@ -640,11 +697,13 @@ pub struct UnifiedLlmClient {
 
 impl UnifiedLlmClient {
     /// Create a new client with configuration
+    ///
+    /// Uses pooled HTTP clients to maintain connection reuse across calls.
+    /// This eliminates TLS handshake overhead (100-500ms per call).
     pub fn new(config: LlmConfig) -> Result<Self> {
-        let http_client = reqwest::Client::builder()
-            .timeout(Duration::from_secs(config.timeout_secs))
-            .build()
-            .map_err(|e| Error::Network(format!("Failed to create HTTP client: {}", e)))?;
+        // Use pooled HTTP client instead of creating new one each time
+        // This maintains connection pools and eliminates TLS handshake overhead
+        let http_client = get_pooled_client(config.timeout_secs);
 
         Ok(Self {
             config,
