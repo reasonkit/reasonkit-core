@@ -12,13 +12,13 @@ This document provides comprehensive UX/UI design recommendations for the `rk-co
 
 ### Design Goals
 
-| Goal | Description | Priority |
-|------|-------------|----------|
-| **Clarity** | Users always know which step they're in and what's happening | Critical |
-| **Scannability** | Key insights are immediately visible without reading everything | High |
-| **Accessibility** | Works without colors; screen reader friendly | High |
-| **Copy-Paste Friendly** | Output can be easily shared and documented | Medium |
-| **Delight** | Professional polish that inspires confidence | Medium |
+| Goal                    | Description                                                     | Priority |
+| ----------------------- | --------------------------------------------------------------- | -------- |
+| **Clarity**             | Users always know which step they're in and what's happening    | Critical |
+| **Scannability**        | Key insights are immediately visible without reading everything | High     |
+| **Accessibility**       | Works without colors; screen reader friendly                    | High     |
+| **Copy-Paste Friendly** | Output can be easily shared and documented                      | Medium   |
+| **Delight**             | Professional polish that inspires confidence                    | Medium   |
 
 ---
 
@@ -80,13 +80,13 @@ Example: Actual analysis output, lists
 
 ### 2.3 Spacing and Layout Rules
 
-| Element | Spacing |
-|---------|---------|
-| Between major sections | 1 blank line |
-| Between subsections | No blank line |
-| Within content | Natural paragraph breaks |
-| Indentation | 2 spaces per level |
-| Maximum line width | 76 characters (fits 80-col terminals) |
+| Element                | Spacing                               |
+| ---------------------- | ------------------------------------- |
+| Between major sections | 1 blank line                          |
+| Between subsections    | No blank line                         |
+| Within content         | Natural paragraph breaks              |
+| Indentation            | 2 spaces per level                    |
+| Maximum line width     | 76 characters (fits 80-col terminals) |
 
 ---
 
@@ -172,39 +172,39 @@ fn clear_progress() {
 
 The color scheme should reflect the ReasonKit brand while providing semantic meaning:
 
-| Color | ANSI Code | Hex | Usage |
-|-------|-----------|-----|-------|
-| **Cyan (Primary)** | `\x1b[36m` | #06b6d4 | Primary brand, borders |
-| **Green (Success)** | `\x1b[32m` | #10b981 | Success states, high confidence |
-| **Yellow (Warning)** | `\x1b[33m` | #ffcc00 | Warnings, moderate confidence |
-| **Red (Error)** | `\x1b[31m` | #f97316 | Errors, low confidence |
-| **White (Text)** | `\x1b[97m` | #f9fafb | Primary text |
-| **Gray (Dim)** | `\x1b[90m` | #9ca3af | Secondary text, metadata |
-| **Magenta (Accent)** | `\x1b[35m` | #a855f7 | Accents, highlights |
+| Color                | ANSI Code  | Hex     | Usage                           |
+| -------------------- | ---------- | ------- | ------------------------------- |
+| **Cyan (Primary)**   | `\x1b[36m` | #06b6d4 | Primary brand, borders          |
+| **Green (Success)**  | `\x1b[32m` | #10b981 | Success states, high confidence |
+| **Yellow (Warning)** | `\x1b[33m` | #ffcc00 | Warnings, moderate confidence   |
+| **Red (Error)**      | `\x1b[31m` | #f97316 | Errors, low confidence          |
+| **White (Text)**     | `\x1b[97m` | #f9fafb | Primary text                    |
+| **Gray (Dim)**       | `\x1b[90m` | #9ca3af | Secondary text, metadata        |
+| **Magenta (Accent)** | `\x1b[35m` | #a855f7 | Accents, highlights             |
 
 ### 4.2 ThinkTool-Specific Themes
 
 Each ThinkTool should have a distinct visual identity:
 
-| Tool | Primary | Secondary | Icon | Rationale |
-|------|---------|-----------|------|-----------|
-| **GigaThink** | Gold (#FFD700) | Purple | 💡 | Brilliant ideas, creativity |
-| **LaserLogic** | Green (#00FF00) | White | ⚡ | Precision, clarity |
-| **BedRock** | Amber (#FFBF00) | Gray | 🪨 | Solid foundation |
-| **ProofGuard** | White | Blue | 🛡️ | Authority, trust |
-| **BrutalHonesty** | Red (#FF0000) | Yellow | 🔥 | Warning, intensity |
-| **PowerCombo** | Rainbow gradient | - | 🌈 | All tools combined |
+| Tool              | Primary          | Secondary | Icon | Rationale                   |
+| ----------------- | ---------------- | --------- | ---- | --------------------------- |
+| **GigaThink**     | Gold (#FFD700)   | Purple    | 💡   | Brilliant ideas, creativity |
+| **LaserLogic**    | Green (#00FF00)  | White     | ⚡   | Precision, clarity          |
+| **BedRock**       | Amber (#FFBF00)  | Gray      | 🪨   | Solid foundation            |
+| **ProofGuard**    | White            | Blue      | 🛡️   | Authority, trust            |
+| **BrutalHonesty** | Red (#FF0000)    | Yellow    | 🔥   | Warning, intensity          |
+| **PowerCombo**    | Rainbow gradient | -         | 🌈   | All tools combined          |
 
 ### 4.3 Semantic Colors
 
-| Semantic Use | Color | ANSI | Example |
-|--------------|-------|------|---------|
-| Success/Completed | Green | `\x1b[32m` | "OK Status" |
-| In Progress | Cyan | `\x1b[36m` | "RUNNING..." |
-| Pending/Waiting | Gray | `\x1b[90m` | "PENDING" |
-| Warning/Moderate | Yellow | `\x1b[33m` | "60% confidence" |
-| Error/Failed | Red | `\x1b[31m` | "FAILED" |
-| High Value | Bold Green | `\x1b[1;32m` | "95% confidence" |
+| Semantic Use      | Color      | ANSI         | Example          |
+| ----------------- | ---------- | ------------ | ---------------- |
+| Success/Completed | Green      | `\x1b[32m`   | "OK Status"      |
+| In Progress       | Cyan       | `\x1b[36m`   | "RUNNING..."     |
+| Pending/Waiting   | Gray       | `\x1b[90m`   | "PENDING"        |
+| Warning/Moderate  | Yellow     | `\x1b[33m`   | "60% confidence" |
+| Error/Failed      | Red        | `\x1b[31m`   | "FAILED"         |
+| High Value        | Bold Green | `\x1b[1;32m` | "95% confidence" |
 
 ### 4.4 Confidence Color Gradient
 
@@ -292,22 +292,22 @@ Goodbye! Session saved to ~/.reasonkit/sessions/2025-12-28.json
 
 ### 5.3 REPL Commands
 
-| Command | Shortcut | Description |
-|---------|----------|-------------|
-| `think <query>` | Default | Execute with current settings |
-| `/profile <name>` | `/p` | Set reasoning profile |
-| `/protocol <name>` | `/t` | Set single protocol |
-| `/model <name>` | `/m` | Change LLM model |
-| `/provider <name>` | `/pr` | Change LLM provider |
-| `/temperature <n>` | `/temp` | Set temperature (0.0-2.0) |
-| `/context <text>` | `/c` | Add context for next query |
-| `/history` | `/h` | Show query history |
-| `/export <n>` | `/e` | Export result n to file |
-| `/last` | `/l` | Show last result |
-| `/trace <n>` | `/tr` | View trace for result n |
-| `/clear` | `/cls` | Clear screen |
-| `/help` | `/?` | Show help |
-| `exit` | `quit` | Exit REPL |
+| Command            | Shortcut | Description                   |
+| ------------------ | -------- | ----------------------------- |
+| `think <query>`    | Default  | Execute with current settings |
+| `/profile <name>`  | `/p`     | Set reasoning profile         |
+| `/protocol <name>` | `/t`     | Set single protocol           |
+| `/model <name>`    | `/m`     | Change LLM model              |
+| `/provider <name>` | `/pr`    | Change LLM provider           |
+| `/temperature <n>` | `/temp`  | Set temperature (0.0-2.0)     |
+| `/context <text>`  | `/c`     | Add context for next query    |
+| `/history`         | `/h`     | Show query history            |
+| `/export <n>`      | `/e`     | Export result n to file       |
+| `/last`            | `/l`     | Show last result              |
+| `/trace <n>`       | `/tr`    | View trace for result n       |
+| `/clear`           | `/cls`   | Clear screen                  |
+| `/help`            | `/?`     | Show help                     |
+| `exit`             | `quit`   | Exit REPL                     |
 
 ### 5.4 REPL Features
 
@@ -534,14 +534,14 @@ Every error should follow this structure:
 
 ### 6.3 Error Message Rules
 
-| Rule | Description |
-|------|-------------|
-| **No jargon** | Use plain language, not internal error codes alone |
-| **Actionable** | Always provide at least one concrete action |
-| **Context-aware** | Include relevant details (what was attempted) |
-| **Consistent** | Use the same structure for all errors |
-| **Non-blaming** | Avoid "you did X wrong"; say "X needs to be Y" |
-| **Helpful links** | Point to documentation when relevant |
+| Rule              | Description                                        |
+| ----------------- | -------------------------------------------------- |
+| **No jargon**     | Use plain language, not internal error codes alone |
+| **Actionable**    | Always provide at least one concrete action        |
+| **Context-aware** | Include relevant details (what was attempted)      |
+| **Consistent**    | Use the same structure for all errors              |
+| **Non-blaming**   | Avoid "you did X wrong"; say "X needs to be Y"     |
+| **Helpful links** | Point to documentation when relevant               |
 
 ### 6.4 Warning Messages
 
@@ -586,6 +586,7 @@ TERM=dumb rk-core think "query"
 ```
 
 No-color output should use:
+
 - ASCII borders instead of box-drawing characters
 - Text labels instead of color-coded states
 - Explicit status text: "[OK]", "[FAILED]", "[WARN]"
@@ -614,19 +615,20 @@ No-color output should use:
 ### 7.3 Contrast Ratios
 
 For terminal emulators that support it:
+
 - Foreground text should have 4.5:1 contrast ratio minimum
 - Important information (errors, warnings) should be 7:1
 
 ### 7.4 Keyboard Navigation in REPL
 
-| Key | Action |
-|-----|--------|
-| Up/Down | Navigate history |
-| Ctrl+R | Reverse search history |
-| Ctrl+C | Cancel current operation |
-| Ctrl+D | Exit REPL |
-| Tab | Auto-complete |
-| Ctrl+L | Clear screen |
+| Key     | Action                   |
+| ------- | ------------------------ |
+| Up/Down | Navigate history         |
+| Ctrl+R  | Reverse search history   |
+| Ctrl+C  | Cancel current operation |
+| Ctrl+D  | Exit REPL                |
+| Tab     | Auto-complete            |
+| Ctrl+L  | Clear screen             |
 
 ---
 
@@ -662,6 +664,7 @@ rk-core think "query" -o analysis.md
 ```
 
 Output structure:
+
 ```markdown
 # GigaThink Analysis
 
@@ -682,12 +685,13 @@ Chain of thought prompting is a technique that...
 
 ---
 
-*Generated by ReasonKit v0.1.0 on 2025-12-28*
+_Generated by ReasonKit v0.1.0 on 2025-12-28_
 ```
 
 ### 8.3 Plain Text (Default)
 
 The default text output should be:
+
 - Clean enough to paste into documents
 - Not depend on terminal-specific features
 - Include all essential information without decoration
@@ -818,11 +822,11 @@ Executing profile: paranoid (6 steps)
 
 ## VERSION HISTORY
 
-| Version | Date | Changes |
-|---------|------|---------|
-| 1.0.0 | 2025-12-28 | Initial UX design specification |
+| Version | Date       | Changes                         |
+| ------- | ---------- | ------------------------------- |
+| 1.0.0   | 2025-12-28 | Initial UX design specification |
 
 ---
 
-*"Great CLIs are discovered through use, refined through feedback."*
-*- ReasonKit UX Design*
+_"Great CLIs are discovered through use, refined through feedback."_
+_- ReasonKit UX Design_

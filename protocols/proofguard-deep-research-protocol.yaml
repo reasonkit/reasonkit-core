@@ -201,7 +201,6 @@ phase_4_structured_synthesis:
   duration_estimate: "5-10 minutes"
 
   required_output_elements:
-
     technical_specifications_table:
       required: true
       purpose: "Consolidate verified specs"
@@ -270,7 +269,6 @@ phase_5_output:
   duration_estimate: "3-5 minutes"
 
   required_sections:
-
     proofguard_verification_summary:
       position: "top"
       required: true
@@ -325,7 +323,6 @@ phase_5_output:
 # ─────────────────────────────────────────────────────────────────────────────
 
 objective_measures:
-
   completeness_metrics:
     - metric: "Triangulation Coverage"
       formula: "(claims_with_3_sources / total_claims) * 100"
@@ -369,7 +366,6 @@ objective_measures:
 # ─────────────────────────────────────────────────────────────────────────────
 
 thinktool_integration:
-
   activation:
     shortcut: "pg-deep"
     full_command: "--profile paranoid --thinktool ProofGuard"
@@ -380,7 +376,8 @@ thinktool_integration:
 
   profile_mapping:
     paranoid:
-      modules: ["GigaThink", "LaserLogic", "BedRock", "ProofGuard", "BrutalHonesty"]
+      modules:
+        ["GigaThink", "LaserLogic", "BedRock", "ProofGuard", "BrutalHonesty"]
       confidence_target: 95%
       this_protocol: "REQUIRED"
 
@@ -392,7 +389,8 @@ thinktool_integration:
 
     deep:
       # Core modules (Pro adds: HighReflect)
-      modules: ["GigaThink", "LaserLogic", "BedRock", "ProofGuard", "BrutalHonesty"]
+      modules:
+        ["GigaThink", "LaserLogic", "BedRock", "ProofGuard", "BrutalHonesty"]
       confidence_target: 85%
       this_protocol: "RECOMMENDED"
 

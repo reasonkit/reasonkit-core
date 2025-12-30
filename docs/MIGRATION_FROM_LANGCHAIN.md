@@ -4,28 +4,28 @@ This guide is designed for developers moving from LangChain (Python/TypeScript) 
 
 ## Conceptual Mapping
 
-| LangChain Concept | ReasonKit Equivalent | Key Difference |
-|-------------------|----------------------|----------------|
-| **Chain** (`LLMChain`) | **Protocol** (`Protocol`) | Protocols are static, declarative, and auditable (TOML/YAML), not arbitrary code. |
-| **Prompt Template** | **ThinkTool** (`ProtocolStep`) | ReasonKit prompts are structured cognitive steps (Analyze, Critique, Synthesize). |
-| **Memory** (`BufferMemory`) | **Context** (`ProtocolInput`) | State is passed explicitly between steps; no hidden global state. |
-| **Agent** | **Executor** (`ProtocolExecutor`) | Executors run defined protocols; less "magic", more predictability. |
-| **Output Parser** | **Schema Validation** | Native Rust type safety and JSON schema validation at every step. |
-| **Retriever** | **Retrieval Module** | High-performance Rust-based retrieval (Qdrant/Tantivy) integrated directly. |
+| LangChain Concept           | ReasonKit Equivalent              | Key Difference                                                                    |
+| --------------------------- | --------------------------------- | --------------------------------------------------------------------------------- |
+| **Chain** (`LLMChain`)      | **Protocol** (`Protocol`)         | Protocols are static, declarative, and auditable (TOML/YAML), not arbitrary code. |
+| **Prompt Template**         | **ThinkTool** (`ProtocolStep`)    | ReasonKit prompts are structured cognitive steps (Analyze, Critique, Synthesize). |
+| **Memory** (`BufferMemory`) | **Context** (`ProtocolInput`)     | State is passed explicitly between steps; no hidden global state.                 |
+| **Agent**                   | **Executor** (`ProtocolExecutor`) | Executors run defined protocols; less "magic", more predictability.               |
+| **Output Parser**           | **Schema Validation**             | Native Rust type safety and JSON schema validation at every step.                 |
+| **Retriever**               | **Retrieval Module**              | High-performance Rust-based retrieval (Qdrant/Tantivy) integrated directly.       |
 
 ## Core Architectural Shifts
 
 1.  **Code vs. Configuration:**
-    *   *LangChain:* Logic is often defined in Python/JS code (loops, conditionals).
-    *   *ReasonKit:* Logic is defined in declarative TOML/YAML files. Rust code is the *engine* that runs them.
+    - _LangChain:_ Logic is often defined in Python/JS code (loops, conditionals).
+    - _ReasonKit:_ Logic is defined in declarative TOML/YAML files. Rust code is the _engine_ that runs them.
 
 2.  **Dynamic vs. Static:**
-    *   *LangChain:* Flexible, often "yolo" execution flow.
-    *   *ReasonKit:* Structured, predictable, type-safe execution.
+    - _LangChain:_ Flexible, often "yolo" execution flow.
+    - _ReasonKit:_ Structured, predictable, type-safe execution.
 
 3.  **Prompting Philosophy:**
-    *   *LangChain:* "Ask the LLM to do X."
-    *   *ReasonKit:* "Apply Cognitive Module Y (e.g., GigaThink) to X."
+    - _LangChain:_ "Ask the LLM to do X."
+    - _ReasonKit:_ "Apply Cognitive Module Y (e.g., GigaThink) to X."
 
 ## Migration Step-by-Step
 
@@ -81,8 +81,9 @@ rk think naming_tool "colorful socks"
 ### 2. Sequential Chain (Multi-Step)
 
 **LangChain:**
-*   Step 1: Generate synopsis.
-*   Step 2: Write review based on synopsis.
+
+- Step 1: Generate synopsis.
+- Step 2: Write review based on synopsis.
 
 **ReasonKit:**
 Define multiple steps in your TOML.
@@ -113,7 +114,7 @@ depends_on = ["synopsis"]
 **ReasonKit:**
 RAG is a native capability of the `ProtocolExecutor`. You simply use a protocol that includes a retrieval step or pass context.
 
-*   *Note:* ReasonKit Core provides the **engine**. You configure the storage (Qdrant/Local) in `config.toml`.
+- _Note:_ ReasonKit Core provides the **engine**. You configure the storage (Qdrant/Local) in `config.toml`.
 
 ## Best Practices for Migration
 
@@ -124,7 +125,7 @@ RAG is a native capability of the `ProtocolExecutor`. You simply use a protocol 
 
 ## Why Switch?
 
-*   **Performance:** Rust engine overhead is measured in microseconds, not milliseconds.
-*   **Safety:** Strict type checking and validation prevent runtime "hallucination format" errors.
-*   **Deployment:** Single binary deployment. No massive Python venv dependency hell.
-*   **Auditability:** Protocols are data, not code. Easier to version, diff, and review.
+- **Performance:** Rust engine overhead is measured in microseconds, not milliseconds.
+- **Safety:** Strict type checking and validation prevent runtime "hallucination format" errors.
+- **Deployment:** Single binary deployment. No massive Python venv dependency hell.
+- **Auditability:** Protocols are data, not code. Easier to version, diff, and review.

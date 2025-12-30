@@ -11,6 +11,7 @@ Complete API documentation for the ReasonKit MCP module.
 The `mcp` module provides a Rust-based implementation of the Model Context Protocol (MCP) server registry system.
 
 **Key Components**:
+
 - MCP protocol types (JSON-RPC 2.0)
 - Server management and lifecycle
 - Transport abstraction (stdio, HTTP/SSE planned)
@@ -34,6 +35,7 @@ pub enum McpMessage {
 ```
 
 **Usage**:
+
 ```rust
 let request = McpMessage::Request(McpRequest {
     jsonrpc: JsonRpcVersion::default(),
@@ -50,6 +52,7 @@ let request = McpMessage::Request(McpRequest {
 JSON-RPC 2.0 request message.
 
 **Fields**:
+
 - `jsonrpc: JsonRpcVersion` - Always "2.0"
 - `id: RequestId` - Request identifier (string or number)
 - `method: String` - Method name
@@ -76,6 +79,7 @@ let req = McpRequest::new(
 JSON-RPC 2.0 response message.
 
 **Fields**:
+
 - `jsonrpc: JsonRpcVersion` - Always "2.0"
 - `id: RequestId` - Matching request ID
 - `result: Option<Value>` - Success result
@@ -112,11 +116,13 @@ let resp = McpResponse::error(
 JSON-RPC error object.
 
 **Fields**:
+
 - `code: ErrorCode` - Error code
 - `message: String` - Error message
 - `data: Option<Value>` - Additional error data
 
 **Error Codes**:
+
 - `PARSE_ERROR` (-32700)
 - `INVALID_REQUEST` (-32600)
 - `METHOD_NOT_FOUND` (-32601)
@@ -154,6 +160,7 @@ Convenience constructor for method not found errors.
 Concrete MCP server implementation.
 
 **Fields**:
+
 - `id: Uuid` - Unique server ID
 - `name: String` - Server name
 - `info: ServerInfo` - Server information
@@ -216,6 +223,7 @@ pub enum ServerStatus {
 Server performance metrics.
 
 **Fields**:
+
 - `requests_total: u64` - Total requests handled
 - `errors_total: u64` - Total errors encountered
 - `avg_response_time_ms: f64` - Average response time
@@ -371,6 +379,7 @@ println!("Healthy: {}/{}", stats.healthy_servers, stats.total_servers);
 Server registration metadata.
 
 **Fields**:
+
 - `id: Uuid` - Server ID
 - `name: String` - Server name
 - `info: ServerInfo` - Server information
@@ -386,6 +395,7 @@ Server registration metadata.
 Health check result.
 
 **Fields**:
+
 - `server_id: Uuid` - Server ID
 - `server_name: String` - Server name
 - `status: HealthStatus` - Health status
@@ -416,6 +426,7 @@ pub enum HealthStatus {
 Registry-wide statistics.
 
 **Fields**:
+
 - `total_servers: usize`
 - `healthy_servers: usize`
 - `degraded_servers: usize`
@@ -431,6 +442,7 @@ Registry-wide statistics.
 Tool definition.
 
 **Fields**:
+
 - `name: String` - Tool name (unique per server)
 - `description: Option<String>` - Human-readable description
 - `input_schema: Value` - JSON Schema for input validation
@@ -472,6 +484,7 @@ let tool = Tool::with_schema(
 Tool execution input.
 
 **Fields**:
+
 - `name: String` - Tool name
 - `arguments: HashMap<String, Value>` - Tool arguments
 
@@ -482,6 +495,7 @@ Tool execution input.
 Tool execution result.
 
 **Fields**:
+
 - `content: Vec<ToolResultContent>` - Result content
 - `is_error: Option<bool>` - Whether this is an error result
 
@@ -592,6 +606,7 @@ let transport = StdioTransport::spawn(
 Initialize request parameters.
 
 **Fields**:
+
 - `protocol_version: String` - Protocol version
 - `capabilities: ClientCapabilities` - Client capabilities
 - `client_info: ClientInfo` - Client information
@@ -617,6 +632,7 @@ Create initialize parameters with custom client info.
 Initialize response.
 
 **Fields**:
+
 - `protocol_version: String` - Protocol version
 - `capabilities: ServerCapabilities` - Server capabilities
 - `server_info: ServerInfo` - Server information
@@ -635,6 +651,7 @@ Create an initialize result.
 Client information.
 
 **Fields**:
+
 - `name: String` - Client name
 - `version: String` - Client version
 
@@ -645,6 +662,7 @@ Client information.
 Server information.
 
 **Fields**:
+
 - `name: String` - Server name
 - `version: String` - Server version
 - `description: Option<String>` - Server description
@@ -741,6 +759,7 @@ let tools = registry.list_all_tools().await?;
 ```
 
 Common errors:
+
 - `Error::NotFound`: Server not found in registry
 - `Error::Network`: Network/transport error
 - `std::io::Error`: Transport-level errors
@@ -750,6 +769,7 @@ Common errors:
 ## Thread Safety
 
 All types are designed for concurrent use:
+
 - `McpRegistry`: Uses `Arc<RwLock<...>>` internally
 - `McpServer`: Uses `Arc<RwLock<...>>` for state
 - All methods are `async` and safe to call concurrently

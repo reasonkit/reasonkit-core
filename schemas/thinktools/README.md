@@ -4,14 +4,14 @@ This directory contains formal JSON Schema definitions for all ThinkTools V2 mod
 
 ## Schema Files
 
-| Schema | Module | Description |
-|--------|--------|-------------|
-| `gigathink_output.json` | GigaThink | Expansive creative thinking with 10+ perspectives |
-| `laserlogic_output.json` | LaserLogic | Precision deductive reasoning with fallacy detection |
-| `bedrock_output.json` | BedRock | First principles decomposition and axiom rebuilding |
-| `proofguard_output.json` | ProofGuard | Multi-source verification with triangulation |
-| `brutalhonesty_output.json` | BrutalHonesty | Adversarial self-critique and flaw detection |
-| `synthesis_output.json` | Synthesis | Final merged output from all modules |
+| Schema                      | Module        | Description                                          |
+| --------------------------- | ------------- | ---------------------------------------------------- |
+| `gigathink_output.json`     | GigaThink     | Expansive creative thinking with 10+ perspectives    |
+| `laserlogic_output.json`    | LaserLogic    | Precision deductive reasoning with fallacy detection |
+| `bedrock_output.json`       | BedRock       | First principles decomposition and axiom rebuilding  |
+| `proofguard_output.json`    | ProofGuard    | Multi-source verification with triangulation         |
+| `brutalhonesty_output.json` | BrutalHonesty | Adversarial self-critique and flaw detection         |
+| `synthesis_output.json`     | Synthesis     | Final merged output from all modules                 |
 
 ## Schema Structure
 
@@ -86,16 +86,16 @@ def validate_output(module: str, output: dict):
 ### JavaScript/TypeScript
 
 ```typescript
-import Ajv from 'ajv';
-import fs from 'fs';
+import Ajv from "ajv";
+import fs from "fs";
 
 function validateOutput(module: string, output: any): boolean {
-    const schema = JSON.parse(
-        fs.readFileSync(`schemas/thinktools/${module}_output.json`, 'utf-8')
-    );
-    const ajv = new Ajv();
-    const validate = ajv.compile(schema);
-    return validate(output);
+  const schema = JSON.parse(
+    fs.readFileSync(`schemas/thinktools/${module}_output.json`, "utf-8"),
+  );
+  const ajv = new Ajv();
+  const validate = ajv.compile(schema);
+  return validate(output);
 }
 ```
 
@@ -104,12 +104,14 @@ function validateOutput(module: string, output: any): boolean {
 ### GigaThink Output
 
 **Key Fields:**
+
 - `perspectives`: Array of 10-25 diverse viewpoints
 - `emergent_insights`: Insights from combining perspectives
 - `cross_domain_analogies`: Analogies from other domains
 - `semantic_clusters`: Perspectives grouped by similarity
 
 **Confidence Factors:**
+
 - perspective_diversity (0.25 weight)
 - insight_novelty (0.20 weight)
 - domain_coverage (0.15 weight)
@@ -119,12 +121,14 @@ function validateOutput(module: string, output: any): boolean {
 ### LaserLogic Output
 
 **Key Fields:**
+
 - `premises`: Extracted premises with validity assessment
 - `deductive_chains`: Logical reasoning chains
 - `fallacies_detected`: Array of 18 fallacy types
 - `conclusion`: Final conclusion with strength score
 
 **Confidence Factors:**
+
 - premise_validity (0.30 weight)
 - chain_coherence (0.25 weight)
 - fallacy_absence (0.25 weight)
@@ -133,12 +137,14 @@ function validateOutput(module: string, output: any): boolean {
 ### BedRock Output
 
 **Key Fields:**
+
 - `decomposition_layers`: 5 levels from surface to axioms
 - `axioms`: Fundamental axioms identified
 - `assumptions_surfaced`: Hidden assumptions discovered
 - `reconstruction`: Rebuilding from axioms upward
 
 **Confidence Factors:**
+
 - axiom_soundness (0.35 weight)
 - decomposition_completeness (0.25 weight)
 - assumption_identification (0.20 weight)
@@ -147,12 +153,14 @@ function validateOutput(module: string, output: any): boolean {
 ### ProofGuard Output
 
 **Key Fields:**
+
 - `claims_extracted`: Factual claims to verify
 - `verification_results`: Verification status per claim
 - `contradictions`: Contradictions found across sources
 - `triangulation_table`: 3-source verification table
 
 **Confidence Factors:**
+
 - source_count (0.20 weight)
 - source_diversity (0.25 weight)
 - tier_quality (0.20 weight)
@@ -162,6 +170,7 @@ function validateOutput(module: string, output: any): boolean {
 ### BrutalHonesty Output
 
 **Key Fields:**
+
 - `critiques`: Array of adversarial critiques
 - `edge_cases`: Edge cases that could break reasoning
 - `biases_detected`: Cognitive biases found
@@ -169,6 +178,7 @@ function validateOutput(module: string, output: any): boolean {
 - `overall_assessment`: Verdict and recommended action
 
 **Confidence Factors:**
+
 - critique_depth (0.25 weight)
 - fatal_flaw_detection (0.30 weight)
 - edge_case_coverage (0.20 weight)
@@ -178,6 +188,7 @@ function validateOutput(module: string, output: any): boolean {
 ### Synthesis Output
 
 **Key Fields:**
+
 - `profile`: Reasoning profile used
 - `modules_executed`: Execution order and timing
 - `module_outputs`: Raw outputs from each module
@@ -191,6 +202,7 @@ function validateOutput(module: string, output: any): boolean {
 ### Versioning
 
 Schemas follow semantic versioning:
+
 - **Major**: Breaking changes to required fields
 - **Minor**: New optional fields
 - **Patch**: Documentation, examples, clarifications
@@ -200,6 +212,7 @@ Current version: **2.0.0**
 ### Backward Compatibility
 
 When updating schemas:
+
 1. Never remove required fields
 2. Make new fields optional when possible
 3. Use `additionalProperties: false` carefully
@@ -254,4 +267,4 @@ To add or modify schemas:
 
 ---
 
-*ThinkTools V2 Schemas | Apache 2.0 | https://reasonkit.sh*
+_ThinkTools V2 Schemas | Apache 2.0 | https://reasonkit.sh_

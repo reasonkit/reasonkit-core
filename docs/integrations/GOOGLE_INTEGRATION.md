@@ -89,12 +89,12 @@ retry_delay_ms = 1000
 
 ### Available Models
 
-| Model | ID | Context | Best For | Cost/1M tokens |
-|-------|-----|---------|----------|----------------|
-| **Gemini 2.0 Flash** | `gemini-2.0-flash` | 1M | Fast, cost-effective | $0.075 in / $0.30 out |
-| **Gemini 2.0 Flash Thinking** | `gemini-2.0-flash-thinking-exp` | 1M | Reasoning tasks | $0.075 in / $0.30 out |
-| **Gemini 1.5 Pro** | `gemini-1.5-pro` | 2M | Maximum context | $1.25 in / $5.00 out |
-| **Gemini 1.5 Flash** | `gemini-1.5-flash` | 1M | Budget option | $0.075 in / $0.30 out |
+| Model                         | ID                              | Context | Best For             | Cost/1M tokens        |
+| ----------------------------- | ------------------------------- | ------- | -------------------- | --------------------- |
+| **Gemini 2.0 Flash**          | `gemini-2.0-flash`              | 1M      | Fast, cost-effective | $0.075 in / $0.30 out |
+| **Gemini 2.0 Flash Thinking** | `gemini-2.0-flash-thinking-exp` | 1M      | Reasoning tasks      | $0.075 in / $0.30 out |
+| **Gemini 1.5 Pro**            | `gemini-1.5-pro`                | 2M      | Maximum context      | $1.25 in / $5.00 out  |
+| **Gemini 1.5 Flash**          | `gemini-1.5-flash`              | 1M      | Budget option        | $0.075 in / $0.30 out |
 
 ---
 
@@ -366,16 +366,16 @@ gemini --sandbox -p "Analyze this code"
 
 ### Per-Query Cost Calculator
 
-| Profile | Model | Avg Tokens | Estimated Cost |
-|---------|-------|------------|----------------|
-| `--quick` | 2.0 Flash | ~2,000 | $0.0008 |
-| `--quick` | 1.5 Pro | ~2,000 | $0.012 |
-| `--balanced` | 2.0 Flash | ~5,000 | $0.002 |
-| `--balanced` | 1.5 Pro | ~5,000 | $0.031 |
-| `--deep` | 2.0 Flash | ~10,000 | $0.004 |
-| `--deep` | 1.5 Pro | ~10,000 | $0.063 |
-| `--paranoid` | 1.5 Pro | ~20,000 | $0.125 |
-| Long context (500K) | 1.5 Pro | ~500,000 | $3.125 |
+| Profile             | Model     | Avg Tokens | Estimated Cost |
+| ------------------- | --------- | ---------- | -------------- |
+| `--quick`           | 2.0 Flash | ~2,000     | $0.0008        |
+| `--quick`           | 1.5 Pro   | ~2,000     | $0.012         |
+| `--balanced`        | 2.0 Flash | ~5,000     | $0.002         |
+| `--balanced`        | 1.5 Pro   | ~5,000     | $0.031         |
+| `--deep`            | 2.0 Flash | ~10,000    | $0.004         |
+| `--deep`            | 1.5 Pro   | ~10,000    | $0.063         |
+| `--paranoid`        | 1.5 Pro   | ~20,000    | $0.125         |
+| Long context (500K) | 1.5 Pro   | ~500,000   | $3.125         |
 
 ### Monthly Budget Examples
 
@@ -596,16 +596,17 @@ rk-core metrics cost --provider gemini --period month
 
 ## Gemini vs Other Providers
 
-| Feature | Gemini | Claude | GPT-4 |
-|---------|--------|--------|-------|
-| Max context | 2M tokens | 200K | 128K |
-| Multimodal | Images, Video, Audio | Images, PDFs | Images |
-| Speed | Very fast | Fast | Fast |
-| Cost | Lowest | Medium | Medium |
-| Reasoning | Good | Excellent | Excellent |
-| Safety | Strictest | Moderate | Moderate |
+| Feature     | Gemini               | Claude       | GPT-4     |
+| ----------- | -------------------- | ------------ | --------- |
+| Max context | 2M tokens            | 200K         | 128K      |
+| Multimodal  | Images, Video, Audio | Images, PDFs | Images    |
+| Speed       | Very fast            | Fast         | Fast      |
+| Cost        | Lowest               | Medium       | Medium    |
+| Reasoning   | Good                 | Excellent    | Excellent |
+| Safety      | Strictest            | Moderate     | Moderate  |
 
 **When to choose Gemini:**
+
 - Long document processing
 - Video/audio analysis
 - Cost-sensitive workloads
@@ -624,5 +625,5 @@ rk-core metrics cost --provider gemini --period month
 
 ---
 
-*ReasonKit + Google Gemini Integration Guide | v1.0.0 | Apache 2.0*
-*"See How Your AI Thinks"*
+_ReasonKit + Google Gemini Integration Guide | v1.0.0 | Apache 2.0_
+_"See How Your AI Thinks"_

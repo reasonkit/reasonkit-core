@@ -27,6 +27,7 @@ This research identifies 25+ advanced reasoning frameworks that can enhance the 
 **Performance:** +33% on plan generation vs CoT (LLaMA-33B outperforms GPT-4)
 
 **How it Improves Over Basic CoT:**
+
 - Explores multiple reasoning paths simultaneously instead of single linear chain
 - Enables strategic lookahead and backtracking
 - Self-evaluates progress at each thought node
@@ -35,6 +36,7 @@ This research identifies 25+ advanced reasoning frameworks that can enhance the 
 **Implementation Complexity:** Medium
 
 **Architecture:**
+
 ```
                     Problem
                        |
@@ -53,12 +55,14 @@ This research identifies 25+ advanced reasoning frameworks that can enhance the 
 ```
 
 **Use Cases:**
+
 - Complex planning tasks (24-step Game of 24)
 - Creative writing with multiple narrative paths
 - Algorithm design with multiple approaches
 - Strategic decision-making with branching options
 
 **Integration into ThinkTools:**
+
 ```rust
 // Enhance BedRock with ToT branching
 pub struct BedRockToT {
@@ -79,6 +83,7 @@ impl BedRockToT {
 ```
 
 **Sources:**
+
 - [Tree of Thoughts: Deliberate Problem Solving with Large Language Models](https://arxiv.org/pdf/2305.10601)
 - [Tree of Thoughts Prompting Guide](https://www.promptingguide.ai/techniques/tot)
 - [IBM: What is Tree Of Thoughts Prompting?](https://www.ibm.com/think/topics/tree-of-thoughts)
@@ -90,6 +95,7 @@ impl BedRockToT {
 **Performance:** +70% sorting accuracy vs CoT, +62% vs ToT, -31% model calls vs ToT
 
 **How it Improves Over ToT:**
+
 - Removes tree constraints: thoughts can merge, share information
 - Enables complex network connections between reasoning steps
 - Allows different branches to exchange information
@@ -98,12 +104,14 @@ impl BedRockToT {
 **Implementation Complexity:** High
 
 **Use Cases:**
+
 - Sorting and optimization problems (70% better than CoT)
 - Knowledge graph construction
 - Multi-constraint reasoning
 - Problems requiring information synthesis from multiple paths
 
 **Integration into ThinkTools:**
+
 ```rust
 // Enhance GigaThink with GoT perspective merging
 pub struct GigaThinkGoT {
@@ -123,6 +131,7 @@ impl GigaThinkGoT {
 ```
 
 **Sources:**
+
 - [Graph of Thoughts — A Graph-Based Reasoning Framework for LLMs](https://systems-analysis.ru/eng/Graph_of_Thoughts)
 - [Advanced Reasoning Frameworks in Large Language Models](https://medium.com/@dewanshsinha71/advanced-reasoning-frameworks-in-large-language-models-chain-tree-and-graph-of-thoughts-bafbfd028575)
 
@@ -133,6 +142,7 @@ impl GigaThinkGoT {
 **Performance:** +46.2% on GPQA scientific reasoning (comparable to RL approaches)
 
 **How it Improves Over GoT:**
+
 - **Dynamic decomposition**: Recursively breaks down complex queries at test-time
 - **Selective expansion**: Only expands subproblems that need further analysis
 - **Unified paradigm**: Combines strengths of chain, tree, and graph approaches
@@ -141,12 +151,14 @@ impl GigaThinkGoT {
 **Implementation Complexity:** High
 
 **Use Cases:**
+
 - Scientific reasoning (GPQA benchmark)
 - Multi-step mathematical proofs
 - Complex technical analysis
 - Problems with hierarchical structure
 
 **Integration into ThinkTools:**
+
 ```rust
 // New ThinkTool: AdaptiveDecompose
 pub struct AdaptiveDecompose {
@@ -167,6 +179,7 @@ impl AdaptiveDecompose {
 ```
 
 **Sources:**
+
 - [Adaptive Graph of Thoughts: Test-Time Adaptive Reasoning (arXiv 2502.05078)](https://arxiv.org/abs/2502.05078)
 - [AGoT Literature Review](https://www.themoonlight.io/en/review/adaptive-graph-of-thoughts-test-time-adaptive-reasoning-unifying-chain-tree-and-graph-structures)
 
@@ -177,6 +190,7 @@ impl AdaptiveDecompose {
 **Performance:** +17.9% on GSM8K, +12.2% on AQuA, +6.4% on StrategyQA
 
 **How it Improves Over Basic CoT:**
+
 - Samples diverse reasoning paths (temperature/nucleus sampling)
 - Marginalizes over paths using majority voting
 - Leverages intuition that correct answers emerge from multiple valid reasoning paths
@@ -185,12 +199,14 @@ impl AdaptiveDecompose {
 **Implementation Complexity:** Low
 
 **Use Cases:**
+
 - Math word problems (GSM8K, AQuA)
 - Commonsense reasoning (StrategyQA)
 - Multiple-choice questions
 - Any task with known/verifiable output
 
 **Integration into ThinkTools:**
+
 ```rust
 // Enhance all ThinkTools with self-consistency
 pub struct SelfConsistentExecutor {
@@ -218,12 +234,14 @@ impl SelfConsistentExecutor {
 **Performance:** -70% sample usage while maintaining accuracy
 
 **Enhancements:**
+
 - Assesses quality of reasoning AND consistency of answers
 - Criteria-based early stopping (don't sample more than needed)
 - Weighted majority voting (high-quality paths weighted higher)
 - More faithful rationales
 
 **Sources:**
+
 - [Self-Consistency Improves Chain of Thought Reasoning (arXiv 2203.11171)](https://arxiv.org/abs/2203.11171)
 - [Reasoning Aware Self-Consistency (NAACL 2025)](https://aclanthology.org/2025.naacl-long.184/)
 - [Self-Consistency Prompt Engineering Guide](https://www.promptingguide.ai/techniques/consistency)
@@ -235,6 +253,7 @@ impl SelfConsistentExecutor {
 **Performance:** +33% relative improvement over GPT-4 CoT on plan generation (LLaMA-33B)
 
 **How it Improves Over Basic CoT:**
+
 - Repurposes LLM as both **world model** and **reasoning agent**
 - Uses Monte Carlo Tree Search (MCTS) for strategic exploration
 - Balances exploration vs exploitation in reasoning space
@@ -243,12 +262,14 @@ impl SelfConsistentExecutor {
 **Implementation Complexity:** High
 
 **Use Cases:**
+
 - Plan generation (Blocksworld domain)
 - Multi-step reasoning requiring lookahead
 - Mathematical reasoning with strategic choices
 - Logical inference with branching paths
 
 **Integration into ThinkTools:**
+
 ```rust
 // New ThinkTool: StrategicPlanner
 pub struct StrategicPlanner {
@@ -271,6 +292,7 @@ impl StrategicPlanner {
 ```
 
 **Sources:**
+
 - [Reasoning with Language Model is Planning with World Model (EMNLP 2023)](https://aclanthology.org/2023.emnlp-main.507/)
 - [GitHub: Ber666/RAP](https://github.com/Ber666/RAP)
 - [RAP and LLM Reasoners Frameworks](https://www.marktechpost.com/2023/07/31/meet-rap-and-llm-reasoners-two-frameworks-based-on-similar-concepts-for-advanced-reasoning-with-llms/)
@@ -284,6 +306,7 @@ impl StrategicPlanner {
 **Performance:** Improves all LLM agents across all models tested; richer reflections (Instructions+Explanation+Solution) outperform limited ones (Retry, Keywords)
 
 **How it Improves Over Basic Reasoning:**
+
 - Creates internal feedback loop for self-evaluation
 - Identifies limitations in understanding
 - Recognizes potential errors before they propagate
@@ -292,12 +315,14 @@ impl StrategicPlanner {
 **Implementation Complexity:** Low-Medium
 
 **Use Cases:**
+
 - Academic response generation (scholarly writing)
 - Code review and debugging
 - Decision-making with high stakes
 - Complex problem-solving requiring iteration
 
 **Integration into ThinkTools:**
+
 ```rust
 // Already exists in BrutalHonesty, but enhance with structured reflection
 pub struct MetacognitiveReflector {
@@ -326,6 +351,7 @@ impl MetacognitiveReflector {
 ```
 
 **Sources:**
+
 - [Self-Reflection in LLM Agents (arXiv 2405.06682)](https://arxiv.org/pdf/2405.06682)
 - [Self-reflection enhances large language models (Nature npj AI)](https://www.nature.com/articles/s44387-025-00045-3)
 - [Meta-Cognitive AI: Self-Aware Intelligence](https://medium.com/@raktims2210/meta-cognitive-ai-the-hidden-layer-of-self-aware-intelligence-powering-the-next-generation-of-ce7d19789724)
@@ -337,6 +363,7 @@ impl MetacognitiveReflector {
 **Performance:** Enables reliable selective prediction (abstain when uncertain)
 
 **How it Improves Over Basic Reasoning:**
+
 - Provides calibrated confidence scores
 - Identifies when model doesn't know (epistemic uncertainty)
 - Detects ambiguous inputs (aleatoric uncertainty)
@@ -345,6 +372,7 @@ impl MetacognitiveReflector {
 **Implementation Complexity:** Medium
 
 **Quantification Methods:**
+
 ```
 Method 1: Ensemble Variance
   - Sample N outputs
@@ -363,12 +391,14 @@ Method 3: Self-Verbalized UQ
 ```
 
 **Use Cases:**
+
 - Healthcare diagnostics (high-stakes decisions)
 - Legal reasoning (need confidence bounds)
 - Selective prediction (abstain when uncertain)
 - Risk assessment (quantify uncertainty)
 
 **Integration into ThinkTools:**
+
 ```rust
 // Enhance all ThinkTools with UQ
 pub struct UncertaintyQuantifier {
@@ -405,6 +435,7 @@ impl UncertaintyQuantifier {
 ```
 
 **Sources:**
+
 - [Uncertainty Quantification and Confidence Calibration in LLMs (arXiv 2503.15850)](https://arxiv.org/abs/2503.15850)
 - [Benchmarking UQ Methods with LM-Polygraph](https://direct.mit.edu/tacl/article/doi/10.1162/tacl_a_00737/128713/Benchmarking-Uncertainty-Quantification-Methods)
 - [Quantifying LLMs Uncertainty with Confidence Scores](https://medium.com/capgemini-invent-lab/quantifying-llms-uncertainty-with-confidence-scores-6bb8a6712aa0)
@@ -416,6 +447,7 @@ impl UncertaintyQuantifier {
 **Performance:** Improves trustworthiness by aligning confidence scores with actual accuracy
 
 **How it Improves Over Raw Scores:**
+
 - Raw LLM confidences are often miscalibrated (overconfident or underconfident)
 - Calibration maps confidence scores to true probabilities
 - Enables better decision-making under uncertainty
@@ -424,6 +456,7 @@ impl UncertaintyQuantifier {
 **Implementation Complexity:** Medium
 
 **Calibration Techniques:**
+
 ```
 Technique 1: Temperature Scaling
   - Learn single parameter T
@@ -440,6 +473,7 @@ Technique 3: Isotonic Regression
 ```
 
 **Integration into ThinkTools:**
+
 ```rust
 // Calibrate confidence scores across all ThinkTools
 pub struct ConfidenceCalibrator {
@@ -466,6 +500,7 @@ impl ConfidenceCalibrator {
 ```
 
 **Sources:**
+
 - [Confidence Calibration in LLMs for UQ (AAAI Symposium)](https://ojs.aaai.org/index.php/AAAI-SS/article/view/36937)
 - [Tutorial: Uncertainty Quantification and Confidence Calibration in LLMs](https://xiao0o0o.github.io/2025KDD_tutorial/)
 
@@ -478,6 +513,7 @@ impl ConfidenceCalibrator {
 **Performance:** Enables sound logical inference, prevents invalid conclusions
 
 **How it Improves Over Natural Language Reasoning:**
+
 - Eliminates ambiguity through formal syntax
 - Ensures logical validity via proof systems
 - Detects contradictions automatically
@@ -486,12 +522,14 @@ impl ConfidenceCalibrator {
 **Implementation Complexity:** High
 
 **Use Cases:**
+
 - Mathematical proofs
 - Logical puzzles (Knights and Knaves)
 - Regulatory compliance checking
 - Knowledge base reasoning
 
 **Integration into ThinkTools:**
+
 ```rust
 // Enhance LaserLogic with FOL reasoning
 pub struct FormalLogicEngine {
@@ -517,6 +555,7 @@ impl FormalLogicEngine {
 ```
 
 **Sources:**
+
 - [First-order logic as a CSP (Progress in AI)](https://dl.acm.org/doi/10.1007/s13748-021-00240-8)
 - [Constraint Satisfaction Problems in AI (GeeksforGeeks)](https://www.geeksforgeeks.org/artificial-intelligence/constraint-satisfaction-problems-csp-in-artificial-intelligence/)
 
@@ -527,6 +566,7 @@ impl FormalLogicEngine {
 **Performance:** Systematically explores solution space, finds all valid solutions
 
 **How it Improves Over Trial-and-Error:**
+
 - **Variables**: Explicit representation of decision points
 - **Domains**: Finite set of possible values
 - **Constraints**: Rules that must be satisfied
@@ -535,12 +575,14 @@ impl FormalLogicEngine {
 **Implementation Complexity:** Medium
 
 **Use Cases:**
+
 - Scheduling problems (resource allocation)
 - Sudoku and logic puzzles
 - Configuration problems
 - Planning under constraints
 
 **Integration into ThinkTools:**
+
 ```rust
 // New ThinkTool: ConstraintSolver
 pub struct ConstraintSolver {
@@ -566,6 +608,7 @@ impl ConstraintSolver {
 ```
 
 **Sources:**
+
 - [Constraint Satisfaction Problems (Temple University)](https://cis.temple.edu/~giorgio/cis587/readings/constraints.html)
 - [AI Constraint Satisfaction Problem (TutorialsPoint)](https://www.tutorialspoint.com/artificial_intelligence/artificial_intelligence_constraint_satisfaction_problem.htm)
 
@@ -576,6 +619,7 @@ impl ConstraintSolver {
 **Performance:** Provides human-understandable argument structure, bridges informal and formal reasoning
 
 **How it Improves Over Raw Claims:**
+
 - **Data**: Evidence supporting the claim
 - **Claim**: Conclusion being argued for
 - **Warrant**: Reasoning linking data to claim
@@ -586,6 +630,7 @@ impl ConstraintSolver {
 **Implementation Complexity:** Low-Medium
 
 **Toulmin Structure:**
+
 ```
     [Data]
        |
@@ -603,12 +648,14 @@ impl ConstraintSolver {
 ```
 
 **Use Cases:**
+
 - Argument analysis and generation
 - Legal reasoning
 - Policy debate
 - Scientific argumentation
 
 **Integration into ThinkTools:**
+
 ```rust
 // Enhance LaserLogic with Toulmin analysis
 pub struct ToulminAnalyzer {
@@ -650,6 +697,7 @@ impl ToulminAnalyzer {
 ```
 
 **Sources:**
+
 - [The Toulmin Argument Model in AI (Springer)](https://link.springer.com/chapter/10.1007/978-0-387-98197-0_11)
 - [Implementing Toulmin Argument Analysis with AI](https://advanced-stack.com/resources/implementing-toulmin-argument-analysis-with-ai-llm-large-language-models.html)
 - [Toulmin Model Analysis of Student Argumentation on AI](https://www.mdpi.com/2227-7102/15/9/1226)
@@ -661,6 +709,7 @@ impl ToulminAnalyzer {
 **Performance:** Handles real-world reasoning with exceptions and non-monotonic logic
 
 **How it Improves Over Classical Logic:**
+
 - Allows **tentative conclusions** (can be defeated by new evidence)
 - Models **exceptions** to general rules
 - Handles **conflicting information** with priority
@@ -669,6 +718,7 @@ impl ToulminAnalyzer {
 **Implementation Complexity:** Medium-High
 
 **Defeasible Logic Architecture:**
+
 ```
 Rules:
   Strict:     P → Q         (always holds)
@@ -688,12 +738,14 @@ Example:
 ```
 
 **Use Cases:**
+
 - Legal reasoning (laws with exceptions)
 - Common-sense reasoning (birds fly, except penguins)
 - Ethical reasoning (rules with context-dependent exceptions)
 - Medical diagnosis (symptoms suggest disease, unless...)
 
 **Integration into ThinkTools:**
+
 ```rust
 // New module for defeasible reasoning
 pub struct DefeasibleReasoner {
@@ -736,6 +788,7 @@ impl DefeasibleReasoner {
 ```
 
 **Sources:**
+
 - [Defeasible Reasoning (Stanford Encyclopedia of Philosophy)](https://plato.stanford.edu/entries/reasoning-defeasible/)
 - [Defeasible Normative Reasoning (AAAI)](https://ojs.aaai.org/index.php/AAAI/article/view/28913)
 - [Arg2P: Argumentation Framework for Explainable AI](https://www.researchgate.net/publication/363186916_Arg2P_an_argumentation_framework_for_explainable_intelligent_systems)
@@ -749,6 +802,7 @@ impl DefeasibleReasoner {
 **Performance:** Enables AI to propose testable hypotheses, then validate through experiments
 
 **How it Improves Over Direct Answers:**
+
 - **Hypothesis formation**: Generate multiple candidate explanations
 - **Prediction**: Derive testable predictions from hypotheses
 - **Experimentation**: Design tests to differentiate hypotheses
@@ -758,6 +812,7 @@ impl DefeasibleReasoner {
 **Implementation Complexity:** Medium-High
 
 **Scientific Method Flow:**
+
 ```
 Observation
     |
@@ -790,12 +845,14 @@ Accept Best Hypothesis (or iterate)
 ```
 
 **Use Cases:**
+
 - Scientific discovery (drug discovery, materials science)
 - Root cause analysis (debugging, system failures)
 - Causal inference (economics, social science)
 - Algorithm design (try different approaches)
 
 **Integration into ThinkTools:**
+
 ```rust
 // New ThinkTool: ScientificMethod
 pub struct ScientificMethodEngine {
@@ -841,6 +898,7 @@ impl ScientificMethodEngine {
 ```
 
 **Sources:**
+
 - [AI Agents Learn to Test Hypotheses (NYU)](https://nyudatascience.medium.com/ai-agents-learn-to-test-their-own-hypotheses-about-how-the-world-works-7edd882b5f02)
 - [LLMs in Scientific Discovery (Nature npj AI)](https://www.nature.com/articles/s44387-025-00019-5)
 - [Scientific Hypothesis Generation with LLMs (arXiv)](https://arxiv.org/html/2504.05496v1)
@@ -853,6 +911,7 @@ impl ScientificMethodEngine {
 **Performance:** Dramatically improves factual accuracy and reduces hallucinations
 
 **How it Improves Over Single-Source:**
+
 - **Multiple independent sources**: Reduces bias from any single source
 - **Cross-validation**: Claims must be supported by diverse evidence
 - **Contradiction detection**: Identifies conflicting information
@@ -861,6 +920,7 @@ impl ScientificMethodEngine {
 **Implementation Complexity:** Medium
 
 **Triangulation Protocol:**
+
 ```
 Claim: "X is true"
     |
@@ -893,12 +953,14 @@ Weighted Synthesis
 ```
 
 **Use Cases:**
+
 - Fact-checking (journalism, research)
 - Medical diagnosis (multiple test results)
 - Intelligence analysis (OSINT)
 - Legal cases (corroborating evidence)
 
 **Integration into ThinkTools:**
+
 ```rust
 // ProofGuard already does this - enhance it further
 pub struct EvidenceTriangulator {
@@ -944,6 +1006,7 @@ impl EvidenceTriangulator {
 ```
 
 **Sources:**
+
 - [Evidence Triangulator using LLMs (Nature Communications)](https://www.nature.com/articles/s41467-025-62783-x)
 - [Data Triangulation in Research (Insight7)](https://insight7.io/data-triangulation-in-qualitative-research-methods/)
 - [Triangulating Evidence in Health Sciences (Oxford Academic)](https://academic.oup.com/bioinformatics/article/40/9/btae519/7738781)
@@ -955,6 +1018,7 @@ impl EvidenceTriangulator {
 **Performance:** Strengthens hypotheses by actively trying to disprove them (Popperian approach)
 
 **How it Improves Over Confirmation:**
+
 - **Seek disconfirming evidence**: Try to falsify rather than confirm
 - **Asymmetry of proof**: One counterexample can disprove, but many examples can't prove
 - **Stronger conclusions**: Hypotheses that survive falsification attempts are robust
@@ -963,6 +1027,7 @@ impl EvidenceTriangulator {
 **Implementation Complexity:** Medium
 
 **Falsification Process:**
+
 ```
 Hypothesis: "All swans are white"
     |
@@ -990,12 +1055,14 @@ Find Counterexample?
 ```
 
 **Use Cases:**
+
 - Scientific theory validation
 - Bug finding (testing software)
 - Security auditing (penetration testing)
 - Adversarial evaluation of claims
 
 **Integration into ThinkTools:**
+
 ```rust
 // Enhance BrutalHonesty with falsification
 pub struct FalsificationEngine {
@@ -1043,6 +1110,7 @@ impl FalsificationEngine {
 ```
 
 **Sources:**
+
 - [The Need for Verification in AI-Driven Scientific Discovery (arXiv)](https://arxiv.org/html/2509.01398v1)
 - [AI For Hypotheses? (AAAS Science)](https://www.science.org/content/blog-post/ai-hypotheses)
 
@@ -1055,6 +1123,7 @@ impl FalsificationEngine {
 **Performance:** Systematizes complex decisions with conflicting objectives
 
 **How it Improves Over Intuition:**
+
 - **Explicit criteria**: Make decision factors transparent
 - **Weights**: Quantify relative importance
 - **Structured comparison**: Score alternatives on each criterion
@@ -1066,6 +1135,7 @@ impl FalsificationEngine {
 **MCDA Methods:**
 
 **1. Analytic Hierarchy Process (AHP)**
+
 ```
 Decision: Choose cloud provider
     |
@@ -1087,12 +1157,14 @@ Weighted Score:
 ```
 
 **Use Cases:**
+
 - Technology selection (cloud providers, frameworks)
 - Hiring decisions (candidate evaluation)
 - Resource allocation (budget distribution)
 - Policy decisions (healthcare, environment)
 
 **Integration into ThinkTools:**
+
 ```rust
 // New ThinkTool: DecisionMatrix
 pub struct MCDAEngine {
@@ -1141,6 +1213,7 @@ impl MCDAEngine {
 ```
 
 **Sources:**
+
 - [Multi-Criteria Decision Analysis (Wikipedia)](https://en.wikipedia.org/wiki/Multiple-criteria_decision_analysis)
 - [MCDA in Health Technology Assessment](https://pmc.ncbi.nlm.nih.gov/articles/PMC6197072/)
 - [Guide to MCDA (UK Government Analysis Function)](https://analysisfunction.civilservice.gov.uk/policy-store/an-introductory-guide-to-mcda/)
@@ -1152,6 +1225,7 @@ impl MCDAEngine {
 **Performance:** Quantifies uncertainty and enables risk-aware decisions
 
 **How it Improves Over Risk-Blind Decisions:**
+
 - **Probability estimation**: Quantify likelihood of outcomes
 - **Impact assessment**: Measure severity of consequences
 - **Risk matrix**: Classify risks by probability × impact
@@ -1161,6 +1235,7 @@ impl MCDAEngine {
 **Implementation Complexity:** Medium
 
 **Risk Assessment Process:**
+
 ```
 Identify Risks
     |
@@ -1190,12 +1265,14 @@ Plan Mitigation
 ```
 
 **Use Cases:**
+
 - Project planning (identify failure modes)
 - Investment decisions (risk-adjusted returns)
 - Security analysis (threat modeling)
 - Medical decisions (treatment risks vs benefits)
 
 **Integration into ThinkTools:**
+
 ```rust
 // New ThinkTool: RiskAnalyzer
 pub struct RiskAnalyzer {
@@ -1261,6 +1338,7 @@ impl RiskAnalyzer {
 **Performance:** +94.1% on GSM8K, +67.7% on MATH
 
 **How it Improves Over Outcome Rewards:**
+
 - **Step-level feedback**: Evaluate each reasoning step, not just final answer
 - **Precise error localization**: Identify exactly where reasoning went wrong
 - **Better exploration**: Guides search toward correct intermediate steps
@@ -1269,6 +1347,7 @@ impl RiskAnalyzer {
 **Implementation Complexity:** High (requires training/fine-tuning)
 
 **Architecture:**
+
 ```
 Problem: "Sarah has 5 apples..."
     |
@@ -1293,12 +1372,14 @@ Step 3: "She has 5 - 2 = 3 left"
 ```
 
 **Use Cases:**
+
 - Mathematical reasoning (GSM8K, MATH benchmarks)
 - Code generation (verify each function/class)
 - Multi-step instructions
 - Proof generation
 
 **Integration into ThinkTools:**
+
 ```rust
 // Enhance all ThinkTools with step verification
 pub struct ProcessRewardModel {
@@ -1357,6 +1438,7 @@ impl ProcessRewardModel {
 ```
 
 **Sources:**
+
 - [Let's Verify Step by Step (OpenAI)](https://cdn.openai.com/improving-mathematical-reasoning-with-process-supervision/Lets_Verify_Step_by_Step.pdf)
 - [Lessons of Developing PRMs (arXiv 2501.07301)](https://arxiv.org/abs/2501.07301)
 - [Process Reward Models (Stephen Diehl)](https://www.stephendiehl.com/posts/process_reward/)
@@ -1368,6 +1450,7 @@ impl ProcessRewardModel {
 **Performance:** 4-6% higher accuracy, >30% fewer factual errors vs standard methods; diverse medium models outperform GPT-4 on GSM-8K (91% vs GPT-4 baseline)
 
 **How it Improves Over Single-Agent:**
+
 - **Multiple perspectives**: Different agents contribute different viewpoints
 - **Adversarial critique**: Agents challenge each other's reasoning
 - **Consensus building**: Agreement emerges from debate
@@ -1376,6 +1459,7 @@ impl ProcessRewardModel {
 **Implementation Complexity:** Medium
 
 **Architecture:**
+
 ```
 Problem
     |
@@ -1413,12 +1497,14 @@ Aggregator: Synthesize consensus → Solution Z*
 ```
 
 **Use Cases:**
+
 - Complex problem-solving (math, strategy)
 - Medical diagnosis (multiple specialties)
 - Policy decisions (multiple stakeholders)
 - Creative tasks (brainstorming)
 
 **Integration into ThinkTools:**
+
 ```rust
 // New orchestration mode: Multi-Agent Debate
 pub struct MultiAgentDebate {
@@ -1477,11 +1563,13 @@ impl MultiAgentDebate {
 ```
 
 **Diversity of Thought:**
+
 - **Homogeneous debate**: 3× same model → 82% accuracy
 - **Heterogeneous debate**: Gemini-Pro + Mixtral + PaLM → 91% accuracy
 - **Key insight**: Model diversity > model size for debate effectiveness
 
 **Sources:**
+
 - [Multi-Agent Debate for AI Reasoning (Medium)](https://sikkha.medium.com/exploring-multi-agent-debate-frameworks-for-ai-reasoning-and-persona-driven-architectures-0ffb5db05ee3)
 - [Improving Factuality with Multiagent Debate (arXiv 2305.14325)](https://arxiv.org/abs/2305.14325)
 - [Diversity of Thought in Multi-Agent Debate (arXiv 2410.12853)](https://arxiv.org/abs/2410.12853)
@@ -1494,6 +1582,7 @@ impl MultiAgentDebate {
 **Performance:** +15.84% SOTA gain, 75% substantive reflection rates, 40% reduction in debugging queries
 
 **How it Improves Over Direct Answers:**
+
 - **Guided discovery**: Leads user to answer through questions
 - **Metacognition**: Stimulates self-reflection
 - **Deep understanding**: Forces articulation of reasoning
@@ -1502,6 +1591,7 @@ impl MultiAgentDebate {
 **Implementation Complexity:** Low-Medium
 
 **Socratic Method:**
+
 ```
 Student Claim: "AI will replace all jobs"
     |
@@ -1532,6 +1622,7 @@ Questioning the Question:
 ```
 
 **Question Categories (Paul & Elder):**
+
 1. **Clarification**: "What do you mean by...?"
 2. **Assumptions**: "What are you assuming?"
 3. **Evidence**: "What evidence supports this?"
@@ -1540,12 +1631,14 @@ Questioning the Question:
 6. **Meta-questions**: "Why ask this question?"
 
 **Use Cases:**
+
 - Education (tutoring, assessment)
 - Debugging (help user find their own bugs)
 - Decision support (guide self-discovery)
 - Therapy/coaching (cognitive behavioral therapy)
 
 **Integration into ThinkTools:**
+
 ```rust
 // New ThinkTool: SocraticDialogue
 pub struct SocraticDialogue {
@@ -1594,6 +1687,7 @@ impl SocraticDialogue {
 ```
 
 **Sources:**
+
 - [The Socratic Method for Self-Discovery in LLMs (Princeton NLP)](https://princeton-nlp.github.io/SocraticAI/)
 - [SocraticAgent: AI-Driven Socratic Dialogue](https://www.emergentmind.com/topics/socraticagent)
 - [AI Oral Assessment Tool Uses Socratic Method (Georgia Tech)](https://research.gatech.edu/ai-oral-assessment-tool-uses-socratic-method-test-students-knowledge)
@@ -1717,27 +1811,28 @@ impl SocraticDialogue {
 
 ## 8. PRIORITIZATION MATRIX
 
-| Framework | Complexity | Impact | Priority | Effort (weeks) |
-|-----------|-----------|--------|----------|----------------|
-| **Self-Consistency** | Low | High | **P0** | 1 |
-| **Socratic Questioning** | Low-Med | Med-High | **P0** | 1 |
-| **Toulmin Analysis** | Low-Med | Medium | **P1** | 1 |
-| **Confidence Calibration** | Medium | High | **P0** | 2 |
-| **Tree of Thoughts** | Medium | High | **P0** | 2-3 |
-| **Evidence Triangulation** | Medium | High | **P0** | 2 |
-| **Multi-Agent Debate** | Medium | Med-High | **P1** | 2-3 |
-| **Uncertainty Quantification** | Medium | High | **P1** | 2 |
-| **MCDA** | Medium | Medium | **P1** | 2 |
-| **Graph of Thoughts** | High | Med-High | **P2** | 3-4 |
-| **Adaptive GoT** | High | High | **P2** | 4-6 |
-| **RAP** | High | Med-High | **P2** | 4-6 |
-| **Process Reward Models** | High | Very High | **P1** | 6-8 |
-| **Scientific Method** | High | High | **P2** | 4-6 |
-| **Defeasible Reasoning** | High | Medium | **P3** | 4-6 |
-| **First-Order Logic** | High | Medium | **P3** | 3-4 |
-| **CSP Solver** | Medium | Low-Med | **P3** | 2-3 |
+| Framework                      | Complexity | Impact    | Priority | Effort (weeks) |
+| ------------------------------ | ---------- | --------- | -------- | -------------- |
+| **Self-Consistency**           | Low        | High      | **P0**   | 1              |
+| **Socratic Questioning**       | Low-Med    | Med-High  | **P0**   | 1              |
+| **Toulmin Analysis**           | Low-Med    | Medium    | **P1**   | 1              |
+| **Confidence Calibration**     | Medium     | High      | **P0**   | 2              |
+| **Tree of Thoughts**           | Medium     | High      | **P0**   | 2-3            |
+| **Evidence Triangulation**     | Medium     | High      | **P0**   | 2              |
+| **Multi-Agent Debate**         | Medium     | Med-High  | **P1**   | 2-3            |
+| **Uncertainty Quantification** | Medium     | High      | **P1**   | 2              |
+| **MCDA**                       | Medium     | Medium    | **P1**   | 2              |
+| **Graph of Thoughts**          | High       | Med-High  | **P2**   | 3-4            |
+| **Adaptive GoT**               | High       | High      | **P2**   | 4-6            |
+| **RAP**                        | High       | Med-High  | **P2**   | 4-6            |
+| **Process Reward Models**      | High       | Very High | **P1**   | 6-8            |
+| **Scientific Method**          | High       | High      | **P2**   | 4-6            |
+| **Defeasible Reasoning**       | High       | Medium    | **P3**   | 4-6            |
+| **First-Order Logic**          | High       | Medium    | **P3**   | 3-4            |
+| **CSP Solver**                 | Medium     | Low-Med   | **P3**   | 2-3            |
 
 **Priority Levels:**
+
 - **P0**: Critical, implement immediately (Weeks 1-4)
 - **P1**: High value, implement soon (Weeks 4-8)
 - **P2**: Important, schedule for Phase 3 (Weeks 8-16)
@@ -1749,15 +1844,15 @@ impl SocraticDialogue {
 
 ### Expected Improvements by Use Case
 
-| Use Case | Baseline (CoT) | With Enhancements | Methods |
-|----------|----------------|-------------------|---------|
-| **Math Problems (GSM8K)** | 60% | 85-95% | Self-Consistency (+18%), PRM (+34%), ToT (+10%) |
-| **Planning Tasks** | 40% | 73-80% | ToT (+33%), RAP (+33%) |
-| **Fact Checking** | 65% | 85-95% | Triangulation (+20%), ProofGuard enhancement |
-| **Scientific Reasoning** | 50% | 70-85% | AGoT (+46%), Scientific Method, Hypothesis Testing |
-| **Decision Making** | N/A | 80-90% conf | MCDA, Risk Assessment, Scenario Planning |
-| **Logical Reasoning** | 70% | 80-90% | Toulmin (+10%), FOL, Defeasible (+5-10%) |
-| **Debate/Argumentation** | 60% | 85-90% | Multi-Agent (+4-6%), Socratic (+15%) |
+| Use Case                  | Baseline (CoT) | With Enhancements | Methods                                            |
+| ------------------------- | -------------- | ----------------- | -------------------------------------------------- |
+| **Math Problems (GSM8K)** | 60%            | 85-95%            | Self-Consistency (+18%), PRM (+34%), ToT (+10%)    |
+| **Planning Tasks**        | 40%            | 73-80%            | ToT (+33%), RAP (+33%)                             |
+| **Fact Checking**         | 65%            | 85-95%            | Triangulation (+20%), ProofGuard enhancement       |
+| **Scientific Reasoning**  | 50%            | 70-85%            | AGoT (+46%), Scientific Method, Hypothesis Testing |
+| **Decision Making**       | N/A            | 80-90% conf       | MCDA, Risk Assessment, Scenario Planning           |
+| **Logical Reasoning**     | 70%            | 80-90%            | Toulmin (+10%), FOL, Defeasible (+5-10%)           |
+| **Debate/Argumentation**  | 60%            | 85-90%            | Multi-Agent (+4-6%), Socratic (+15%)               |
 
 ### Confidence in Estimates
 
@@ -1772,24 +1867,18 @@ impl SocraticDialogue {
 ### For ReasonKit ThinkTools V3
 
 **Immediate (Next Sprint):**
+
 1. Implement Self-Consistency across all ThinkTools
 2. Add Socratic Questioning to BrutalHonesty
 3. Enhance ProofGuard with Evidence Triangulation
 4. Build Confidence Calibration system
 
-**Short-term (1-2 months):**
-5. Implement Tree of Thoughts for BedRock
-6. Add Multi-Agent Debate orchestration
-7. Create MCDA DecisionMatrix ThinkTool
-8. Implement Uncertainty Quantification
+**Short-term (1-2 months):** 5. Implement Tree of Thoughts for BedRock 6. Add Multi-Agent Debate orchestration 7. Create MCDA DecisionMatrix ThinkTool 8. Implement Uncertainty Quantification
 
-**Medium-term (3-6 months):**
-9. Build Graph of Thoughts / Adaptive GoT
-10. Implement Process Reward Models
-11. Create Scientific Method Engine
-12. Add RAP (Reasoning via Planning)
+**Medium-term (3-6 months):** 9. Build Graph of Thoughts / Adaptive GoT 10. Implement Process Reward Models 11. Create Scientific Method Engine 12. Add RAP (Reasoning via Planning)
 
 **Research & Experiment:**
+
 - Benchmark each enhancement on standard datasets (GSM8K, ARC, LogiQA)
 - Measure token cost vs performance trade-offs
 - A/B test with real users
@@ -1798,6 +1887,7 @@ impl SocraticDialogue {
 ### Integration Strategy
 
 **Modular Design:**
+
 ```rust
 // Each enhancement as a composable module
 pub trait ReasoningEnhancement {
@@ -1836,6 +1926,7 @@ Modern AI reasoning combines multiple paradigms to achieve substantial improveme
 6. **Advanced** (PRM, Debate, Socratic): Cutting-edge techniques
 
 **Key Insights:**
+
 - No single method dominates all tasks
 - Combination of methods often exceeds individual gains
 - Implementation complexity varies widely
@@ -1851,11 +1942,12 @@ Start with low-complexity, high-impact enhancements (Self-Consistency, Socratic,
 **Last Updated:** 2025-12-25
 **Maintainer:** Claude Code
 **Related Documents:**
+
 - `/home/zyxsys/RK-PROJECT/reasonkit-core/docs/THINKTOOLS_ARCHITECTURE.md`
 - `/home/zyxsys/RK-PROJECT/reasonkit-core/protocols/thinktools_v2.yaml`
 - `/home/zyxsys/RK-PROJECT/ORCHESTRATOR.md`
 
 ---
 
-*ReasonKit: Turn Prompts into Protocols*
+_ReasonKit: Turn Prompts into Protocols_
 *https://reasonkit.sh*

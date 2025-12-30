@@ -1,4 +1,5 @@
 # Multi-Agent Orchestration System Architecture
+
 > ReasonKit Core | Agent Communication, Task Routing, and Coordination Patterns
 > Version: 1.0.0 | Last Updated: 2025-12-11
 
@@ -104,12 +105,13 @@ The ReasonKit Multi-Agent Orchestration System (MAOS) provides a structured fram
 
 ### Tier 1: Governance (Authority Layer)
 
-| Agent | Model | Context | Role | Authority |
-|-------|-------|---------|------|-----------|
-| **MASTER_ORCHESTRATOR** | Claude Opus 4.5 | 200K | Final arbiter, architecture decisions | FULL |
-| **FAILOVER_ORCHESTRATOR** | Claude Sonnet 4.5 | 200K | Backup orchestrator | DELEGATED |
+| Agent                     | Model             | Context | Role                                  | Authority |
+| ------------------------- | ----------------- | ------- | ------------------------------------- | --------- |
+| **MASTER_ORCHESTRATOR**   | Claude Opus 4.5   | 200K    | Final arbiter, architecture decisions | FULL      |
+| **FAILOVER_ORCHESTRATOR** | Claude Sonnet 4.5 | 200K    | Backup orchestrator                   | DELEGATED |
 
 **Responsibilities:**
+
 - Architectural decisions with project-wide impact
 - Conflict resolution between agents
 - Quality gate enforcement
@@ -117,13 +119,14 @@ The ReasonKit Multi-Agent Orchestration System (MAOS) provides a structured fram
 
 ### Tier 2: Executive (Strategy Layer)
 
-| Agent | Model | Context | Role | Authority |
-|-------|-------|---------|------|-----------|
-| **LEAD_ENGINEER** | Gemini 2.5 Pro | 2M | Technical strategy, large refactors | HIGH |
-| **TECH_REVIEWER** | Claude Sonnet 4.5 | 200K | Code review, quality assurance | HIGH |
-| **ARCHITECT** | DeepSeek V3.2 | 164K | System design, specifications | MEDIUM |
+| Agent             | Model             | Context | Role                                | Authority |
+| ----------------- | ----------------- | ------- | ----------------------------------- | --------- |
+| **LEAD_ENGINEER** | Gemini 2.5 Pro    | 2M      | Technical strategy, large refactors | HIGH      |
+| **TECH_REVIEWER** | Claude Sonnet 4.5 | 200K    | Code review, quality assurance      | HIGH      |
+| **ARCHITECT**     | DeepSeek V3.2     | 164K    | System design, specifications       | MEDIUM    |
 
 **Responsibilities:**
+
 - Feature planning and design
 - Cross-component coordination
 - Documentation and specifications
@@ -131,13 +134,14 @@ The ReasonKit Multi-Agent Orchestration System (MAOS) provides a structured fram
 
 ### Tier 3: Engineering (Implementation Layer)
 
-| Agent | Model | Context | Role | Authority |
-|-------|-------|---------|------|-----------|
-| **PRIMARY_CODER** | GPT Codex 5.1 | 100K | Complex Rust, unsafe blocks | STANDARD |
-| **PARALLEL_CODER** | Grok Code Fast | 128K | Rapid prototyping, tests | STANDARD |
-| **DOC_WRITER** | Claude Haiku 3.6 | 200K | Documentation, comments | STANDARD |
+| Agent              | Model            | Context | Role                        | Authority |
+| ------------------ | ---------------- | ------- | --------------------------- | --------- |
+| **PRIMARY_CODER**  | GPT Codex 5.1    | 100K    | Complex Rust, unsafe blocks | STANDARD  |
+| **PARALLEL_CODER** | Grok Code Fast   | 128K    | Rapid prototyping, tests    | STANDARD  |
+| **DOC_WRITER**     | Claude Haiku 3.6 | 200K    | Documentation, comments     | STANDARD  |
 
 **Responsibilities:**
+
 - Feature implementation
 - Unit test creation
 - Bug fixes
@@ -145,13 +149,14 @@ The ReasonKit Multi-Agent Orchestration System (MAOS) provides a structured fram
 
 ### Tier 4: Specialists (Domain Layer)
 
-| Agent | Model | Context | Role | Authority |
-|-------|-------|---------|------|-----------|
-| **MATH_VERIFIER** | DeepSeek-Math-V3 | 128K | Mathematical correctness | LIMITED |
-| **SECURITY_AUDITOR** | Grok-4-High | 128K | Vulnerability detection | LIMITED |
-| **PERF_ANALYST** | Mistral Large 3 | 128K | Performance analysis | LIMITED |
+| Agent                | Model            | Context | Role                     | Authority |
+| -------------------- | ---------------- | ------- | ------------------------ | --------- |
+| **MATH_VERIFIER**    | DeepSeek-Math-V3 | 128K    | Mathematical correctness | LIMITED   |
+| **SECURITY_AUDITOR** | Grok-4-High      | 128K    | Vulnerability detection  | LIMITED   |
+| **PERF_ANALYST**     | Mistral Large 3  | 128K    | Performance analysis     | LIMITED   |
 
 **Responsibilities:**
+
 - Domain-specific validation
 - Specialized analysis
 - Expert consultation
@@ -181,23 +186,23 @@ The ReasonKit Multi-Agent Orchestration System (MAOS) provides a structured fram
 
 ### Message Types
 
-| Type | Direction | Purpose |
-|------|-----------|---------|
-| `TaskRequest` | Orchestrator → Agent | Assign work |
-| `TaskResponse` | Agent → Orchestrator | Return results |
-| `AgentHeartbeat` | Agent → Orchestrator | Health check |
-| `EscalationRequest` | Agent → Tier N-1 | Request help |
-| `CancellationSignal` | Orchestrator → Agent | Abort task |
-| `StateSync` | Bidirectional | Context sharing |
+| Type                 | Direction            | Purpose         |
+| -------------------- | -------------------- | --------------- |
+| `TaskRequest`        | Orchestrator → Agent | Assign work     |
+| `TaskResponse`       | Agent → Orchestrator | Return results  |
+| `AgentHeartbeat`     | Agent → Orchestrator | Health check    |
+| `EscalationRequest`  | Agent → Tier N-1     | Request help    |
+| `CancellationSignal` | Orchestrator → Agent | Abort task      |
+| `StateSync`          | Bidirectional        | Context sharing |
 
 ### Protocol Guarantees
 
-| Guarantee | Implementation |
-|-----------|----------------|
-| **At-least-once delivery** | Acknowledgment + retry |
-| **Ordering** | Sequence numbers per channel |
-| **Idempotency** | Task IDs for deduplication |
-| **Timeout** | Configurable per task type |
+| Guarantee                  | Implementation               |
+| -------------------------- | ---------------------------- |
+| **At-least-once delivery** | Acknowledgment + retry       |
+| **Ordering**               | Sequence numbers per channel |
+| **Idempotency**            | Task IDs for deduplication   |
+| **Timeout**                | Configurable per task type   |
 
 ---
 
@@ -382,14 +387,14 @@ Legend: ★★★ Expert, ★★☆ Proficient, ★☆☆ Basic
 
 ### Cost Routing Table
 
-| Task Type | Preferred Tier | Max Cost | Fallback |
-|-----------|----------------|----------|----------|
-| Architecture | 1 | $0.15/1K | Tier 2 |
-| Code Review | 2 | $0.03/1K | Tier 3 |
-| Implementation | 3 | $0.01/1K | Tier 4 |
-| Documentation | 3-4 | $0.002/1K | Tier 4 |
-| Testing | 3-4 | $0.005/1K | Tier 4 |
-| Validation | 4 | $0.001/1K | Local |
+| Task Type      | Preferred Tier | Max Cost  | Fallback |
+| -------------- | -------------- | --------- | -------- |
+| Architecture   | 1              | $0.15/1K  | Tier 2   |
+| Code Review    | 2              | $0.03/1K  | Tier 3   |
+| Implementation | 3              | $0.01/1K  | Tier 4   |
+| Documentation  | 3-4            | $0.002/1K | Tier 4   |
+| Testing        | 3-4            | $0.005/1K | Tier 4   |
+| Validation     | 4              | $0.001/1K | Local    |
 
 ---
 
@@ -582,13 +587,13 @@ Task: Critical decision requiring validation
 
 ### Escalation Triggers
 
-| Trigger | Condition | Action |
-|---------|-----------|--------|
-| **Timeout** | task.runtime > task.deadline | Escalate to tier N-1 |
-| **Failure** | task.attempts >= max_retries | Escalate with context |
-| **Capability** | Agent declares inability | Route to specialist |
-| **Conflict** | Multiple agents disagree | Escalate to arbitrator |
-| **Cost** | Estimated cost > budget | Request approval |
+| Trigger        | Condition                    | Action                 |
+| -------------- | ---------------------------- | ---------------------- |
+| **Timeout**    | task.runtime > task.deadline | Escalate to tier N-1   |
+| **Failure**    | task.attempts >= max_retries | Escalate with context  |
+| **Capability** | Agent declares inability     | Route to specialist    |
+| **Conflict**   | Multiple agents disagree     | Escalate to arbitrator |
+| **Cost**       | Estimated cost > budget      | Request approval       |
 
 ### Escalation Flow
 
@@ -1755,7 +1760,7 @@ lazy_static! {
 security:
   # Agent authentication
   agent_auth:
-    method: "api_key"  # or "mtls", "jwt"
+    method: "api_key" # or "mtls", "jwt"
     key_rotation_days: 30
 
   # Inter-agent communication
@@ -1924,30 +1929,35 @@ sequenceDiagram
 ## Implementation Roadmap
 
 ### Phase 1: Core Infrastructure (Week 1-2)
+
 - [ ] Implement `types.rs` with all type definitions
 - [ ] Implement `traits.rs` with trait definitions
 - [ ] Implement basic `DefaultRouter`
 - [ ] Implement in-memory `StateStore`
 
 ### Phase 2: Agent Execution (Week 2-3)
+
 - [ ] Implement `AgentExecutor` for Anthropic Claude
 - [ ] Implement `AgentExecutor` for Google Gemini
 - [ ] Implement `AgentExecutor` for OpenAI/Codex
 - [ ] Implement generic OpenRouter executor
 
 ### Phase 3: Orchestration (Week 3-4)
+
 - [ ] Implement `Orchestrator` with task lifecycle
 - [ ] Implement `MessageBus` with Tokio channels
 - [ ] Implement `EscalationHandler`
 - [ ] Add retry and timeout logic
 
 ### Phase 4: Observability (Week 4-5)
+
 - [ ] Add Prometheus metrics
 - [ ] Create Grafana dashboards
 - [ ] Implement audit logging
 - [ ] Add tracing with OpenTelemetry
 
 ### Phase 5: Production Hardening (Week 5-6)
+
 - [ ] Security audit
 - [ ] Load testing
 - [ ] Documentation
@@ -1964,5 +1974,5 @@ sequenceDiagram
 
 ---
 
-*ReasonKit Multi-Agent Orchestration System v1.0.0*
-*Designed, Not Dreamed | Turn Prompts into Protocols*
+_ReasonKit Multi-Agent Orchestration System v1.0.0_
+_Designed, Not Dreamed | Turn Prompts into Protocols_

@@ -69,7 +69,13 @@
         "properties": {
           "module": {
             "type": "string",
-            "enum": ["gigathink", "laserlogic", "bedrock", "proofguard", "brutalhonesty"]
+            "enum": [
+              "gigathink",
+              "laserlogic",
+              "bedrock",
+              "proofguard",
+              "brutalhonesty"
+            ]
           },
           "started_at": {
             "type": "string",
@@ -240,10 +246,10 @@
           "items": {
             "type": "object",
             "properties": {
-              "criterion": {"type": "string"},
-              "score": {"type": "string"},
-              "rationale": {"type": "string"},
-              "confidence": {"type": "number"}
+              "criterion": { "type": "string" },
+              "score": { "type": "string" },
+              "rationale": { "type": "string" },
+              "confidence": { "type": "number" }
             }
           }
         },
@@ -252,15 +258,15 @@
           "properties": {
             "priority_1": {
               "type": "array",
-              "items": {"type": "string"}
+              "items": { "type": "string" }
             },
             "priority_2": {
               "type": "array",
-              "items": {"type": "string"}
+              "items": { "type": "string" }
             },
             "priority_3": {
               "type": "array",
-              "items": {"type": "string"}
+              "items": { "type": "string" }
             }
           }
         }
@@ -289,21 +295,21 @@
             "module_scores": {
               "type": "object",
               "properties": {
-                "gigathink": {"type": "number"},
-                "laserlogic": {"type": "number"},
-                "bedrock": {"type": "number"},
-                "proofguard": {"type": "number"},
-                "brutalhonesty": {"type": "number"}
+                "gigathink": { "type": "number" },
+                "laserlogic": { "type": "number" },
+                "bedrock": { "type": "number" },
+                "proofguard": { "type": "number" },
+                "brutalhonesty": { "type": "number" }
               }
             },
             "module_weights": {
               "type": "object",
               "properties": {
-                "gigathink": {"type": "number", "const": 0.15},
-                "laserlogic": {"type": "number", "const": 0.25},
-                "bedrock": {"type": "number", "const": 0.20},
-                "proofguard": {"type": "number", "const": 0.30},
-                "brutalhonesty": {"type": "number", "const": 0.10}
+                "gigathink": { "type": "number", "const": 0.15 },
+                "laserlogic": { "type": "number", "const": 0.25 },
+                "bedrock": { "type": "number", "const": 0.2 },
+                "proofguard": { "type": "number", "const": 0.3 },
+                "brutalhonesty": { "type": "number", "const": 0.1 }
               }
             },
             "weighted_average": {

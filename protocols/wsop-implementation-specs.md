@@ -1,9 +1,11 @@
 # Web Search Optimization Protocol - Implementation Specifications v1.1
+
 > Testable Implementation Specs Derived from Academic Paper Analysis
 
 **Created:** 2025-12-12
 **Base Protocol:** `web-search-optimization-protocol.yaml` v1.0.0
 **Source Papers:**
+
 - HyDE (arXiv:2212.10496) - ACL 2023
 - Query Rewriting (arXiv:2305.14283) - EMNLP 2023
 - CRAG (arXiv:2401.15884) - Corrective RAG
@@ -47,13 +49,13 @@ def hyde_expand(query: str, llm: LLM, encoder: Encoder) -> Vector:
 
 ### 1.2 Testable Assertions
 
-| Test ID | Assertion | Expected Outcome |
-|---------|-----------|------------------|
-| HYDE-001 | HyDE generates valid hypothetical document | Non-empty, contextually relevant text |
-| HYDE-002 | HyDE embedding differs from raw query embedding | Cosine similarity < 0.95 |
-| HYDE-003 | HyDE retrieval improves recall vs raw query | Recall@10 improvement >= 5% |
-| HYDE-004 | HyDE works zero-shot (no training data) | No labeled data required |
-| HYDE-005 | Dense bottleneck filters hallucinations | False facts in hyp-doc not in results |
+| Test ID  | Assertion                                       | Expected Outcome                      |
+| -------- | ----------------------------------------------- | ------------------------------------- |
+| HYDE-001 | HyDE generates valid hypothetical document      | Non-empty, contextually relevant text |
+| HYDE-002 | HyDE embedding differs from raw query embedding | Cosine similarity < 0.95              |
+| HYDE-003 | HyDE retrieval improves recall vs raw query     | Recall@10 improvement >= 5%           |
+| HYDE-004 | HyDE works zero-shot (no training data)         | No labeled data required              |
+| HYDE-005 | Dense bottleneck filters hallucinations         | False facts in hyp-doc not in results |
 
 ### 1.3 Integration Points
 
@@ -63,7 +65,7 @@ integration:
   position: "phase_2_expansion"
   fallback: "raw_query_embedding"
   cache_key: "hyde:{query_hash}"
-  cache_ttl: 3600  # 1 hour
+  cache_ttl: 3600 # 1 hour
 ```
 
 ---
@@ -240,14 +242,14 @@ def crag_pipeline(
 
 ### 2.4 Testable Assertions
 
-| Test ID | Assertion | Expected Outcome |
-|---------|-----------|------------------|
-| CRAG-001 | Evaluator classifies into 3 categories | Output in {CORRECT, INCORRECT, AMBIGUOUS} |
-| CRAG-002 | Web search triggered on INCORRECT | web_search.search() called when action="INCORRECT" |
-| CRAG-003 | Knowledge refinement reduces token count | refined_len < original_len * 0.7 |
-| CRAG-004 | Decomposition produces valid strips | Each strip is 1-2 sentences |
-| CRAG-005 | Performance matches paper benchmarks | PopQA accuracy >= baseline + 5% |
-| CRAG-006 | Ambiguous combines both sources | Both corpus and web results in context |
+| Test ID  | Assertion                                | Expected Outcome                                   |
+| -------- | ---------------------------------------- | -------------------------------------------------- |
+| CRAG-001 | Evaluator classifies into 3 categories   | Output in {CORRECT, INCORRECT, AMBIGUOUS}          |
+| CRAG-002 | Web search triggered on INCORRECT        | web_search.search() called when action="INCORRECT" |
+| CRAG-003 | Knowledge refinement reduces token count | refined_len < original_len \* 0.7                  |
+| CRAG-004 | Decomposition produces valid strips      | Each strip is 1-2 sentences                        |
+| CRAG-005 | Performance matches paper benchmarks     | PopQA accuracy >= baseline + 5%                    |
+| CRAG-006 | Ambiguous combines both sources          | Both corpus and web results in context             |
 
 ---
 
@@ -380,14 +382,14 @@ def rag_fusion_pipeline(
 
 ### 3.4 Testable Assertions
 
-| Test ID | Assertion | Expected Outcome |
-|---------|-----------|------------------|
-| RAGF-001 | Multi-query generates diverse queries | Jaccard similarity < 0.5 between queries |
-| RAGF-002 | RRF score formula is correct | score = sum(1/(rank+k)) |
-| RAGF-003 | RRF with k=60 produces stable rankings | Ranking variance < 5% across runs |
-| RAGF-004 | Fusion improves recall vs single query | Recall@10 improvement >= 10% |
-| RAGF-005 | Original query always included | original_query in generated_queries |
-| RAGF-006 | Latency within acceptable bounds | total_time < 1.77 * single_query_time |
+| Test ID  | Assertion                              | Expected Outcome                         |
+| -------- | -------------------------------------- | ---------------------------------------- |
+| RAGF-001 | Multi-query generates diverse queries  | Jaccard similarity < 0.5 between queries |
+| RAGF-002 | RRF score formula is correct           | score = sum(1/(rank+k))                  |
+| RAGF-003 | RRF with k=60 produces stable rankings | Ranking variance < 5% across runs        |
+| RAGF-004 | Fusion improves recall vs single query | Recall@10 improvement >= 10%             |
+| RAGF-005 | Original query always included         | original_query in generated_queries      |
+| RAGF-006 | Latency within acceptable bounds       | total_time < 1.77 \* single_query_time   |
 
 ---
 
@@ -514,14 +516,14 @@ def rewrite_retrieve_read(
 
 ### 4.3 Testable Assertions
 
-| Test ID | Assertion | Expected Outcome |
-|---------|-----------|------------------|
-| QRW-001 | Rewriter produces valid query | Non-empty, <64 tokens |
-| QRW-002 | Rewritten differs from original | edit_distance > 0 |
-| QRW-003 | Rewritten improves retrieval | Recall improvement >= 5% |
-| QRW-004 | PPO reward in valid range | 0.0 <= reward <= 1.0 |
-| QRW-005 | T5-large can be fine-tuned | Model accepts PPO gradients |
-| QRW-006 | Web search integration works | Retriever returns valid docs |
+| Test ID | Assertion                       | Expected Outcome             |
+| ------- | ------------------------------- | ---------------------------- |
+| QRW-001 | Rewriter produces valid query   | Non-empty, <64 tokens        |
+| QRW-002 | Rewritten differs from original | edit_distance > 0            |
+| QRW-003 | Rewritten improves retrieval    | Recall improvement >= 5%     |
+| QRW-004 | PPO reward in valid range       | 0.0 <= reward <= 1.0         |
+| QRW-005 | T5-large can be fine-tuned      | Model accepts PPO gradients  |
+| QRW-006 | Web search integration works    | Retriever returns valid docs |
 
 ---
 
@@ -612,16 +614,16 @@ class WebSearchOptimizationPipeline:
 
 ### 5.2 Testable End-to-End Assertions
 
-| Test ID | Assertion | Expected Outcome |
-|---------|-----------|------------------|
-| WSOP-001 | Simple queries skip expansion | HyDE not called for simple |
-| WSOP-002 | Complex queries use full pipeline | All 4 techniques engaged |
-| WSOP-003 | Fallback triggered on low confidence | Web search called when conf < 0.3 |
-| WSOP-004 | Credibility scoring applied | All results have credibility tier |
-| WSOP-005 | Answer includes citations | Sources cited in output |
-| WSOP-006 | Latency scales with complexity | simple < moderate < complex |
-| WSOP-007 | Pipeline handles empty results | Graceful degradation on no results |
-| WSOP-008 | RRF integration works | Fusion applied to multi-query results |
+| Test ID  | Assertion                            | Expected Outcome                      |
+| -------- | ------------------------------------ | ------------------------------------- |
+| WSOP-001 | Simple queries skip expansion        | HyDE not called for simple            |
+| WSOP-002 | Complex queries use full pipeline    | All 4 techniques engaged              |
+| WSOP-003 | Fallback triggered on low confidence | Web search called when conf < 0.3     |
+| WSOP-004 | Credibility scoring applied          | All results have credibility tier     |
+| WSOP-005 | Answer includes citations            | Sources cited in output               |
+| WSOP-006 | Latency scales with complexity       | simple < moderate < complex           |
+| WSOP-007 | Pipeline handles empty results       | Graceful degradation on no results    |
+| WSOP-008 | RRF integration works                | Fusion applied to multi-query results |
 
 ---
 
@@ -740,7 +742,7 @@ wsop:
   query_rewriting:
     enabled: true
     model: "t5-large"
-    use_rl: false  # Set true when RL-trained model available
+    use_rl: false # Set true when RL-trained model available
     max_length: 64
 
   routing:
@@ -757,13 +759,13 @@ wsop:
 
 ## 8. CHANGELOG
 
-| Version | Date | Changes |
-|---------|------|---------|
-| 1.1.0 | 2025-12-12 | Added testable implementation specs from PDF analysis |
-| | | Integrated HyDE, CRAG, RAG-Fusion, Query Rewriting |
-| | | Created 30+ testable assertions |
-| | | Added end-to-end pipeline specification |
+| Version | Date       | Changes                                               |
+| ------- | ---------- | ----------------------------------------------------- |
+| 1.1.0   | 2025-12-12 | Added testable implementation specs from PDF analysis |
+|         |            | Integrated HyDE, CRAG, RAG-Fusion, Query Rewriting    |
+|         |            | Created 30+ testable assertions                       |
+|         |            | Added end-to-end pipeline specification               |
 
 ---
 
-*WSOP Implementation Specs v1.1 | Derived from 4 academic papers | 30+ testable assertions*
+_WSOP Implementation Specs v1.1 | Derived from 4 academic papers | 30+ testable assertions_

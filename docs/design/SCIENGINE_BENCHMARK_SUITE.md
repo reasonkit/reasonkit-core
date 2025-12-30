@@ -9,18 +9,21 @@
 ## Design Principles
 
 ### 1. Statistical Rigor
+
 - Report 95% confidence intervals on ALL results
 - Minimum 10 trials per configuration
 - Model responses as Bernoulli trials
 - Use temperature=0 for reproducibility
 
 ### 2. Reproducibility
+
 - All prompts publicly available
 - Document: model version, GPU type, batch size, precision
 - requirements.txt with exact versions
 - Seed all random operations
 
 ### 3. Honest Reporting
+
 - Show where ThinkTools help AND hurt
 - No cherry-picking favorable results
 - Include cost/latency alongside accuracy
@@ -31,37 +34,37 @@
 
 ### Primary Benchmarks (Run These)
 
-| Benchmark | Why | ReasonKit Opportunity |
-|-----------|-----|----------------------|
-| **LogiQA 2.0** | 27.8pp gap between GPT-4 and QwQ-32B | Test ProofGuard, LaserLogic |
-| **MMLU-Pro** | 10-choice, not saturated | Knowledge + reasoning |
-| **BIG-Bench Hard** | 23 challenging tasks | Test GigaThink, BedRock |
-| **Game of 24** | 74% vs 4% ToT demonstration | Marketing-friendly demo |
+| Benchmark          | Why                                  | ReasonKit Opportunity       |
+| ------------------ | ------------------------------------ | --------------------------- |
+| **LogiQA 2.0**     | 27.8pp gap between GPT-4 and QwQ-32B | Test ProofGuard, LaserLogic |
+| **MMLU-Pro**       | 10-choice, not saturated             | Knowledge + reasoning       |
+| **BIG-Bench Hard** | 23 challenging tasks                 | Test GigaThink, BedRock     |
+| **Game of 24**     | 74% vs 4% ToT demonstration          | Marketing-friendly demo     |
 
 ### Avoid (Saturated/Problematic)
 
-| Benchmark | Problem |
-|-----------|---------|
-| GSM8K | Saturated (GPT-4 90%+), contamination concerns |
-| MMLU | 6.5% question error rate, saturated |
-| HellaSwag | Near-ceiling performance |
+| Benchmark | Problem                                        |
+| --------- | ---------------------------------------------- |
+| GSM8K     | Saturated (GPT-4 90%+), contamination concerns |
+| MMLU      | 6.5% question error rate, saturated            |
+| HellaSwag | Near-ceiling performance                       |
 
 ### Where Structured Reasoning Helps
 
-| Domain | Improvement Evidence |
-|--------|---------------------|
-| Multi-step math | GSM8K, MATH, AIME |
-| Logical reasoning | LogiQA, ReClor |
+| Domain              | Improvement Evidence     |
+| ------------------- | ------------------------ |
+| Multi-step math     | GSM8K, MATH, AIME        |
+| Logical reasoning   | LogiQA, ReClor           |
 | Algorithmic puzzles | Game of 24, code puzzles |
-| Complex QA | HotpotQA, multi-hop |
+| Complex QA          | HotpotQA, multi-hop      |
 
 ### Where Structured Reasoning Hurts
 
-| Domain | Issue |
-|--------|-------|
-| Clinical text | 86.3% of LLMs degraded with CoT |
-| Simple tasks | Overthinking penalty |
-| Small models (<100B) | Illogical reasoning chains |
+| Domain               | Issue                           |
+| -------------------- | ------------------------------- |
+| Clinical text        | 86.3% of LLMs degraded with CoT |
+| Simple tasks         | Overthinking penalty            |
+| Small models (<100B) | Illogical reasoning chains      |
 
 ---
 
@@ -440,7 +443,7 @@ fn is_statistically_significant(
 
 ### Markdown Report Template
 
-```markdown
+````markdown
 # ReasonKit Benchmark Report
 
 **Date:** {date}
@@ -450,7 +453,8 @@ fn is_statistically_significant(
 ## Summary
 
 | Benchmark | Profile | Accuracy | 95% CI | Delta vs Baseline |
-|-----------|---------|----------|--------|-------------------|
+| --------- | ------- | -------- | ------ | ----------------- |
+
 {summary_table}
 
 ## Detailed Results
@@ -460,7 +464,8 @@ fn is_statistically_significant(
 **Best Profile:** {best_profile} ({best_accuracy}%)
 
 | Profile | Accuracy | 95% CI | Latency (ms) | Cost ($) |
-|---------|----------|--------|--------------|----------|
+| ------- | -------- | ------ | ------------ | -------- |
+
 {profile_table}
 
 **Where ThinkTools Helped:**
@@ -482,7 +487,9 @@ fn is_statistically_significant(
 # Reproduce this benchmark
 {reproduction_command}
 ```
-```
+````
+
+````
 
 ### CI/CD Integration
 
@@ -544,7 +551,7 @@ jobs:
               repo: context.repo.repo,
               body: '## Benchmark Results\n\n' + report
             });
-```
+````
 
 ---
 
@@ -615,13 +622,13 @@ reproducibility:
 
 ### What Results Mean
 
-| Delta | Interpretation | Action |
-|-------|----------------|--------|
-| > +10% | Strong improvement | Highlight in marketing |
-| +5-10% | Meaningful improvement | Document trade-offs |
-| +1-5% | Marginal | May not justify cost |
-| -1 to +1% | No difference | Honest: "no measurable change" |
-| < -1% | Degradation | Document when NOT to use |
+| Delta     | Interpretation         | Action                         |
+| --------- | ---------------------- | ------------------------------ |
+| > +10%    | Strong improvement     | Highlight in marketing         |
+| +5-10%    | Meaningful improvement | Document trade-offs            |
+| +1-5%     | Marginal               | May not justify cost           |
+| -1 to +1% | No difference          | Honest: "no measurable change" |
+| < -1%     | Degradation            | Document when NOT to use       |
 
 ### Cost-Benefit Analysis
 
@@ -644,23 +651,27 @@ BUT: Only if accuracy improvement matters more than latency.
 ## Implementation Roadmap
 
 ### Phase 1: Foundation (Week 1-2)
+
 - [ ] Implement statistical utilities (Wilson CI, McNemar)
 - [ ] Create benchmark trait/interface
 - [ ] Implement Game of 24 (marketing demo)
 - [ ] Basic CLI runner
 
 ### Phase 2: Core Benchmarks (Week 3-4)
+
 - [ ] LogiQA 2.0 integration
 - [ ] MMLU-Pro integration
 - [ ] BIG-Bench Hard (subset)
 - [ ] A/B comparison framework
 
 ### Phase 3: Reporting (Week 5)
+
 - [ ] Markdown report generator
 - [ ] HTML dashboard
 - [ ] CI/CD integration
 
 ### Phase 4: Community Release (Week 6)
+
 - [ ] Public benchmark results
 - [ ] Reproducibility documentation
 - [ ] Leaderboard (optional)
@@ -679,5 +690,5 @@ BUT: Only if accuracy improvement matters more than latency.
 
 ---
 
-*SciEngine Benchmark Suite v1.0 | ReasonKit Core*
-*"No claims without evidence."*
+_SciEngine Benchmark Suite v1.0 | ReasonKit Core_
+_"No claims without evidence."_

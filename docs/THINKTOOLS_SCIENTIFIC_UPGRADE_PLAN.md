@@ -10,26 +10,27 @@
 ## Executive Summary
 
 This document presents a scientifically-grounded roadmap for upgrading ReasonKit ThinkTools based on:
+
 - **3 research passes** covering cognitive science, formal logic, and implementation patterns
 - **12 improvement perspectives** validated for logical consistency and feasibility
 - **Rigorous evidence assessment** prioritizing empirically-proven methods
 
 ### Priority Matrix (Evidence × Impact)
 
-| Priority | Perspective | Evidence Strength | Expected Impact | Implementation Complexity |
-|----------|-------------|-------------------|-----------------|---------------------------|
-| **P0** | Tree-of-Thoughts (11) | 95% | +50% creative | High |
-| **P0** | Process Reward Model (7) | 92% | +8% GSM8K | Medium |
-| **P1** | Multi-Agent Debate (6) | 90% | +20% factuality | High |
-| **P1** | Toulmin Structure (3) | 90% | +25% argument quality | Low |
-| **P1** | Triangulation Protocol (5) | 85% | +50% false claim rejection | Medium |
-| **P2** | Metacognitive Calibration (8) | 88% | -30% decision error | Medium |
-| **P2** | Divergent-Convergent (1) | 85% | +40% idea quality | Medium |
-| **P2** | FOL Autoverification (2) | 80% | 80% F1 fallacy | High |
-| **P3** | Socratic Engine (12) | 80% | +35% clarity | Medium |
-| **P3** | Tripartite Processing (4) | 75% | -35% heuristic error | Medium |
-| **EXP** | Cognitive Forcing (9) | 60% | Mixed evidence | Low |
-| **EXP** | SAT Library (10) | 65% | Weak evidence | Medium |
+| Priority | Perspective                   | Evidence Strength | Expected Impact            | Implementation Complexity |
+| -------- | ----------------------------- | ----------------- | -------------------------- | ------------------------- |
+| **P0**   | Tree-of-Thoughts (11)         | 95%               | +50% creative              | High                      |
+| **P0**   | Process Reward Model (7)      | 92%               | +8% GSM8K                  | Medium                    |
+| **P1**   | Multi-Agent Debate (6)        | 90%               | +20% factuality            | High                      |
+| **P1**   | Toulmin Structure (3)         | 90%               | +25% argument quality      | Low                       |
+| **P1**   | Triangulation Protocol (5)    | 85%               | +50% false claim rejection | Medium                    |
+| **P2**   | Metacognitive Calibration (8) | 88%               | -30% decision error        | Medium                    |
+| **P2**   | Divergent-Convergent (1)      | 85%               | +40% idea quality          | Medium                    |
+| **P2**   | FOL Autoverification (2)      | 80%               | 80% F1 fallacy             | High                      |
+| **P3**   | Socratic Engine (12)          | 80%               | +35% clarity               | Medium                    |
+| **P3**   | Tripartite Processing (4)     | 75%               | -35% heuristic error       | Medium                    |
+| **EXP**  | Cognitive Forcing (9)         | 60%               | Mixed evidence             | Low                       |
+| **EXP**  | SAT Library (10)              | 65%               | Weak evidence              | Medium                    |
 
 ---
 
@@ -38,6 +39,7 @@ This document presents a scientifically-grounded roadmap for upgrading ReasonKit
 ### 1.1 Process Reward Model Integration (P0)
 
 **Scientific Basis:**
+
 - Math-Shepherd (ACL 2024): +6.2% GSM8K improvement
 - Step-by-step PPO enables error localization and correction
 
@@ -122,11 +124,13 @@ impl ProcessRewardModel {
 ```
 
 **Metrics & Benchmarks:**
+
 - Primary: GSM8K accuracy (target: +8% over baseline)
 - Secondary: MATH accuracy, step-level precision
 - Tracking: Error localization precision, recovery rate
 
 **Test Plan:**
+
 ```bash
 # Benchmark command
 cargo run --release --bin gsm8k_eval -- \
@@ -140,6 +144,7 @@ cargo run --release --bin gsm8k_eval -- \
 ### 1.2 Toulmin Argumentation Structure (P1)
 
 **Scientific Basis:**
+
 - Toulmin (1958): Established framework for argument analysis
 - Widely validated in legal, educational, and policy contexts
 
@@ -260,6 +265,7 @@ toulmin_output_format:
 ### 1.3 Epistemic Triangulation Protocol (P1)
 
 **Scientific Basis:**
+
 - Du Bois methodological triangulation (1950s sociology)
 - Modern fact-checking infrastructure research (2025)
 - Multi-source verification in epistemology
@@ -396,6 +402,7 @@ impl TriangulationResult {
 ### 2.1 Tree-of-Thoughts Integration (P0)
 
 **Scientific Basis:**
+
 - Yao et al. (NeurIPS 2023): 74% vs 4% on creative tasks
 - ToTRL (2025): 63.3% on AIME with parallel exploration
 
@@ -553,6 +560,7 @@ impl TreeOfThoughtsExecutor {
 ```
 
 **Benchmark:**
+
 - Game of 24: Target 74% (matching Yao et al.)
 - Creative Writing: Target 50% improvement in novelty scores
 - AIME: Target 60% with sufficient compute budget
@@ -562,6 +570,7 @@ impl TreeOfThoughtsExecutor {
 ### 2.2 Multi-Agent Debate (P1)
 
 **Scientific Basis:**
+
 - ICML 2024: "Multiagent debate significantly enhances mathematical and strategic reasoning"
 - Reduces hallucinations through adversarial critique
 
@@ -684,6 +693,7 @@ impl DebateArena {
 ### 3.1 Metacognitive Calibration System (P2)
 
 **Scientific Basis:**
+
 - PNAS 2025: "Metacognitive sensitivity is key to calibrating trust"
 - Brier score and ECE are proper scoring rules
 
@@ -962,15 +972,15 @@ impl EnhancedThinkToolsPipeline {
 
 ### Primary Benchmarks
 
-| Benchmark | Metric | Baseline | Target | ThinkTool |
-|-----------|--------|----------|--------|-----------|
-| GSM8K | Accuracy | 77.9% | 85.9% | PRM |
-| MATH | Accuracy | 28.6% | 36.5% | PRM + ToT |
-| Game of 24 | Success | 4% | 60%+ | ToT |
-| AIME 2025 | Score | 0.40 | 0.60 | ToT + PRM |
-| TruthfulQA | MC1 | 60% | 72% | Debate |
-| LOGIC | F1 | 70% | 80% | FOL Verifier |
-| ARC-C | Accuracy | 85% | 90% | Tripartite |
+| Benchmark  | Metric   | Baseline | Target | ThinkTool    |
+| ---------- | -------- | -------- | ------ | ------------ |
+| GSM8K      | Accuracy | 77.9%    | 85.9%  | PRM          |
+| MATH       | Accuracy | 28.6%    | 36.5%  | PRM + ToT    |
+| Game of 24 | Success  | 4%       | 60%+   | ToT          |
+| AIME 2025  | Score    | 0.40     | 0.60   | ToT + PRM    |
+| TruthfulQA | MC1      | 60%      | 72%    | Debate       |
+| LOGIC      | F1       | 70%      | 80%    | FOL Verifier |
+| ARC-C      | Accuracy | 85%      | 90%    | Tripartite   |
 
 ### Quality Metrics
 
@@ -1100,11 +1110,11 @@ profiles:
 
 ### Foundational Literature
 
-1. **Divergent Thinking**: Guilford, J.P. (1967). *The Nature of Human Intelligence*
-2. **Dual Process Theory**: Kahneman, D. (2011). *Thinking, Fast and Slow*
-3. **Tripartite Mind**: Stanovich, K.E. (2011). *Rationality and the Reflective Mind*
-4. **Toulmin Model**: Toulmin, S.E. (1958). *The Uses of Argument*
-5. **Deliberate Practice**: Ericsson, K.A. (1993). *The Role of Deliberate Practice*
+1. **Divergent Thinking**: Guilford, J.P. (1967). _The Nature of Human Intelligence_
+2. **Dual Process Theory**: Kahneman, D. (2011). _Thinking, Fast and Slow_
+3. **Tripartite Mind**: Stanovich, K.E. (2011). _Rationality and the Reflective Mind_
+4. **Toulmin Model**: Toulmin, S.E. (1958). _The Uses of Argument_
+5. **Deliberate Practice**: Ericsson, K.A. (1993). _The Role of Deliberate Practice_
 
 ### LLM Reasoning Research
 
@@ -1143,5 +1153,5 @@ Week 15-16: Profile tuning + Documentation
 
 ---
 
-*Generated by ReasonKit PowerCombo: 3x UltiSearch + 2x GigaThink + MegaLogic Validation*
-*Confidence: 82% | Sources: 50+ | Reasoning Steps: 120+*
+_Generated by ReasonKit PowerCombo: 3x UltiSearch + 2x GigaThink + MegaLogic Validation_
+_Confidence: 82% | Sources: 50+ | Reasoning Steps: 120+_

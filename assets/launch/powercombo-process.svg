@@ -1,0 +1,175 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600" fill="none">
+  <defs>
+    <!-- Gradients -->
+    <linearGradient id="heroGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#06b6d4"/>
+      <stop offset="50%" stop-color="#a855f7"/>
+      <stop offset="100%" stop-color="#ec4899"/>
+    </linearGradient>
+    <linearGradient id="cyanGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#06b6d4"/>
+      <stop offset="100%" stop-color="#0891b2"/>
+    </linearGradient>
+    <linearGradient id="purpleGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#a855f7"/>
+      <stop offset="100%" stop-color="#9333ea"/>
+    </linearGradient>
+    <linearGradient id="greenGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#10b981"/>
+      <stop offset="100%" stop-color="#059669"/>
+    </linearGradient>
+    <linearGradient id="pinkGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#ec4899"/>
+      <stop offset="100%" stop-color="#db2777"/>
+    </linearGradient>
+    <linearGradient id="orangeGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#f97316"/>
+      <stop offset="100%" stop-color="#ea580c"/>
+    </linearGradient>
+
+    <!-- Glow filters -->
+    <filter id="glowCyan" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="8" result="blur"/>
+      <feFlood flood-color="#06b6d4" flood-opacity="0.5"/>
+      <feComposite in2="blur" operator="in"/>
+      <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="glowPurple" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feFlood flood-color="#a855f7" flood-opacity="0.4"/>
+      <feComposite in2="blur" operator="in"/>
+      <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="600" fill="#030508"/>
+
+  <!-- Ambient glow -->
+  <ellipse cx="600" cy="300" rx="500" ry="250" fill="url(#heroGrad)" opacity="0.08"/>
+
+  <!-- Title -->
+  <text x="600" y="60" text-anchor="middle" fill="url(#heroGrad)" font-family="Inter, sans-serif" font-size="32" font-weight="700">POWERCOMBO PROCESS</text>
+  <text x="600" y="90" text-anchor="middle" fill="#9ca3af" font-family="Inter, sans-serif" font-size="16">5-Step Structured Reasoning Chain</text>
+
+  <!-- Step 1: GigaThink -->
+  <g transform="translate(120, 180)">
+    <rect x="0" y="0" width="180" height="280" rx="16" fill="#0a0d14" stroke="#06b6d4" stroke-width="2" filter="url(#glowCyan)"/>
+    <circle cx="90" cy="50" r="30" fill="url(#cyanGrad)" opacity="0.2"/>
+    <text x="90" y="58" text-anchor="middle" font-size="28">💡</text>
+    <text x="90" y="100" text-anchor="middle" fill="#06b6d4" font-family="Inter, sans-serif" font-size="16" font-weight="700">GigaThink</text>
+    <text x="90" y="125" text-anchor="middle" fill="#f9fafb" font-family="Inter, sans-serif" font-size="12" font-weight="600">DIVERGENT</text>
+    <line x1="20" y1="145" x2="160" y2="145" stroke="#06b6d4" stroke-width="1" opacity="0.3"/>
+    <text x="90" y="170" text-anchor="middle" fill="#9ca3af" font-family="Inter, sans-serif" font-size="11">Generate 10+</text>
+    <text x="90" y="188" text-anchor="middle" fill="#9ca3af" font-family="Inter, sans-serif" font-size="11">perspectives</text>
+    <text x="90" y="215" text-anchor="middle" fill="#6b7280" font-family="Inter, sans-serif" font-size="10">Explore widely</text>
+    <text x="90" y="232" text-anchor="middle" fill="#6b7280" font-family="Inter, sans-serif" font-size="10">No constraints</text>
+    <rect x="60" y="250" width="60" height="20" rx="10" fill="#06b6d4" opacity="0.2"/>
+    <text x="90" y="264" text-anchor="middle" fill="#06b6d4" font-family="JetBrains Mono, monospace" font-size="10">gt</text>
+  </g>
+
+  <!-- Arrow 1→2 -->
+  <path d="M310 320 L330 320" stroke="url(#heroGrad)" stroke-width="3" marker-end="url(#arrowhead)"/>
+  <polygon points="340,320 330,315 330,325" fill="url(#heroGrad)"/>
+
+  <!-- Step 2: LaserLogic -->
+  <g transform="translate(350, 180)">
+    <rect x="0" y="0" width="180" height="280" rx="16" fill="#0a0d14" stroke="#a855f7" stroke-width="2" filter="url(#glowPurple)"/>
+    <circle cx="90" cy="50" r="30" fill="url(#purpleGrad)" opacity="0.2"/>
+    <text x="90" y="58" text-anchor="middle" font-size="28">⚡</text>
+    <text x="90" y="100" text-anchor="middle" fill="#a855f7" font-family="Inter, sans-serif" font-size="16" font-weight="700">LaserLogic</text>
+    <text x="90" y="125" text-anchor="middle" fill="#f9fafb" font-family="Inter, sans-serif" font-size="12" font-weight="600">CONVERGENT</text>
+    <line x1="20" y1="145" x2="160" y2="145" stroke="#a855f7" stroke-width="1" opacity="0.3"/>
+    <text x="90" y="170" text-anchor="middle" fill="#9ca3af" font-family="Inter, sans-serif" font-size="11">Validate logic</text>
+    <text x="90" y="188" text-anchor="middle" fill="#9ca3af" font-family="Inter, sans-serif" font-size="11">Detect fallacies</text>
+    <text x="90" y="215" text-anchor="middle" fill="#6b7280" font-family="Inter, sans-serif" font-size="10">Prioritize ideas</text>
+    <text x="90" y="232" text-anchor="middle" fill="#6b7280" font-family="Inter, sans-serif" font-size="10">Focus ruthlessly</text>
+    <rect x="60" y="250" width="60" height="20" rx="10" fill="#a855f7" opacity="0.2"/>
+    <text x="90" y="264" text-anchor="middle" fill="#a855f7" font-family="JetBrains Mono, monospace" font-size="10">ll</text>
+  </g>
+
+  <!-- Arrow 2→3 -->
+  <polygon points="570,320 560,315 560,325" fill="url(#heroGrad)"/>
+
+  <!-- Step 3: BedRock -->
+  <g transform="translate(580, 180)">
+    <rect x="0" y="0" width="180" height="280" rx="16" fill="#0a0d14" stroke="#10b981" stroke-width="2"/>
+    <circle cx="90" cy="50" r="30" fill="url(#greenGrad)" opacity="0.2"/>
+    <text x="90" y="58" text-anchor="middle" font-size="28">🪨</text>
+    <text x="90" y="100" text-anchor="middle" fill="#10b981" font-family="Inter, sans-serif" font-size="16" font-weight="700">BedRock</text>
+    <text x="90" y="125" text-anchor="middle" fill="#f9fafb" font-family="Inter, sans-serif" font-size="12" font-weight="600">GROUNDING</text>
+    <line x1="20" y1="145" x2="160" y2="145" stroke="#10b981" stroke-width="1" opacity="0.3"/>
+    <text x="90" y="170" text-anchor="middle" fill="#9ca3af" font-family="Inter, sans-serif" font-size="11">First principles</text>
+    <text x="90" y="188" text-anchor="middle" fill="#9ca3af" font-family="Inter, sans-serif" font-size="11">Find axioms</text>
+    <text x="90" y="215" text-anchor="middle" fill="#6b7280" font-family="Inter, sans-serif" font-size="10">Decompose to</text>
+    <text x="90" y="232" text-anchor="middle" fill="#6b7280" font-family="Inter, sans-serif" font-size="10">fundamentals</text>
+    <rect x="60" y="250" width="60" height="20" rx="10" fill="#10b981" opacity="0.2"/>
+    <text x="90" y="264" text-anchor="middle" fill="#10b981" font-family="JetBrains Mono, monospace" font-size="10">br</text>
+  </g>
+
+  <!-- Arrow 3→4 -->
+  <polygon points="800,320 790,315 790,325" fill="url(#heroGrad)"/>
+
+  <!-- Step 4: ProofGuard -->
+  <g transform="translate(810, 180)">
+    <rect x="0" y="0" width="180" height="280" rx="16" fill="#0a0d14" stroke="#fbbf24" stroke-width="2"/>
+    <circle cx="90" cy="50" r="30" fill="#fbbf24" opacity="0.2"/>
+    <text x="90" y="58" text-anchor="middle" font-size="28">🛡️</text>
+    <text x="90" y="100" text-anchor="middle" fill="#fbbf24" font-family="Inter, sans-serif" font-size="16" font-weight="700">ProofGuard</text>
+    <text x="90" y="125" text-anchor="middle" fill="#f9fafb" font-family="Inter, sans-serif" font-size="12" font-weight="600">VALIDATION</text>
+    <line x1="20" y1="145" x2="160" y2="145" stroke="#fbbf24" stroke-width="1" opacity="0.3"/>
+    <text x="90" y="170" text-anchor="middle" fill="#9ca3af" font-family="Inter, sans-serif" font-size="11">Verify claims</text>
+    <text x="90" y="188" text-anchor="middle" fill="#9ca3af" font-family="Inter, sans-serif" font-size="11">3-source rule</text>
+    <text x="90" y="215" text-anchor="middle" fill="#6b7280" font-family="Inter, sans-serif" font-size="10">Triangulate</text>
+    <text x="90" y="232" text-anchor="middle" fill="#6b7280" font-family="Inter, sans-serif" font-size="10">Check evidence</text>
+    <rect x="60" y="250" width="60" height="20" rx="10" fill="#fbbf24" opacity="0.2"/>
+    <text x="90" y="264" text-anchor="middle" fill="#fbbf24" font-family="JetBrains Mono, monospace" font-size="10">pg</text>
+  </g>
+
+  <!-- Arrow 4→5 -->
+  <polygon points="1030,320 1020,315 1020,325" fill="url(#heroGrad)"/>
+
+  <!-- Step 5: BrutalHonesty -->
+  <g transform="translate(1000, 180)">
+    <rect x="0" y="0" width="180" height="280" rx="16" fill="#0a0d14" stroke="#f97316" stroke-width="2"/>
+    <circle cx="90" cy="50" r="30" fill="url(#orangeGrad)" opacity="0.2"/>
+    <text x="90" y="58" text-anchor="middle" font-size="28">🔥</text>
+    <text x="90" y="100" text-anchor="middle" fill="#f97316" font-family="Inter, sans-serif" font-size="16" font-weight="700">BrutalHonesty</text>
+    <text x="90" y="125" text-anchor="middle" fill="#f9fafb" font-family="Inter, sans-serif" font-size="12" font-weight="600">RUTHLESS</text>
+    <line x1="20" y1="145" x2="160" y2="145" stroke="#f97316" stroke-width="1" opacity="0.3"/>
+    <text x="90" y="170" text-anchor="middle" fill="#9ca3af" font-family="Inter, sans-serif" font-size="11">Adversarial</text>
+    <text x="90" y="188" text-anchor="middle" fill="#9ca3af" font-family="Inter, sans-serif" font-size="11">critique</text>
+    <text x="90" y="215" text-anchor="middle" fill="#6b7280" font-family="Inter, sans-serif" font-size="10">Cut the fluff</text>
+    <text x="90" y="232" text-anchor="middle" fill="#6b7280" font-family="Inter, sans-serif" font-size="10">Be honest</text>
+    <rect x="60" y="250" width="60" height="20" rx="10" fill="#f97316" opacity="0.2"/>
+    <text x="90" y="264" text-anchor="middle" fill="#f97316" font-family="JetBrains Mono, monospace" font-size="10">bh</text>
+  </g>
+
+  <!-- Flow arrows connecting all -->
+  <path d="M300 320 L340 320" stroke="#4b5563" stroke-width="2" stroke-dasharray="5,5"/>
+  <path d="M530 320 L570 320" stroke="#4b5563" stroke-width="2" stroke-dasharray="5,5"/>
+  <path d="M760 320 L800 320" stroke="#4b5563" stroke-width="2" stroke-dasharray="5,5"/>
+  <path d="M990 320 L1000 320" stroke="#4b5563" stroke-width="2" stroke-dasharray="5,5"/>
+
+  <!-- Bottom stats -->
+  <g transform="translate(0, 500)">
+    <rect x="120" y="0" width="200" height="50" rx="8" fill="#0a0d14" stroke="rgba(6,182,212,0.3)" stroke-width="1"/>
+    <text x="220" y="22" text-anchor="middle" fill="#06b6d4" font-family="Inter, sans-serif" font-size="12" font-weight="600">QUICK PROFILE</text>
+    <text x="220" y="40" text-anchor="middle" fill="#9ca3af" font-family="JetBrains Mono, monospace" font-size="11">gt → ll (70%)</text>
+
+    <rect x="360" y="0" width="200" height="50" rx="8" fill="#0a0d14" stroke="rgba(168,85,247,0.3)" stroke-width="1"/>
+    <text x="460" y="22" text-anchor="middle" fill="#a855f7" font-family="Inter, sans-serif" font-size="12" font-weight="600">BALANCED</text>
+    <text x="460" y="40" text-anchor="middle" fill="#9ca3af" font-family="JetBrains Mono, monospace" font-size="11">gt → ll → br → pg (80%)</text>
+
+    <rect x="600" y="0" width="200" height="50" rx="8" fill="#0a0d14" stroke="rgba(16,185,129,0.3)" stroke-width="1"/>
+    <text x="700" y="22" text-anchor="middle" fill="#10b981" font-family="Inter, sans-serif" font-size="12" font-weight="600">DEEP</text>
+    <text x="700" y="40" text-anchor="middle" fill="#9ca3af" font-family="JetBrains Mono, monospace" font-size="11">All 5 modules (85%)</text>
+
+    <rect x="840" y="0" width="200" height="50" rx="8" fill="#0a0d14" stroke="rgba(249,115,22,0.3)" stroke-width="1"/>
+    <text x="940" y="22" text-anchor="middle" fill="#f97316" font-family="Inter, sans-serif" font-size="12" font-weight="600">PARANOID</text>
+    <text x="940" y="40" text-anchor="middle" fill="#9ca3af" font-family="JetBrains Mono, monospace" font-size="11">All 5 + validation (95%)</text>
+  </g>
+
+  <!-- Brand footer -->
+  <text x="600" y="580" text-anchor="middle" fill="#4b5563" font-family="Inter, sans-serif" font-size="11">reasonkit-core | Turn Prompts into Protocols | reasonkit.sh</text>
+</svg>

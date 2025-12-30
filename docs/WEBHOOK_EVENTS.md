@@ -6,20 +6,22 @@ This document provides a comprehensive reference for all events emitted by the R
 
 All events follow the naming convention: `{category}.{action}`.
 
-| Category | Description |
-|----------|-------------|
+| Category    | Description                                                        |
+| ----------- | ------------------------------------------------------------------ |
 | `execution` | Events related to the lifecycle of a reasoning protocol execution. |
-| `trace` | Events related to the creation and management of reasoning traces. |
-| `usage` | Events triggered by quota thresholds and usage limits. |
-| `account` | Events related to user account changes (Pro/Enterprise). |
-| `ingestion` | Events related to document ingestion and RAG indexing. |
+| `trace`     | Events related to the creation and management of reasoning traces. |
+| `usage`     | Events triggered by quota thresholds and usage limits.             |
+| `account`   | Events related to user account changes (Pro/Enterprise).           |
+| `ingestion` | Events related to document ingestion and RAG indexing.             |
 
 ## Core Execution Events
 
 ### `execution.started`
+
 Fired when a reasoning execution begins.
 
 **Payload:**
+
 ```json
 {
   "type": "execution.started",
@@ -34,9 +36,11 @@ Fired when a reasoning execution begins.
 ```
 
 ### `execution.step_completed`
+
 Fired after each atomic step within a protocol completes.
 
 **Payload:**
+
 ```json
 {
   "type": "execution.step_completed",
@@ -50,9 +54,11 @@ Fired after each atomic step within a protocol completes.
 ```
 
 ### `execution.completed`
+
 Fired when the entire protocol execution finishes successfully.
 
 **Payload:**
+
 ```json
 {
   "type": "execution.completed",
@@ -68,9 +74,11 @@ Fired when the entire protocol execution finishes successfully.
 ```
 
 ### `execution.failed`
+
 Fired when an execution fails due to an error (provider down, validation failed, etc.).
 
 **Payload:**
+
 ```json
 {
   "type": "execution.failed",
@@ -88,22 +96,27 @@ Fired when an execution fails due to an error (provider down, validation failed,
 ## Trace Events
 
 ### `trace.created`
+
 Fired when an execution trace is persisted to storage.
 
 ### `trace.shared`
+
 Fired when a public share link is generated for a trace.
 
 ## Usage & Billing Events
 
 ### `usage.limit_warning`
+
 Fired when a user reaches 80% of their monthly token or request quota.
 
 ### `usage.limit_exceeded`
+
 Fired when a quota is exhausted and requests are being throttled.
 
 ## Security (Enterprise)
 
 ### `security.api_key_used`
+
 Fired when a new or rotated API key is first used.
 
 ---
@@ -112,13 +125,13 @@ Fired when a new or rotated API key is first used.
 
 All event payloads include the following top-level fields:
 
-| Field | Type | Description |
-|-------|------|-------------|
-| `id` | string | Unique event UUID. |
-| `type` | string | The event name (e.g., `execution.completed`). |
-| `created_at` | string | ISO 8601 timestamp. |
-| `idempotency_key` | string | Key to prevent duplicate processing. |
-| `data` | object | Event-specific data (see details above). |
+| Field             | Type   | Description                                   |
+| ----------------- | ------ | --------------------------------------------- |
+| `id`              | string | Unique event UUID.                            |
+| `type`            | string | The event name (e.g., `execution.completed`). |
+| `created_at`      | string | ISO 8601 timestamp.                           |
+| `idempotency_key` | string | Key to prevent duplicate processing.          |
+| `data`            | object | Event-specific data (see details above).      |
 
 ## Integration
 

@@ -64,13 +64,13 @@ This guide provides a complete strategy for implementing production-grade error 
 
 ### Key Principles
 
-| Principle | Description |
-|-----------|-------------|
-| **Privacy First** | PII scrubbing before any external transmission |
-| **Local First** | All data stored locally by default, external opt-in |
-| **Fail Loud** | Errors surface immediately with actionable context |
-| **Structured** | Consistent error formats across Rust and Python |
-| **Traceable** | Full stack traces and execution context |
+| Principle         | Description                                         |
+| ----------------- | --------------------------------------------------- |
+| **Privacy First** | PII scrubbing before any external transmission      |
+| **Local First**   | All data stored locally by default, external opt-in |
+| **Fail Loud**     | Errors surface immediately with actionable context  |
+| **Structured**    | Consistent error formats across Rust and Python     |
+| **Traceable**     | Full stack traces and execution context             |
 
 ---
 
@@ -149,12 +149,12 @@ This guide provides a complete strategy for implementing production-grade error 
 
 ### 2.2 Error Classification
 
-| Level | Code | Description | Action Required | Example |
-|-------|------|-------------|-----------------|---------|
-| **Fatal** | F001-F999 | Application crash, unrecoverable | Immediate restart, incident | Panic, OOM |
-| **Error** | E001-E999 | Operation failed, recoverable | Retry or user action | API timeout |
-| **Warning** | W001-W999 | Degraded functionality | Monitoring, no action | Cache miss |
-| **Info** | I001-I999 | Informational events | Logging only | Config loaded |
+| Level       | Code      | Description                      | Action Required             | Example       |
+| ----------- | --------- | -------------------------------- | --------------------------- | ------------- |
+| **Fatal**   | F001-F999 | Application crash, unrecoverable | Immediate restart, incident | Panic, OOM    |
+| **Error**   | E001-E999 | Operation failed, recoverable    | Retry or user action        | API timeout   |
+| **Warning** | W001-W999 | Degraded functionality           | Monitoring, no action       | Cache miss    |
+| **Info**    | I001-I999 | Informational events             | Logging only                | Config loaded |
 
 ### 2.3 Error Code Registry
 
@@ -1334,6 +1334,7 @@ def capture_error(error: "ReasonKitError") -> Optional[str]:
 #### Project Configuration
 
 1. **Create Sentry Project**
+
    ```
    Organization: reasonkit
    Project: reasonkit-core (Rust)
@@ -1341,6 +1342,7 @@ def capture_error(error: "ReasonKitError") -> Optional[str]:
    ```
 
 2. **Configure DSN Management**
+
    ```bash
    # Development (local .env)
    SENTRY_DSN=https://xxx@xxx.ingest.sentry.io/xxx
@@ -1351,11 +1353,12 @@ def capture_error(error: "ReasonKitError") -> Optional[str]:
    ```
 
 3. **Environment Separation**
+
    ```yaml
    environments:
-     - development  # Local development
-     - staging      # CI/CD testing
-     - production   # Live users
+     - development # Local development
+     - staging # CI/CD testing
+     - production # Live users
    ```
 
 4. **Release Tracking**
@@ -1409,7 +1412,7 @@ For organizations requiring self-hosted solutions:
 
 ```yaml
 # docker-compose.glitchtip.yml
-version: '3.8'
+version: "3.8"
 
 services:
   glitchtip:
@@ -1457,16 +1460,16 @@ volumes:
 
 ### 5.3 Comparison: Sentry vs Self-Hosted
 
-| Feature | Sentry Cloud | GlitchTip | Highlight.io |
-|---------|--------------|-----------|--------------|
-| **Setup Complexity** | Low | Medium | Medium |
-| **Cost** | $26+/month | Infrastructure only | $0-150/month |
-| **Data Residency** | US/EU | Your servers | Your servers |
-| **Features** | Full | 80% | 90% |
-| **Retention** | 90 days | Unlimited | Configurable |
-| **GDPR Compliance** | DPA available | Full control | DPA available |
-| **Rust SDK** | Official | Compatible | Official |
-| **Python SDK** | Official | Compatible | Official |
+| Feature              | Sentry Cloud  | GlitchTip           | Highlight.io  |
+| -------------------- | ------------- | ------------------- | ------------- |
+| **Setup Complexity** | Low           | Medium              | Medium        |
+| **Cost**             | $26+/month    | Infrastructure only | $0-150/month  |
+| **Data Residency**   | US/EU         | Your servers        | Your servers  |
+| **Features**         | Full          | 80%                 | 90%           |
+| **Retention**        | 90 days       | Unlimited           | Configurable  |
+| **GDPR Compliance**  | DPA available | Full control        | DPA available |
+| **Rust SDK**         | Official      | Compatible          | Official      |
+| **Python SDK**       | Official      | Compatible          | Official      |
 
 **Recommendation:** Use Sentry Cloud for teams <10 developers, self-hosted GlitchTip for enterprise/compliance requirements.
 
@@ -1669,7 +1672,7 @@ retention:
 
   # Sentry (if enabled)
   sentry:
-    events: 90 days  # Sentry default
+    events: 90 days # Sentry default
     transactions: 90 days
 
   # Self-hosted
@@ -1805,11 +1808,11 @@ warning_alerts:
 ```yaml
 info_alerts:
   - name: "Daily Error Summary"
-    schedule: "0 9 * * *"  # 9 AM daily
+    schedule: "0 9 * * *" # 9 AM daily
     action: email_digest
 
   - name: "Weekly Trend Report"
-    schedule: "0 9 * * 1"  # Monday 9 AM
+    schedule: "0 9 * * 1" # Monday 9 AM
     action: email_report
 ```
 
@@ -1876,13 +1879,13 @@ graph TD
 ```yaml
 # Assignment based on error category
 assignment_rules:
-  - match: "code starts with E1"  # Config errors
+  - match: "code starts with E1" # Config errors
     assign: "platform-team"
 
-  - match: "code starts with E2"  # Network errors
+  - match: "code starts with E2" # Network errors
     assign: "infrastructure-team"
 
-  - match: "code starts with E3"  # Processing errors
+  - match: "code starts with E3" # Processing errors
     assign: "core-team"
 
   - match: "thinktool contains PowerCombo"
@@ -1904,19 +1907,23 @@ assignment_rules:
 **Affected:** [affected_count] users
 
 ### Summary
+
 [error_message]
 
 ### Context
+
 - ThinkTool: [thinktool]
 - Profile: [profile]
 - Environment: [environment]
 
 ### Quick Links
+
 - [View in Sentry](sentry_link)
 - [Runbook](runbook_link)
 - [Recent Deploys](deploy_link)
 
 ### Actions Required
+
 1. Acknowledge this alert
 2. Check runbook for known fixes
 3. Escalate if not resolved in 30m
@@ -1932,11 +1939,13 @@ assignment_rules:
 **Fix Applied:** [fix_description]
 
 ### Impact
+
 - Affected users: [count]
 - Duration: [duration]
 - Data loss: [yes/no]
 
 ### Prevention
+
 [prevention_steps]
 ```
 
@@ -2102,6 +2111,7 @@ metrics:
 # ReasonKit Error Report: Week of [DATE]
 
 ## Executive Summary
+
 - **Total Errors:** [count] ([trend]% vs last week)
 - **Error Rate:** [rate]%
 - **Affected Users:** [count]
@@ -2109,27 +2119,31 @@ metrics:
 
 ## Top Issues This Week
 
-| Rank | Error Code | Count | Trend | Status |
-|------|------------|-------|-------|--------|
-| 1 | E303 | 1,234 | +15% | Investigating |
-| 2 | E201 | 567 | -20% | Fixed |
-| 3 | E100 | 234 | New | Triaging |
+| Rank | Error Code | Count | Trend | Status        |
+| ---- | ---------- | ----- | ----- | ------------- |
+| 1    | E303       | 1,234 | +15%  | Investigating |
+| 2    | E201       | 567   | -20%  | Fixed         |
+| 3    | E100       | 234   | New   | Triaging      |
 
 ## Resolution Metrics
+
 - **MTTD:** [X] minutes (Target: <5 min)
 - **MTTR:** [X] minutes (Target: <60 min)
 - **First Response:** [X] minutes
 
 ## Notable Incidents
+
 1. **[INC-001]** - [Brief description] - Resolved in [X] min
 2. **[INC-002]** - [Brief description] - Ongoing
 
 ## Action Items
+
 - [ ] Investigate E303 spike
 - [ ] Deploy fix for E201
 - [ ] Update runbook for E100
 
 ## Trends
+
 [Include trend chart image]
 ```
 
@@ -2139,7 +2153,7 @@ metrics:
 
 ### 10.1 In-CLI Automatic Crash Reports
 
-```rust
+````rust
 // src/crash_reporter.rs
 
 use std::panic;
@@ -2218,7 +2232,7 @@ fn save_crash_report(report: &str) -> std::io::Result<std::path::PathBuf> {
 
     Ok(path)
 }
-```
+````
 
 ### 10.2 Manual Bug Report Command
 
@@ -2545,7 +2559,7 @@ fn test_pii_scrubbing_comprehensive() {
 ```yaml
 # Reduce sample rate temporarily
 sentry:
-  sample_rate: 0.1  # 10% of errors
+  sample_rate: 0.1 # 10% of errors
 
 # Add rate limiting
 rate_limits:
@@ -2577,17 +2591,17 @@ RK_ERROR_TRACKING_DRY_RUN=true rk-core think "test query"
 
 ## Appendix A: Error Code Reference
 
-| Code Range | Category | Description |
-|------------|----------|-------------|
-| F001-F099 | Fatal | Unrecoverable crashes |
-| E100-E199 | Configuration | Config file errors |
-| E200-E299 | Network | API/connectivity errors |
-| E300-E399 | Processing | Validation/parsing errors |
-| E400-E499 | Storage | File/database errors |
-| E500-E599 | Integration | MCP/external tool errors |
-| W100-W199 | Performance | Slow operations |
-| W200-W299 | Deprecation | Deprecated API usage |
-| I100-I199 | Informational | Notable events |
+| Code Range | Category      | Description               |
+| ---------- | ------------- | ------------------------- |
+| F001-F099  | Fatal         | Unrecoverable crashes     |
+| E100-E199  | Configuration | Config file errors        |
+| E200-E299  | Network       | API/connectivity errors   |
+| E300-E399  | Processing    | Validation/parsing errors |
+| E400-E499  | Storage       | File/database errors      |
+| E500-E599  | Integration   | MCP/external tool errors  |
+| W100-W199  | Performance   | Slow operations           |
+| W200-W299  | Deprecation   | Deprecated API usage      |
+| I100-I199  | Informational | Notable events            |
 
 ## Appendix B: Related Documents
 
@@ -2598,6 +2612,6 @@ RK_ERROR_TRACKING_DRY_RUN=true rk-core think "test query"
 
 ---
 
-*Document Version: 1.0.0*
-*Last Updated: 2025-12-28*
-*Maintainer: ReasonKit Team*
+_Document Version: 1.0.0_
+_Last Updated: 2025-12-28_
+_Maintainer: ReasonKit Team_

@@ -37,12 +37,12 @@ The ReasonKit Feature Flag System provides controlled, progressive rollout of fe
 
 ### Design Principles
 
-| Principle | Description |
-|-----------|-------------|
-| **Performance First** | Sub-millisecond flag evaluation (Rust-native) |
-| **Type Safety** | Compile-time verification of flag usage |
-| **Offline Capable** | Local cache with graceful degradation |
-| **Audit Trail** | Full history of flag changes and evaluations |
+| Principle                  | Description                                    |
+| -------------------------- | ---------------------------------------------- |
+| **Performance First**      | Sub-millisecond flag evaluation (Rust-native)  |
+| **Type Safety**            | Compile-time verification of flag usage        |
+| **Offline Capable**        | Local cache with graceful degradation          |
+| **Audit Trail**            | Full history of flag changes and evaluations   |
 | **OpenFeature Compatible** | Standard-compliant for future interoperability |
 
 ### Architecture Overview
@@ -82,7 +82,7 @@ release_flags:
     default: false
     lifecycle:
       created: "2025-01-15"
-      expected_removal: "2025-04-15"  # After GA
+      expected_removal: "2025-04-15" # After GA
     rules:
       - condition: "environment == 'development'"
         value: true
@@ -91,6 +91,7 @@ release_flags:
 ```
 
 **Use Cases:**
+
 - Progressive feature rollout (0% -> 5% -> 25% -> 100%)
 - Kill switch for production issues
 - Feature gating during development
@@ -127,6 +128,7 @@ experiment_flags:
 ```
 
 **Use Cases:**
+
 - A/B testing new ThinkTool configurations
 - Multivariate testing of prompt variations
 - Holdout groups for long-term impact analysis
@@ -175,6 +177,7 @@ ops_flags:
 ```
 
 **Use Cases:**
+
 - Maintenance mode during deployments
 - Dynamic rate limiting based on system load
 - Debug mode for internal testing
@@ -226,6 +229,7 @@ permission_flags:
 ```
 
 **Use Cases:**
+
 - Plan-based feature access (Free/Pro/Enterprise)
 - Beta program management
 - User-specific overrides
@@ -241,39 +245,39 @@ permission_flags:
 # Complete flag definition schema
 flag:
   # Required fields
-  key: string              # Unique identifier (snake_case)
-  description: string      # Human-readable description
-  type: enum               # release | experiment | ops | permission
-  default: any             # Default value when no rules match
+  key: string # Unique identifier (snake_case)
+  description: string # Human-readable description
+  type: enum # release | experiment | ops | permission
+  default: any # Default value when no rules match
 
   # Optional fields
-  value_type: enum         # boolean (default) | string | number | json
-  enabled: boolean         # Master switch (default: true)
+  value_type: enum # boolean (default) | string | number | json
+  enabled: boolean # Master switch (default: true)
 
   # Targeting rules (evaluated in order)
   rules:
-    - condition: string    # Condition expression
-      value: any           # Value if condition matches
-      priority: number     # Optional priority (lower = higher priority)
+    - condition: string # Condition expression
+      value: any # Value if condition matches
+      priority: number # Optional priority (lower = higher priority)
 
   # Metadata
-  tags: [string]           # For filtering and organization
-  owner: string            # Team or person responsible
-  created_at: datetime     # Creation timestamp
-  updated_at: datetime     # Last modification
+  tags: [string] # For filtering and organization
+  owner: string # Team or person responsible
+  created_at: datetime # Creation timestamp
+  updated_at: datetime # Last modification
 
   # Lifecycle
   lifecycle:
-    status: enum           # active | deprecated | archived
-    created: date          # When flag was created
+    status: enum # active | deprecated | archived
+    created: date # When flag was created
     expected_removal: date # When flag should be removed
 
   # Experiment-specific (type: experiment only)
-  variants: map            # Variant definitions
-  metrics: object          # Metrics to track
-  guardrails: [object]     # Safety guardrails
-  sample_size: number      # Required sample size
-  duration_days: number    # Experiment duration
+  variants: map # Variant definitions
+  metrics: object # Metrics to track
+  guardrails: [object] # Safety guardrails
+  sample_size: number # Required sample size
+  duration_days: number # Experiment duration
 ```
 
 ### 3.2 Evaluation Engine
@@ -1662,52 +1666,52 @@ async fn handle_features_command(cmd: FeatureCommands) -> anyhow::Result<()> {
 
 ### 7.1 User Attributes
 
-| Attribute | Type | Description | Example |
-|-----------|------|-------------|---------|
-| `user.id` | String | Unique user identifier | `"user_abc123"` |
-| `user.email` | String | User email address | `"user@example.com"` |
-| `user.plan` | String | Subscription plan | `"free"`, `"pro"`, `"enterprise"` |
-| `user.signup_date` | Date | Account creation date | `"2025-01-15"` |
-| `user.is_staff` | Boolean | Internal staff flag | `true`, `false` |
-| `user.*` | Any | Custom attributes | Via `attributes` map |
+| Attribute          | Type    | Description            | Example                           |
+| ------------------ | ------- | ---------------------- | --------------------------------- |
+| `user.id`          | String  | Unique user identifier | `"user_abc123"`                   |
+| `user.email`       | String  | User email address     | `"user@example.com"`              |
+| `user.plan`        | String  | Subscription plan      | `"free"`, `"pro"`, `"enterprise"` |
+| `user.signup_date` | Date    | Account creation date  | `"2025-01-15"`                    |
+| `user.is_staff`    | Boolean | Internal staff flag    | `true`, `false`                   |
+| `user.*`           | Any     | Custom attributes      | Via `attributes` map              |
 
 ### 7.2 Context Attributes
 
-| Attribute | Type | Description | Example |
-|-----------|------|-------------|---------|
-| `context.sdk_version` | String | Client SDK version | `"2.1.0"` |
-| `context.platform` | String | Client platform | `"cli"`, `"api"`, `"web"` |
-| `context.request_id` | String | Unique request ID | `"req_xyz789"` |
-| `context.*` | Any | Custom context | Arbitrary key-value |
+| Attribute             | Type   | Description        | Example                   |
+| --------------------- | ------ | ------------------ | ------------------------- |
+| `context.sdk_version` | String | Client SDK version | `"2.1.0"`                 |
+| `context.platform`    | String | Client platform    | `"cli"`, `"api"`, `"web"` |
+| `context.request_id`  | String | Unique request ID  | `"req_xyz789"`            |
+| `context.*`           | Any    | Custom context     | Arbitrary key-value       |
 
 ### 7.3 System Attributes
 
-| Attribute | Type | Description | Example |
-|-----------|------|-------------|---------|
-| `system.environment` | String | Deployment environment | `"development"`, `"staging"`, `"production"` |
-| `system.region` | String | Geographic region | `"us-east-1"`, `"eu-west-1"` |
-| `system.version` | String | Application version | `"1.2.3"` |
-| `system.cpu_usage` | Number | Current CPU usage % | `75.5` |
-| `system.memory_usage` | Number | Current memory usage % | `60.2` |
+| Attribute             | Type   | Description            | Example                                      |
+| --------------------- | ------ | ---------------------- | -------------------------------------------- |
+| `system.environment`  | String | Deployment environment | `"development"`, `"staging"`, `"production"` |
+| `system.region`       | String | Geographic region      | `"us-east-1"`, `"eu-west-1"`                 |
+| `system.version`      | String | Application version    | `"1.2.3"`                                    |
+| `system.cpu_usage`    | Number | Current CPU usage %    | `75.5`                                       |
+| `system.memory_usage` | Number | Current memory usage % | `60.2`                                       |
 
 ### 7.4 Operators Reference
 
-| Operator | Description | Example |
-|----------|-------------|---------|
-| `==` | Equals | `user.plan == 'enterprise'` |
-| `!=` | Not equals | `user.plan != 'free'` |
-| `>` | Greater than | `user.usage > 1000` |
-| `>=` | Greater than or equal | `system.cpu_usage >= 80` |
-| `<` | Less than | `percentage < 10` |
-| `<=` | Less than or equal | `user.age <= 30` |
-| `in` | In list | `user.id in beta_users` |
-| `not_in` | Not in list | `user.id not_in blacklist` |
-| `contains` | String contains | `user.email contains '@company.com'` |
-| `starts_with` | String starts with | `user.email starts_with 'admin'` |
-| `ends_with` | String ends with | `user.email ends_with '@reasonkit.sh'` |
-| `and` | Logical AND | `user.plan == 'pro' and user.is_staff == false` |
-| `or` | Logical OR | `user.plan == 'enterprise' or user.is_staff == true` |
-| `not` | Logical NOT | `not user.is_blocked` |
+| Operator      | Description           | Example                                              |
+| ------------- | --------------------- | ---------------------------------------------------- |
+| `==`          | Equals                | `user.plan == 'enterprise'`                          |
+| `!=`          | Not equals            | `user.plan != 'free'`                                |
+| `>`           | Greater than          | `user.usage > 1000`                                  |
+| `>=`          | Greater than or equal | `system.cpu_usage >= 80`                             |
+| `<`           | Less than             | `percentage < 10`                                    |
+| `<=`          | Less than or equal    | `user.age <= 30`                                     |
+| `in`          | In list               | `user.id in beta_users`                              |
+| `not_in`      | Not in list           | `user.id not_in blacklist`                           |
+| `contains`    | String contains       | `user.email contains '@company.com'`                 |
+| `starts_with` | String starts with    | `user.email starts_with 'admin'`                     |
+| `ends_with`   | String ends with      | `user.email ends_with '@reasonkit.sh'`               |
+| `and`         | Logical AND           | `user.plan == 'pro' and user.is_staff == false`      |
+| `or`          | Logical OR            | `user.plan == 'enterprise' or user.is_staff == true` |
+| `not`         | Logical NOT           | `not user.is_blocked`                                |
 
 ---
 
@@ -1742,14 +1746,14 @@ new_feature:
 
 **Rollout Schedule Example:**
 
-| Day | Percentage | Condition |
-|-----|------------|-----------|
-| 1 | 1% | `percentage < 1` |
-| 3 | 5% | `percentage < 5` |
-| 7 | 10% | `percentage < 10` |
-| 14 | 25% | `percentage < 25` |
-| 21 | 50% | `percentage < 50` |
-| 28 | 100% | `percentage < 100` or remove flag |
+| Day | Percentage | Condition                         |
+| --- | ---------- | --------------------------------- |
+| 1   | 1%         | `percentage < 1`                  |
+| 3   | 5%         | `percentage < 5`                  |
+| 7   | 10%        | `percentage < 10`                 |
+| 14  | 25%        | `percentage < 25`                 |
+| 21  | 50%        | `percentage < 50`                 |
+| 28  | 100%       | `percentage < 100` or remove flag |
 
 ### 8.2 Canary Release
 
@@ -1843,21 +1847,21 @@ experiments:
         description: "Current balanced profile"
         config:
           profile: "balanced"
-        weight: 50  # 50% of traffic
+        weight: 50 # 50% of traffic
 
       treatment_a:
         description: "New balanced with extended token budget"
         config:
           profile: "balanced"
           token_budget: 12000
-        weight: 25  # 25% of traffic
+        weight: 25 # 25% of traffic
 
       treatment_b:
         description: "New balanced with higher confidence threshold"
         config:
           profile: "balanced"
           min_confidence: 0.85
-        weight: 25  # 25% of traffic
+        weight: 25 # 25% of traffic
 
     # Metrics to track
     metrics:
@@ -2558,10 +2562,10 @@ naming:
     - "perm_custom_protocols"
 
   anti_patterns:
-    - "test"           # Too vague
-    - "new_feature"    # Non-descriptive
-    - "temp_fix"       # Should be documented properly
-    - "johns_flag"     # Personal names
+    - "test" # Too vague
+    - "new_feature" # Non-descriptive
+    - "temp_fix" # Should be documented properly
+    - "johns_flag" # Personal names
 ```
 
 ### 12.2 Lifecycle Management
@@ -2701,15 +2705,15 @@ pub async fn handle_request(&self, req: Request, context: &EvaluationContext) ->
 
 ### 13.1 Build vs Buy Decision Matrix
 
-| Factor | Build (ReasonKit Native) | Buy (LaunchDarkly/etc) |
-|--------|-------------------------|------------------------|
-| **Control** | Full control over implementation | Vendor-dependent |
-| **Cost** | Development time | $25-150/1000 MAU/month |
-| **Performance** | Rust-native, sub-ms | Network latency (10-50ms) |
-| **Features** | Build what we need | Comprehensive out-of-box |
-| **Maintenance** | Ongoing investment | Vendor maintained |
-| **Compliance** | Full data control | Depends on vendor |
-| **Integration** | Native to ReasonKit | SDK integration |
+| Factor          | Build (ReasonKit Native)         | Buy (LaunchDarkly/etc)    |
+| --------------- | -------------------------------- | ------------------------- |
+| **Control**     | Full control over implementation | Vendor-dependent          |
+| **Cost**        | Development time                 | $25-150/1000 MAU/month    |
+| **Performance** | Rust-native, sub-ms              | Network latency (10-50ms) |
+| **Features**    | Build what we need               | Comprehensive out-of-box  |
+| **Maintenance** | Ongoing investment               | Vendor maintained         |
+| **Compliance**  | Full data control                | Depends on vendor         |
+| **Integration** | Native to ReasonKit              | SDK integration           |
 
 **Recommendation**: Build native for CLI and core library, integrate with vendor for hosted/enterprise if needed.
 
@@ -2833,58 +2837,58 @@ migration:
 
 ### Phase 1: Foundation (Week 1-2)
 
-| Task | Priority | Effort | Owner |
-|------|----------|--------|-------|
-| Define core types and traits | P0 | 2d | Core team |
-| Implement YAML storage backend | P0 | 1d | Core team |
-| Implement condition expression parser | P0 | 3d | Core team |
-| Basic evaluation engine | P0 | 2d | Core team |
-| Unit tests for evaluation | P0 | 1d | Core team |
+| Task                                  | Priority | Effort | Owner     |
+| ------------------------------------- | -------- | ------ | --------- |
+| Define core types and traits          | P0       | 2d     | Core team |
+| Implement YAML storage backend        | P0       | 1d     | Core team |
+| Implement condition expression parser | P0       | 3d     | Core team |
+| Basic evaluation engine               | P0       | 2d     | Core team |
+| Unit tests for evaluation             | P0       | 1d     | Core team |
 
 **Deliverable**: Basic flag evaluation working from YAML files.
 
 ### Phase 2: CLI Integration (Week 3)
 
-| Task | Priority | Effort | Owner |
-|------|----------|--------|-------|
-| Add `features` subcommand to CLI | P0 | 2d | CLI team |
-| `--feature` flag for think command | P0 | 1d | CLI team |
-| Integration tests | P0 | 2d | QA |
+| Task                               | Priority | Effort | Owner    |
+| ---------------------------------- | -------- | ------ | -------- |
+| Add `features` subcommand to CLI   | P0       | 2d     | CLI team |
+| `--feature` flag for think command | P0       | 1d     | CLI team |
+| Integration tests                  | P0       | 2d     | QA       |
 
 **Deliverable**: Feature flags usable from CLI.
 
 ### Phase 3: Advanced Features (Week 4-5)
 
-| Task | Priority | Effort | Owner |
-|------|----------|--------|-------|
-| Percentage rollout with consistent hashing | P0 | 2d | Core team |
-| User list support | P1 | 1d | Core team |
-| SQLite storage backend | P1 | 2d | Core team |
-| Evaluation history/analytics | P1 | 3d | Core team |
-| Python bindings | P1 | 2d | Bindings team |
+| Task                                       | Priority | Effort | Owner         |
+| ------------------------------------------ | -------- | ------ | ------------- |
+| Percentage rollout with consistent hashing | P0       | 2d     | Core team     |
+| User list support                          | P1       | 1d     | Core team     |
+| SQLite storage backend                     | P1       | 2d     | Core team     |
+| Evaluation history/analytics               | P1       | 3d     | Core team     |
+| Python bindings                            | P1       | 2d     | Bindings team |
 
 **Deliverable**: Full-featured local flag system.
 
 ### Phase 4: Experimentation (Week 6-7)
 
-| Task | Priority | Effort | Owner |
-|------|----------|--------|-------|
-| Experiment flag type | P1 | 3d | Core team |
-| Variant assignment | P1 | 2d | Core team |
-| Statistical analysis module | P1 | 3d | Data team |
-| Guardrail monitoring | P1 | 2d | Core team |
+| Task                        | Priority | Effort | Owner     |
+| --------------------------- | -------- | ------ | --------- |
+| Experiment flag type        | P1       | 3d     | Core team |
+| Variant assignment          | P1       | 2d     | Core team |
+| Statistical analysis module | P1       | 3d     | Data team |
+| Guardrail monitoring        | P1       | 2d     | Core team |
 
 **Deliverable**: A/B testing capability.
 
 ### Phase 5: Production Hardening (Week 8)
 
-| Task | Priority | Effort | Owner |
-|------|----------|--------|-------|
-| Performance optimization | P0 | 2d | Core team |
-| Caching layer | P0 | 1d | Core team |
-| Prometheus metrics | P1 | 1d | Ops team |
-| Grafana dashboards | P2 | 1d | Ops team |
-| Documentation | P0 | 2d | Docs team |
+| Task                     | Priority | Effort | Owner     |
+| ------------------------ | -------- | ------ | --------- |
+| Performance optimization | P0       | 2d     | Core team |
+| Caching layer            | P0       | 1d     | Core team |
+| Prometheus metrics       | P1       | 1d     | Ops team  |
+| Grafana dashboards       | P2       | 1d     | Ops team  |
+| Documentation            | P0       | 2d     | Docs team |
 
 **Deliverable**: Production-ready feature flag system.
 
@@ -3108,7 +3112,7 @@ environment == 'staging' or user.is_staff == true
 
 ---
 
-*Document Version: 1.0.0*
-*Last Updated: 2025-12-28*
-*Author: ReasonKit Engineering Team*
-*License: Apache 2.0*
+_Document Version: 1.0.0_
+_Last Updated: 2025-12-28_
+_Author: ReasonKit Engineering Team_
+_License: Apache 2.0_

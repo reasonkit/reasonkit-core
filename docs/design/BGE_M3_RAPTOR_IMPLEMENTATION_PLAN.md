@@ -1,4 +1,5 @@
 # BGE-M3 & RAPTOR Implementation Plan
+
 > Internalized from ProofGuard-verified deep research
 
 **Status**: Implementation Ready
@@ -11,14 +12,14 @@
 
 ### BGE-M3 Technical Specs
 
-| Property | Value | Verification |
-|----------|-------|--------------|
-| Embedding Dimension | 1024 | HuggingFace + NVIDIA + bge-model.com |
-| Max Context Length | 8192 tokens | 3 sources confirmed |
-| Languages | 100+ | Official docs |
-| Parameters | 568M | Model architecture |
-| License | MIT | Compatible with Apache 2.0 |
-| Base Model | XLM-RoBERTa (extended) | arXiv 2402.03216 |
+| Property            | Value                  | Verification                         |
+| ------------------- | ---------------------- | ------------------------------------ |
+| Embedding Dimension | 1024                   | HuggingFace + NVIDIA + bge-model.com |
+| Max Context Length  | 8192 tokens            | 3 sources confirmed                  |
+| Languages           | 100+                   | Official docs                        |
+| Parameters          | 568M                   | Model architecture                   |
+| License             | MIT                    | Compatible with Apache 2.0           |
+| Base Model          | XLM-RoBERTa (extended) | arXiv 2402.03216                     |
 
 ### BGE-M3 "3 M's" Multi-Functionality
 
@@ -33,24 +34,24 @@ SINGLE MODEL PASS → 3 OUTPUTS:
 
 ### RAPTOR Performance (VERIFIED)
 
-| Dataset | RAPTOR Score | Baseline | Improvement |
-|---------|--------------|----------|-------------|
-| QuALITY | 82.6% | 62.3% | **+20.3 pts** |
-| QuALITY-HARD | 76.2% | 54.7% | **+21.5 pts** |
-| QASPER | F1 55.7% | 53.9% | +1.8 pts |
-| NarrativeQA | METEOR 19.1 | 10.6 | +8.5 pts |
+| Dataset      | RAPTOR Score | Baseline | Improvement   |
+| ------------ | ------------ | -------- | ------------- |
+| QuALITY      | 82.6%        | 62.3%    | **+20.3 pts** |
+| QuALITY-HARD | 76.2%        | 54.7%    | **+21.5 pts** |
+| QASPER       | F1 55.7%     | 53.9%    | +1.8 pts      |
+| NarrativeQA  | METEOR 19.1  | 10.6     | +8.5 pts      |
 
 ---
 
 ## 2. Decision Matrix (INTERNALIZED)
 
-| Component | reasonkit-core | reasonkit-pro | Confidence |
-|-----------|----------------|---------------|------------|
-| BGE-M3 Dense+Sparse | ✅ YES | ✅ YES | 92% |
-| BGE-M3 ColBERT | ❌ No | ✅ YES | 88% |
-| RAPTOR Full | ❌ No | ✅ YES | 85% |
-| Hierarchical Index (simple) | ✅ YES | ✅ YES | 90% |
-| ONNX Local Inference | ✅ YES | ✅ YES | 95% |
+| Component                   | reasonkit-core | reasonkit-pro | Confidence |
+| --------------------------- | -------------- | ------------- | ---------- |
+| BGE-M3 Dense+Sparse         | ✅ YES         | ✅ YES        | 92%        |
+| BGE-M3 ColBERT              | ❌ No          | ✅ YES        | 88%        |
+| RAPTOR Full                 | ❌ No          | ✅ YES        | 85%        |
+| Hierarchical Index (simple) | ✅ YES         | ✅ YES        | 90%        |
+| ONNX Local Inference        | ✅ YES         | ✅ YES        | 95%        |
 
 ---
 
@@ -65,11 +66,13 @@ tokenizers = "0.19"   # HuggingFace tokenizers
 ```
 
 **Files to modify:**
+
 - `Cargo.toml` - Add dependencies
 - `src/embedding/mod.rs` - Replace LocalEmbedding placeholder
 - `src/embedding/bge_m3.rs` - New BGE-M3 provider
 
 **Implementation steps:**
+
 1. Add ort dependency with CPU feature
 2. Create BGE-M3 ONNX model loader
 3. Implement encode() returning dense + sparse
@@ -89,6 +92,7 @@ Chunk-level (100-500 tokens)          ← Bottom (leaves)
 ```
 
 **No LLM summarization required** - Use existing metadata:
+
 - Academic papers: Use abstract as document-level
 - Docs: Use first H1 + intro paragraph
 - Code: Use file docstring + function signatures
@@ -228,12 +232,12 @@ pub struct HybridRetriever {
 
 ## 7. Timeline Estimate
 
-| Phase | Effort | Dependencies |
-|-------|--------|--------------|
-| ONNX Integration | 1-2 days | ort crate |
-| BGE-M3 Provider | 1-2 days | ONNX + tokenizers |
-| Hierarchical Indexing | 2-3 days | BGE-M3 working |
-| RRF Enhancement | 1 day | Existing hybrid search |
+| Phase                 | Effort   | Dependencies           |
+| --------------------- | -------- | ---------------------- |
+| ONNX Integration      | 1-2 days | ort crate              |
+| BGE-M3 Provider       | 1-2 days | ONNX + tokenizers      |
+| Hierarchical Indexing | 2-3 days | BGE-M3 working         |
+| RRF Enhancement       | 1 day    | Existing hybrid search |
 
 **Total**: 5-8 days of focused work
 
@@ -241,32 +245,35 @@ pub struct HybridRetriever {
 
 ## 8. Deferred to reasonkit-pro
 
-| Feature | Reason | Complexity |
-|---------|--------|------------|
-| Full RAPTOR | LLM costs, build complexity | High |
-| ColBERT reranking | Multi-vector storage needs | Medium |
-| GMM clustering | Requires linfa port | Medium |
-| UMAP dimensionality | Requires umap-rs | Medium |
+| Feature             | Reason                      | Complexity |
+| ------------------- | --------------------------- | ---------- |
+| Full RAPTOR         | LLM costs, build complexity | High       |
+| ColBERT reranking   | Multi-vector storage needs  | Medium     |
+| GMM clustering      | Requires linfa port         | Medium     |
+| UMAP dimensionality | Requires umap-rs            | Medium     |
 
 ---
 
 ## 9. Sources (Triangulated)
 
 ### Primary (Tier 1)
+
 - https://huggingface.co/BAAI/bge-m3
 - https://arxiv.org/abs/2401.18059
 - https://github.com/parthsarthi03/raptor
 
 ### Secondary (Tier 2)
+
 - https://build.nvidia.com/baai/bge-m3/modelcard
 - https://github.com/yuniko-software/bge-m3-qdrant-sample
 - https://ragflow.io/blog/long-context-rag-raptor
 
 ### Independent (Tier 3)
+
 - https://bge-model.com/bge/bge_m3.html
 - https://web.stanford.edu/class/cs224n/final-reports/256925521.pdf
 - https://crates.io/crates/embed_anything
 
 ---
 
-*Implementation plan based on ProofGuard-verified research with 3+ sources per claim.*
+_Implementation plan based on ProofGuard-verified research with 3+ sources per claim._

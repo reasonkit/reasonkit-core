@@ -13,7 +13,14 @@
     },
     "type": {
       "type": "string",
-      "enum": ["paper", "documentation", "code", "note", "transcript", "benchmark"],
+      "enum": [
+        "paper",
+        "documentation",
+        "code",
+        "note",
+        "transcript",
+        "benchmark"
+      ],
       "description": "Document type for categorization"
     },
     "source": {

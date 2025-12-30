@@ -22,13 +22,13 @@
 
 ### 1.1 Design Principles
 
-| Principle | Implementation |
-|-----------|---------------|
+| Principle                | Implementation                                                     |
+| ------------------------ | ------------------------------------------------------------------ |
 | **Developer Ergonomics** | Consistent naming, sensible defaults, comprehensive error messages |
-| **Observability** | Trace IDs on every request, step-level visibility, structured logs |
-| **Cost Transparency** | Token counts per step, estimated cost in every response |
-| **Idempotency** | Client-generated request IDs, safe retries for all operations |
-| **Streaming First** | Real-time step updates for long-running reasoning chains |
+| **Observability**        | Trace IDs on every request, step-level visibility, structured logs |
+| **Cost Transparency**    | Token counts per step, estimated cost in every response            |
+| **Idempotency**          | Client-generated request IDs, safe retries for all operations      |
+| **Streaming First**      | Real-time step updates for long-running reasoning chains           |
 
 ### 1.2 Base URL
 
@@ -40,12 +40,12 @@ Self-hosted: http://localhost:8080/v1
 
 ### 1.3 Content Types
 
-| Type | Media Type | Usage |
-|------|------------|-------|
-| Request Body | `application/json` | All POST/PUT requests |
-| Response Body | `application/json` | Standard responses |
-| Streaming | `text/event-stream` | SSE streaming responses |
-| Webhook Payload | `application/json` | Async callbacks |
+| Type            | Media Type          | Usage                   |
+| --------------- | ------------------- | ----------------------- |
+| Request Body    | `application/json`  | All POST/PUT requests   |
+| Response Body   | `application/json`  | Standard responses      |
+| Streaming       | `text/event-stream` | SSE streaming responses |
+| Webhook Payload | `application/json`  | Async callbacks         |
 
 ---
 
@@ -58,6 +58,7 @@ Authorization: Bearer rk_live_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ```
 
 **Key Format:**
+
 - `rk_live_*` - Production keys
 - `rk_test_*` - Test/sandbox keys (no billing)
 - `rk_dev_*` - Development keys (local only)
@@ -77,10 +78,10 @@ X-Request-ID: req_xxxxxxxxxxxxxxxx
 X-Idempotency-Key: idem_xxxxxxxxxxxxxxxx
 ```
 
-| Header | Purpose | Format |
-|--------|---------|--------|
-| `X-Request-ID` | Client-generated request identifier for tracing | `req_` + 16-32 alphanumeric |
-| `X-Idempotency-Key` | Ensures exactly-once execution for retries | `idem_` + UUID or custom |
+| Header              | Purpose                                         | Format                      |
+| ------------------- | ----------------------------------------------- | --------------------------- |
+| `X-Request-ID`      | Client-generated request identifier for tracing | `req_` + 16-32 alphanumeric |
+| `X-Idempotency-Key` | Ensures exactly-once execution for retries      | `idem_` + UUID or custom    |
 
 ---
 
@@ -88,17 +89,17 @@ X-Idempotency-Key: idem_xxxxxxxxxxxxxxxx
 
 ### 3.1 Core Endpoints
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `POST` | `/v1/think` | Execute a reasoning request |
-| `POST` | `/v1/think/stream` | Execute with SSE streaming |
-| `GET` | `/v1/traces/{trace_id}` | Retrieve execution trace |
-| `GET` | `/v1/protocols` | List available protocols |
-| `GET` | `/v1/protocols/{id}` | Get protocol details |
-| `GET` | `/v1/profiles` | List reasoning profiles |
-| `GET` | `/v1/profiles/{id}` | Get profile details |
-| `POST` | `/v1/webhooks` | Register webhook endpoint |
-| `GET` | `/v1/usage` | Get usage statistics |
+| Method | Endpoint                | Description                 |
+| ------ | ----------------------- | --------------------------- |
+| `POST` | `/v1/think`             | Execute a reasoning request |
+| `POST` | `/v1/think/stream`      | Execute with SSE streaming  |
+| `GET`  | `/v1/traces/{trace_id}` | Retrieve execution trace    |
+| `GET`  | `/v1/protocols`         | List available protocols    |
+| `GET`  | `/v1/protocols/{id}`    | Get protocol details        |
+| `GET`  | `/v1/profiles`          | List reasoning profiles     |
+| `GET`  | `/v1/profiles/{id}`     | Get profile details         |
+| `POST` | `/v1/webhooks`          | Register webhook endpoint   |
+| `GET`  | `/v1/usage`             | Get usage statistics        |
 
 ### 3.2 POST /v1/think - Execute Reasoning
 
@@ -129,20 +130,20 @@ Primary endpoint for synchronous reasoning requests.
 
 **Request Fields:**
 
-| Field | Type | Required | Description |
-|-------|------|----------|-------------|
-| `query` | string | Yes | The question or problem to analyze |
-| `protocol` | string | No* | Protocol ID (e.g., "gigathink", "laserlogic") |
-| `profile` | string | No* | Profile ID (e.g., "quick", "balanced", "paranoid") |
-| `context` | object | No | Additional context as key-value pairs |
-| `options.min_confidence` | number | No | Minimum confidence threshold (0.0-1.0) |
-| `options.max_tokens` | integer | No | Maximum tokens for entire chain |
-| `options.temperature` | number | No | LLM temperature (0.0-2.0) |
-| `options.save_trace` | boolean | No | Persist trace for later retrieval |
-| `options.tags` | array | No | Custom tags for filtering/analytics |
-| `idempotency_key` | string | No | For safe retries |
+| Field                    | Type    | Required | Description                                        |
+| ------------------------ | ------- | -------- | -------------------------------------------------- |
+| `query`                  | string  | Yes      | The question or problem to analyze                 |
+| `protocol`               | string  | No\*     | Protocol ID (e.g., "gigathink", "laserlogic")      |
+| `profile`                | string  | No\*     | Profile ID (e.g., "quick", "balanced", "paranoid") |
+| `context`                | object  | No       | Additional context as key-value pairs              |
+| `options.min_confidence` | number  | No       | Minimum confidence threshold (0.0-1.0)             |
+| `options.max_tokens`     | integer | No       | Maximum tokens for entire chain                    |
+| `options.temperature`    | number  | No       | LLM temperature (0.0-2.0)                          |
+| `options.save_trace`     | boolean | No       | Persist trace for later retrieval                  |
+| `options.tags`           | array   | No       | Custom tags for filtering/analytics                |
+| `idempotency_key`        | string  | No       | For safe retries                                   |
 
-*Either `protocol` or `profile` is required.
+\*Either `protocol` or `profile` is required.
 
 **Response (200 OK):**
 
@@ -232,15 +233,15 @@ Primary endpoint for synchronous reasoning requests.
 
 **Response Fields:**
 
-| Field | Type | Description |
-|-------|------|-------------|
-| `id` | string | Unique execution identifier |
-| `trace_id` | string | Trace ID for detailed debugging |
-| `status` | string | `completed`, `failed`, `timeout` |
+| Field        | Type   | Description                        |
+| ------------ | ------ | ---------------------------------- |
+| `id`         | string | Unique execution identifier        |
+| `trace_id`   | string | Trace ID for detailed debugging    |
+| `status`     | string | `completed`, `failed`, `timeout`   |
 | `confidence` | number | Overall confidence score (0.0-1.0) |
-| `steps` | array | Per-step execution details |
-| `tokens` | object | Total token usage with cost |
-| `timing` | object | Execution timing breakdown |
+| `steps`      | array  | Per-step execution details         |
+| `tokens`     | object | Total token usage with cost        |
+| `timing`     | object | Execution timing breakdown         |
 
 ### 3.3 POST /v1/think/stream - Streaming Execution
 
@@ -299,15 +300,15 @@ data: [DONE]
 
 **SSE Event Types:**
 
-| Event | Description | Data Fields |
-|-------|-------------|-------------|
-| `execution_started` | Execution has begun | `execution_id`, `trace_id`, `protocol_id` |
-| `step_started` | Step execution starting | `step_id`, `step_index`, `total_steps` |
-| `step_progress` | Intermediate progress | `step_id`, `progress`, `message` |
-| `step_completed` | Step finished | `step_id`, `confidence`, `tokens`, `output` |
-| `execution_completed` | Full execution done | Full result summary |
-| `error` | Error occurred | `error_code`, `message`, `step_id` |
-| `done` | Stream ended | `[DONE]` |
+| Event                 | Description             | Data Fields                                 |
+| --------------------- | ----------------------- | ------------------------------------------- |
+| `execution_started`   | Execution has begun     | `execution_id`, `trace_id`, `protocol_id`   |
+| `step_started`        | Step execution starting | `step_id`, `step_index`, `total_steps`      |
+| `step_progress`       | Intermediate progress   | `step_id`, `progress`, `message`            |
+| `step_completed`      | Step finished           | `step_id`, `confidence`, `tokens`, `output` |
+| `execution_completed` | Full execution done     | Full result summary                         |
+| `error`               | Error occurred          | `error_code`, `message`, `step_id`          |
+| `done`                | Stream ended            | `[DONE]`                                    |
 
 ### 3.4 GET /v1/traces/{trace_id} - Retrieve Trace
 
@@ -469,7 +470,7 @@ data: [DONE]
       "name": "Quick Analysis",
       "description": "Fast 2-step analysis for rapid insights",
       "chain": ["gigathink", "laserlogic"],
-      "min_confidence": 0.70,
+      "min_confidence": 0.7,
       "typical_tokens": 3000,
       "typical_duration_ms": 8000,
       "tags": ["fast", "creative"]
@@ -479,7 +480,7 @@ data: [DONE]
       "name": "Balanced Analysis",
       "description": "Standard 4-module chain for thorough analysis",
       "chain": ["gigathink", "laserlogic", "bedrock", "proofguard"],
-      "min_confidence": 0.80,
+      "min_confidence": 0.8,
       "typical_tokens": 8000,
       "typical_duration_ms": 18000,
       "tags": ["standard", "thorough"]
@@ -488,7 +489,13 @@ data: [DONE]
       "id": "deep",
       "name": "Deep Analysis",
       "description": "Thorough analysis with all 5 tools",
-      "chain": ["gigathink", "laserlogic", "bedrock", "proofguard", "brutalhonesty"],
+      "chain": [
+        "gigathink",
+        "laserlogic",
+        "bedrock",
+        "proofguard",
+        "brutalhonesty"
+      ],
       "min_confidence": 0.85,
       "typical_tokens": 12000,
       "typical_duration_ms": 25000,
@@ -498,7 +505,14 @@ data: [DONE]
       "id": "paranoid",
       "name": "Paranoid Verification",
       "description": "Maximum rigor with multi-pass verification",
-      "chain": ["gigathink", "laserlogic", "bedrock", "proofguard", "brutalhonesty", "proofguard"],
+      "chain": [
+        "gigathink",
+        "laserlogic",
+        "bedrock",
+        "proofguard",
+        "brutalhonesty",
+        "proofguard"
+      ],
       "min_confidence": 0.95,
       "typical_tokens": 18000,
       "typical_duration_ms": 35000,
@@ -508,7 +522,14 @@ data: [DONE]
       "id": "powercombo",
       "name": "PowerCombo Ultimate",
       "description": "All 5 ThinkTools with cross-validation",
-      "chain": ["gigathink", "laserlogic", "bedrock", "proofguard", "brutalhonesty", "proofguard"],
+      "chain": [
+        "gigathink",
+        "laserlogic",
+        "bedrock",
+        "proofguard",
+        "brutalhonesty",
+        "proofguard"
+      ],
       "min_confidence": 0.95,
       "typical_tokens": 25000,
       "typical_duration_ms": 45000,
@@ -523,11 +544,11 @@ data: [DONE]
 
 **Query Parameters:**
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
+| Parameter    | Type   | Description                          |
+| ------------ | ------ | ------------------------------------ |
 | `start_date` | string | ISO 8601 date (default: 30 days ago) |
-| `end_date` | string | ISO 8601 date (default: now) |
-| `group_by` | string | `day`, `week`, `month` |
+| `end_date`   | string | ISO 8601 date (default: now)         |
+| `group_by`   | string | `day`, `week`, `month`               |
 
 **Response (200 OK):**
 
@@ -681,13 +702,13 @@ data: {"step_id":"synthesize","content":" the","index":2}
 
 ### 5.2 Webhook Events
 
-| Event | Trigger |
-|-------|---------|
-| `execution.started` | Execution has begun processing |
-| `execution.step_completed` | Individual step completed |
-| `execution.completed` | Entire execution finished successfully |
-| `execution.failed` | Execution failed with error |
-| `execution.timeout` | Execution timed out |
+| Event                      | Trigger                                |
+| -------------------------- | -------------------------------------- |
+| `execution.started`        | Execution has begun processing         |
+| `execution.step_completed` | Individual step completed              |
+| `execution.completed`      | Entire execution finished successfully |
+| `execution.failed`         | Execution failed with error            |
+| `execution.timeout`        | Execution timed out                    |
 
 ### 5.3 Webhook Payload
 
@@ -1097,12 +1118,12 @@ X-RateLimit-Tokens-Reset: 1703773200
 
 ### 7.2 Rate Limit Tiers
 
-| Tier | Requests/min | Tokens/min | Concurrent | Monthly Tokens |
-|------|-------------|------------|------------|----------------|
-| Free | 10 | 10,000 | 2 | 100,000 |
-| Starter | 30 | 50,000 | 5 | 1,000,000 |
-| Pro | 60 | 100,000 | 10 | 10,000,000 |
-| Enterprise | Custom | Custom | Custom | Unlimited |
+| Tier       | Requests/min | Tokens/min | Concurrent | Monthly Tokens |
+| ---------- | ------------ | ---------- | ---------- | -------------- |
+| Free       | 10           | 10,000     | 2          | 100,000        |
+| Starter    | 30           | 50,000     | 5          | 1,000,000      |
+| Pro        | 60           | 100,000    | 10         | 10,000,000     |
+| Enterprise | Custom       | Custom     | Custom     | Unlimited      |
 
 ### 7.3 Rate Limit Response
 
@@ -1220,7 +1241,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ThinkRequest'
+              $ref: "#/components/schemas/ThinkRequest"
             examples:
               simple:
                 summary: Simple protocol execution
@@ -1238,12 +1259,12 @@ paths:
                     min_confidence: 0.85
                     save_trace: true
       responses:
-        '200':
+        "200":
           description: Successful execution
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ThinkResult'
+                $ref: "#/components/schemas/ThinkResult"
           headers:
             X-Request-ID:
               schema:
@@ -1253,18 +1274,18 @@ paths:
               schema:
                 type: integer
               description: Remaining requests in current window
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '402':
-          $ref: '#/components/responses/QuotaExceeded'
-        '422':
-          $ref: '#/components/responses/ValidationError'
-        '429':
-          $ref: '#/components/responses/RateLimited'
-        '500':
-          $ref: '#/components/responses/InternalError'
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "402":
+          $ref: "#/components/responses/QuotaExceeded"
+        "422":
+          $ref: "#/components/responses/ValidationError"
+        "429":
+          $ref: "#/components/responses/RateLimited"
+        "500":
+          $ref: "#/components/responses/InternalError"
 
   /think/stream:
     post:
@@ -1279,19 +1300,19 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ThinkRequest'
+              $ref: "#/components/schemas/ThinkRequest"
       responses:
-        '200':
+        "200":
           description: SSE stream
           content:
             text/event-stream:
               schema:
                 type: string
                 description: Server-Sent Events stream
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
 
   /traces/{trace_id}:
     get:
@@ -1306,16 +1327,16 @@ paths:
           required: true
           schema:
             type: string
-            pattern: '^trace_[a-zA-Z0-9]{16}$'
+            pattern: "^trace_[a-zA-Z0-9]{16}$"
       responses:
-        '200':
+        "200":
           description: Trace details
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ExecutionTrace'
-        '404':
-          $ref: '#/components/responses/NotFound'
+                $ref: "#/components/schemas/ExecutionTrace"
+        "404":
+          $ref: "#/components/responses/NotFound"
 
   /protocols:
     get:
@@ -1324,12 +1345,12 @@ paths:
       tags:
         - Protocols
       responses:
-        '200':
+        "200":
           description: List of protocols
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ProtocolList'
+                $ref: "#/components/schemas/ProtocolList"
 
   /protocols/{protocol_id}:
     get:
@@ -1344,14 +1365,14 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: Protocol details
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Protocol'
-        '404':
-          $ref: '#/components/responses/NotFound'
+                $ref: "#/components/schemas/Protocol"
+        "404":
+          $ref: "#/components/responses/NotFound"
 
   /profiles:
     get:
@@ -1360,12 +1381,12 @@ paths:
       tags:
         - Profiles
       responses:
-        '200':
+        "200":
           description: List of profiles
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ProfileList'
+                $ref: "#/components/schemas/ProfileList"
 
   /profiles/{profile_id}:
     get:
@@ -1380,14 +1401,14 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: Profile details
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Profile'
-        '404':
-          $ref: '#/components/responses/NotFound'
+                $ref: "#/components/schemas/Profile"
+        "404":
+          $ref: "#/components/responses/NotFound"
 
   /webhooks:
     post:
@@ -1400,26 +1421,26 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/WebhookCreate'
+              $ref: "#/components/schemas/WebhookCreate"
       responses:
-        '201':
+        "201":
           description: Webhook created
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Webhook'
+                $ref: "#/components/schemas/Webhook"
     get:
       operationId: listWebhooks
       summary: List registered webhooks
       tags:
         - Webhooks
       responses:
-        '200':
+        "200":
           description: List of webhooks
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/WebhookList'
+                $ref: "#/components/schemas/WebhookList"
 
   /webhooks/{webhook_id}:
     delete:
@@ -1434,7 +1455,7 @@ paths:
           schema:
             type: string
       responses:
-        '204':
+        "204":
           description: Webhook deleted
 
   /usage:
@@ -1460,12 +1481,12 @@ paths:
             type: string
             enum: [day, week, month]
       responses:
-        '200':
+        "200":
           description: Usage statistics
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UsageReport'
+                $ref: "#/components/schemas/UsageReport"
 
 components:
   securitySchemes:
@@ -1497,17 +1518,18 @@ components:
         profile:
           type: string
           description: Profile ID (quick, balanced, paranoid, etc.)
-          enum: [quick, balanced, deep, paranoid, scientific, decide, powercombo]
+          enum:
+            [quick, balanced, deep, paranoid, scientific, decide, powercombo]
         context:
           type: object
           description: Additional context as key-value pairs
           additionalProperties: true
         options:
-          $ref: '#/components/schemas/ThinkOptions'
+          $ref: "#/components/schemas/ThinkOptions"
         idempotency_key:
           type: string
           description: Key for idempotent retries
-          pattern: '^idem_[a-zA-Z0-9_-]{8,64}$'
+          pattern: "^idem_[a-zA-Z0-9_-]{8,64}$"
       oneOf:
         - required: [protocol]
         - required: [profile]
@@ -1550,11 +1572,11 @@ components:
         id:
           type: string
           description: Execution identifier
-          pattern: '^exec_[a-zA-Z0-9]{16}$'
+          pattern: "^exec_[a-zA-Z0-9]{16}$"
         trace_id:
           type: string
           description: Trace identifier
-          pattern: '^trace_[a-zA-Z0-9]{16}$'
+          pattern: "^trace_[a-zA-Z0-9]{16}$"
         status:
           type: string
           enum: [completed, failed, timeout]
@@ -1578,13 +1600,13 @@ components:
         steps:
           type: array
           items:
-            $ref: '#/components/schemas/StepSummary'
+            $ref: "#/components/schemas/StepSummary"
         tokens:
-          $ref: '#/components/schemas/TokenUsage'
+          $ref: "#/components/schemas/TokenUsage"
         timing:
-          $ref: '#/components/schemas/Timing'
+          $ref: "#/components/schemas/Timing"
         metadata:
-          $ref: '#/components/schemas/ExecutionMetadata'
+          $ref: "#/components/schemas/ExecutionMetadata"
         created_at:
           type: string
           format: date-time
@@ -1602,7 +1624,7 @@ components:
         duration_ms:
           type: integer
         tokens:
-          $ref: '#/components/schemas/TokenUsage'
+          $ref: "#/components/schemas/TokenUsage"
 
     TokenUsage:
       type: object
@@ -1668,11 +1690,11 @@ components:
         steps:
           type: array
           items:
-            $ref: '#/components/schemas/StepTrace'
+            $ref: "#/components/schemas/StepTrace"
         confidence:
           type: number
         tokens:
-          $ref: '#/components/schemas/TokenUsage'
+          $ref: "#/components/schemas/TokenUsage"
         timing:
           type: object
           properties:
@@ -1689,7 +1711,7 @@ components:
             processing_ms:
               type: integer
         metadata:
-          $ref: '#/components/schemas/ExecutionMetadata'
+          $ref: "#/components/schemas/ExecutionMetadata"
 
     StepTrace:
       type: object
@@ -1714,7 +1736,7 @@ components:
         duration_ms:
           type: integer
         tokens:
-          $ref: '#/components/schemas/TokenUsage'
+          $ref: "#/components/schemas/TokenUsage"
         started_at:
           type: string
           format: date-time
@@ -1735,7 +1757,16 @@ components:
           type: string
         strategy:
           type: string
-          enum: [expansive, deductive, analytical, adversarial, verification, decision, empirical]
+          enum:
+            [
+              expansive,
+              deductive,
+              analytical,
+              adversarial,
+              verification,
+              decision,
+              empirical,
+            ]
         input_fields:
           type: object
           properties:
@@ -1760,7 +1791,7 @@ components:
         protocols:
           type: array
           items:
-            $ref: '#/components/schemas/Protocol'
+            $ref: "#/components/schemas/Protocol"
         total:
           type: integer
 
@@ -1795,7 +1826,7 @@ components:
         profiles:
           type: array
           items:
-            $ref: '#/components/schemas/Profile'
+            $ref: "#/components/schemas/Profile"
         total:
           type: integer
 
@@ -1847,7 +1878,7 @@ components:
         webhooks:
           type: array
           items:
-            $ref: '#/components/schemas/Webhook'
+            $ref: "#/components/schemas/Webhook"
         total:
           type: integer
 
@@ -1952,7 +1983,7 @@ components:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Error'
+            $ref: "#/components/schemas/Error"
           example:
             error:
               code: "bad_request"
@@ -1963,7 +1994,7 @@ components:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Error'
+            $ref: "#/components/schemas/Error"
           example:
             error:
               code: "unauthorized"
@@ -1974,7 +2005,7 @@ components:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Error'
+            $ref: "#/components/schemas/Error"
           example:
             error:
               code: "not_found"
@@ -1985,7 +2016,7 @@ components:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Error'
+            $ref: "#/components/schemas/Error"
           example:
             error:
               code: "validation_error"
@@ -1998,7 +2029,7 @@ components:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Error'
+            $ref: "#/components/schemas/Error"
           example:
             error:
               code: "quota_exceeded"
@@ -2017,7 +2048,7 @@ components:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Error'
+            $ref: "#/components/schemas/Error"
           example:
             error:
               code: "rate_limit_exceeded"
@@ -2029,7 +2060,7 @@ components:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Error'
+            $ref: "#/components/schemas/Error"
           example:
             error:
               code: "internal_error"
@@ -2040,36 +2071,37 @@ components:
 
 ## Appendix A: Error Codes
 
-| Code | HTTP Status | Description |
-|------|-------------|-------------|
-| `bad_request` | 400 | Malformed request |
-| `unauthorized` | 401 | Invalid/missing API key |
-| `forbidden` | 403 | Insufficient permissions |
-| `not_found` | 404 | Resource not found |
-| `validation_error` | 422 | Request validation failed |
-| `rate_limit_exceeded` | 429 | Too many requests |
-| `quota_exceeded` | 402 | Token quota exceeded |
-| `timeout` | 408 | Execution timed out |
-| `llm_error` | 502 | Upstream LLM error |
-| `internal_error` | 500 | Internal server error |
+| Code                  | HTTP Status | Description               |
+| --------------------- | ----------- | ------------------------- |
+| `bad_request`         | 400         | Malformed request         |
+| `unauthorized`        | 401         | Invalid/missing API key   |
+| `forbidden`           | 403         | Insufficient permissions  |
+| `not_found`           | 404         | Resource not found        |
+| `validation_error`    | 422         | Request validation failed |
+| `rate_limit_exceeded` | 429         | Too many requests         |
+| `quota_exceeded`      | 402         | Token quota exceeded      |
+| `timeout`             | 408         | Execution timed out       |
+| `llm_error`           | 502         | Upstream LLM error        |
+| `internal_error`      | 500         | Internal server error     |
 
 ## Appendix B: Protocol Input Fields
 
-| Protocol | Required | Optional |
-|----------|----------|----------|
-| `gigathink` | `query` | `context`, `constraints` |
-| `laserlogic` | `argument` | `context` |
-| `bedrock` | `statement` | `domain` |
-| `proofguard` | `claim` | `sources` |
-| `brutalhonesty` | `work` | `criteria` |
+| Protocol        | Required    | Optional                 |
+| --------------- | ----------- | ------------------------ |
+| `gigathink`     | `query`     | `context`, `constraints` |
+| `laserlogic`    | `argument`  | `context`                |
+| `bedrock`       | `statement` | `domain`                 |
+| `proofguard`    | `claim`     | `sources`                |
+| `brutalhonesty` | `work`      | `criteria`               |
 
 ## Appendix C: Output Structures
 
 ### GigaThink Output
+
 ```json
 {
   "perspectives": [
-    {"dimension": "string", "insight": "string", "confidence": 0.0}
+    { "dimension": "string", "insight": "string", "confidence": 0.0 }
   ],
   "themes": ["string"],
   "synthesis": "string",
@@ -2078,20 +2110,22 @@ components:
 ```
 
 ### LaserLogic Output
+
 ```json
 {
-  "premises": [{"statement": "string", "valid": true}],
+  "premises": [{ "statement": "string", "valid": true }],
   "conclusion": "string",
-  "fallacies": [{"type": "string", "description": "string"}],
+  "fallacies": [{ "type": "string", "description": "string" }],
   "validity": "valid|invalid|uncertain",
   "confidence": 0.0
 }
 ```
 
 ### BedRock Output
+
 ```json
 {
-  "axioms": [{"principle": "string", "foundation": "string"}],
+  "axioms": [{ "principle": "string", "foundation": "string" }],
   "decomposition": ["string"],
   "reconstruction": "string",
   "confidence": 0.0
@@ -2099,9 +2133,12 @@ components:
 ```
 
 ### ProofGuard Output
+
 ```json
 {
-  "sources": [{"name": "string", "stance": "confirms|contradicts|neutral", "tier": 1}],
+  "sources": [
+    { "name": "string", "stance": "confirms|contradicts|neutral", "tier": 1 }
+  ],
   "triangulation_status": "verified|partial|unverified",
   "contradictions": ["string"],
   "confidence": 0.0
@@ -2109,6 +2146,7 @@ components:
 ```
 
 ### BrutalHonesty Output
+
 ```json
 {
   "strengths": ["string"],
@@ -2121,5 +2159,5 @@ components:
 
 ---
 
-*ReasonKit ThinkTools API v1.0.0 | "Turn Prompts into Protocols"*
+_ReasonKit ThinkTools API v1.0.0 | "Turn Prompts into Protocols"_
 *https://reasonkit.sh*

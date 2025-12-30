@@ -3,11 +3,12 @@
 ReasonKit follows [Semantic Versioning 2.0.0](https://semver.org/).
 
 ## Version Format
+
 `MAJOR.MINOR.PATCH` (e.g., `1.2.3`)
 
-*   **MAJOR**: Incompatible API changes.
-*   **MINOR**: Functionality added in a backward-compatible manner.
-*   **PATCH**: Backward-compatible bug fixes.
+- **MAJOR**: Incompatible API changes.
+- **MINOR**: Functionality added in a backward-compatible manner.
+- **PATCH**: Backward-compatible bug fixes.
 
 ## Public API Definition
 
@@ -23,9 +24,9 @@ Modules marked as `experimental` or `internal` are NOT covered by semantic versi
 
 ## Release Cadence
 
-*   **Patch Releases:** As needed for bug fixes (weekly/bi-weekly).
-*   **Minor Releases:** Quarterly feature drops (Q1, Q2, Q3, Q4).
-*   **Major Releases:** Annually or when significant architectural shifts occur.
+- **Patch Releases:** As needed for bug fixes (weekly/bi-weekly).
+- **Minor Releases:** Quarterly feature drops (Q1, Q2, Q3, Q4).
+- **Major Releases:** Annually or when significant architectural shifts occur.
 
 ## Deprecation Policy
 
@@ -38,5 +39,6 @@ We strive to avoid breaking changes. When they are necessary:
 ## Protocol Versioning
 
 ThinkTool protocols use their own versioning (`thinktools_v2.yaml`).
-*   The engine supports executing older protocol versions if the schema is compatible.
-*   Breaking schema changes require a parser update and potentially a MAJOR engine update.
+
+- The engine supports executing older protocol versions if the schema is compatible.
+- Breaking schema changes require a parser update and potentially a MAJOR engine update.

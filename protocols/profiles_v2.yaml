@@ -33,13 +33,13 @@
         argument: steps.gigathink.synthesize
     - protocol_id: bedrock
       input_mapping:
-        statement: steps.laserlogic.check_validity  # Fixed: actual step ID
+        statement: steps.laserlogic.check_validity # Fixed: actual step ID
       condition:
         type: confidence_below
         threshold: 0.9
     - protocol_id: proofguard
       input_mapping:
-        claim: steps.bedrock.identify_axioms  # Fixed: actual step ID
+        claim: steps.bedrock.identify_axioms # Fixed: actual step ID
 
 - id: deep
   name: Deep Analysis
@@ -57,13 +57,13 @@
         argument: steps.gigathink.synthesize
     - protocol_id: bedrock
       input_mapping:
-        statement: steps.laserlogic.check_validity  # Fixed: actual step ID
+        statement: steps.laserlogic.check_validity # Fixed: actual step ID
     - protocol_id: proofguard
       input_mapping:
-        claim: steps.bedrock.identify_axioms  # Fixed: actual step ID
+        claim: steps.bedrock.identify_axioms # Fixed: actual step ID
     - protocol_id: brutalhonesty
       input_mapping:
-        work: steps.proofguard.triangulate  # Fixed: actual step ID
+        work: steps.proofguard.triangulate # Fixed: actual step ID
       condition:
         type: confidence_below
         threshold: 0.85
@@ -84,18 +84,18 @@
         argument: steps.gigathink.synthesize
     - protocol_id: bedrock
       input_mapping:
-        statement: steps.laserlogic.check_validity  # Fixed: actual step ID
+        statement: steps.laserlogic.check_validity # Fixed: actual step ID
     - protocol_id: proofguard
       input_mapping:
-        claim: steps.bedrock.identify_axioms  # Fixed: actual step ID
+        claim: steps.bedrock.identify_axioms # Fixed: actual step ID
     - protocol_id: brutalhonesty
       input_mapping:
-        work: steps.proofguard.triangulate  # Fixed: actual step ID
+        work: steps.proofguard.triangulate # Fixed: actual step ID
       config_override:
         temperature: 0.3
     - protocol_id: proofguard
       input_mapping:
-        claim: steps.brutalhonesty.verdict  # verdict exists
+        claim: steps.brutalhonesty.verdict # verdict exists
       condition:
         type: confidence_below
         threshold: 0.95
@@ -112,10 +112,10 @@
         argument: input.query
     - protocol_id: bedrock
       input_mapping:
-        statement: steps.laserlogic.check_validity  # Fixed: actual step ID
+        statement: steps.laserlogic.check_validity # Fixed: actual step ID
     - protocol_id: brutalhonesty
       input_mapping:
-        work: steps.bedrock.reconstruct  # Fixed: actual step ID
+        work: steps.bedrock.reconstruct # Fixed: actual step ID
 
 - id: scientific
   name: Scientific Method
@@ -132,11 +132,11 @@
         temperature: 0.8
     - protocol_id: bedrock
       input_mapping:
-        statement: steps.gigathink.synthesize  # synthesize exists
+        statement: steps.gigathink.synthesize # synthesize exists
         domain: input.domain
     - protocol_id: proofguard
       input_mapping:
-        claim: steps.bedrock.identify_axioms  # Fixed: actual step ID
+        claim: steps.bedrock.identify_axioms # Fixed: actual step ID
         sources: input.sources
       config_override:
         min_confidence: 0.85

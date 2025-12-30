@@ -35,12 +35,12 @@ ReasonKit must prove its value through measurable, reproducible benchmarks. This
 
 ### What We Measure
 
-| Category | Primary Metric | Target | Proven Approach |
-|----------|---------------|--------|-----------------|
-| **Reasoning Quality** | Accuracy delta | > +5% | Self-Consistency (Wang et al.) |
-| **Reliability** | Consistency rate | > 90% | Multiple trials, same seed |
-| **Auditability** | Trace completeness | 100% | Structural validation |
-| **Performance** | Latency overhead | < 50% | Criterion benchmarks |
+| Category              | Primary Metric     | Target | Proven Approach                |
+| --------------------- | ------------------ | ------ | ------------------------------ |
+| **Reasoning Quality** | Accuracy delta     | > +5%  | Self-Consistency (Wang et al.) |
+| **Reliability**       | Consistency rate   | > 90%  | Multiple trials, same seed     |
+| **Auditability**      | Trace completeness | 100%   | Structural validation          |
+| **Performance**       | Latency overhead   | < 50%  | Criterion benchmarks           |
 
 ---
 
@@ -52,15 +52,16 @@ Measure whether ThinkTools actually improve LLM reasoning accuracy.
 
 #### 1.1 Mathematical Reasoning (GSM8K)
 
-| Property | Value |
-|----------|-------|
-| **Dataset** | GSM8K - 8,792 grade school math problems |
-| **Metric** | Exact match accuracy |
-| **Baseline** | GPT-4: 92%, Claude Sonnet: 88% |
-| **ReasonKit Target** | +3-5% with balanced profile |
-| **Status** | Implemented in `src/thinktool/benchmark.rs` |
+| Property             | Value                                       |
+| -------------------- | ------------------------------------------- |
+| **Dataset**          | GSM8K - 8,792 grade school math problems    |
+| **Metric**           | Exact match accuracy                        |
+| **Baseline**         | GPT-4: 92%, Claude Sonnet: 88%              |
+| **ReasonKit Target** | +3-5% with balanced profile                 |
+| **Status**           | Implemented in `src/thinktool/benchmark.rs` |
 
 **Why GSM8K:**
+
 - Multi-step reasoning required
 - Clear ground truth (numerical answer)
 - Well-established baseline scores
@@ -70,45 +71,48 @@ Measure whether ThinkTools actually improve LLM reasoning accuracy.
 
 #### 1.2 Science Reasoning (ARC-Challenge)
 
-| Property | Value |
-|----------|-------|
-| **Dataset** | ARC-Challenge - 2,590 science questions |
-| **Metric** | Multiple-choice accuracy |
-| **Baseline** | GPT-4: 95%, Claude Sonnet: 93% |
-| **ReasonKit Target** | +2-4% with deep profile |
-| **Status** | Implemented in `src/bin/bench.rs` |
+| Property             | Value                                   |
+| -------------------- | --------------------------------------- |
+| **Dataset**          | ARC-Challenge - 2,590 science questions |
+| **Metric**           | Multiple-choice accuracy                |
+| **Baseline**         | GPT-4: 95%, Claude Sonnet: 93%          |
+| **ReasonKit Target** | +2-4% with deep profile                 |
+| **Status**           | Implemented in `src/bin/bench.rs`       |
 
 **Why ARC-C:**
+
 - Requires scientific knowledge + reasoning
 - Tests explanation-based reasoning (ProofGuard value)
 - Not saturated like ARC-Easy
 
 #### 1.3 Logical Deduction (LogiQA 2.0)
 
-| Property | Value |
-|----------|-------|
-| **Dataset** | LogiQA 2.0 - 7,376 logical reasoning problems |
-| **Metric** | Multiple-choice accuracy |
-| **Baseline** | GPT-4: 58%, QwQ-32B: 85% |
-| **ReasonKit Target** | +5-10% with paranoid profile |
-| **Status** | Design complete, implementation pending |
+| Property             | Value                                         |
+| -------------------- | --------------------------------------------- |
+| **Dataset**          | LogiQA 2.0 - 7,376 logical reasoning problems |
+| **Metric**           | Multiple-choice accuracy                      |
+| **Baseline**         | GPT-4: 58%, QwQ-32B: 85%                      |
+| **ReasonKit Target** | +5-10% with paranoid profile                  |
+| **Status**           | Design complete, implementation pending       |
 
 **Why LogiQA:**
+
 - 27.8pp gap between models shows reasoning improvement potential
 - Tests LaserLogic fallacy detection
 - Categories: categorical, sufficient conditional, necessary conditional, etc.
 
 #### 1.4 Common Sense (HellaSwag)
 
-| Property | Value |
-|----------|-------|
-| **Dataset** | HellaSwag - 10,042 commonsense scenarios |
-| **Metric** | Multiple-choice accuracy |
-| **Baseline** | GPT-4: 95%, Claude Sonnet: 93% |
-| **ReasonKit Target** | +0-2% (near ceiling) |
-| **Status** | Low priority - near saturation |
+| Property             | Value                                    |
+| -------------------- | ---------------------------------------- |
+| **Dataset**          | HellaSwag - 10,042 commonsense scenarios |
+| **Metric**           | Multiple-choice accuracy                 |
+| **Baseline**         | GPT-4: 95%, Claude Sonnet: 93%           |
+| **ReasonKit Target** | +0-2% (near ceiling)                     |
+| **Status**           | Low priority - near saturation           |
 
 **Why HellaSwag:**
+
 - Tests common sense completion
 - Good sanity check that ThinkTools don't degrade simple tasks
 - Helps identify overthinking penalty
@@ -121,29 +125,31 @@ Measure consistency and failure handling.
 
 #### 2.1 Hallucination Rate
 
-| Property | Value |
-|----------|-------|
-| **Dataset** | TruthfulQA - 817 questions designed to elicit false answers |
-| **Metric** | MC1 (single correct answer), MC2 (multiple correct answers) |
-| **Baseline** | GPT-4: 59% MC1 |
-| **ReasonKit Target** | +5-10% with ProofGuard verification |
-| **Measurement** | Flag responses containing known false claims |
+| Property             | Value                                                       |
+| -------------------- | ----------------------------------------------------------- |
+| **Dataset**          | TruthfulQA - 817 questions designed to elicit false answers |
+| **Metric**           | MC1 (single correct answer), MC2 (multiple correct answers) |
+| **Baseline**         | GPT-4: 59% MC1                                              |
+| **ReasonKit Target** | +5-10% with ProofGuard verification                         |
+| **Measurement**      | Flag responses containing known false claims                |
 
 **Metrics:**
+
 - **Hallucination rate:** % of responses containing verifiably false claims
 - **Claim verification rate:** % of claims that can be traced to sources
 - **Overconfidence ratio:** High confidence on wrong answers
 
 #### 2.2 Consistency (Same Input, Same Output)
 
-| Property | Value |
-|----------|-------|
-| **Method** | Run same query 10 times, measure answer variance |
-| **Metric** | Agreement rate (% identical answers) |
-| **Target** | > 85% with Self-Consistency |
-| **Temperature** | 0.0 for baseline, 0.7 for diversity tests |
+| Property        | Value                                            |
+| --------------- | ------------------------------------------------ |
+| **Method**      | Run same query 10 times, measure answer variance |
+| **Metric**      | Agreement rate (% identical answers)             |
+| **Target**      | > 85% with Self-Consistency                      |
+| **Temperature** | 0.0 for baseline, 0.7 for diversity tests        |
 
 **Protocol:**
+
 ```rust
 pub struct ConsistencyTest {
     pub query: String,
@@ -163,13 +169,14 @@ pub struct ConsistencyResult {
 
 #### 2.3 Failure Recovery
 
-| Property | Value |
-|----------|-------|
-| **Method** | Inject malformed inputs, measure graceful degradation |
-| **Metrics** | Error rate, recovery rate, timeout rate |
-| **Target** | < 1% unhandled errors, 100% structured error messages |
+| Property    | Value                                                 |
+| ----------- | ----------------------------------------------------- |
+| **Method**  | Inject malformed inputs, measure graceful degradation |
+| **Metrics** | Error rate, recovery rate, timeout rate               |
+| **Target**  | < 1% unhandled errors, 100% structured error messages |
 
 **Test Cases:**
+
 1. Empty input
 2. Extremely long input (> 100K tokens)
 3. Invalid encoding
@@ -184,14 +191,15 @@ Measure traceability and explanation quality - ReasonKit's core differentiator.
 
 #### 3.1 Trace Completeness
 
-| Property | Value |
-|----------|-------|
+| Property   | Value                                             |
+| ---------- | ------------------------------------------------- |
 | **Method** | Validate all execution traces for required fields |
-| **Metric** | % of traces with complete metadata |
-| **Target** | 100% |
-| **Status** | Implemented in quality gates |
+| **Metric** | % of traces with complete metadata                |
+| **Target** | 100%                                              |
+| **Status** | Implemented in quality gates                      |
 
 **Required Fields:**
+
 ```rust
 pub struct TraceCompleteness {
     // Mandatory fields (must be present and valid)
@@ -211,14 +219,15 @@ pub struct TraceCompleteness {
 
 #### 3.2 Decision Traceability
 
-| Property | Value |
-|----------|-------|
-| **Method** | Human evaluation: can decisions be traced to reasoning? |
-| **Metric** | Traceability score (1-5 Likert scale) |
-| **Target** | Mean > 4.0 |
-| **Sample Size** | 100 randomly selected traces |
+| Property        | Value                                                   |
+| --------------- | ------------------------------------------------------- |
+| **Method**      | Human evaluation: can decisions be traced to reasoning? |
+| **Metric**      | Traceability score (1-5 Likert scale)                   |
+| **Target**      | Mean > 4.0                                              |
+| **Sample Size** | 100 randomly selected traces                            |
 
 **Evaluation Rubric:**
+
 - **5:** Every decision has clear, traceable reasoning path
 - **4:** Most decisions traceable, minor gaps
 - **3:** Key decisions traceable, supporting details unclear
@@ -227,13 +236,14 @@ pub struct TraceCompleteness {
 
 #### 3.3 Explanation Quality
 
-| Property | Value |
-|----------|-------|
-| **Method** | Automated + human evaluation of explanations |
+| Property    | Value                                           |
+| ----------- | ----------------------------------------------- |
+| **Method**  | Automated + human evaluation of explanations    |
 | **Metrics** | Coherence, Completeness, Correctness (3C score) |
-| **Target** | Mean 3C score > 0.8 |
+| **Target**  | Mean 3C score > 0.8                             |
 
 **Automated Metrics:**
+
 ```rust
 pub struct ExplanationQuality {
     // Coherence: Does the explanation flow logically?
@@ -258,12 +268,12 @@ Measure computational overhead of ThinkTools.
 
 #### 4.1 Latency Overhead
 
-| Property | Value |
-|----------|-------|
-| **Method** | Compare raw query time vs ThinkTool-enhanced time |
-| **Metric** | Latency multiplier, p50/p95/p99 |
-| **Target** | < 1.5x overhead for balanced profile |
-| **Measurement** | Criterion benchmarks with 100+ iterations |
+| Property        | Value                                             |
+| --------------- | ------------------------------------------------- |
+| **Method**      | Compare raw query time vs ThinkTool-enhanced time |
+| **Metric**      | Latency multiplier, p50/p95/p99                   |
+| **Target**      | < 1.5x overhead for balanced profile              |
+| **Measurement** | Criterion benchmarks with 100+ iterations         |
 
 **Profiles by Overhead:**
 | Profile | Expected Overhead | Acceptable For |
@@ -275,10 +285,10 @@ Measure computational overhead of ThinkTools.
 
 #### 4.2 Token Efficiency
 
-| Property | Value |
-|----------|-------|
-| **Method** | Measure input/output token counts per profile |
-| **Metric** | Token multiplier vs raw query |
+| Property   | Value                                            |
+| ---------- | ------------------------------------------------ |
+| **Method** | Measure input/output token counts per profile    |
+| **Metric** | Token multiplier vs raw query                    |
 | **Target** | Document overhead, let users decide cost-benefit |
 
 **Token Budget by Profile:**
@@ -291,12 +301,12 @@ Measure computational overhead of ThinkTools.
 
 #### 4.3 Memory Usage
 
-| Property | Value |
-|----------|-------|
-| **Method** | Track heap allocation during benchmark runs |
-| **Metric** | Peak memory, average memory, allocation count |
-| **Target** | < 100MB peak for standard operations |
-| **Tooling** | `dhat` profiler, custom allocator tracking |
+| Property    | Value                                         |
+| ----------- | --------------------------------------------- |
+| **Method**  | Track heap allocation during benchmark runs   |
+| **Metric**  | Peak memory, average memory, allocation count |
+| **Target**  | < 100MB peak for standard operations          |
+| **Tooling** | `dhat` profiler, custom allocator tracking    |
 
 ---
 
@@ -987,15 +997,15 @@ fn cohens_h(p1: f64, p2: f64) -> f64 {
 
 ### Metrics
 
-| Metric | Baseline | Treatment | Interpretation |
-|--------|----------|-----------|----------------|
-| **Accuracy** | Raw LLM | ThinkTools | Higher = better reasoning |
-| **Delta** | 0 | Treatment - Baseline | > 0 = improvement |
-| **95% CI** | - | Wilson score | Narrow = precise |
-| **p-value** | - | McNemar's test | < 0.05 = significant |
-| **Effect Size** | - | Cohen's h | > 0.2 = small, > 0.5 = medium, > 0.8 = large |
-| **Token Ratio** | 1.0x | Treatment / Baseline | Cost multiplier |
-| **Latency Ratio** | 1.0x | Treatment / Baseline | Time multiplier |
+| Metric            | Baseline | Treatment            | Interpretation                               |
+| ----------------- | -------- | -------------------- | -------------------------------------------- |
+| **Accuracy**      | Raw LLM  | ThinkTools           | Higher = better reasoning                    |
+| **Delta**         | 0        | Treatment - Baseline | > 0 = improvement                            |
+| **95% CI**        | -        | Wilson score         | Narrow = precise                             |
+| **p-value**       | -        | McNemar's test       | < 0.05 = significant                         |
+| **Effect Size**   | -        | Cohen's h            | > 0.2 = small, > 0.5 = medium, > 0.8 = large |
+| **Token Ratio**   | 1.0x     | Treatment / Baseline | Cost multiplier                              |
+| **Latency Ratio** | 1.0x     | Treatment / Baseline | Time multiplier                              |
 
 ---
 
@@ -1128,7 +1138,7 @@ $ rk-core benchmark gsm8k --samples 100 --profiles baseline,balanced
         "baseline": {
           "accuracy": 0.78,
           "ci_lower": 0.691,
-          "ci_upper": 0.850,
+          "ci_upper": 0.85,
           "mean_tokens": 150,
           "mean_latency_ms": 800,
           "mean_confidence": 0.72
@@ -1176,7 +1186,8 @@ $ rk-core benchmark gsm8k --samples 100 --profiles baseline,balanced
 ## Executive Summary
 
 | Benchmark | Best Profile | Delta vs Baseline | Significant? |
-|-----------|-------------|-------------------|--------------|
+| --------- | ------------ | ----------------- | ------------ |
+
 {summary_table}
 
 ## Detailed Results
@@ -1186,19 +1197,23 @@ $ rk-core benchmark gsm8k --samples 100 --profiles baseline,balanced
 **Best Result:** balanced profile (+7.0% vs baseline)
 
 | Profile | Accuracy | 95% CI | Latency | Tokens | Cost |
-|---------|----------|--------|---------|--------|------|
+| ------- | -------- | ------ | ------- | ------ | ---- |
+
 {profile_table}
 
 **Statistical Significance:**
+
 - McNemar's test: p = 0.023 (significant at alpha = 0.05)
 - Effect size (Cohen's h): 0.18 (small effect)
 
 **Where ThinkTools Helped:**
+
 - Multi-step problems requiring explicit reasoning
 - Problems with common calculation errors
 - Problems requiring systematic approach
 
 **Where ThinkTools Did NOT Help:**
+
 - Simple single-step calculations
 - Problems already solved correctly by baseline
 - Very long problems (token budget exceeded)
@@ -1221,16 +1236,19 @@ rk-core benchmark gsm8k --samples 100 --seed 42
 ## Honest Assessment
 
 ### What This Shows
+
 - ThinkTools can improve accuracy on math reasoning tasks
 - Improvement is statistically significant but effect size is small
 - Cost is 4x tokens for 7% accuracy gain
 
 ### What This Does NOT Show
+
 - ThinkTools always improve accuracy
 - Improvement transfers to all domains
 - Cost-benefit is universally positive
 
 ### Recommendations
+
 - Use for high-stakes decisions where accuracy matters
 - Consider cost-benefit for high-volume applications
 - Run your own benchmarks on your specific use case
@@ -1249,21 +1267,21 @@ name: Benchmark Suite
 
 on:
   schedule:
-    - cron: '0 0 * * *'  # Nightly at midnight UTC
+    - cron: "0 0 * * *" # Nightly at midnight UTC
   pull_request:
     paths:
-      - 'src/thinktool/**'
-      - 'src/benchmark/**'
+      - "src/thinktool/**"
+      - "src/benchmark/**"
   workflow_dispatch:
     inputs:
       benchmark:
-        description: 'Benchmark to run (all, gsm8k, logiqa, arc_c)'
+        description: "Benchmark to run (all, gsm8k, logiqa, arc_c)"
         required: false
-        default: 'quick'
+        default: "quick"
       samples:
-        description: 'Number of samples'
+        description: "Number of samples"
         required: false
-        default: '50'
+        default: "50"
 
 env:
   RUST_BACKTRACE: 1
@@ -1661,22 +1679,22 @@ submission:
 
 ### What Good Looks Like
 
-| Delta | Interpretation | Action | Confidence |
-|-------|----------------|--------|------------|
-| **> +10%** | Strong improvement | Highlight in marketing, document use case | High |
-| **+5-10%** | Meaningful improvement | Document, verify cost-benefit | Medium-High |
-| **+2-5%** | Marginal improvement | May not justify cost for all use cases | Medium |
-| **+0-2%** | No meaningful difference | Honest: "no measurable change" | Low |
-| **< 0%** | Degradation | Document when NOT to use, investigate | High |
+| Delta      | Interpretation           | Action                                    | Confidence  |
+| ---------- | ------------------------ | ----------------------------------------- | ----------- |
+| **> +10%** | Strong improvement       | Highlight in marketing, document use case | High        |
+| **+5-10%** | Meaningful improvement   | Document, verify cost-benefit             | Medium-High |
+| **+2-5%**  | Marginal improvement     | May not justify cost for all use cases    | Medium      |
+| **+0-2%**  | No meaningful difference | Honest: "no measurable change"            | Low         |
+| **< 0%**   | Degradation              | Document when NOT to use, investigate     | High        |
 
 ### Effect Size Interpretation
 
-| Cohen's h | Interpretation | Example |
-|-----------|----------------|---------|
-| < 0.2 | Trivial | 80% -> 82% |
-| 0.2 - 0.5 | Small | 80% -> 85% |
-| 0.5 - 0.8 | Medium | 80% -> 90% |
-| > 0.8 | Large | 70% -> 90% |
+| Cohen's h | Interpretation | Example    |
+| --------- | -------------- | ---------- |
+| < 0.2     | Trivial        | 80% -> 82% |
+| 0.2 - 0.5 | Small          | 80% -> 85% |
+| 0.5 - 0.8 | Medium         | 80% -> 90% |
+| > 0.8     | Large          | 70% -> 90% |
 
 ### Cost-Benefit Analysis
 
@@ -1703,21 +1721,21 @@ Decision Framework:
 
 #### Where ReasonKit Excels
 
-| Domain | Evidence | Recommended Profile |
-|--------|----------|---------------------|
-| **Multi-step math** | GSM8K +7% | balanced, deep |
-| **Logical deduction** | LogiQA +10% | paranoid |
-| **Complex analysis** | Qualitative | deep, powercombo |
-| **Audit-critical** | Trace completeness 100% | Any |
+| Domain                | Evidence                | Recommended Profile |
+| --------------------- | ----------------------- | ------------------- |
+| **Multi-step math**   | GSM8K +7%               | balanced, deep      |
+| **Logical deduction** | LogiQA +10%             | paranoid            |
+| **Complex analysis**  | Qualitative             | deep, powercombo    |
+| **Audit-critical**    | Trace completeness 100% | Any                 |
 
 #### Where ReasonKit Does NOT Add Value
 
-| Domain | Finding | Recommendation |
-|--------|---------|----------------|
-| **Simple factual QA** | No improvement | Use raw LLM |
-| **Creative writing** | Potential degradation | Use raw LLM or quick |
-| **High-throughput, low-stakes** | Cost prohibitive | Use raw LLM |
-| **Already correct** | No room for improvement | Use raw LLM |
+| Domain                          | Finding                 | Recommendation       |
+| ------------------------------- | ----------------------- | -------------------- |
+| **Simple factual QA**           | No improvement          | Use raw LLM          |
+| **Creative writing**            | Potential degradation   | Use raw LLM or quick |
+| **High-throughput, low-stakes** | Cost prohibitive        | Use raw LLM          |
+| **Already correct**             | No room for improvement | Use raw LLM          |
 
 #### Honest Limitations
 
@@ -1836,5 +1854,5 @@ Where:
 
 ---
 
-*ReasonKit Benchmark Suite v2.0 | Structured Prompt Engineering Framework*
-*"No claims without evidence. Run benchmarks to prove value."*
+_ReasonKit Benchmark Suite v2.0 | Structured Prompt Engineering Framework_
+_"No claims without evidence. Run benchmarks to prove value."_

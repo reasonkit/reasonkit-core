@@ -10,15 +10,15 @@
 
 ## Quick Links
 
-| Document | Purpose | Audience |
-|----------|---------|----------|
-| [API Reference](API_REFERENCE.md) | Complete API documentation | Developers |
-| [CLI Reference](CLI_REFERENCE.md) | Command-line interface guide | Users & DevOps |
-| [CLI Workflow Examples](CLI_WORKFLOW_EXAMPLES.md) | Practical workflow scripts | Users |
-| [ThinkTools Quick Reference](THINKTOOLS_QUICK_REFERENCE.md) | Protocol execution guide | AI Engineers |
-| [ThinkTools Architecture](THINKTOOLS_ARCHITECTURE.md) | System design & internals | Architects |
-| [Architecture](../ARCHITECTURE.md) | 5-layer RAG design | Engineers |
-| [Project Context](../CLAUDE.md) | Project-specific details | Contributors |
+| Document                                                    | Purpose                      | Audience       |
+| ----------------------------------------------------------- | ---------------------------- | -------------- |
+| [API Reference](API_REFERENCE.md)                           | Complete API documentation   | Developers     |
+| [CLI Reference](CLI_REFERENCE.md)                           | Command-line interface guide | Users & DevOps |
+| [CLI Workflow Examples](CLI_WORKFLOW_EXAMPLES.md)           | Practical workflow scripts   | Users          |
+| [ThinkTools Quick Reference](THINKTOOLS_QUICK_REFERENCE.md) | Protocol execution guide     | AI Engineers   |
+| [ThinkTools Architecture](THINKTOOLS_ARCHITECTURE.md)       | System design & internals    | Architects     |
+| [Architecture](../ARCHITECTURE.md)                          | 5-layer RAG design           | Engineers      |
+| [Project Context](../CLAUDE.md)                             | Project-specific details     | Contributors   |
 
 ---
 
@@ -27,11 +27,13 @@
 ### For Users
 
 **Getting Started**
+
 - [Installation](#installation)
 - [Quick Start](#quick-start)
 - [CLI Reference](CLI_REFERENCE.md) - Complete CLI guide
 
 **Using ReasonKit**
+
 - [Query Knowledge Base](#querying)
 - [Ingest Documents](#ingestion)
 - [Execute ThinkTools](#thinktools)
@@ -42,18 +44,21 @@
 ### For Developers
 
 **API Documentation**
+
 - [API Reference](API_REFERENCE.md) - Complete API docs
 - [Rustdoc](../target/doc/reasonkit_core/index.html) - Generated API docs
 - [Core Types](#core-types)
 - [Modules](#modules)
 
 **Architecture**
+
 - [System Architecture](../ARCHITECTURE.md) - 5-layer design
 - [ThinkTools Architecture](THINKTOOLS_ARCHITECTURE.md) - Protocol engine
 - [Storage Backends](#storage)
 - [Retrieval System](#retrieval)
 
 **Contributing**
+
 - [Development Setup](#development)
 - [Testing](#testing)
 - [Quality Gates](#quality-gates)
@@ -61,6 +66,7 @@
 ### For Researchers
 
 **Academic References**
+
 - [Paper Index](content/papers-index.md)
 - [Source Overview](SOURCE_OVERVIEW.md)
 - [Research Documentation](research/)
@@ -197,29 +203,29 @@ pub struct SearchResult {
 
 ### Core Modules
 
-| Module | Purpose | Documentation |
-|--------|---------|---------------|
-| `lib.rs` | Core types & exports | [API Ref](API_REFERENCE.md#core-types) |
-| `error.rs` | Error handling | [API Ref](API_REFERENCE.md#error-handling) |
-| `ingestion/` | Document parsing | [API Ref](API_REFERENCE.md#ingestion) |
-| `processing/` | Chunking & cleaning | [API Ref](API_REFERENCE.md#processing) |
-| `embedding/` | Text embeddings | [API Ref](API_REFERENCE.md#embedding-pipeline) |
-| `indexing/` | BM25 & HNSW indexes | [API Ref](API_REFERENCE.md#indexing) |
-| `retrieval/` | Hybrid search | [API Ref](API_REFERENCE.md#retrieval-system) |
-| `storage/` | Qdrant & storage | [API Ref](API_REFERENCE.md#storage-backends) |
-| `raptor.rs` | RAPTOR trees | [API Ref](API_REFERENCE.md#raptor-hierarchical-retrieval) |
+| Module        | Purpose              | Documentation                                             |
+| ------------- | -------------------- | --------------------------------------------------------- |
+| `lib.rs`      | Core types & exports | [API Ref](API_REFERENCE.md#core-types)                    |
+| `error.rs`    | Error handling       | [API Ref](API_REFERENCE.md#error-handling)                |
+| `ingestion/`  | Document parsing     | [API Ref](API_REFERENCE.md#ingestion)                     |
+| `processing/` | Chunking & cleaning  | [API Ref](API_REFERENCE.md#processing)                    |
+| `embedding/`  | Text embeddings      | [API Ref](API_REFERENCE.md#embedding-pipeline)            |
+| `indexing/`   | BM25 & HNSW indexes  | [API Ref](API_REFERENCE.md#indexing)                      |
+| `retrieval/`  | Hybrid search        | [API Ref](API_REFERENCE.md#retrieval-system)              |
+| `storage/`    | Qdrant & storage     | [API Ref](API_REFERENCE.md#storage-backends)              |
+| `raptor.rs`   | RAPTOR trees         | [API Ref](API_REFERENCE.md#raptor-hierarchical-retrieval) |
 
 ### ThinkTool Modules
 
-| Module | Purpose | Documentation |
-|--------|---------|---------------|
-| `thinktool/mod.rs` | Protocol engine | [ThinkTools Arch](THINKTOOLS_ARCHITECTURE.md) |
-| `thinktool/llm.rs` | LLM integrations (18+ providers) | [API Ref](API_REFERENCE.md#unifiedllmclient) |
-| `thinktool/executor.rs` | Protocol execution | [ThinkTools Quick](THINKTOOLS_QUICK_REFERENCE.md) |
-| `thinktool/registry.rs` | Protocol registry | [ThinkTools Arch](THINKTOOLS_ARCHITECTURE.md) |
-| `thinktool/profiles.rs` | Reasoning profiles | [API Ref](API_REFERENCE.md#reasoning-profiles) |
-| `thinktool/budget.rs` | Budget management | [API Ref](API_REFERENCE.md#budget-management) |
-| `thinktool/trace.rs` | Execution tracing | [API Ref](API_REFERENCE.md#execution-trace) |
+| Module                  | Purpose                          | Documentation                                     |
+| ----------------------- | -------------------------------- | ------------------------------------------------- |
+| `thinktool/mod.rs`      | Protocol engine                  | [ThinkTools Arch](THINKTOOLS_ARCHITECTURE.md)     |
+| `thinktool/llm.rs`      | LLM integrations (18+ providers) | [API Ref](API_REFERENCE.md#unifiedllmclient)      |
+| `thinktool/executor.rs` | Protocol execution               | [ThinkTools Quick](THINKTOOLS_QUICK_REFERENCE.md) |
+| `thinktool/registry.rs` | Protocol registry                | [ThinkTools Arch](THINKTOOLS_ARCHITECTURE.md)     |
+| `thinktool/profiles.rs` | Reasoning profiles               | [API Ref](API_REFERENCE.md#reasoning-profiles)    |
+| `thinktool/budget.rs`   | Budget management                | [API Ref](API_REFERENCE.md#budget-management)     |
+| `thinktool/trace.rs`    | Execution tracing                | [API Ref](API_REFERENCE.md#execution-trace)       |
 
 ---
 
@@ -306,22 +312,22 @@ Structured reasoning protocols that transform ad-hoc LLM prompting into auditabl
 
 ### Available Protocols (Open Source)
 
-| Tool | Code | Purpose |
-|------|------|---------|
-| **GigaThink** | `gt` | Expansive creative thinking (10+ perspectives) |
-| **LaserLogic** | `ll` | Precision deductive reasoning, fallacy detection |
-| **BedRock** | `br` | First principles decomposition |
-| **ProofGuard** | `pg` | Multi-source verification |
-| **BrutalHonesty** | `bh` | Adversarial self-critique |
+| Tool              | Code | Purpose                                          |
+| ----------------- | ---- | ------------------------------------------------ |
+| **GigaThink**     | `gt` | Expansive creative thinking (10+ perspectives)   |
+| **LaserLogic**    | `ll` | Precision deductive reasoning, fallacy detection |
+| **BedRock**       | `br` | First principles decomposition                   |
+| **ProofGuard**    | `pg` | Multi-source verification                        |
+| **BrutalHonesty** | `bh` | Adversarial self-critique                        |
 
 ### Reasoning Profiles
 
-| Profile | Modules | Confidence | Use Case |
-|---------|---------|------------|----------|
-| `--quick` | gt, ll | 70% | Fast 3-step analysis |
-| `--balanced` | gt, ll, br, pg | 80% | Standard 5-module chain |
-| `--deep` | gt, ll, br, pg, hr | 85% | Thorough analysis |
-| `--paranoid` | gt, ll, br, pg, bh | 95% | Maximum verification |
+| Profile      | Modules            | Confidence | Use Case                |
+| ------------ | ------------------ | ---------- | ----------------------- |
+| `--quick`    | gt, ll             | 70%        | Fast 3-step analysis    |
+| `--balanced` | gt, ll, br, pg     | 80%        | Standard 5-module chain |
+| `--deep`     | gt, ll, br, pg, hr | 85%        | Thorough analysis       |
+| `--paranoid` | gt, ll, br, pg, bh | 95%        | Maximum verification    |
 
 ### Execute Protocol
 
@@ -346,6 +352,7 @@ rk-core think "Evaluate this decision" --profile balanced
 - And 10+ more...
 
 **See:**
+
 - [ThinkTools Quick Reference](THINKTOOLS_QUICK_REFERENCE.md)
 - [ThinkTools Architecture](THINKTOOLS_ARCHITECTURE.md)
 - [CLI Reference - Think](CLI_REFERENCE.md#3-think---execute-thinktool-protocols)
@@ -405,11 +412,11 @@ export XAI_API_KEY="xai-..."
 
 ### Backends
 
-| Backend | Use Case | Setup |
-|---------|----------|-------|
-| **Qdrant** | Production | `docker run -p 6333:6333 qdrant/qdrant` |
-| **In-Memory** | Testing | No setup required |
-| **JSONL** | Lightweight | File-based persistence |
+| Backend       | Use Case    | Setup                                   |
+| ------------- | ----------- | --------------------------------------- |
+| **Qdrant**    | Production  | `docker run -p 6333:6333 qdrant/qdrant` |
+| **In-Memory** | Testing     | No setup required                       |
+| **JSONL**     | Lightweight | File-based persistence                  |
 
 ### Qdrant Setup
 
@@ -529,6 +536,7 @@ cargo bench
 ```
 
 **Expected Performance:**
+
 - Embed single text (API): ~150ms
 - Dense search (1M vectors): ~25ms
 - BM25 search (1M docs): ~15ms
@@ -571,6 +579,7 @@ cargo doc --no-deps --open
 **Location:** `reasonkit-core/target/doc/reasonkit_core/index.html`
 
 **Modules:**
+
 - `reasonkit_core` - Core library
 - `reasonkit_core::embedding` - Embedding pipeline
 - `reasonkit_core::retrieval` - Retrieval system
@@ -632,12 +641,12 @@ async fn main() -> anyhow::Result<()> {
 
 ### Common Issues
 
-| Issue | Solution |
-|-------|----------|
-| Qdrant connection failed | Start Qdrant: `docker run -p 6333:6333 qdrant/qdrant` |
-| OpenAI rate limit | Reduce batch size: `export REASONKIT_EMBEDDING_BATCH_SIZE="20"` |
-| Out of memory | Process in smaller batches |
-| Protocol timeout | Increase budget: `--budget "5m"` |
+| Issue                    | Solution                                                        |
+| ------------------------ | --------------------------------------------------------------- |
+| Qdrant connection failed | Start Qdrant: `docker run -p 6333:6333 qdrant/qdrant`           |
+| OpenAI rate limit        | Reduce batch size: `export REASONKIT_EMBEDDING_BATCH_SIZE="20"` |
+| Out of memory            | Process in smaller batches                                      |
+| Protocol timeout         | Increase budget: `--budget "5m"`                                |
 
 **See:** [CLI Reference - Troubleshooting](CLI_REFERENCE.md#troubleshooting)
 
@@ -692,6 +701,7 @@ Apache 2.0
 ### v0.1.0 (2025-12-23)
 
 Initial release:
+
 - 5-layer RAG architecture
 - Hybrid search (BM25 + vector)
 - RAPTOR hierarchical retrieval

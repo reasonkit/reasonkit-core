@@ -1,4 +1,5 @@
 # WEBHOOK AND EVENT NOTIFICATION SYSTEM
+
 > ReasonKit Pro/Enterprise Event Architecture
 > Version: 1.0.0 | Status: Design Phase
 > Author: ReasonKit Team
@@ -660,13 +661,13 @@ pub fn verify_webhook(
 
 #### Security Requirements
 
-| Requirement | Enforcement |
-|-------------|-------------|
-| **TLS Required** | Webhook URLs must use HTTPS (except localhost for testing) |
-| **Signature Verification** | Recipients MUST verify HMAC signatures |
-| **Timestamp Validation** | Reject events older than 5 minutes |
-| **Secret Rotation** | Support for rotating webhook secrets without downtime |
-| **IP Allowlist** (Enterprise) | Optional IP range restrictions |
+| Requirement                   | Enforcement                                                |
+| ----------------------------- | ---------------------------------------------------------- |
+| **TLS Required**              | Webhook URLs must use HTTPS (except localhost for testing) |
+| **Signature Verification**    | Recipients MUST verify HMAC signatures                     |
+| **Timestamp Validation**      | Reject events older than 5 minutes                         |
+| **Secret Rotation**           | Support for rotating webhook secrets without downtime      |
+| **IP Allowlist** (Enterprise) | Optional IP range restrictions                             |
 
 ---
 
@@ -674,12 +675,12 @@ pub fn verify_webhook(
 
 ### 4.1 Delivery Guarantees
 
-| Guarantee | Implementation |
-|-----------|----------------|
-| **At-Least-Once** | Events may be delivered multiple times |
-| **Ordering** | Events ordered within a single execution; no global ordering guarantee |
-| **Idempotency** | Use `idempotency_key` to deduplicate |
-| **Durability** | Events persisted before delivery attempt |
+| Guarantee         | Implementation                                                         |
+| ----------------- | ---------------------------------------------------------------------- |
+| **At-Least-Once** | Events may be delivered multiple times                                 |
+| **Ordering**      | Events ordered within a single execution; no global ordering guarantee |
+| **Idempotency**   | Use `idempotency_key` to deduplicate                                   |
+| **Durability**    | Events persisted before delivery attempt                               |
 
 ### 4.2 Retry Policy
 
@@ -719,26 +720,26 @@ pub fn verify_webhook(
 
 **Alternative Strategies:**
 
-| Strategy | Description |
-|----------|-------------|
-| `exponential` | Exponential backoff (default) |
-| `linear` | Linear increase: 1s, 2s, 3s... |
-| `fixed` | Fixed delay between retries |
-| `none` | No retries |
+| Strategy      | Description                    |
+| ------------- | ------------------------------ |
+| `exponential` | Exponential backoff (default)  |
+| `linear`      | Linear increase: 1s, 2s, 3s... |
+| `fixed`       | Fixed delay between retries    |
+| `none`        | No retries                     |
 
 ### 4.3 Failure Handling
 
 #### Response Code Handling
 
-| Response Code | Action |
-|---------------|--------|
-| 2xx | Success - No retry |
-| 3xx | Follow redirects (max 3) |
-| 408, 429 | Rate limited - Retry with backoff |
-| 4xx (other) | Client error - No retry, log warning |
-| 5xx | Server error - Retry |
-| Timeout (30s) | Retry |
-| Connection error | Retry |
+| Response Code    | Action                               |
+| ---------------- | ------------------------------------ |
+| 2xx              | Success - No retry                   |
+| 3xx              | Follow redirects (max 3)             |
+| 408, 429         | Rate limited - Retry with backoff    |
+| 4xx (other)      | Client error - No retry, log warning |
+| 5xx              | Server error - Retry                 |
+| Timeout (30s)    | Retry                                |
+| Connection error | Retry                                |
 
 #### Dead Letter Queue (DLQ)
 
@@ -872,20 +873,22 @@ rk-core integrations add discord \
 
 ```json
 {
-  "embeds": [{
-    "title": "Execution Completed",
-    "color": 5763719,
-    "fields": [
-      {"name": "Protocol", "value": "PowerCombo", "inline": true},
-      {"name": "Profile", "value": "balanced", "inline": true},
-      {"name": "Confidence", "value": "91%", "inline": true},
-      {"name": "Duration", "value": "30.4s", "inline": true},
-      {"name": "Tokens", "value": "10,370", "inline": true},
-      {"name": "Cost", "value": "$0.016", "inline": true}
-    ],
-    "footer": {"text": "exec_01HZK4J8X2..."},
-    "timestamp": "2025-12-28T15:30:30.000Z"
-  }]
+  "embeds": [
+    {
+      "title": "Execution Completed",
+      "color": 5763719,
+      "fields": [
+        { "name": "Protocol", "value": "PowerCombo", "inline": true },
+        { "name": "Profile", "value": "balanced", "inline": true },
+        { "name": "Confidence", "value": "91%", "inline": true },
+        { "name": "Duration", "value": "30.4s", "inline": true },
+        { "name": "Tokens", "value": "10,370", "inline": true },
+        { "name": "Cost", "value": "$0.016", "inline": true }
+      ],
+      "footer": { "text": "exec_01HZK4J8X2..." },
+      "timestamp": "2025-12-28T15:30:30.000Z"
+    }
+  ]
 }
 ```
 
@@ -964,12 +967,12 @@ rk-core integrations add pagerduty \
 
 **Event Action Mapping:**
 
-| ReasonKit Event | PagerDuty Action | Severity |
-|-----------------|------------------|----------|
-| `execution.failed` | trigger | critical |
-| `execution.timeout` | trigger | error |
-| `execution.completed` | resolve | - |
-| `usage.limit_exceeded` | trigger | warning |
+| ReasonKit Event        | PagerDuty Action | Severity |
+| ---------------------- | ---------------- | -------- |
+| `execution.failed`     | trigger          | critical |
+| `execution.timeout`    | trigger          | error    |
+| `execution.completed`  | resolve          | -        |
+| `usage.limit_exceeded` | trigger          | warning  |
 
 ### 5.5 Datadog Integration (Enterprise)
 
@@ -1056,18 +1059,18 @@ Filter events before delivery based on conditions:
 
 **Supported Operators:**
 
-| Operator | Description | Example |
-|----------|-------------|---------|
-| `eq` | Equal | `{"field": "status", "operator": "eq", "value": "failed"}` |
-| `ne` | Not equal | `{"field": "status", "operator": "ne", "value": "completed"}` |
-| `gt` | Greater than | `{"field": "duration_ms", "operator": "gt", "value": 1000}` |
-| `gte` | Greater or equal | `{"field": "confidence", "operator": "gte", "value": 0.9}` |
-| `lt` | Less than | `{"field": "tokens", "operator": "lt", "value": 10000}` |
-| `lte` | Less or equal | `{"field": "step_count", "operator": "lte", "value": 3}` |
-| `in` | In list | `{"field": "profile", "operator": "in", "value": ["paranoid", "deep"]}` |
+| Operator   | Description        | Example                                                                  |
+| ---------- | ------------------ | ------------------------------------------------------------------------ |
+| `eq`       | Equal              | `{"field": "status", "operator": "eq", "value": "failed"}`               |
+| `ne`       | Not equal          | `{"field": "status", "operator": "ne", "value": "completed"}`            |
+| `gt`       | Greater than       | `{"field": "duration_ms", "operator": "gt", "value": 1000}`              |
+| `gte`      | Greater or equal   | `{"field": "confidence", "operator": "gte", "value": 0.9}`               |
+| `lt`       | Less than          | `{"field": "tokens", "operator": "lt", "value": 10000}`                  |
+| `lte`      | Less or equal      | `{"field": "step_count", "operator": "lte", "value": 3}`                 |
+| `in`       | In list            | `{"field": "profile", "operator": "in", "value": ["paranoid", "deep"]}`  |
 | `contains` | Contains substring | `{"field": "error.message", "operator": "contains", "value": "timeout"}` |
-| `regex` | Regex match | `{"field": "protocol_id", "operator": "regex", "value": "^power.*"}` |
-| `exists` | Field exists | `{"field": "data.error", "operator": "exists", "value": true}` |
+| `regex`    | Regex match        | `{"field": "protocol_id", "operator": "regex", "value": "^power.*"}`     |
+| `exists`   | Field exists       | `{"field": "data.error", "operator": "exists", "value": true}`           |
 
 ### 6.2 Routing Rules
 
@@ -1385,12 +1388,12 @@ Structured logs for all webhook operations:
 
 **Log Levels:**
 
-| Level | Use Case |
-|-------|----------|
+| Level   | Use Case                                     |
+| ------- | -------------------------------------------- |
 | `debug` | Detailed delivery attempts, payload contents |
-| `info` | Successful deliveries, webhook changes |
-| `warn` | Retry attempts, approaching limits |
-| `error` | Delivery failures, DLQ additions |
+| `info`  | Successful deliveries, webhook changes       |
+| `warn`  | Retry attempts, approaching limits           |
+| `error` | Delivery failures, DLQ additions             |
 
 ### 8.3 Alerting
 
@@ -1483,28 +1486,32 @@ Real-time event streaming for Enterprise customers:
 
 ```javascript
 // JavaScript Example
-const ws = new WebSocket('wss://api.reasonkit.sh/v1/events/stream');
+const ws = new WebSocket("wss://api.reasonkit.sh/v1/events/stream");
 
 ws.onopen = () => {
   // Authenticate
-  ws.send(JSON.stringify({
-    type: 'auth',
-    token: 'rk_live_xxx'
-  }));
+  ws.send(
+    JSON.stringify({
+      type: "auth",
+      token: "rk_live_xxx",
+    }),
+  );
 
   // Subscribe to events
-  ws.send(JSON.stringify({
-    type: 'subscribe',
-    events: ['execution.*', 'trace.*'],
-    filter: {
-      project_id: 'prj_xyz789'
-    }
-  }));
+  ws.send(
+    JSON.stringify({
+      type: "subscribe",
+      events: ["execution.*", "trace.*"],
+      filter: {
+        project_id: "prj_xyz789",
+      },
+    }),
+  );
 };
 
 ws.onmessage = (message) => {
   const event = JSON.parse(message.data);
-  console.log('Received:', event.type, event.data);
+  console.log("Received:", event.type, event.data);
 };
 ```
 
@@ -2069,7 +2076,7 @@ impl From<serde_json::Error> for DeliveryError {
 
 ### 12.1 Quick Start Guide
 
-```markdown
+````markdown
 # Webhook Quick Start
 
 ## 1. Create a Webhook
@@ -2080,6 +2087,7 @@ rk-core webhooks add \
   --events "execution.completed,execution.failed" \
   --secret $(openssl rand -hex 32)
 ```
+````
 
 ## 2. Verify Signatures (Python Example)
 
@@ -2124,6 +2132,7 @@ def webhook():
 
     return 'OK', 200
 ```
+
 ```
 
 ### 12.2 Event Reference
@@ -2144,3 +2153,4 @@ Full event documentation is available at:
 
 *"Real-time insights into AI reasoning."*
 *ReasonKit Team*
+```

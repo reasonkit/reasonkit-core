@@ -38,14 +38,14 @@ Efficient serialization  ->   serde with skip_serializing_if, compact JSON
 
 ### Critical Paths (Performance-Sensitive Code)
 
-| Critical Path | Location | Target Latency | Notes |
-|---------------|----------|----------------|-------|
-| Protocol parsing | `src/thinktool/protocol.rs` | <1ms | YAML parsing + validation |
-| LLM request formatting | `src/thinktool/llm.rs` | <2ms | Prompt construction |
-| Response processing | `src/thinktool/step.rs` | <5ms | Parsing + trace update |
-| Trace storage | `src/thinktool/trace.rs` | <3ms | Serialize + write |
-| BM25 search | `src/retrieval/mod.rs` | <10ms | Tantivy query execution |
-| Hybrid fusion | `src/retrieval/fusion.rs` | <5ms | Score normalization |
+| Critical Path          | Location                    | Target Latency | Notes                     |
+| ---------------------- | --------------------------- | -------------- | ------------------------- |
+| Protocol parsing       | `src/thinktool/protocol.rs` | <1ms           | YAML parsing + validation |
+| LLM request formatting | `src/thinktool/llm.rs`      | <2ms           | Prompt construction       |
+| Response processing    | `src/thinktool/step.rs`     | <5ms           | Parsing + trace update    |
+| Trace storage          | `src/thinktool/trace.rs`    | <3ms           | Serialize + write         |
+| BM25 search            | `src/retrieval/mod.rs`      | <10ms          | Tantivy query execution   |
+| Hybrid fusion          | `src/retrieval/fusion.rs`   | <5ms           | Score normalization       |
 
 ### Memory Layout Considerations
 
@@ -96,15 +96,15 @@ ReasonKit uses Criterion.rs for statistically rigorous benchmarking.
 
 #### Existing Benchmark Files
 
-| Benchmark | File | What It Measures |
-|-----------|------|------------------|
+| Benchmark         | File                         | What It Measures                    |
+| ----------------- | ---------------------------- | ----------------------------------- |
 | `retrieval_bench` | `benches/retrieval_bench.rs` | BM25, hybrid search, corpus scaling |
-| `thinktool_bench` | `benches/thinktool_bench.rs` | Protocol execution, profile chains |
-| `fusion_bench` | `benches/fusion_bench.rs` | Score fusion algorithms |
-| `embedding_bench` | `benches/embedding_bench.rs` | Embedding generation/lookup |
-| `raptor_bench` | `benches/raptor_bench.rs` | RAPTOR tree operations |
-| `ingestion_bench` | `benches/ingestion_bench.rs` | Document ingestion pipeline |
-| `rerank_bench` | `benches/rerank_bench.rs` | Re-ranking algorithms |
+| `thinktool_bench` | `benches/thinktool_bench.rs` | Protocol execution, profile chains  |
+| `fusion_bench`    | `benches/fusion_bench.rs`    | Score fusion algorithms             |
+| `embedding_bench` | `benches/embedding_bench.rs` | Embedding generation/lookup         |
+| `raptor_bench`    | `benches/raptor_bench.rs`    | RAPTOR tree operations              |
+| `ingestion_bench` | `benches/ingestion_bench.rs` | Document ingestion pipeline         |
+| `rerank_bench`    | `benches/rerank_bench.rs`    | Re-ranking algorithms               |
 
 #### Adding New Benchmarks
 
@@ -617,12 +617,12 @@ pub struct TokenAnalysis {
 
 ### Token Efficiency Targets
 
-| Query Type | Target Overhead | Maximum Overhead |
-|------------|-----------------|------------------|
-| Simple (< 20 tokens) | <10% | 20% |
-| Medium (20-100 tokens) | <15% | 25% |
-| Complex (> 100 tokens) | <20% | 30% |
-| With context (RAG) | <25% | 35% |
+| Query Type             | Target Overhead | Maximum Overhead |
+| ---------------------- | --------------- | ---------------- |
+| Simple (< 20 tokens)   | <10%            | 20%              |
+| Medium (20-100 tokens) | <15%            | 25%              |
+| Complex (> 100 tokens) | <20%            | 30%              |
+| With context (RAG)     | <25%            | 35%              |
 
 ---
 
@@ -630,16 +630,16 @@ pub struct TokenAnalysis {
 
 ### Targets by Operation
 
-| Operation | Target | Max Acceptable | Notes |
-|-----------|--------|----------------|-------|
-| CLI startup | <50ms | 100ms | Cold start, no config |
-| Protocol parsing | <1ms | 5ms | YAML parse + validate |
-| Request formatting | <5ms | 10ms | Prompt construction |
-| Response processing | <10ms | 20ms | Parse + trace update |
-| Trace serialization | <3ms | 10ms | JSON serialize |
-| BM25 search (1K docs) | <10ms | 50ms | Tantivy query |
-| Hybrid search (1K docs) | <20ms | 100ms | BM25 + vector + fusion |
-| Embedding lookup | <5ms | 20ms | Qdrant query |
+| Operation               | Target | Max Acceptable | Notes                  |
+| ----------------------- | ------ | -------------- | ---------------------- |
+| CLI startup             | <50ms  | 100ms          | Cold start, no config  |
+| Protocol parsing        | <1ms   | 5ms            | YAML parse + validate  |
+| Request formatting      | <5ms   | 10ms           | Prompt construction    |
+| Response processing     | <10ms  | 20ms           | Parse + trace update   |
+| Trace serialization     | <3ms   | 10ms           | JSON serialize         |
+| BM25 search (1K docs)   | <10ms  | 50ms           | Tantivy query          |
+| Hybrid search (1K docs) | <20ms  | 100ms          | BM25 + vector + fusion |
+| Embedding lookup        | <5ms   | 20ms           | Qdrant query           |
 
 ### Optimization Strategies
 
@@ -744,14 +744,14 @@ hyperfine --warmup 3 './target/release/rk-core --help'
 
 ### What to Cache
 
-| Item | Cache Type | TTL | Invalidation |
-|------|------------|-----|--------------|
-| Parsed protocols | In-memory (static) | Forever | On reload |
-| Compiled templates | In-memory (static) | Forever | On reload |
-| LLM responses | Disk (SQLite) | 24h | On query hash change |
-| Embedding vectors | Qdrant | Forever | On document update |
-| Search results | In-memory LRU | 5min | On index update |
-| Token counts | In-memory | Session | Never |
+| Item               | Cache Type         | TTL     | Invalidation         |
+| ------------------ | ------------------ | ------- | -------------------- |
+| Parsed protocols   | In-memory (static) | Forever | On reload            |
+| Compiled templates | In-memory (static) | Forever | On reload            |
+| LLM responses      | Disk (SQLite)      | 24h     | On query hash change |
+| Embedding vectors  | Qdrant             | Forever | On document update   |
+| Search results     | In-memory LRU      | 5min    | On index update      |
+| Token counts       | In-memory          | Session | Never                |
 
 ### Cache Implementation
 
@@ -965,6 +965,7 @@ storage.batch_upsert_embeddings(embeddings, &context).await?;
 ```
 
 **Performance**:
+
 - Sequential: ~10 embeddings/sec
 - Batched (100): ~500 embeddings/sec (50x improvement)
 - Batched + Parallel: ~2000 embeddings/sec (200x improvement)
@@ -1015,25 +1016,27 @@ let cached_results = storage.search_with_cache(
 ```
 
 **Performance**:
+
 - Uncached query: 50-100ms (network + Qdrant processing)
 - Cached query: < 1ms (memory lookup)
 - Cache hit rate target: > 80% for production workloads
 
 ### Performance Targets
 
-| Metric | Target | Status |
-|--------|--------|--------|
-| Cached query p50 | < 1ms | ✅ ACHIEVED |
-| Cached query p95 | < 5ms | ✅ ACHIEVED |
-| Cached query p99 | < 10ms | ✅ ACHIEVED |
-| Uncached query p50 | < 50ms | ✅ ACHIEVED |
-| Uncached query p95 | < 100ms | ✅ ACHIEVED |
-| Batch throughput | > 1000 embeddings/sec | ✅ ACHIEVED (~2000/sec) |
-| Cache hit rate | > 80% | ⏳ Workload-dependent |
+| Metric             | Target                | Status                  |
+| ------------------ | --------------------- | ----------------------- |
+| Cached query p50   | < 1ms                 | ✅ ACHIEVED             |
+| Cached query p95   | < 5ms                 | ✅ ACHIEVED             |
+| Cached query p99   | < 10ms                | ✅ ACHIEVED             |
+| Uncached query p50 | < 50ms                | ✅ ACHIEVED             |
+| Uncached query p95 | < 100ms               | ✅ ACHIEVED             |
+| Batch throughput   | > 1000 embeddings/sec | ✅ ACHIEVED (~2000/sec) |
+| Cache hit rate     | > 80%                 | ⏳ Workload-dependent   |
 
 ### Configuration Recommendations
 
 #### Development
+
 ```rust
 BatchConfig {
     max_batch_size: 50,
@@ -1051,6 +1054,7 @@ QueryCacheConfig {
 ```
 
 #### Production
+
 ```rust
 BatchConfig {
     max_batch_size: 100,
@@ -1069,14 +1073,14 @@ QueryCacheConfig {
 
 ### Performance Comparison
 
-| Operation | Base Storage | Optimized Storage | Improvement |
-|-----------|-------------|------------------|-------------|
-| Single embedding upsert | 100ms | 100ms | 1x (no change) |
-| Batch upsert (100) | 10s | 200ms | 50x faster |
-| Batch upsert (1000) | 100s | 2s | 50x faster |
-| First query | 50ms | 50ms | 1x (no change) |
-| Repeated query | 50ms | 0.5ms | 100x faster |
-| Hot query (cached) | 50ms | 0.1ms | 500x faster |
+| Operation               | Base Storage | Optimized Storage | Improvement    |
+| ----------------------- | ------------ | ----------------- | -------------- |
+| Single embedding upsert | 100ms        | 100ms             | 1x (no change) |
+| Batch upsert (100)      | 10s          | 200ms             | 50x faster     |
+| Batch upsert (1000)     | 100s         | 2s                | 50x faster     |
+| First query             | 50ms         | 50ms              | 1x (no change) |
+| Repeated query          | 50ms         | 0.5ms             | 100x faster    |
+| Hot query (cached)      | 50ms         | 0.1ms             | 500x faster    |
 
 ### Benchmarking
 
@@ -1094,6 +1098,7 @@ open target/criterion/report/index.html
 ```
 
 **Benchmark Suite**:
+
 1. `batch_upsert` - Measures throughput for different batch sizes
 2. `query_cache` - Compares cache hit vs miss performance
 3. `parallel_batching` - Sequential vs parallel batch processing
@@ -1103,13 +1108,15 @@ open target/criterion/report/index.html
 ### Troubleshooting
 
 #### High Cache Miss Rate
+
 - **Symptoms**: Cache hit rate < 50%
-- **Solutions**: 
+- **Solutions**:
   - Increase `ttl_secs` to 600-3600
   - Increase `max_cache_entries` to 10000+
   - Analyze query patterns and warm cache for common queries
 
 #### Slow Batch Operations
+
 - **Symptoms**: Batch throughput < 100 embeddings/sec
 - **Solutions**:
   - Enable parallel batching: `parallel_batching: true`
@@ -1117,6 +1124,7 @@ open target/criterion/report/index.html
   - Scale Qdrant cluster horizontally
 
 #### Memory Growth
+
 - **Symptoms**: Storage memory usage increases over time
 - **Solutions**:
   - Set reasonable `max_cache_entries` (1000-10000)
@@ -1165,7 +1173,8 @@ let storage = OptimizedQdrantStorage::new(
 3. **Predictive Cache Warming** - ML-based hot query prediction
 4. **Query Result Compression** - Compress cached results to reduce memory
 
-**See Also**: 
+**See Also**:
+
 - [Storage Module Documentation](../src/storage/README.md)
 - [Qdrant Optimization Benchmarks](../benches/qdrant_optimization_bench.rs)
 
@@ -1426,13 +1435,13 @@ git bisect run bash -c '
 
 ### Performance Review Schedule
 
-| Frequency | Task | Owner |
-|-----------|------|-------|
-| Per PR | Run `cargo bench` on changed code | Author |
-| Nightly | Full benchmark suite in CI | Automation |
-| Weekly | Review benchmark trends | Performance lead |
-| Monthly | Profile and optimize hot paths | Team |
-| Quarterly | Deep audit, external review | External |
+| Frequency | Task                              | Owner            |
+| --------- | --------------------------------- | ---------------- |
+| Per PR    | Run `cargo bench` on changed code | Author           |
+| Nightly   | Full benchmark suite in CI        | Automation       |
+| Weekly    | Review benchmark trends           | Performance lead |
+| Monthly   | Profile and optimize hot paths    | Team             |
+| Quarterly | Deep audit, external review       | External         |
 
 ---
 
@@ -1583,13 +1592,13 @@ cargo bench -- --baseline main
 
 ### Performance Targets Summary
 
-| Metric | Target | Max |
-|--------|--------|-----|
-| CLI startup | <50ms | 100ms |
-| Protocol overhead | <5ms | 10ms |
-| Token overhead (simple) | <10% | 20% |
-| Token overhead (complex) | <20% | 30% |
-| Search (1K docs) | <20ms | 100ms |
+| Metric                   | Target | Max   |
+| ------------------------ | ------ | ----- |
+| CLI startup              | <50ms  | 100ms |
+| Protocol overhead        | <5ms   | 10ms  |
+| Token overhead (simple)  | <10%   | 20%   |
+| Token overhead (complex) | <20%   | 30%   |
+| Search (1K docs)         | <20ms  | 100ms |
 
 ### Files to Profile First
 
@@ -1605,6 +1614,7 @@ cargo bench -- --baseline main
 ## Document Consolidation Note
 
 This document consolidates optimization documentation from:
+
 - `src/storage/OPTIMIZATION_GUIDE.md` (Qdrant-specific optimizations)
 - `src/storage/OPTIMIZATION_SUMMARY.md` (Optimization summary)
 - `docs/PERFORMANCE_BASELINE.md` (Performance baseline measurements)

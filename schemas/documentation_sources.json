@@ -25,11 +25,7 @@
             "type": "web"
           }
         },
-        "key_files": [
-          "README.md",
-          "docs/**/*.md",
-          "CLAUDE.md"
-        ],
+        "key_files": ["README.md", "docs/**/*.md", "CLAUDE.md"],
         "tags": ["anthropic", "claude", "terminal", "agentic"],
         "status": "pending"
       },
@@ -55,11 +51,7 @@
             "type": "web"
           }
         },
-        "key_files": [
-          "README.md",
-          "docs/index.md",
-          "docs/**/*.md"
-        ],
+        "key_files": ["README.md", "docs/index.md", "docs/**/*.md"],
         "tags": ["google", "gemini", "terminal", "open-source"],
         "status": "pending"
       },
@@ -80,10 +72,7 @@
             "type": "web"
           }
         },
-        "key_files": [
-          "README.md",
-          "docs/**/*.md"
-        ],
+        "key_files": ["README.md", "docs/**/*.md"],
         "tags": ["openai", "codex", "terminal"],
         "status": "pending"
       },

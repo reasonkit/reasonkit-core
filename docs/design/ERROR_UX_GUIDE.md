@@ -12,13 +12,13 @@ Good error messages are critical for developer experience. This guide establishe
 
 ### Design Principles
 
-| Principle | Description | Priority |
-|-----------|-------------|----------|
-| **Specific** | Tell users exactly what went wrong, not generic messages | Critical |
-| **Actionable** | Always suggest how to fix the problem | Critical |
-| **Contextual** | Include relevant details about the failed operation | High |
-| **Linkable** | Point to documentation when helpful | High |
-| **Consistent** | Use the same structure across all errors | Medium |
+| Principle      | Description                                              | Priority |
+| -------------- | -------------------------------------------------------- | -------- |
+| **Specific**   | Tell users exactly what went wrong, not generic messages | Critical |
+| **Actionable** | Always suggest how to fix the problem                    | Critical |
+| **Contextual** | Include relevant details about the failed operation      | High     |
+| **Linkable**   | Point to documentation when helpful                      | High     |
+| **Consistent** | Use the same structure across all errors                 | Medium   |
 
 ---
 
@@ -93,17 +93,17 @@ Docs: https://reasonkit.sh/docs/configuration
 
 ### 3.1 Exit Codes
 
-| Exit Code | Category | Description |
-|-----------|----------|-------------|
-| 0 | Success | Operation completed successfully |
-| 1 | General Error | Unspecified error occurred |
-| 2 | Configuration Error | Missing or invalid configuration |
-| 3 | API Error | LLM provider API error |
-| 4 | Runtime Error | Execution or processing error |
-| 5 | Input Error | Invalid user input |
-| 6 | Network Error | Connection or timeout issues |
-| 7 | Storage Error | File or database issues |
-| 10 | Partial Success | Some operations failed |
+| Exit Code | Category            | Description                      |
+| --------- | ------------------- | -------------------------------- |
+| 0         | Success             | Operation completed successfully |
+| 1         | General Error       | Unspecified error occurred       |
+| 2         | Configuration Error | Missing or invalid configuration |
+| 3         | API Error           | LLM provider API error           |
+| 4         | Runtime Error       | Execution or processing error    |
+| 5         | Input Error         | Invalid user input               |
+| 6         | Network Error       | Connection or timeout issues     |
+| 7         | Storage Error       | File or database issues          |
+| 10        | Partial Success     | Some operations failed           |
 
 ### 3.2 Configuration Errors (Exit Code: 2)
 
@@ -607,16 +607,16 @@ Docs: https://reasonkit.sh/docs/storage
 
 ### 4.1 Color Semantics
 
-| Element | Color | ANSI Code | Usage |
-|---------|-------|-----------|-------|
-| Error prefix | Red | `\x1b[31m` | "Error:" text |
-| Warning prefix | Yellow | `\x1b[33m` | "Warning:" text |
-| Info prefix | Cyan | `\x1b[36m` | "Info:" text |
-| Hint prefix | Green | `\x1b[32m` | "Hint:" text |
-| Code/Commands | Cyan | `\x1b[36m` | Inline commands |
-| URLs | Blue/Underline | `\x1b[34;4m` | Documentation links |
-| Emphasis | Bold | `\x1b[1m` | Key information |
-| Dim | Gray | `\x1b[90m` | Secondary details |
+| Element        | Color          | ANSI Code    | Usage               |
+| -------------- | -------------- | ------------ | ------------------- |
+| Error prefix   | Red            | `\x1b[31m`   | "Error:" text       |
+| Warning prefix | Yellow         | `\x1b[33m`   | "Warning:" text     |
+| Info prefix    | Cyan           | `\x1b[36m`   | "Info:" text        |
+| Hint prefix    | Green          | `\x1b[32m`   | "Hint:" text        |
+| Code/Commands  | Cyan           | `\x1b[36m`   | Inline commands     |
+| URLs           | Blue/Underline | `\x1b[34;4m` | Documentation links |
+| Emphasis       | Bold           | `\x1b[1m`    | Key information     |
+| Dim            | Gray           | `\x1b[90m`   | Secondary details   |
 
 ### 4.2 Example with Colors
 
@@ -671,6 +671,7 @@ Error: No LLM provider configured
 ```
 
 Exit code only when used with `--exit-code-only`:
+
 ```bash
 $ rk-core think "query" --quiet --exit-code-only
 $ echo $?
@@ -752,12 +753,12 @@ Continuing with existing index...
 
 ### 6.2 Warning Categories
 
-| Category | Color | Example |
-|----------|-------|---------|
-| Performance | Yellow | "Query may be slow without index" |
-| Deprecation | Yellow | "The --format flag is deprecated" |
+| Category      | Color  | Example                             |
+| ------------- | ------ | ----------------------------------- |
+| Performance   | Yellow | "Query may be slow without index"   |
+| Deprecation   | Yellow | "The --format flag is deprecated"   |
 | Compatibility | Yellow | "Model X may not support feature Y" |
-| Quality | Yellow | "Low confidence result (45%)" |
+| Quality       | Yellow | "Low confidence result (45%)"       |
 
 ### 6.3 Suppressing Warnings
 
@@ -1052,23 +1053,23 @@ fn main() {
 
 ### 10.1 Bad Error Messages
 
-| Bad | Why | Good |
-|-----|-----|------|
-| "Error: E2001" | Meaningless code | "Error: No LLM provider configured" |
-| "Something went wrong" | Too vague | "Failed to connect to the Anthropic API" |
-| "Invalid input" | No context | "Invalid budget format: expected '30s' or '$0.50'" |
-| "Permission denied" | No solution | "Permission denied. Run: chmod 755 ~/.reasonkit" |
-| "Unexpected error" | Unhelpful | Specific error with trace ID for debugging |
+| Bad                    | Why              | Good                                               |
+| ---------------------- | ---------------- | -------------------------------------------------- |
+| "Error: E2001"         | Meaningless code | "Error: No LLM provider configured"                |
+| "Something went wrong" | Too vague        | "Failed to connect to the Anthropic API"           |
+| "Invalid input"        | No context       | "Invalid budget format: expected '30s' or '$0.50'" |
+| "Permission denied"    | No solution      | "Permission denied. Run: chmod 755 ~/.reasonkit"   |
+| "Unexpected error"     | Unhelpful        | Specific error with trace ID for debugging         |
 
 ### 10.2 Rules to Follow
 
-| Rule | Description |
-|------|-------------|
-| **No jargon alone** | Codes like E2001 are fine if accompanied by plain text |
-| **No blaming** | Say "The key format is invalid" not "You provided an invalid key" |
-| **No dead ends** | Every error must suggest at least one action |
-| **No guessing** | If you don't know the cause, say so and suggest diagnostics |
-| **No walls of text** | Use structure (headers, bullets) for scannability |
+| Rule                 | Description                                                       |
+| -------------------- | ----------------------------------------------------------------- |
+| **No jargon alone**  | Codes like E2001 are fine if accompanied by plain text            |
+| **No blaming**       | Say "The key format is invalid" not "You provided an invalid key" |
+| **No dead ends**     | Every error must suggest at least one action                      |
+| **No guessing**      | If you don't know the cause, say so and suggest diagnostics       |
+| **No walls of text** | Use structure (headers, bullets) for scannability                 |
 
 ---
 
@@ -1103,11 +1104,11 @@ messages::api_rejected(provider: &str) -> String
 
 ## VERSION HISTORY
 
-| Version | Date | Changes |
-|---------|------|---------|
-| 1.0.0 | 2025-12-28 | Initial error UX guide |
+| Version | Date       | Changes                |
+| ------- | ---------- | ---------------------- |
+| 1.0.0   | 2025-12-28 | Initial error UX guide |
 
 ---
 
-*"Error messages are a conversation with the user. Make it a helpful one."*
-*- ReasonKit UX Design*
+_"Error messages are a conversation with the user. Make it a helpful one."_
+_- ReasonKit UX Design_

@@ -1,4 +1,5 @@
 # ReasonKit Architecture Diagrams
+
 > Consolidated Visual Reference for All System Components
 > Version: 1.0.0 | Last Updated: 2025-12-11
 
@@ -810,5 +811,5 @@ graph TB
 
 ---
 
-*ReasonKit Architecture Diagrams v1.0.0*
-*Designed, Not Dreamed | Turn Prompts into Protocols*
+_ReasonKit Architecture Diagrams v1.0.0_
+_Designed, Not Dreamed | Turn Prompts into Protocols_

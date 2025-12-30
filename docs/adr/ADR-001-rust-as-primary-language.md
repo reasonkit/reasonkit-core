@@ -16,12 +16,12 @@ ReasonKit is a structured reasoning framework designed to make AI reasoning audi
 
 We evaluated four primary candidates:
 
-| Language | Pros | Cons |
-|----------|------|------|
-| **Python** | Dominant in ML/AI, large ecosystem, rapid prototyping | GIL limits concurrency, slow execution, requires runtime |
-| **Go** | Fast compilation, good concurrency, single binary | Less expressive type system, no generics (until recently), smaller ML ecosystem |
-| **Node.js** | Large ecosystem, async-first, familiar to web developers | V8 memory overhead, callback complexity, not suited for compute-intensive work |
-| **Rust** | Zero-cost abstractions, memory safety, single binary, excellent performance | Steeper learning curve, longer compilation times, smaller talent pool |
+| Language    | Pros                                                                        | Cons                                                                            |
+| ----------- | --------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
+| **Python**  | Dominant in ML/AI, large ecosystem, rapid prototyping                       | GIL limits concurrency, slow execution, requires runtime                        |
+| **Go**      | Fast compilation, good concurrency, single binary                           | Less expressive type system, no generics (until recently), smaller ML ecosystem |
+| **Node.js** | Large ecosystem, async-first, familiar to web developers                    | V8 memory overhead, callback complexity, not suited for compute-intensive work  |
+| **Rust**    | Zero-cost abstractions, memory safety, single binary, excellent performance | Steeper learning curve, longer compilation times, smaller talent pool           |
 
 ### Performance Requirements
 
@@ -40,6 +40,7 @@ Memory safety vulnerabilities in AI infrastructure can lead to data leaks or mod
 **We will use Rust as the primary implementation language for ReasonKit.**
 
 Specifically:
+
 - Core reasoning engine: 100% Rust
 - CLI: 100% Rust
 - MCP servers: 100% Rust (no Node.js)
@@ -67,12 +68,12 @@ Specifically:
 
 ### Mitigations
 
-| Negative | Mitigation |
-|----------|------------|
-| Learning curve | Comprehensive CONTRIBUTING.md, mentorship, good documentation |
-| Compilation time | Incremental builds, `cargo-watch`, CI caching |
-| Iteration speed | REPL-like development with `cargo test`, property-based testing |
-| AI ecosystem | Python bindings via PyO3, subprocess LLM calls, standard protocols (OpenAI API) |
+| Negative         | Mitigation                                                                      |
+| ---------------- | ------------------------------------------------------------------------------- |
+| Learning curve   | Comprehensive CONTRIBUTING.md, mentorship, good documentation                   |
+| Compilation time | Incremental builds, `cargo-watch`, CI caching                                   |
+| Iteration speed  | REPL-like development with `cargo test`, property-based testing                 |
+| AI ecosystem     | Python bindings via PyO3, subprocess LLM calls, standard protocols (OpenAI API) |
 
 ## Related Documents
 

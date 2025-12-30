@@ -131,12 +131,24 @@
           },
           "likelihood": {
             "type": "string",
-            "enum": ["very_likely", "likely", "possible", "unlikely", "very_unlikely"],
+            "enum": [
+              "very_likely",
+              "likely",
+              "possible",
+              "unlikely",
+              "very_unlikely"
+            ],
             "description": "How likely this edge case is"
           },
           "impact": {
             "type": "string",
-            "enum": ["catastrophic", "severe", "moderate", "minor", "negligible"],
+            "enum": [
+              "catastrophic",
+              "severe",
+              "moderate",
+              "minor",
+              "negligible"
+            ],
             "description": "Impact if this edge case occurs"
           },
           "mitigation": {
@@ -294,8 +306,11 @@
           "items": {
             "type": "object",
             "properties": {
-              "issue": {"type": "string"},
-              "priority": {"type": "string", "enum": ["critical", "high", "medium", "low"]}
+              "issue": { "type": "string" },
+              "priority": {
+                "type": "string",
+                "enum": ["critical", "high", "medium", "low"]
+              }
             }
           }
         }
@@ -392,19 +407,19 @@
         "type": "object",
         "required": ["step", "action", "result"],
         "properties": {
-          "step": {"type": "integer"},
-          "action": {"type": "string"},
-          "result": {"type": "string"},
-          "duration_ms": {"type": "integer"}
+          "step": { "type": "integer" },
+          "action": { "type": "string" },
+          "result": { "type": "string" },
+          "duration_ms": { "type": "integer" }
         }
       }
     },
     "metadata": {
       "type": "object",
       "properties": {
-        "execution_time_ms": {"type": "integer"},
-        "token_count": {"type": "integer"},
-        "model_used": {"type": "string"},
+        "execution_time_ms": { "type": "integer" },
+        "token_count": { "type": "integer" },
+        "model_used": { "type": "string" },
         "attack_intensity": {
           "type": "number",
           "minimum": 0.0,

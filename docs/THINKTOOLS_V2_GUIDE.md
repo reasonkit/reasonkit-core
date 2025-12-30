@@ -1,4 +1,5 @@
 # ThinkTools V2 Protocol Guide
+
 > Production-Ready Reasoning Module Orchestration for AI Agents
 
 **Version:** 2.0.0
@@ -62,6 +63,7 @@ Final Synthesis (structured output + recommendation)
 **Purpose:** Expansive creative thinking with 10+ perspectives
 
 **Capabilities:**
+
 - Multi-perspective generation (10-25 viewpoints)
 - Lateral thinking patterns
 - Emergent insight detection
@@ -89,6 +91,7 @@ Final Synthesis (structured output + recommendation)
 **Purpose:** Precision deductive reasoning with fallacy detection
 
 **Capabilities:**
+
 - Deductive chain construction
 - Formal fallacy detection (18 types)
 - Argument structure validation
@@ -98,6 +101,7 @@ Final Synthesis (structured output + recommendation)
 **Output Schema:** `schemas/thinktools/laserlogic_output.json`
 
 **Fallacy Taxonomy (18 types):**
+
 - Ad Hominem
 - Straw Man
 - False Dichotomy
@@ -135,6 +139,7 @@ Final Synthesis (structured output + recommendation)
 **Purpose:** First principles decomposition and axiom rebuilding
 
 **Capabilities:**
+
 - Recursive decomposition (5 levels)
 - Axiom extraction and verification
 - Assumption surfacing
@@ -144,6 +149,7 @@ Final Synthesis (structured output + recommendation)
 **Output Schema:** `schemas/thinktools/bedrock_output.json`
 
 **Decomposition Levels:**
+
 1. **Surface Observations** - What we see
 2. **Underlying Mechanisms** - How it works
 3. **Governing Principles** - Why it works
@@ -168,6 +174,7 @@ Final Synthesis (structured output + recommendation)
 **Purpose:** Triangulation-based fact verification
 
 **Capabilities:**
+
 - 3-source triangulation (mandatory)
 - Source tier classification (1/2/3)
 - Contradiction detection
@@ -210,6 +217,7 @@ Final Synthesis (structured output + recommendation)
 **Purpose:** Red-team adversarial critique and flaw detection
 
 **Capabilities:**
+
 - Adversarial assumption testing
 - Edge case enumeration
 - Failure mode prediction
@@ -219,6 +227,7 @@ Final Synthesis (structured output + recommendation)
 **Output Schema:** `schemas/thinktools/brutalhonesty_output.json`
 
 **Attack Vectors:**
+
 - Assumption Challenges
 - Edge Case Stress Tests
 - Logical Gap Probing
@@ -229,6 +238,7 @@ Final Synthesis (structured output + recommendation)
 - Failure Mode Analysis
 
 **Cognitive Biases Detected:**
+
 - Confirmation Bias
 - Anchoring Bias
 - Availability Heuristic
@@ -264,11 +274,13 @@ Final Synthesis (structured output + recommendation)
 **Duration:** ~60s
 
 **Use Cases:**
+
 - Fast exploratory analysis
 - Initial brainstorming
 - Low-stakes decisions
 
 **Chain Pattern:**
+
 ```
 GigaThink (parallel) →
 LaserLogic (parallel) →
@@ -285,11 +297,13 @@ Synthesize
 **Duration:** ~180s
 
 **Use Cases:**
+
 - Standard technical analysis
 - Design decisions
 - Code architecture
 
 **Chain Pattern:**
+
 ```
 GigaThink →
 BedRock →
@@ -308,11 +322,13 @@ Synthesize
 **Duration:** ~300s
 
 **Use Cases:**
+
 - Complex system design
 - Research synthesis
 - Critical decisions
 
 **Chain Pattern:**
+
 ```
 GigaThink →
 BedRock →
@@ -333,11 +349,13 @@ Synthesize
 **Duration:** ~600s
 
 **Use Cases:**
+
 - Security-critical decisions
 - High-stakes architecture
 - Production safety analysis
 
 **Chain Pattern:**
+
 ```
 Pass 1: gt → br → ll → pg
 Pass 2: bh → identify flaws
@@ -353,21 +371,25 @@ Synthesize
 ### Execution Modes
 
 #### 1. Parallel
+
 - **Use:** Modules are independent (e.g., gt + ll)
 - **Latency:** Low
 - **Pattern:** Run simultaneously, merge outputs
 
 #### 2. Sequential
+
 - **Use:** Each module builds on previous
 - **Latency:** Medium
 - **Pattern:** Pipe outputs forward in chain
 
 #### 3. Sequential with Feedback
+
 - **Use:** Need adversarial validation
 - **Latency:** High
 - **Pattern:** Run chain, critique, loop back if needed
 
 #### 4. Sequential with Multi-Pass
+
 - **Use:** Maximum verification (paranoid)
 - **Latency:** Very High
 - **Pattern:** Multiple complete passes until confidence target met
@@ -411,48 +433,49 @@ CONFIDENCE = (
 
 ### Module Weights
 
-| Module | Weight | Rationale |
-|--------|--------|-----------|
-| GigaThink | 0.15 | Exploratory, less definitive |
-| LaserLogic | 0.25 | Logical rigor is high value |
-| BedRock | 0.20 | Foundational strength matters |
-| ProofGuard | 0.30 | Verification is highest weight |
-| BrutalHonesty | 0.10 | Adjusts, doesn't determine |
+| Module        | Weight | Rationale                      |
+| ------------- | ------ | ------------------------------ |
+| GigaThink     | 0.15   | Exploratory, less definitive   |
+| LaserLogic    | 0.25   | Logical rigor is high value    |
+| BedRock       | 0.20   | Foundational strength matters  |
+| ProofGuard    | 0.30   | Verification is highest weight |
+| BrutalHonesty | 0.10   | Adjusts, doesn't determine     |
 
 ### Contradiction Penalties
 
 | Severity | Penalty Factor |
-|----------|---------------|
-| None | 1.00 |
-| Minor | 0.95 |
-| Moderate | 0.85 |
-| Major | 0.70 |
-| Blocking | 0.50 |
+| -------- | -------------- |
+| None     | 1.00           |
+| Minor    | 0.95           |
+| Moderate | 0.85           |
+| Major    | 0.70           |
+| Blocking | 0.50           |
 
 ### Profile Multipliers
 
-| Profile | Multiplier | Rationale |
-|---------|-----------|-----------|
-| Quick | 1.00 | No adjustment |
-| Balanced | 1.05 | Multi-module validation |
-| Deep | 1.10 | Thorough analysis |
-| Paranoid | 1.15 | Maximum verification |
+| Profile  | Multiplier | Rationale               |
+| -------- | ---------- | ----------------------- |
+| Quick    | 1.00       | No adjustment           |
+| Balanced | 1.05       | Multi-module validation |
+| Deep     | 1.10       | Thorough analysis       |
+| Paranoid | 1.15       | Maximum verification    |
 
 ### Calibration Bands
 
-| Confidence | Label | Recommended Action |
-|-----------|-------|-------------------|
-| 95-100% | Very High | Proceed with implementation |
-| 85-94% | High | Proceed with monitoring |
-| 70-84% | Moderate | Proceed with caution |
-| 50-69% | Low | Gather more data |
-| <50% | Insufficient | Do not proceed |
+| Confidence | Label        | Recommended Action          |
+| ---------- | ------------ | --------------------------- |
+| 95-100%    | Very High    | Proceed with implementation |
+| 85-94%     | High         | Proceed with monitoring     |
+| 70-84%     | Moderate     | Proceed with caution        |
+| 50-69%     | Low          | Gather more data            |
+| <50%       | Insufficient | Do not proceed              |
 
 ---
 
 ## JSON Schemas
 
 All module outputs conform to formal JSON schemas located in:
+
 ```
 reasonkit-core/schemas/thinktools/
 ├── gigathink_output.json
@@ -475,6 +498,7 @@ validate_thinktool_output("gigathink", &output)?;
 ### Common Schema Fields
 
 All modules include:
+
 - `module`: Module identifier
 - `version`: Semver version
 - `timestamp`: ISO 8601 execution time
@@ -632,12 +656,12 @@ let result = orchestrator
 
 ### 1. Choose the Right Profile
 
-| Scenario | Recommended Profile |
-|----------|-------------------|
-| Quick brainstorm | `--quick` |
-| Design decision | `--balanced` |
-| Research synthesis | `--deep` |
-| Security review | `--paranoid` |
+| Scenario           | Recommended Profile |
+| ------------------ | ------------------- |
+| Quick brainstorm   | `--quick`           |
+| Design decision    | `--balanced`        |
+| Research synthesis | `--deep`            |
+| Security review    | `--paranoid`        |
 
 ### 2. Interpret Confidence Scores
 
@@ -650,6 +674,7 @@ let result = orchestrator
 ### 3. Handle Contradictions
 
 When modules disagree:
+
 1. **Investigate** the nature of contradiction
 2. **Re-run** affected modules with tighter constraints
 3. **Consult** additional sources via ProofGuard
@@ -658,6 +683,7 @@ When modules disagree:
 ### 4. Leverage Verbose Thinking
 
 Enable verbose mode to:
+
 - Debug reasoning chains
 - Audit AI decisions
 - Understand confidence calculations
@@ -666,6 +692,7 @@ Enable verbose mode to:
 ### 5. Validate Against Schemas
 
 Always validate JSON output:
+
 ```rust
 validate_thinktool_output("gigathink", &output)?;
 ```
@@ -673,6 +700,7 @@ validate_thinktool_output("gigathink", &output)?;
 ### 6. Monitor Performance
 
 Track key metrics:
+
 - Latency per profile
 - Confidence calibration (actual vs predicted)
 - Contradiction rates
@@ -695,6 +723,7 @@ To create a new ThinkTool module:
 ### Multi-Pass Optimization
 
 For paranoid profile, optimize multi-pass:
+
 - Cache verified claims across passes
 - Skip redundant ProofGuard searches
 - Focus BrutalHonesty on weak points from previous pass
@@ -702,6 +731,7 @@ For paranoid profile, optimize multi-pass:
 ### Confidence Tuning
 
 Adjust weights based on your domain:
+
 ```rust
 let orchestrator = ThinkToolOrchestrator::new()
     .module_weight("proofguard", 0.40)  // Higher for fact-heavy work
@@ -718,6 +748,7 @@ let orchestrator = ThinkToolOrchestrator::new()
 **Problem:** Confidence consistently below target
 
 **Solutions:**
+
 1. Check for cross-module contradictions
 2. Increase source count in ProofGuard
 3. Run BrutalHonesty critique
@@ -728,6 +759,7 @@ let orchestrator = ThinkToolOrchestrator::new()
 **Problem:** GigaThink and LaserLogic disagree
 
 **Solutions:**
+
 1. Review verbose thinking traces
 2. Identify specific conflict points
 3. Re-run with tighter constraints
@@ -738,6 +770,7 @@ let orchestrator = ThinkToolOrchestrator::new()
 **Problem:** Profile takes too long
 
 **Solutions:**
+
 1. Use lower profile for time-sensitive work
 2. Cache ProofGuard source lookups
 3. Parallelize independent modules
@@ -748,6 +781,7 @@ let orchestrator = ThinkToolOrchestrator::new()
 ## API Reference
 
 See full API documentation at:
+
 - Rust Docs: `cargo doc --open`
 - Online: https://docs.rs/reasonkit-core
 
@@ -756,6 +790,7 @@ See full API documentation at:
 ## Changelog
 
 ### v2.0.0 (2025-12-22)
+
 - Initial ThinkTools V2 protocol
 - 5 core modules with formal schemas
 - 4 reasoning profiles
@@ -782,4 +817,4 @@ Apache 2.0 - See LICENSE file
 
 ---
 
-*ThinkTools V2 Protocol | ReasonKit Core | https://reasonkit.sh*
+_ThinkTools V2 Protocol | ReasonKit Core | https://reasonkit.sh_

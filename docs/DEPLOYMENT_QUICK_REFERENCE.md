@@ -56,7 +56,7 @@ cross build --target aarch64-unknown-linux-gnu
 name: Release
 on:
   push:
-    tags: ['v*']
+    tags: ["v*"]
 
 jobs:
   build:
@@ -142,6 +142,7 @@ end
 ```
 
 **Installation:**
+
 ```bash
 brew tap username/tap
 brew install reasonkit
@@ -160,6 +161,7 @@ pkg-fmt = "tgz"
 ```
 
 **Usage:**
+
 ```bash
 cargo binstall reasonkit  # Downloads binary instead of compiling
 ```
@@ -203,6 +205,7 @@ cargo release major --execute  # 0.1.0 -> 1.0.0
 ```
 
 **What it does:**
+
 1. Runs tests
 2. Bumps version
 3. Updates changelog
@@ -230,6 +233,7 @@ cargo deny check
 ```
 
 **deny.toml example:**
+
 ```toml
 [advisories]
 vulnerability = "deny"
@@ -258,6 +262,7 @@ upx --best target/x86_64-unknown-linux-musl/release/rk-core
 ```
 
 **Expected results:**
+
 - Original debug: ~10 MB
 - After --release: ~2 MB
 - After optimizations: ~800 KB
@@ -300,6 +305,7 @@ echo "ReasonKit installed! Run 'rk-core --help' to get started."
 ## Release Checklist
 
 ### Pre-Release
+
 - [ ] `cargo test` passes
 - [ ] `cargo clippy -- -D warnings` clean
 - [ ] `cargo fmt --check` passes
@@ -307,18 +313,21 @@ echo "ReasonKit installed! Run 'rk-core --help' to get started."
 - [ ] Version bumped
 
 ### Build
+
 - [ ] Cross-compile all targets
 - [ ] Generate shell completions
 - [ ] Create SHA256 checksums
 - [ ] Test binaries on each platform
 
 ### Distribution
+
 - [ ] GitHub Release created
 - [ ] `cargo publish`
 - [ ] Homebrew formula updated
 - [ ] Update install script
 
 ### Post-Release
+
 - [ ] Announce release
 - [ ] Monitor for issues
 - [ ] Update documentation

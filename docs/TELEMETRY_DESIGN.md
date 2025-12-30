@@ -8,6 +8,7 @@
 **Author**: ReasonKit Team
 **Date**: 2025-12-28
 **Related**:
+
 - `src/telemetry/` - Implementation modules
 - `docs/design/ANALYTICS_SCHEMA.md` - Database schema
 - `docs/SECURITY_AUDIT_CHECKLIST.md` - Security considerations
@@ -20,13 +21,13 @@ This document defines the complete telemetry and usage analytics system for Reas
 
 ### Key Design Decisions
 
-| Decision | Choice | Rationale |
-|----------|--------|-----------|
-| **Default State** | Opt-in (disabled) | Privacy-first, builds trust |
-| **Storage** | Local SQLite first | User controls their data |
-| **Content Collection** | Never | Query/response content never stored |
-| **Identifiers** | Anonymous session-based | No persistent user tracking |
-| **Cloud Sync** | Opt-in, Pro tier only | Explicit consent required |
+| Decision               | Choice                  | Rationale                           |
+| ---------------------- | ----------------------- | ----------------------------------- |
+| **Default State**      | Opt-in (disabled)       | Privacy-first, builds trust         |
+| **Storage**            | Local SQLite first      | User controls their data            |
+| **Content Collection** | Never                   | Query/response content never stored |
+| **Identifiers**        | Anonymous session-based | No persistent user tracking         |
+| **Cloud Sync**         | Opt-in, Pro tier only   | Explicit consent required           |
 
 ---
 
@@ -71,28 +72,28 @@ This document defines the complete telemetry and usage analytics system for Reas
 
 These are hard constraints that can never be violated:
 
-| Category | Examples | Reason |
-|----------|----------|--------|
-| **Query Content** | User prompts, questions, input text | Privacy, IP protection |
-| **Response Content** | AI responses, generated text | Privacy, IP protection |
-| **API Keys** | ANTHROPIC_API_KEY, OPENAI_API_KEY | Security critical |
-| **Personal Information** | Name, email, phone, address | PII regulations |
-| **File Contents** | Code, documents, data files | IP protection |
-| **Network Data** | IP addresses, hostnames | Privacy |
-| **System Identifiers** | MAC address, hardware IDs | Device fingerprinting |
-| **Credentials** | Passwords, tokens, certificates | Security |
-| **Geolocation** | GPS, precise location | Privacy |
+| Category                 | Examples                            | Reason                 |
+| ------------------------ | ----------------------------------- | ---------------------- |
+| **Query Content**        | User prompts, questions, input text | Privacy, IP protection |
+| **Response Content**     | AI responses, generated text        | Privacy, IP protection |
+| **API Keys**             | ANTHROPIC_API_KEY, OPENAI_API_KEY   | Security critical      |
+| **Personal Information** | Name, email, phone, address         | PII regulations        |
+| **File Contents**        | Code, documents, data files         | IP protection          |
+| **Network Data**         | IP addresses, hostnames             | Privacy                |
+| **System Identifiers**   | MAC address, hardware IDs           | Device fingerprinting  |
+| **Credentials**          | Passwords, tokens, certificates     | Security               |
+| **Geolocation**          | GPS, precise location               | Privacy                |
 
 ### 1.3 What We MAY Collect (With Consent)
 
-| Category | Examples | Purpose | Consent Level |
-|----------|----------|---------|---------------|
-| **Command Usage** | `think --profile balanced` | Feature adoption | Local |
-| **Performance Metrics** | Latency, error rates | Quality improvement | Local |
-| **Tool Usage** | Which ThinkTools are used | Feature prioritization | Local |
-| **Error Types** | `timeout`, `api_error` | Bug fixing | Local |
-| **Session Metadata** | Duration, query count | Usage patterns | Local |
-| **Aggregates** | Daily totals, averages | Product analytics | Aggregated Sharing |
+| Category                | Examples                   | Purpose                | Consent Level      |
+| ----------------------- | -------------------------- | ---------------------- | ------------------ |
+| **Command Usage**       | `think --profile balanced` | Feature adoption       | Local              |
+| **Performance Metrics** | Latency, error rates       | Quality improvement    | Local              |
+| **Tool Usage**          | Which ThinkTools are used  | Feature prioritization | Local              |
+| **Error Types**         | `timeout`, `api_error`     | Bug fixing             | Local              |
+| **Session Metadata**    | Duration, query count      | Usage patterns         | Local              |
+| **Aggregates**          | Daily totals, averages     | Product analytics      | Aggregated Sharing |
 
 ---
 
@@ -1289,12 +1290,12 @@ dp_epsilon = 1.0
 
 ### 6.2 Storage & Retention
 
-| Data Tier | Storage | Retention | Purpose |
-|-----------|---------|-----------|---------|
-| **Raw Events** | ClickHouse | 90 days | Debugging, analysis |
-| **Hourly Aggregates** | ClickHouse | 1 year | Real-time dashboards |
-| **Daily Aggregates** | PostgreSQL | 3 years | Trend analysis |
-| **Monthly Summaries** | PostgreSQL | Forever | Historical reports |
+| Data Tier             | Storage    | Retention | Purpose              |
+| --------------------- | ---------- | --------- | -------------------- |
+| **Raw Events**        | ClickHouse | 90 days   | Debugging, analysis  |
+| **Hourly Aggregates** | ClickHouse | 1 year    | Real-time dashboards |
+| **Daily Aggregates**  | PostgreSQL | 3 years   | Trend analysis       |
+| **Monthly Summaries** | PostgreSQL | Forever   | Historical reports   |
 
 ### 6.3 Data Lifecycle
 
@@ -1442,39 +1443,41 @@ ORDER BY cohort_week, weeks_since_join;
 
 ### 8.1 GDPR Compliance
 
-| Article | Requirement | Implementation |
-|---------|-------------|----------------|
-| **Art. 6** | Lawful Basis | Legitimate interest (product improvement) with opt-out |
-| **Art. 7** | Consent | Clear opt-in, documented consent record |
-| **Art. 12** | Transparency | `rk-core telemetry explain` command |
-| **Art. 15** | Right to Access | `rk-core telemetry export` command |
-| **Art. 17** | Right to Erasure | `rk-core telemetry delete` command |
-| **Art. 20** | Data Portability | Export in JSON/CSV formats |
-| **Art. 21** | Right to Object | `rk-core telemetry disable` command |
-| **Art. 25** | Privacy by Design | Opt-in default, minimal collection |
-| **Art. 32** | Security | TLS 1.3, encryption at rest, access controls |
+| Article     | Requirement       | Implementation                                         |
+| ----------- | ----------------- | ------------------------------------------------------ |
+| **Art. 6**  | Lawful Basis      | Legitimate interest (product improvement) with opt-out |
+| **Art. 7**  | Consent           | Clear opt-in, documented consent record                |
+| **Art. 12** | Transparency      | `rk-core telemetry explain` command                    |
+| **Art. 15** | Right to Access   | `rk-core telemetry export` command                     |
+| **Art. 17** | Right to Erasure  | `rk-core telemetry delete` command                     |
+| **Art. 20** | Data Portability  | Export in JSON/CSV formats                             |
+| **Art. 21** | Right to Object   | `rk-core telemetry disable` command                    |
+| **Art. 25** | Privacy by Design | Opt-in default, minimal collection                     |
+| **Art. 32** | Security          | TLS 1.3, encryption at rest, access controls           |
 
 ### 8.2 CCPA Compliance
 
-| Requirement | Implementation |
-|-------------|----------------|
-| **Right to Know** | Full event list in `telemetry explain` |
-| **Right to Delete** | Complete deletion via `telemetry delete` |
-| **Right to Opt-Out** | Telemetry disabled by default |
-| **Non-Discrimination** | No feature reduction for opt-out |
-| **Notice at Collection** | Consent prompt on first enable |
+| Requirement              | Implementation                           |
+| ------------------------ | ---------------------------------------- |
+| **Right to Know**        | Full event list in `telemetry explain`   |
+| **Right to Delete**      | Complete deletion via `telemetry delete` |
+| **Right to Opt-Out**     | Telemetry disabled by default            |
+| **Non-Discrimination**   | No feature reduction for opt-out         |
+| **Notice at Collection** | Consent prompt on first enable           |
 
 ### 8.3 Privacy Documentation
 
 Required documentation for privacy compliance:
 
 1. **Privacy Policy Section**
+
    ```markdown
    ## Telemetry Data Collection
 
    ReasonKit collects anonymous usage data to improve the product.
 
    ### What We Collect
+
    - Command usage (which commands, not content)
    - Performance metrics (latency, error rates)
    - ThinkTool usage patterns
@@ -1482,18 +1485,21 @@ Required documentation for privacy compliance:
    - Platform information (OS, architecture)
 
    ### What We Never Collect
+
    - Query or response content
    - API keys or credentials
    - Personal information (name, email, IP)
    - File contents or paths
 
    ### Your Rights
+
    - **View**: `rk-core telemetry status`
    - **Export**: `rk-core telemetry export`
    - **Delete**: `rk-core telemetry delete`
    - **Opt-out**: `rk-core telemetry disable`
 
    ### Data Retention
+
    - Local: Configurable, default 90 days
    - Cloud (Pro): Raw events 90 days, aggregates 3 years
    ```
@@ -1534,13 +1540,13 @@ impl Default for TransportSecurity {
 
 ### 9.2 Data Security
 
-| Layer | Protection | Implementation |
-|-------|------------|----------------|
-| **In Transit** | TLS 1.3 | reqwest with rustls |
-| **At Rest (Local)** | OS permissions | SQLite file 0600 |
-| **At Rest (Cloud)** | AES-256-GCM | ClickHouse encryption |
-| **Access Control** | Role-based | Internal dashboards only |
-| **Audit Logging** | All access logged | Security audit trail |
+| Layer               | Protection        | Implementation           |
+| ------------------- | ----------------- | ------------------------ |
+| **In Transit**      | TLS 1.3           | reqwest with rustls      |
+| **At Rest (Local)** | OS permissions    | SQLite file 0600         |
+| **At Rest (Cloud)** | AES-256-GCM       | ClickHouse encryption    |
+| **Access Control**  | Role-based        | Internal dashboards only |
+| **Audit Logging**   | All access logged | Security audit trail     |
 
 ### 9.3 Incident Response
 
@@ -1572,11 +1578,11 @@ impl Default for TransportSecurity {
 
 ### 10.1 Internal Reports
 
-| Report | Frequency | Audience | Content |
-|--------|-----------|----------|---------|
-| **Weekly Metrics** | Weekly | Engineering | Feature usage, error rates, performance |
-| **Monthly Deep Dive** | Monthly | Product | Funnel analysis, cohorts, growth |
-| **Quarterly Review** | Quarterly | Leadership | Strategic metrics, YoY trends |
+| Report                | Frequency | Audience    | Content                                 |
+| --------------------- | --------- | ----------- | --------------------------------------- |
+| **Weekly Metrics**    | Weekly    | Engineering | Feature usage, error rates, performance |
+| **Monthly Deep Dive** | Monthly   | Product     | Funnel analysis, cohorts, growth        |
+| **Quarterly Review**  | Quarterly | Leadership  | Strategic metrics, YoY trends           |
 
 ### 10.2 Public Transparency Report
 
@@ -1660,11 +1666,11 @@ Published annually, includes:
 
 ## Version History
 
-| Version | Date | Changes |
-|---------|------|---------|
-| 1.0.0 | 2025-12-28 | Initial design document |
+| Version | Date       | Changes                 |
+| ------- | ---------- | ----------------------- |
+| 1.0.0   | 2025-12-28 | Initial design document |
 
 ---
 
-*ReasonKit Telemetry Design v1.0 | "Measure What Matters, Protect What's Private"*
+_ReasonKit Telemetry Design v1.0 | "Measure What Matters, Protect What's Private"_
 *https://reasonkit.sh*

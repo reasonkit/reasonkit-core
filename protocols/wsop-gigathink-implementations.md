@@ -1,4 +1,5 @@
 # WSOP GigaThink Implementations
+
 > Transforming 12 Creative Perspectives into Production Code
 
 **Version:** 1.2.0 | **Date:** 2025-12-12
@@ -1424,7 +1425,7 @@ wsop:
   query_evolution:
     enabled: true
     visualize: true
-    format: "ascii"  # or "mermaid"
+    format: "ascii" # or "mermaid"
 
   provenance_chain:
     enabled: true
@@ -1454,19 +1455,19 @@ wsop:
 
 ## CHANGELOG
 
-| Version | Date | Changes |
-|---------|------|---------|
-| 1.2.0 | 2025-12-12 | GigaThink implementation - 12 perspectives integrated |
-| | | Added Belief Reports with epistemic transparency |
-| | | Added Falsification Search Engine |
-| | | Added Query Evolution Visualization |
-| | | Added Provenance Chains |
-| | | Added Adaptive Query Memory |
-| | | Added Source Motivation Analysis |
-| | | Added Knowledge Graph Builder |
-| | | Added Difficulty Mode Selector |
-| | | Added Epistemic Uncertainty Handler |
+| Version | Date       | Changes                                               |
+| ------- | ---------- | ----------------------------------------------------- |
+| 1.2.0   | 2025-12-12 | GigaThink implementation - 12 perspectives integrated |
+|         |            | Added Belief Reports with epistemic transparency      |
+|         |            | Added Falsification Search Engine                     |
+|         |            | Added Query Evolution Visualization                   |
+|         |            | Added Provenance Chains                               |
+|         |            | Added Adaptive Query Memory                           |
+|         |            | Added Source Motivation Analysis                      |
+|         |            | Added Knowledge Graph Builder                         |
+|         |            | Added Difficulty Mode Selector                        |
+|         |            | Added Epistemic Uncertainty Handler                   |
 
 ---
 
-*WSOP v1.2 | GigaThink Integration | "Designed, Not Dreamed"*
+_WSOP v1.2 | GigaThink Integration | "Designed, Not Dreamed"_

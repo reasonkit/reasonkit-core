@@ -78,38 +78,38 @@ depends_on = ["challenge_assumptions"]
 
 ### Module Fields
 
-| Field | Type | Description |
-|-------|------|-------------|
-| `id` | string | Unique identifier (snake_case) |
-| `name` | string | Human-readable name |
-| `description` | string | Brief description of what the tool does |
-| `category` | string | `divergent`, `convergent`, `analytical`, `verification`, `adversarial` |
-| `steps` | array | List of ProtocolStep objects (see below) |
+| Field         | Type   | Description                                                            |
+| ------------- | ------ | ---------------------------------------------------------------------- |
+| `id`          | string | Unique identifier (snake_case)                                         |
+| `name`        | string | Human-readable name                                                    |
+| `description` | string | Brief description of what the tool does                                |
+| `category`    | string | `divergent`, `convergent`, `analytical`, `verification`, `adversarial` |
+| `steps`       | array  | List of ProtocolStep objects (see below)                               |
 
 ### Protocol Step
 
 Each step defines a single atomic reasoning operation.
 
-| Field | Type | Description |
-|-------|------|-------------|
-| `id` | string | Unique step ID (used for referencing) |
-| `action` | object | The type of cognitive action (see below) |
+| Field             | Type   | Description                                                                                        |
+| ----------------- | ------ | -------------------------------------------------------------------------------------------------- |
+| `id`              | string | Unique step ID (used for referencing)                                                              |
+| `action`          | object | The type of cognitive action (see below)                                                           |
 | `prompt_template` | string | Handlebars-style template. Can reference input `{{query}}` or previous step outputs `{{step_id}}`. |
-| `output_format` | string | `text`, `list`, `structured`, `score`, `boolean` |
-| `min_confidence` | float | 0.0 - 1.0 (default 0.7) |
-| `depends_on` | array | List of step IDs this step requires input from |
+| `output_format`   | string | `text`, `list`, `structured`, `score`, `boolean`                                                   |
+| `min_confidence`  | float  | 0.0 - 1.0 (default 0.7)                                                                            |
+| `depends_on`      | array  | List of step IDs this step requires input from                                                     |
 
 ### Action Types
 
-| Action Type | Parameters | Example |
-|-------------|------------|---------|
-| `generate` | `min_count`, `max_count` | `{ type = "generate", min_count = 5, max_count = 10 }` |
-| `analyze` | `criteria` (array) | `{ type = "analyze", criteria = ["feasibility", "cost"] }` |
-| `synthesize` | `aggregation` | `{ type = "synthesize", aggregation = "thematic_clustering" }` |
-| `validate` | `rules` (array) | `{ type = "validate", rules = ["consistency"] }` |
-| `critique` | `severity` | `{ type = "critique", severity = "brutal" }` |
-| `decide` | `method` | `{ type = "decide", method = "pros_cons" }` |
-| `cross_reference` | `min_sources` | `{ type = "cross_reference", min_sources = 3 }` |
+| Action Type       | Parameters               | Example                                                        |
+| ----------------- | ------------------------ | -------------------------------------------------------------- |
+| `generate`        | `min_count`, `max_count` | `{ type = "generate", min_count = 5, max_count = 10 }`         |
+| `analyze`         | `criteria` (array)       | `{ type = "analyze", criteria = ["feasibility", "cost"] }`     |
+| `synthesize`      | `aggregation`            | `{ type = "synthesize", aggregation = "thematic_clustering" }` |
+| `validate`        | `rules` (array)          | `{ type = "validate", rules = ["consistency"] }`               |
+| `critique`        | `severity`               | `{ type = "critique", severity = "brutal" }`                   |
+| `decide`          | `method`                 | `{ type = "decide", method = "pros_cons" }`                    |
+| `cross_reference` | `min_sources`            | `{ type = "cross_reference", min_sources = 3 }`                |
 
 ## Advanced: Dynamic Branching
 
@@ -119,7 +119,7 @@ You can add branching logic to steps:
 [[thinktool_modules.my_tool.steps]]
 id = "check_safety"
 # ...
-branch = { type = "confidence_below", threshold = 0.8 } 
+branch = { type = "confidence_below", threshold = 0.8 }
 # If confidence < 0.8, the executor might trigger a loop or fallback (depending on implementation)
 ```
 

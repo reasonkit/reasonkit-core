@@ -23,13 +23,13 @@ This document defines the complete analytics and telemetry schema for ReasonKit,
 
 ### Design Principles
 
-| Principle | Implementation |
-|-----------|----------------|
-| **Local-First** | All data stored in SQLite by default, never sent externally without consent |
-| **Privacy-First** | PII stripping, differential privacy, opt-in only |
-| **Tiered Collection** | OSS collects less, Pro collects more (with consent) |
-| **Auditable** | Full schema versioning, data lineage tracking |
-| **GDPR by Default** | Right to deletion, data portability, consent management |
+| Principle             | Implementation                                                              |
+| --------------------- | --------------------------------------------------------------------------- |
+| **Local-First**       | All data stored in SQLite by default, never sent externally without consent |
+| **Privacy-First**     | PII stripping, differential privacy, opt-in only                            |
+| **Tiered Collection** | OSS collects less, Pro collects more (with consent)                         |
+| **Auditable**         | Full schema versioning, data lineage tracking                               |
+| **GDPR by Default**   | Right to deletion, data portability, consent management                     |
 
 ---
 
@@ -865,24 +865,24 @@ All events share a common envelope for cloud sync:
 
 ### 5.1 Default Retention (OSS)
 
-| Data Type | Retention | Rationale |
-|-----------|-----------|-----------|
-| Sessions | 90 days | Balance between history and storage |
-| Queries | 90 days | Privacy-first |
-| Feedback | 180 days | Valuable for improvement |
-| Tool usage | 90 days | Operational data |
-| Traces | 30 days | High volume, quickly stale |
-| Daily aggregates | 365 days | Low volume, valuable trends |
-| Hourly aggregates | 7 days | High volume, real-time only |
+| Data Type         | Retention | Rationale                           |
+| ----------------- | --------- | ----------------------------------- |
+| Sessions          | 90 days   | Balance between history and storage |
+| Queries           | 90 days   | Privacy-first                       |
+| Feedback          | 180 days  | Valuable for improvement            |
+| Tool usage        | 90 days   | Operational data                    |
+| Traces            | 30 days   | High volume, quickly stale          |
+| Daily aggregates  | 365 days  | Low volume, valuable trends         |
+| Hourly aggregates | 7 days    | High volume, real-time only         |
 
 ### 5.2 Pro Tier Retention
 
-| Data Type | Retention | Configurable |
-|-----------|-----------|--------------|
-| Sessions | 365 days | Yes, up to 3 years |
-| Queries | 365 days | Yes |
-| Billing events | 7 years | No (legal requirement) |
-| Aggregates | Unlimited | Yes |
+| Data Type      | Retention | Configurable           |
+| -------------- | --------- | ---------------------- |
+| Sessions       | 365 days  | Yes, up to 3 years     |
+| Queries        | 365 days  | Yes                    |
+| Billing events | 7 years   | No (legal requirement) |
+| Aggregates     | Unlimited | Yes                    |
 
 ### 5.3 Retention Implementation
 
@@ -910,14 +910,14 @@ VACUUM;
 
 ### 6.1 Data Subject Rights Implementation
 
-| Right | Implementation |
-|-------|----------------|
-| **Right to Access** | `rk telemetry export --format json` |
-| **Right to Erasure** | `rk telemetry delete --all` |
-| **Right to Portability** | Export in JSON/CSV formats |
-| **Right to Rectification** | Feedback correction via API |
-| **Right to Restrict** | Pause telemetry collection |
-| **Right to Object** | Full opt-out mechanism |
+| Right                      | Implementation                      |
+| -------------------------- | ----------------------------------- |
+| **Right to Access**        | `rk telemetry export --format json` |
+| **Right to Erasure**       | `rk telemetry delete --all`         |
+| **Right to Portability**   | Export in JSON/CSV formats          |
+| **Right to Rectification** | Feedback correction via API         |
+| **Right to Restrict**      | Pause telemetry collection          |
+| **Right to Object**        | Full opt-out mechanism              |
 
 ### 6.2 Consent Management
 
@@ -999,27 +999,27 @@ rk telemetry consent --community
 
 ### 7.1 What We Collect (OSS, Opt-In)
 
-| Data | Collected | Stored | Shared |
-|------|-----------|--------|--------|
-| Query text | No | Hash only | Never |
-| File paths | Redacted | Redacted | Never |
-| Tool names | Yes | Yes | Aggregated only |
-| Latency metrics | Yes | Yes | Aggregated only |
-| Token counts | Yes | Yes | Aggregated only |
-| Error types | Yes | Yes | Aggregated only |
-| OS family | Yes | Yes | Aggregated only |
-| User identity | No | No | Never |
+| Data            | Collected | Stored    | Shared          |
+| --------------- | --------- | --------- | --------------- |
+| Query text      | No        | Hash only | Never           |
+| File paths      | Redacted  | Redacted  | Never           |
+| Tool names      | Yes       | Yes       | Aggregated only |
+| Latency metrics | Yes       | Yes       | Aggregated only |
+| Token counts    | Yes       | Yes       | Aggregated only |
+| Error types     | Yes       | Yes       | Aggregated only |
+| OS family       | Yes       | Yes       | Aggregated only |
+| User identity   | No        | No        | Never           |
 
 ### 7.2 What We Collect (Pro, With Consent)
 
 Additional data with explicit consent:
 
-| Data | Purpose | Sharing |
-|------|---------|---------|
-| Billing events | Metered pricing | Stripe/Orb only |
-| Organization ID | Team features | Internal only |
-| Model usage | Cost allocation | Internal only |
-| Feature flags | Feature access | Internal only |
+| Data            | Purpose         | Sharing         |
+| --------------- | --------------- | --------------- |
+| Billing events  | Metered pricing | Stripe/Orb only |
+| Organization ID | Team features   | Internal only   |
+| Model usage     | Cost allocation | Internal only   |
+| Feature flags   | Feature access  | Internal only   |
 
 ### 7.3 Opt-Out Mechanisms
 
@@ -1093,5 +1093,5 @@ Additional data with explicit consent:
 
 ---
 
-*ReasonKit Analytics Schema v2.0 | "Privacy-First Telemetry"*
+_ReasonKit Analytics Schema v2.0 | "Privacy-First Telemetry"_
 *https://reasonkit.sh*

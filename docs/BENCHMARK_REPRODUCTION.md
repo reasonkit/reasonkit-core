@@ -26,32 +26,32 @@ This guide enables independent verification of ReasonKit performance claims. All
 
 ### Minimum Specifications (Fair Comparison)
 
-| Component | Minimum | Rationale |
-|-----------|---------|-----------|
-| CPU | 4 cores @ 2.5GHz | Baseline for async operations |
-| RAM | 8 GB | Sufficient for 10K document corpus |
-| Storage | SSD (NVMe preferred) | I/O bound operations |
-| Network | 100 Mbps stable | LLM API calls |
+| Component | Minimum              | Rationale                          |
+| --------- | -------------------- | ---------------------------------- |
+| CPU       | 4 cores @ 2.5GHz     | Baseline for async operations      |
+| RAM       | 8 GB                 | Sufficient for 10K document corpus |
+| Storage   | SSD (NVMe preferred) | I/O bound operations               |
+| Network   | 100 Mbps stable      | LLM API calls                      |
 
 ### Recommended Specifications
 
-| Component | Recommended | Rationale |
-|-----------|-------------|-----------|
-| CPU | 8+ cores @ 3.0GHz+ | Parallel retrieval benchmarks |
-| RAM | 16 GB | Large corpus testing |
-| Storage | NVMe SSD | Consistent I/O timing |
-| Network | 1 Gbps, low latency | Minimize API variance |
+| Component | Recommended         | Rationale                     |
+| --------- | ------------------- | ----------------------------- |
+| CPU       | 8+ cores @ 3.0GHz+  | Parallel retrieval benchmarks |
+| RAM       | 16 GB               | Large corpus testing          |
+| Storage   | NVMe SSD            | Consistent I/O timing         |
+| Network   | 1 Gbps, low latency | Minimize API variance         |
 
 ### Cloud Instance Equivalents
 
-| Provider | Instance Type | vCPUs | RAM | Cost/hr |
-|----------|---------------|-------|-----|---------|
-| **AWS** | c6i.xlarge | 4 | 8 GB | ~$0.17 |
-| **AWS** | c6i.2xlarge (recommended) | 8 | 16 GB | ~$0.34 |
-| **GCP** | c2-standard-4 | 4 | 16 GB | ~$0.21 |
-| **GCP** | c2-standard-8 (recommended) | 8 | 32 GB | ~$0.42 |
-| **Azure** | F4s_v2 | 4 | 8 GB | ~$0.17 |
-| **Azure** | F8s_v2 (recommended) | 8 | 16 GB | ~$0.34 |
+| Provider  | Instance Type               | vCPUs | RAM   | Cost/hr |
+| --------- | --------------------------- | ----- | ----- | ------- |
+| **AWS**   | c6i.xlarge                  | 4     | 8 GB  | ~$0.17  |
+| **AWS**   | c6i.2xlarge (recommended)   | 8     | 16 GB | ~$0.34  |
+| **GCP**   | c2-standard-4               | 4     | 16 GB | ~$0.21  |
+| **GCP**   | c2-standard-8 (recommended) | 8     | 32 GB | ~$0.42  |
+| **Azure** | F4s_v2                      | 4     | 8 GB  | ~$0.17  |
+| **Azure** | F8s_v2 (recommended)        | 8     | 16 GB | ~$0.34  |
 
 ### Hardware Verification Script
 
@@ -486,7 +486,7 @@ config:
   iterations: 100
   warmup: 3
   profile: "balanced"
-  llm_mode: "mock"  # or "live" with model name
+  llm_mode: "mock" # or "live" with model name
 ```
 
 ### Results Table Template
@@ -494,26 +494,26 @@ config:
 ```markdown
 ## Results: [Your System Description]
 
-| Metric | ReasonKit | LangChain | Speedup | Notes |
-|--------|-----------|-----------|---------|-------|
-| Mean Latency | 12.3ms | 208.1ms | 16.9x | Mock LLM |
-| P50 Latency | 11.8ms | 195.2ms | 16.5x | |
-| P95 Latency | 14.2ms | 312.5ms | 22.0x | |
-| P99 Latency | 18.1ms | 425.8ms | 23.5x | |
-| Memory (RSS) | 45 MB | 312 MB | 6.9x | Peak during chain |
-| Binary Size | 8.2 MB | N/A | - | Stripped release |
+| Metric       | ReasonKit | LangChain | Speedup | Notes             |
+| ------------ | --------- | --------- | ------- | ----------------- |
+| Mean Latency | 12.3ms    | 208.1ms   | 16.9x   | Mock LLM          |
+| P50 Latency  | 11.8ms    | 195.2ms   | 16.5x   |                   |
+| P95 Latency  | 14.2ms    | 312.5ms   | 22.0x   |                   |
+| P99 Latency  | 18.1ms    | 425.8ms   | 23.5x   |                   |
+| Memory (RSS) | 45 MB     | 312 MB    | 6.9x    | Peak during chain |
+| Binary Size  | 8.2 MB    | N/A       | -       | Stripped release  |
 ```
 
 ### What to Measure
 
-| Metric | Definition | How to Measure | Target |
-|--------|------------|----------------|--------|
+| Metric           | Definition                       | How to Measure         | Target        |
+| ---------------- | -------------------------------- | ---------------------- | ------------- |
 | **Mean Latency** | Average time for chain execution | Sum(latencies) / count | < 20ms (mock) |
-| **P50 Latency** | Median latency | 50th percentile | < 15ms (mock) |
-| **P95 Latency** | 95th percentile | Sort, take 95% index | < 25ms (mock) |
-| **P99 Latency** | 99th percentile | Sort, take 99% index | < 50ms (mock) |
-| **Memory (RSS)** | Peak resident set size | `/usr/bin/time -v` | < 100 MB |
-| **Throughput** | Chains per second | 1000 / mean_latency_ms | > 50 QPS |
+| **P50 Latency**  | Median latency                   | 50th percentile        | < 15ms (mock) |
+| **P95 Latency**  | 95th percentile                  | Sort, take 95% index   | < 25ms (mock) |
+| **P99 Latency**  | 99th percentile                  | Sort, take 99% index   | < 50ms (mock) |
+| **Memory (RSS)** | Peak resident set size           | `/usr/bin/time -v`     | < 100 MB      |
+| **Throughput**   | Chains per second                | 1000 / mean_latency_ms | > 50 QPS      |
 
 ---
 
@@ -551,6 +551,7 @@ time ./target/release/rk-core think --profile balanced "query"
 ```
 
 **When comparing:**
+
 - Mock-to-mock: Fair comparison of framework overhead
 - Live-to-live: Only valid if SAME model, SAME endpoint, SAME region
 
@@ -636,6 +637,7 @@ cargo build --release
 ## Benchmark Results: AWS c6i.2xlarge (Ubuntu 22.04)
 
 ### Metadata
+
 - Date: 2025-01-15
 - ReasonKit: 0.1.0 (commit abc123)
 - LangChain: 0.2.16
@@ -644,16 +646,18 @@ cargo build --release
 ### Results
 
 | Metric | ReasonKit | LangChain | Speedup |
-|--------|-----------|-----------|---------|
-| Mean | 11.2ms | 189.4ms | 16.9x |
-| P99 | 15.8ms | 398.2ms | 25.2x |
+| ------ | --------- | --------- | ------- |
+| Mean   | 11.2ms    | 189.4ms   | 16.9x   |
+| P99    | 15.8ms    | 398.2ms   | 25.2x   |
 
 ### Notes
+
 - Used default configurations for both frameworks
 - No network calls (mock mode)
 - Single-threaded execution
 
 ### Attachments
+
 - [results_reasonkit.csv](...)
 - [results_langchain.csv](...)
 - [system_info.txt](...)
@@ -709,15 +713,15 @@ Before publishing ANY performance claim, verify:
 
 **Validation:**
 
-| Check | Status | Notes |
-|-------|--------|-------|
-| Release build | PASS | `--release` flag used |
-| Warmup | PASS | 3 iterations |
-| Mock mode | PASS | Isolates framework overhead |
-| Iterations | PASS | 100 iterations |
-| Same chain complexity | PASS | 4-step chain in both |
-| Percentiles reported | PASS | P50, P95, P99 included |
-| Raw data available | PASS | CSV files attached |
+| Check                 | Status | Notes                       |
+| --------------------- | ------ | --------------------------- |
+| Release build         | PASS   | `--release` flag used       |
+| Warmup                | PASS   | 3 iterations                |
+| Mock mode             | PASS   | Isolates framework overhead |
+| Iterations            | PASS   | 100 iterations              |
+| Same chain complexity | PASS   | 4-step chain in both        |
+| Percentiles reported  | PASS   | P50, P95, P99 included      |
+| Raw data available    | PASS   | CSV files attached          |
 
 **Verdict:** Claim is defensible.
 
@@ -792,6 +796,6 @@ A: Yes! Follow the same methodology. We welcome community benchmarks against any
 
 ---
 
-*"Trust, but verify." -- This document exists so you can verify.*
+_"Trust, but verify." -- This document exists so you can verify._
 
-*Last updated: 2025-12-28 | ReasonKit Core v0.1.0*
+_Last updated: 2025-12-28 | ReasonKit Core v0.1.0_

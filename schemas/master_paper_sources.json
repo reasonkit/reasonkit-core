@@ -11,7 +11,13 @@
     {
       "id": "deepseek_r1_2025",
       "title": "DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via Reinforcement Learning",
-      "authors": ["DeepSeek-AI", "Bi Xiao", "Chen Daya", "Yang Guanting", "et al."],
+      "authors": [
+        "DeepSeek-AI",
+        "Bi Xiao",
+        "Chen Daya",
+        "Yang Guanting",
+        "et al."
+      ],
       "arxiv_id": "2501.12948",
       "doi": "10.1038/s41586-025-09422-z",
       "url": "https://arxiv.org/abs/2501.12948",
@@ -71,7 +77,15 @@
     {
       "id": "tree_of_thoughts_2023",
       "title": "Tree of Thoughts: Deliberate Problem Solving with Large Language Models",
-      "authors": ["Yao Shunyu", "Yu Dian", "Zhao Jeffrey", "Shafran Izhak", "Griffiths Thomas L.", "Cao Yuan", "Narasimhan Karthik"],
+      "authors": [
+        "Yao Shunyu",
+        "Yu Dian",
+        "Zhao Jeffrey",
+        "Shafran Izhak",
+        "Griffiths Thomas L.",
+        "Cao Yuan",
+        "Narasimhan Karthik"
+      ],
       "arxiv_id": "2305.10601",
       "url": "https://arxiv.org/abs/2305.10601",
       "pdf_url": "https://arxiv.org/pdf/2305.10601.pdf",
@@ -86,7 +100,16 @@
     {
       "id": "self_consistency_2022",
       "title": "Self-Consistency Improves Chain of Thought Reasoning in Language Models",
-      "authors": ["Wang Xuezhi", "Wei Jason", "Schuurmans Dale", "Le Quoc V.", "Chi Ed H.", "Narang Sharan", "Chowdhery Aakanksha", "Zhou Denny"],
+      "authors": [
+        "Wang Xuezhi",
+        "Wei Jason",
+        "Schuurmans Dale",
+        "Le Quoc V.",
+        "Chi Ed H.",
+        "Narang Sharan",
+        "Chowdhery Aakanksha",
+        "Zhou Denny"
+      ],
       "arxiv_id": "2203.11171",
       "url": "https://arxiv.org/abs/2203.11171",
       "pdf_url": "https://arxiv.org/pdf/2203.11171.pdf",
@@ -101,7 +124,13 @@
     {
       "id": "reflexion_2023",
       "title": "Reflexion: Language Agents with Verbal Reinforcement Learning",
-      "authors": ["Shinn Noah", "Cassano Federico", "Gopinath Ashwin", "Narasimhan Karthik", "Yao Shunyu"],
+      "authors": [
+        "Shinn Noah",
+        "Cassano Federico",
+        "Gopinath Ashwin",
+        "Narasimhan Karthik",
+        "Yao Shunyu"
+      ],
       "arxiv_id": "2303.11366",
       "url": "https://arxiv.org/abs/2303.11366",
       "pdf_url": "https://arxiv.org/pdf/2303.11366.pdf",
@@ -131,7 +160,14 @@
     {
       "id": "raptor_2024",
       "title": "RAPTOR: Recursive Abstractive Processing for Tree-Organized Retrieval",
-      "authors": ["Sarthi Parth", "Abdullah Salman", "Tuli Aditi", "Khanna Shubh", "Goldie Anna", "Manning Christopher D."],
+      "authors": [
+        "Sarthi Parth",
+        "Abdullah Salman",
+        "Tuli Aditi",
+        "Khanna Shubh",
+        "Goldie Anna",
+        "Manning Christopher D."
+      ],
       "arxiv_id": "2401.18059",
       "url": "https://arxiv.org/abs/2401.18059",
       "pdf_url": "https://arxiv.org/pdf/2401.18059.pdf",
@@ -149,7 +185,17 @@
     {
       "id": "cot_2022",
       "title": "Chain-of-Thought Prompting Elicits Reasoning in Large Language Models",
-      "authors": ["Wei Jason", "Wang Xuezhi", "Schuurmans Dale", "Bosma Maarten", "Ichter Brian", "Xia Fei", "Chi Ed", "Le Quoc", "Zhou Denny"],
+      "authors": [
+        "Wei Jason",
+        "Wang Xuezhi",
+        "Schuurmans Dale",
+        "Bosma Maarten",
+        "Ichter Brian",
+        "Xia Fei",
+        "Chi Ed",
+        "Le Quoc",
+        "Zhou Denny"
+      ],
       "arxiv_id": "2201.11903",
       "doi": "10.48550/arXiv.2201.11903",
       "url": "https://arxiv.org/abs/2201.11903",
@@ -164,7 +210,13 @@
     {
       "id": "zero_shot_reasoners_2022",
       "title": "Large Language Models are Zero-Shot Reasoners",
-      "authors": ["Kojima Takeshi", "Gu Shixiang Shane", "Reid Machel", "Matsuo Yutaka", "Iwasawa Yusuke"],
+      "authors": [
+        "Kojima Takeshi",
+        "Gu Shixiang Shane",
+        "Reid Machel",
+        "Matsuo Yutaka",
+        "Iwasawa Yusuke"
+      ],
       "arxiv_id": "2205.11916",
       "url": "https://arxiv.org/abs/2205.11916",
       "pdf_url": "https://arxiv.org/pdf/2205.11916.pdf",
@@ -182,7 +234,18 @@
     {
       "id": "lets_verify_2023",
       "title": "Let's Verify Step by Step",
-      "authors": ["Lightman Hunter", "Kosaraju Vineet", "Burda Yura", "Edwards Harri", "Baker Bowen", "Lee Teddy", "Leike Jan", "Schulman John", "Sutskever Ilya", "Cobbe Karl"],
+      "authors": [
+        "Lightman Hunter",
+        "Kosaraju Vineet",
+        "Burda Yura",
+        "Edwards Harri",
+        "Baker Bowen",
+        "Lee Teddy",
+        "Leike Jan",
+        "Schulman John",
+        "Sutskever Ilya",
+        "Cobbe Karl"
+      ],
       "arxiv_id": null,
       "url": "https://cdn.openai.com/improving-mathematical-reasoning-with-process-supervision/Lets_Verify_Step_by_Step.pdf",
       "pdf_url": "https://cdn.openai.com/improving-mathematical-reasoning-with-process-supervision/Lets_Verify_Step_by_Step.pdf",
@@ -240,7 +303,13 @@
     {
       "id": "camel_2023",
       "title": "CAMEL: Communicative Agents for Mind Exploration of Large Language Model Society",
-      "authors": ["Li Guohao", "Hammoud Hasan Abed Al Kader", "Itani Hani", "Khizbullin Dmitrii", "Ghanem Bernard"],
+      "authors": [
+        "Li Guohao",
+        "Hammoud Hasan Abed Al Kader",
+        "Itani Hani",
+        "Khizbullin Dmitrii",
+        "Ghanem Bernard"
+      ],
       "arxiv_id": "2303.17760",
       "url": "https://arxiv.org/abs/2303.17760",
       "pdf_url": "https://arxiv.org/pdf/2303.17760.pdf",
@@ -254,7 +323,13 @@
     {
       "id": "multiagent_debate_2024",
       "title": "Improving Factuality and Reasoning in Language Models through Multiagent Debate",
-      "authors": ["Du Yilun", "Li Shuang", "Torralba Antonio", "Tenenbaum Joshua B.", "Mordatch Igor"],
+      "authors": [
+        "Du Yilun",
+        "Li Shuang",
+        "Torralba Antonio",
+        "Tenenbaum Joshua B.",
+        "Mordatch Igor"
+      ],
       "arxiv_id": "2305.14325",
       "url": "https://arxiv.org/abs/2305.14325",
       "pdf_url": "https://arxiv.org/pdf/2305.14325.pdf",
@@ -345,7 +420,14 @@
     {
       "id": "bge_m3_2024",
       "title": "BGE M3-Embedding: Multi-Lingual, Multi-Functionality, Multi-Granularity Text Embeddings",
-      "authors": ["Chen Jianlv", "Xiao Shitao", "Zhang Peitian", "Luo Kun", "Lian Defu", "Liu Zheng"],
+      "authors": [
+        "Chen Jianlv",
+        "Xiao Shitao",
+        "Zhang Peitian",
+        "Luo Kun",
+        "Lian Defu",
+        "Liu Zheng"
+      ],
       "arxiv_id": "2402.03216",
       "url": "https://arxiv.org/abs/2402.03216",
       "pdf_url": "https://arxiv.org/pdf/2402.03216.pdf",
@@ -403,7 +485,12 @@
     {
       "id": "semantic_entropy_2024",
       "title": "Detecting hallucinations in large language models using semantic entropy",
-      "authors": ["Farquhar Sebastian", "Kossen Jannik", "Kuhn Lorenz", "Gal Yarin"],
+      "authors": [
+        "Farquhar Sebastian",
+        "Kossen Jannik",
+        "Kuhn Lorenz",
+        "Gal Yarin"
+      ],
       "doi": "10.1038/s41586-024-07421-0",
       "url": "https://www.nature.com/articles/s41586-024-07421-0",
       "year": 2024,
@@ -640,7 +727,12 @@
     {
       "id": "act_r_integrated_2004",
       "title": "An Integrated Theory of the Mind",
-      "authors": ["Anderson John R.", "Bothell Daniel", "Byrne Michael D.", "et al."],
+      "authors": [
+        "Anderson John R.",
+        "Bothell Daniel",
+        "Byrne Michael D.",
+        "et al."
+      ],
       "doi": "10.1037/0033-295X.111.4.1036",
       "year": 2004,
       "venue": "Psychological Review",
@@ -705,7 +797,12 @@
     {
       "id": "calibration_2017",
       "title": "On Calibration of Modern Neural Networks",
-      "authors": ["Guo Chuan", "Pleiss Geoff", "Sun Yu", "Weinberger Kilian Q."],
+      "authors": [
+        "Guo Chuan",
+        "Pleiss Geoff",
+        "Sun Yu",
+        "Weinberger Kilian Q."
+      ],
       "arxiv_id": "1706.04599",
       "url": "https://arxiv.org/abs/1706.04599",
       "pdf_url": "https://arxiv.org/pdf/1706.04599.pdf",
@@ -720,7 +817,11 @@
     {
       "id": "bayesian_binning_2015",
       "title": "Obtaining Well Calibrated Probabilities Using Bayesian Binning into Quantiles",
-      "authors": ["Naeini Mahdi Pakdaman", "Cooper Gregory F.", "Hauskrecht Milos"],
+      "authors": [
+        "Naeini Mahdi Pakdaman",
+        "Cooper Gregory F.",
+        "Hauskrecht Milos"
+      ],
       "year": 2015,
       "venue": "AAAI 2015",
       "category": "calibration",

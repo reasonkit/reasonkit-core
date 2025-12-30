@@ -9,7 +9,17 @@
       {
         "id": "cot_2022",
         "title": "Chain-of-Thought Prompting Elicits Reasoning in Large Language Models",
-        "authors": ["Jason Wei", "Xuezhi Wang", "Dale Schuurmans", "Maarten Bosma", "Brian Ichter", "Fei Xia", "Ed Chi", "Quoc Le", "Denny Zhou"],
+        "authors": [
+          "Jason Wei",
+          "Xuezhi Wang",
+          "Dale Schuurmans",
+          "Maarten Bosma",
+          "Brian Ichter",
+          "Fei Xia",
+          "Ed Chi",
+          "Quoc Le",
+          "Denny Zhou"
+        ],
         "arxiv_id": "2201.11903",
         "url": "https://arxiv.org/abs/2201.11903",
         "pdf_url": "https://arxiv.org/pdf/2201.11903.pdf",
@@ -27,7 +37,14 @@
       {
         "id": "self_consistency_2022",
         "title": "Self-Consistency Improves Chain of Thought Reasoning in Language Models",
-        "authors": ["Xuezhi Wang", "Jason Wei", "Dale Schuurmans", "Quoc Le", "Ed Chi", "Denny Zhou"],
+        "authors": [
+          "Xuezhi Wang",
+          "Jason Wei",
+          "Dale Schuurmans",
+          "Quoc Le",
+          "Ed Chi",
+          "Denny Zhou"
+        ],
         "arxiv_id": "2203.11171",
         "url": "https://arxiv.org/abs/2203.11171",
         "pdf_url": "https://arxiv.org/pdf/2203.11171.pdf",
@@ -46,7 +63,15 @@
       {
         "id": "tree_of_thoughts_2023",
         "title": "Tree of Thoughts: Deliberate Problem Solving with Large Language Models",
-        "authors": ["Shunyu Yao", "Dian Yu", "Jeffrey Zhao", "Izhak Shafran", "Thomas L. Griffiths", "Yuan Cao", "Karthik Narasimhan"],
+        "authors": [
+          "Shunyu Yao",
+          "Dian Yu",
+          "Jeffrey Zhao",
+          "Izhak Shafran",
+          "Thomas L. Griffiths",
+          "Yuan Cao",
+          "Karthik Narasimhan"
+        ],
         "arxiv_id": "2305.10601",
         "url": "https://arxiv.org/abs/2305.10601",
         "pdf_url": "https://arxiv.org/pdf/2305.10601.pdf",
@@ -64,7 +89,14 @@
       {
         "id": "raptor_2024",
         "title": "RAPTOR: Recursive Abstractive Processing for Tree-Organized Retrieval",
-        "authors": ["Parth Sarthi", "Salman Abdullah", "Aditi Tuli", "Shubh Khanna", "Anna Goldie", "Christopher D. Manning"],
+        "authors": [
+          "Parth Sarthi",
+          "Salman Abdullah",
+          "Aditi Tuli",
+          "Shubh Khanna",
+          "Anna Goldie",
+          "Christopher D. Manning"
+        ],
         "arxiv_id": "2401.18059",
         "url": "https://arxiv.org/abs/2401.18059",
         "pdf_url": "https://arxiv.org/pdf/2401.18059.pdf",
@@ -82,7 +114,13 @@
       {
         "id": "reflexion_2023",
         "title": "Reflexion: Language Agents with Verbal Reinforcement Learning",
-        "authors": ["Noah Shinn", "Federico Cassano", "Ashwin Gopinath", "Karthik Narasimhan", "Shunyu Yao"],
+        "authors": [
+          "Noah Shinn",
+          "Federico Cassano",
+          "Ashwin Gopinath",
+          "Karthik Narasimhan",
+          "Shunyu Yao"
+        ],
         "arxiv_id": "2303.11366",
         "url": "https://arxiv.org/abs/2303.11366",
         "pdf_url": "https://arxiv.org/pdf/2303.11366.pdf",
@@ -100,7 +138,18 @@
       {
         "id": "constitutional_ai_2022",
         "title": "Constitutional AI: Harmlessness from AI Feedback",
-        "authors": ["Yuntao Bai", "Saurav Kadavath", "Sandipan Kundu", "Amanda Askell", "Jackson Kernion", "Andy Jones", "Anna Chen", "Anna Goldie", "Azalia Mirhoseini", "Cameron McKinnon"],
+        "authors": [
+          "Yuntao Bai",
+          "Saurav Kadavath",
+          "Sandipan Kundu",
+          "Amanda Askell",
+          "Jackson Kernion",
+          "Andy Jones",
+          "Anna Chen",
+          "Anna Goldie",
+          "Azalia Mirhoseini",
+          "Cameron McKinnon"
+        ],
         "arxiv_id": "2212.08073",
         "url": "https://arxiv.org/abs/2212.08073",
         "pdf_url": "https://arxiv.org/pdf/2212.08073.pdf",
@@ -118,7 +167,18 @@
       {
         "id": "process_supervision_2023",
         "title": "Let's Verify Step by Step",
-        "authors": ["Hunter Lightman", "Vineet Kosaraju", "Yura Burda", "Harri Edwards", "Bowen Baker", "Teddy Lee", "Jan Leike", "John Schulman", "Ilya Sutskever", "Karl Cobbe"],
+        "authors": [
+          "Hunter Lightman",
+          "Vineet Kosaraju",
+          "Yura Burda",
+          "Harri Edwards",
+          "Bowen Baker",
+          "Teddy Lee",
+          "Jan Leike",
+          "John Schulman",
+          "Ilya Sutskever",
+          "Karl Cobbe"
+        ],
         "arxiv_id": null,
         "url": "https://cdn.openai.com/improving-mathematical-reasoning-with-process-supervision/Lets_Verify_Step_by_Step.pdf",
         "pdf_url": "https://cdn.openai.com/improving-mathematical-reasoning-with-process-supervision/Lets_Verify_Step_by_Step.pdf",
@@ -174,7 +234,14 @@
       {
         "id": "bge_m3_2024",
         "title": "BGE M3-Embedding: Multi-Lingual, Multi-Functionality, Multi-Granularity Text Embeddings Through Self-Knowledge Distillation",
-        "authors": ["Jianlv Chen", "Shitao Xiao", "Peitian Zhang", "Kun Luo", "Defu Lian", "Zheng Liu"],
+        "authors": [
+          "Jianlv Chen",
+          "Shitao Xiao",
+          "Peitian Zhang",
+          "Kun Luo",
+          "Defu Lian",
+          "Zheng Liu"
+        ],
         "arxiv_id": "2402.03216",
         "url": "https://arxiv.org/abs/2402.03216",
         "pdf_url": "https://arxiv.org/pdf/2402.03216.pdf",
@@ -192,7 +259,16 @@
       {
         "id": "e5_2022",
         "title": "Text Embeddings by Weakly-Supervised Contrastive Pre-training",
-        "authors": ["Liang Wang", "Nan Yang", "Xiaolong Huang", "Binxing Jiao", "Linjun Yang", "Daxin Jiang", "Rangan Majumder", "Furu Wei"],
+        "authors": [
+          "Liang Wang",
+          "Nan Yang",
+          "Xiaolong Huang",
+          "Binxing Jiao",
+          "Linjun Yang",
+          "Daxin Jiang",
+          "Rangan Majumder",
+          "Furu Wei"
+        ],
         "arxiv_id": "2212.03533",
         "url": "https://arxiv.org/abs/2212.03533",
         "pdf_url": "https://arxiv.org/pdf/2212.03533.pdf",
@@ -212,7 +288,12 @@
       {
         "id": "semantic_entropy_2024",
         "title": "Detecting hallucinations in large language models using semantic entropy",
-        "authors": ["Sebastian Farquhar", "Jannik Kossen", "Lorenz Kuhn", "Yarin Gal"],
+        "authors": [
+          "Sebastian Farquhar",
+          "Jannik Kossen",
+          "Lorenz Kuhn",
+          "Yarin Gal"
+        ],
         "arxiv_id": null,
         "url": "https://www.nature.com/articles/s41586-024-07421-0",
         "pdf_url": null,
@@ -233,7 +314,20 @@
       {
         "id": "gsm8k_2021",
         "title": "Training Verifiers to Solve Math Word Problems",
-        "authors": ["Karl Cobbe", "Vineet Kosaraju", "Mohammad Bavarian", "Mark Chen", "Heewoo Jun", "Lukasz Kaiser", "Matthias Plappert", "Jerry Tworek", "Jacob Hilton", "Reiichiro Nakano", "Christopher Hesse", "John Schulman"],
+        "authors": [
+          "Karl Cobbe",
+          "Vineet Kosaraju",
+          "Mohammad Bavarian",
+          "Mark Chen",
+          "Heewoo Jun",
+          "Lukasz Kaiser",
+          "Matthias Plappert",
+          "Jerry Tworek",
+          "Jacob Hilton",
+          "Reiichiro Nakano",
+          "Christopher Hesse",
+          "John Schulman"
+        ],
         "arxiv_id": "2110.14168",
         "url": "https://arxiv.org/abs/2110.14168",
         "pdf_url": "https://arxiv.org/pdf/2110.14168.pdf",
@@ -251,7 +345,16 @@
       {
         "id": "math_benchmark_2021",
         "title": "Measuring Mathematical Problem Solving With the MATH Dataset",
-        "authors": ["Dan Hendrycks", "Collin Burns", "Saurav Kadavath", "Akul Arora", "Steven Basart", "Eric Tang", "Dawn Song", "Jacob Steinhardt"],
+        "authors": [
+          "Dan Hendrycks",
+          "Collin Burns",
+          "Saurav Kadavath",
+          "Akul Arora",
+          "Steven Basart",
+          "Eric Tang",
+          "Dawn Song",
+          "Jacob Steinhardt"
+        ],
         "arxiv_id": "2103.03874",
         "url": "https://arxiv.org/abs/2103.03874",
         "pdf_url": "https://arxiv.org/pdf/2103.03874.pdf",
@@ -289,7 +392,12 @@
       {
         "id": "cot_decreasing_value_2025",
         "title": "The Decreasing Value of Chain of Thought in Prompting",
-        "authors": ["Lennart Meincke", "Ethan R. Mollick", "Lilach Mollick", "Dan Shapiro"],
+        "authors": [
+          "Lennart Meincke",
+          "Ethan R. Mollick",
+          "Lilach Mollick",
+          "Dan Shapiro"
+        ],
         "arxiv_id": null,
         "url": "https://gail.wharton.upenn.edu/research-and-insights/tech-report-chain-of-thought/",
         "pdf_url": null,

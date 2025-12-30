@@ -45,31 +45,31 @@ source /path/to/reasonkit-core/shell/zsh/functions/rk-widgets.zsh
 
 ## Keybindings
 
-| Keybinding | Function | Description |
-|------------|----------|-------------|
-| `Ctrl+R T` | Quick Think | Fast 2-step analysis |
-| `Ctrl+R D` | Deep Think | Thorough 5-module analysis |
-| `Ctrl+R P` | PowerCombo | Maximum reasoning power |
-| `Alt+R` | Inline Reason | Replace buffer with result |
-| `Ctrl+R E` | Explain Error | Analyze last command failure |
-| `Ctrl+R F` | Profile Selector | fzf picker for profiles |
-| `Ctrl+R V` | Provider Selector | fzf picker for providers |
-| `Ctrl+R H` | History Search | Search previous RK commands |
-| `Ctrl+R B` | Command Builder | Interactive command builder |
+| Keybinding | Function          | Description                  |
+| ---------- | ----------------- | ---------------------------- |
+| `Ctrl+R T` | Quick Think       | Fast 2-step analysis         |
+| `Ctrl+R D` | Deep Think        | Thorough 5-module analysis   |
+| `Ctrl+R P` | PowerCombo        | Maximum reasoning power      |
+| `Alt+R`    | Inline Reason     | Replace buffer with result   |
+| `Ctrl+R E` | Explain Error     | Analyze last command failure |
+| `Ctrl+R F` | Profile Selector  | fzf picker for profiles      |
+| `Ctrl+R V` | Provider Selector | fzf picker for providers     |
+| `Ctrl+R H` | History Search    | Search previous RK commands  |
+| `Ctrl+R B` | Command Builder   | Interactive command builder  |
 
 ## Aliases
 
-| Alias | Command |
-|-------|---------|
-| `rk` | `rk-core` |
-| `rkq` | `rk-core think --profile quick` |
-| `rkb` | `rk-core think --profile balanced` |
-| `rkd` | `rk-core think --profile deep` |
-| `rkp` | `rk-core think --profile paranoid` |
+| Alias  | Command                              |
+| ------ | ------------------------------------ |
+| `rk`   | `rk-core`                            |
+| `rkq`  | `rk-core think --profile quick`      |
+| `rkb`  | `rk-core think --profile balanced`   |
+| `rkd`  | `rk-core think --profile deep`       |
+| `rkp`  | `rk-core think --profile paranoid`   |
 | `rkpc` | `rk-core think --profile powercombo` |
-| `rkw` | `rk-core web` |
-| `rkv` | `rk-core verify` |
-| `rkm` | `rk-core metrics report` |
+| `rkw`  | `rk-core web`                        |
+| `rkv`  | `rk-core verify`                     |
+| `rkm`  | `rk-core metrics report`             |
 
 ## Helper Functions
 

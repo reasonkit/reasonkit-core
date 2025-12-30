@@ -259,13 +259,13 @@ export REASONKIT_PROVIDER="anthropic"  # or openai, openrouter
 
 ## Profile Selection Guide
 
-| Scenario | Profile | Command |
-|----------|---------|---------|
-| Quick brainstorm | `--quick` | `rk-think --quick "idea"` |
-| Daily decisions | `--balanced` | `rk-think "question"` |
-| Research synthesis | `--deep` | `rk-think --deep "topic"` |
-| Security review | `--paranoid` | `rk-think --paranoid "security issue"` |
-| Scientific analysis | `--scientific` | `rk-think --scientific "hypothesis"` |
+| Scenario            | Profile        | Command                                |
+| ------------------- | -------------- | -------------------------------------- |
+| Quick brainstorm    | `--quick`      | `rk-think --quick "idea"`              |
+| Daily decisions     | `--balanced`   | `rk-think "question"`                  |
+| Research synthesis  | `--deep`       | `rk-think --deep "topic"`              |
+| Security review     | `--paranoid`   | `rk-think --paranoid "security issue"` |
+| Scientific analysis | `--scientific` | `rk-think --scientific "hypothesis"`   |
 
 ---
 
@@ -303,5 +303,5 @@ rk-think --mock "Test query"
 
 ---
 
-*ReasonKit CLI Workflow Examples | Apache 2.0*
+_ReasonKit CLI Workflow Examples | Apache 2.0_
 *https://reasonkit.sh*

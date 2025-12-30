@@ -215,6 +215,7 @@ rk-core think [QUERY] [OPTIONS]
 #### Options
 
 **Protocol Selection:**
+
 - `-p, --protocol <NAME>` - Execute specific protocol
   - `gigathink` (gt) - Expansive creative thinking
   - `laserlogic` (ll) - Precision deductive reasoning
@@ -229,6 +230,7 @@ rk-core think [QUERY] [OPTIONS]
   - `paranoid` - Maximum verification (95% confidence)
 
 **LLM Configuration:**
+
 - `--provider <PROVIDER>` - LLM provider [default: anthropic]
   - `anthropic` - Anthropic Claude
   - `openai` - OpenAI GPT
@@ -244,16 +246,19 @@ rk-core think [QUERY] [OPTIONS]
 - `--max-tokens <N>` - Maximum tokens [default: 2000]
 
 **Budget Control:**
+
 - `-b, --budget <BUDGET>` - Compute budget
   - Time: `30s`, `5m`, `1h`
   - Tokens: `1000t`, `5000tokens`
   - Cost: `$0.50`, `$1.00`
 
 **Tracing:**
+
 - `--save-trace` - Save execution trace
 - `--trace-dir <DIR>` - Trace output directory [default: ./traces]
 
 **Other:**
+
 - `--mock` - Use mock LLM (for testing)
 - `--list` - List available protocols and profiles
 
@@ -598,12 +603,14 @@ Press Ctrl+C to stop
 #### API Endpoints
 
 **Health Check**
+
 ```bash
 curl http://localhost:8080/health
 # {"status": "ok", "version": "0.1.0"}
 ```
 
 **Query**
+
 ```bash
 curl -X POST http://localhost:8080/query \
   -H "Content-Type: application/json" \
@@ -611,6 +618,7 @@ curl -X POST http://localhost:8080/query \
 ```
 
 **Think (Protocol Execution)**
+
 ```bash
 curl -X POST http://localhost:8080/think \
   -H "Content-Type: application/json" \
@@ -776,15 +784,15 @@ rk-core serve --host 127.0.0.1 --port 8080
 
 ## Exit Codes
 
-| Code | Meaning |
-|------|---------|
-| 0 | Success |
-| 1 | General error |
-| 2 | Configuration error |
-| 3 | Storage/database error |
-| 4 | Embedding error (API failure) |
-| 5 | LLM error (protocol execution) |
-| 6 | Not found (document/index) |
+| Code | Meaning                        |
+| ---- | ------------------------------ |
+| 0    | Success                        |
+| 1    | General error                  |
+| 2    | Configuration error            |
+| 3    | Storage/database error         |
+| 4    | Embedding error (API failure)  |
+| 5    | LLM error (protocol execution) |
+| 6    | Not found (document/index)     |
 
 ---
 

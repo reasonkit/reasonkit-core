@@ -16,13 +16,13 @@ ReasonKit provides structured reasoning through composable cognitive modules cal
 
 We evaluated several architectural patterns:
 
-| Pattern | Pros | Cons |
-|---------|------|------|
-| **Monolithic Engine** | Simple implementation, optimized data flow | Hard to extend, all-or-nothing, difficult testing |
-| **Plugin System (dynamic loading)** | Maximum flexibility, runtime extension | Complex, security concerns, version compatibility |
-| **Trait-Based Modules** | Compile-time safety, clear interfaces, testable | Requires recompilation for new modules |
-| **Actor Model** | Excellent concurrency, isolation | Overhead for simple cases, complex debugging |
-| **Pipeline Pattern** | Clear data flow, easy visualization | Less flexible branching, linear only |
+| Pattern                             | Pros                                            | Cons                                              |
+| ----------------------------------- | ----------------------------------------------- | ------------------------------------------------- |
+| **Monolithic Engine**               | Simple implementation, optimized data flow      | Hard to extend, all-or-nothing, difficult testing |
+| **Plugin System (dynamic loading)** | Maximum flexibility, runtime extension          | Complex, security concerns, version compatibility |
+| **Trait-Based Modules**             | Compile-time safety, clear interfaces, testable | Requires recompilation for new modules            |
+| **Actor Model**                     | Excellent concurrency, isolation                | Overhead for simple cases, complex debugging      |
+| **Pipeline Pattern**                | Clear data flow, easy visualization             | Less flexible branching, linear only              |
 
 ### Core Requirements
 
@@ -117,23 +117,23 @@ impl ModuleRegistry {
 
 ### Built-in Modules (OSS - reasonkit-core)
 
-| Module | ID | Purpose |
-|--------|-----|---------|
-| GigaThink | `gt` | Expansive creative thinking, 10+ perspectives |
-| LaserLogic | `ll` | Precision deductive reasoning, fallacy detection |
-| BedRock | `br` | First principles decomposition, axiom rebuilding |
-| ProofGuard | `pg` | Multi-source verification, contradiction detection |
-| BrutalHonesty | `bh` | Adversarial self-critique, flaw detection |
+| Module        | ID   | Purpose                                            |
+| ------------- | ---- | -------------------------------------------------- |
+| GigaThink     | `gt` | Expansive creative thinking, 10+ perspectives      |
+| LaserLogic    | `ll` | Precision deductive reasoning, fallacy detection   |
+| BedRock       | `br` | First principles decomposition, axiom rebuilding   |
+| ProofGuard    | `pg` | Multi-source verification, contradiction detection |
+| BrutalHonesty | `bh` | Adversarial self-critique, flaw detection          |
 
 ### Advanced Modules (reasonkit-pro)
 
-| Module | ID | Purpose |
-|--------|-----|---------|
-| AtomicBreak | `ab` | Point-by-point decomposition |
-| HighReflect | `hr` | Meta-cognition, bias detection |
-| RiskRadar | `rr` | Threat identification, probability estimation |
-| DeciDomatic | `dm` | Multi-criteria analysis |
-| SciEngine | `se` | Scientific method automation |
+| Module      | ID   | Purpose                                       |
+| ----------- | ---- | --------------------------------------------- |
+| AtomicBreak | `ab` | Point-by-point decomposition                  |
+| HighReflect | `hr` | Meta-cognition, bias detection                |
+| RiskRadar   | `rr` | Threat identification, probability estimation |
+| DeciDomatic | `dm` | Multi-criteria analysis                       |
+| SciEngine   | `se` | Scientific method automation                  |
 
 ## Consequences
 
@@ -156,12 +156,12 @@ impl ModuleRegistry {
 
 ### Mitigations
 
-| Negative | Mitigation |
-|----------|------------|
-| Recompilation | Feature flags for optional modules; WASM plugin support planned |
-| Rust knowledge | Thorough documentation; example module template |
-| Binary size | LTO optimization; optional features for advanced modules |
-| Versioning | Semantic versioning; deprecation warnings; migration guides |
+| Negative       | Mitigation                                                      |
+| -------------- | --------------------------------------------------------------- |
+| Recompilation  | Feature flags for optional modules; WASM plugin support planned |
+| Rust knowledge | Thorough documentation; example module template                 |
+| Binary size    | LTO optimization; optional features for advanced modules        |
+| Versioning     | Semantic versioning; deprecation warnings; migration guides     |
 
 ### Extension Points
 

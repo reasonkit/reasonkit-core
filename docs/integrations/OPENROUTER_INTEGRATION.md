@@ -401,16 +401,16 @@ for model, result in results.items():
 
 ### Per-Query Cost by Model
 
-| Model | Context | Cost/1M in | Cost/1M out | Balanced Query |
-|-------|---------|------------|-------------|----------------|
-| claude-opus-4 | 200K | $15.00 | $75.00 | $0.90 |
-| claude-sonnet-4 | 200K | $3.00 | $15.00 | $0.09 |
-| gpt-4o | 128K | $2.50 | $10.00 | $0.063 |
-| gpt-4o-mini | 128K | $0.15 | $0.60 | $0.004 |
-| gemini-2.0-flash | 1M | $0.075 | $0.30 | $0.002 |
-| gemini-1.5-pro | 2M | $1.25 | $5.00 | $0.031 |
-| llama-3.3-70b:free | 128K | FREE | FREE | FREE |
-| deepseek-r1 | 128K | $0.55 | $2.19 | $0.014 |
+| Model              | Context | Cost/1M in | Cost/1M out | Balanced Query |
+| ------------------ | ------- | ---------- | ----------- | -------------- |
+| claude-opus-4      | 200K    | $15.00     | $75.00      | $0.90          |
+| claude-sonnet-4    | 200K    | $3.00      | $15.00      | $0.09          |
+| gpt-4o             | 128K    | $2.50      | $10.00      | $0.063         |
+| gpt-4o-mini        | 128K    | $0.15      | $0.60       | $0.004         |
+| gemini-2.0-flash   | 1M      | $0.075     | $0.30       | $0.002         |
+| gemini-1.5-pro     | 2M      | $1.25      | $5.00       | $0.031         |
+| llama-3.3-70b:free | 128K    | FREE       | FREE        | FREE           |
+| deepseek-r1        | 128K    | $0.55      | $2.19       | $0.014         |
 
 ### Cost Optimization Strategies
 
@@ -638,17 +638,18 @@ rk-core consensus "Is this architecture sound?" \
 
 ## OpenRouter vs Direct Provider Access
 
-| Feature | OpenRouter | Direct Access |
-|---------|------------|---------------|
-| Model variety | 300+ models | Single provider |
-| Single API key | Yes | Multiple keys needed |
-| Fallback routing | Built-in | Manual implementation |
-| Cost tracking | Unified dashboard | Per-provider |
-| Latency | +10-50ms overhead | Direct |
-| Free models | Available | Provider-specific |
-| Pricing | Pass-through | Direct pricing |
+| Feature          | OpenRouter        | Direct Access         |
+| ---------------- | ----------------- | --------------------- |
+| Model variety    | 300+ models       | Single provider       |
+| Single API key   | Yes               | Multiple keys needed  |
+| Fallback routing | Built-in          | Manual implementation |
+| Cost tracking    | Unified dashboard | Per-provider          |
+| Latency          | +10-50ms overhead | Direct                |
+| Free models      | Available         | Provider-specific     |
+| Pricing          | Pass-through      | Direct pricing        |
 
 **When to use OpenRouter:**
+
 - Need access to multiple providers
 - Want fallback/routing capabilities
 - Unified billing preferred
@@ -656,6 +657,7 @@ rk-core consensus "Is this architecture sound?" \
 - Cost optimization needed
 
 **When to use direct access:**
+
 - Maximum performance needed
 - Single provider sufficient
 - Enterprise contracts in place
@@ -674,5 +676,5 @@ rk-core consensus "Is this architecture sound?" \
 
 ---
 
-*ReasonKit + OpenRouter Integration Guide | v1.0.0 | Apache 2.0*
-*"See How Your AI Thinks - With Any Model"*
+_ReasonKit + OpenRouter Integration Guide | v1.0.0 | Apache 2.0_
+_"See How Your AI Thinks - With Any Model"_

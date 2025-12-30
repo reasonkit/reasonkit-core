@@ -13,7 +13,7 @@
 
 ### **Turn Prompts into Protocols**
 
-> *"Designed, Not Dreamed."* — Structure beats intelligence. Engineering over hope.
+> _"Designed, Not Dreamed."_ — Structure beats intelligence. Engineering over hope.
 
 **Industrial-Grade Reasoning Infrastructure | Rust-Native | Zero-Trust Logic**
 
@@ -35,11 +35,11 @@
 
 LLMs are fundamentally **probabilistic**. Same prompt → different outputs. This creates three critical failures:
 
-| Failure        | Impact                      | Our Solution                                          |
-| -------------- | --------------------------- | ----------------------------------------------------- |
-| **Inconsistency** | Unreliable for production   | Deterministic protocol execution                      |
-| **Hallucination** | Dangerous falsehoods        | Multi-source triangulation + adversarial critique     |
-| **Opacity**     | No audit trail              | Complete execution tracing with confidence scores      |
+| Failure           | Impact                    | Our Solution                                      |
+| ----------------- | ------------------------- | ------------------------------------------------- |
+| **Inconsistency** | Unreliable for production | Deterministic protocol execution                  |
+| **Hallucination** | Dangerous falsehoods      | Multi-source triangulation + adversarial critique |
+| **Opacity**       | No audit trail            | Complete execution tracing with confidence scores |
 
 **We don't eliminate probability** (impossible). **We constrain it** through structured protocols that force probabilistic outputs into deterministic execution paths.
 
@@ -70,13 +70,13 @@ rk-core think --profile balanced "Should we migrate to microservices?"
 
 Each ThinkTool acts as a **variance reduction filter**, transforming probabilistic outputs into increasingly deterministic reasoning paths.
 
-| ThinkTool       | Operation                              | Variance Reduction                        |
-| --------------- | -------------------------------------- | ---------------------------------------- |
-| **GigaThink** 💡 | `Diverge()` - 10+ perspectives        | Exploit probability to explore widely     |
-| **LaserLogic** ⚡ | `Converge()` - Logical validation      | Detect fallacies, hidden assumptions     |
-| **BedRock** 🪨 | `Ground()` - First principles         | Rebuild from axioms, identify gaps       |
-| **ProofGuard** 🛡️ | `Verify()` - Multi-source triangulation | Require 3+ sources, flag contradictions |
-| **BrutalHonesty** 🔥 | `Critique()` - Adversarial red team   | Attack your reasoning, find flaws         |
+| ThinkTool            | Operation                               | Variance Reduction                      |
+| -------------------- | --------------------------------------- | --------------------------------------- |
+| **GigaThink** 💡     | `Diverge()` - 10+ perspectives          | Exploit probability to explore widely   |
+| **LaserLogic** ⚡    | `Converge()` - Logical validation       | Detect fallacies, hidden assumptions    |
+| **BedRock** 🪨       | `Ground()` - First principles           | Rebuild from axioms, identify gaps      |
+| **ProofGuard** 🛡️    | `Verify()` - Multi-source triangulation | Require 3+ sources, flag contradictions |
+| **BrutalHonesty** 🔥 | `Critique()` - Adversarial red team     | Attack your reasoning, find flaws       |
 
 **The Chain Effect:**
 
@@ -111,12 +111,12 @@ rk-core think --profile deep "Design A/B test for feature X"
 rk-core think --profile paranoid "Validate cryptographic implementation"
 ```
 
-| Profile     | Chain                        | Confidence | Use Case           |
-| ----------- | ---------------------------- | ---------- | ------------------ |
-| `--quick`   | GigaThink → LaserLogic       | 70%        | Fast sanity checks |
-| `--balanced` | All 5 ThinkTools             | 80%        | Standard decisions |
-| `--deep`    | All 5 + meta-cognition       | 85%        | Complex problems   |
-| `--paranoid` | All 5 + validation pass     | 95%        | Critical decisions |
+| Profile      | Chain                   | Confidence | Use Case           |
+| ------------ | ----------------------- | ---------- | ------------------ |
+| `--quick`    | GigaThink → LaserLogic  | 70%        | Fast sanity checks |
+| `--balanced` | All 5 ThinkTools        | 80%        | Standard decisions |
+| `--deep`     | All 5 + meta-cognition  | 85%        | Complex problems   |
+| `--paranoid` | All 5 + validation pass | 95%        | Critical decisions |
 
 ---
 
@@ -209,20 +209,17 @@ Probabilistic Input → Deterministic Protocol → Auditable Output
 **Three-Layer Architecture:**
 
 1. **Probabilistic LLM** (Unavoidable)
-
    - LLMs generate tokens probabilistically
    - Same prompt → different outputs
    - We **cannot eliminate** this
 
 2. **Deterministic Protocol Engine** (Our Innovation)
-
    - Wraps the probabilistic LLM layer
    - Enforces strict execution paths
    - Validates outputs against schemas
    - State machine ensures consistent flow
 
 3. **ThinkTool Chain** (Variance Reduction)
-
    - Each ThinkTool reduces variance
    - Multi-stage validation catches errors
    - Confidence scoring quantifies uncertainty
@@ -240,13 +237,13 @@ Probabilistic Input → Deterministic Protocol → Auditable Output
 
 **Zero overhead. Type safety. Memory safety. Fearless concurrency.**
 
-| Feature        | Specification        | Impact                              |
-| -------------- | -------------------- | ----------------------------------- |
-| **Zero Overhead** | Rust-native binaries | 10-100x faster than Python          |
-| **Type Safety** | Strict compilation   | Errors caught at build time         |
-| **Memory Safety** | No GC pauses         | Predictable latency (<5ms)          |
-| **Concurrency** | Fearless parallelism | 100+ reasoning chains in parallel   |
-| **Determinism** | No undefined behavior | Auditable execution traces          |
+| Feature           | Specification         | Impact                            |
+| ----------------- | --------------------- | --------------------------------- |
+| **Zero Overhead** | Rust-native binaries  | 10-100x faster than Python        |
+| **Type Safety**   | Strict compilation    | Errors caught at build time       |
+| **Memory Safety** | No GC pauses          | Predictable latency (<5ms)        |
+| **Concurrency**   | Fearless parallelism  | 100+ reasoning chains in parallel |
+| **Determinism**   | No undefined behavior | Auditable execution traces        |
 
 **We don't use Python for core logic.** We don't tolerate interpreter overhead. We don't compromise on performance.
 
@@ -270,6 +267,7 @@ reasonkit-core = { version = "1.0", features = ["memory"] }
 This automatically includes `reasonkit-mem` and re-exports its modules. The RAG engine (with full LLM integration) remains in `reasonkit-core` and uses `reasonkit-mem` for storage/retrieval operations.
 
 **Features:**
+
 - Qdrant vector database (embedded mode)
 - Hybrid search (dense + sparse fusion)
 - RAPTOR hierarchical retrieval
@@ -281,6 +279,7 @@ This automatically includes `reasonkit-mem` and re-exports its modules. The RAG 
 ## 🔧 Installation
 
 **Primary Method (Universal):**
+
 ```bash
 curl -fsSL https://reasonkit.sh/install | bash
 ```
@@ -366,12 +365,12 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for complete guidelines.
 
 **We do claim to constrain it.** Through structured protocols, multi-stage validation, and deterministic execution paths, we transform probabilistic token generation into auditable reasoning chains.
 
-| What We Battle | How We Battle It                                    | What We're Honest About                              |
-| -------------- | --------------------------------------------------- | ---------------------------------------------------- |
-| **Inconsistency** | Deterministic protocol execution                    | LLM outputs still vary, but execution paths don't    |
-| **Hallucination** | Multi-source triangulation, adversarial critique   | Can't eliminate, but can detect and flag            |
-| **Opacity**     | Full execution tracing, confidence scoring          | Transparency doesn't guarantee correctness           |
-| **Uncertainty** | Explicit confidence metrics, variance reduction     | We quantify uncertainty, not eliminate it           |
+| What We Battle    | How We Battle It                                 | What We're Honest About                           |
+| ----------------- | ------------------------------------------------ | ------------------------------------------------- |
+| **Inconsistency** | Deterministic protocol execution                 | LLM outputs still vary, but execution paths don't |
+| **Hallucination** | Multi-source triangulation, adversarial critique | Can't eliminate, but can detect and flag          |
+| **Opacity**       | Full execution tracing, confidence scoring       | Transparency doesn't guarantee correctness        |
+| **Uncertainty**   | Explicit confidence metrics, variance reduction  | We quantify uncertainty, not eliminate it         |
 
 **Industrial Cyberpunk Aesthetic:**
 
@@ -396,7 +395,7 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for complete guidelines.
 
 **ReasonKit** — Turn Prompts into Protocols
 
-*Designed, Not Dreamed*
+_Designed, Not Dreamed_
 
 [Website](https://reasonkit.sh) | [Documentation](https://docs.reasonkit.sh) | [GitHub](https://github.com/reasonkit/reasonkit-core) | [Discord](https://discord.gg/reasonkit)
 

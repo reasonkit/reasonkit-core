@@ -1,4 +1,5 @@
 # RAG PIPELINE ARCHITECTURE DESIGN SPECIFICATION
+
 > ReasonKit Core - 5-Layer Retrieval-Augmented Generation System
 > Version: 1.0.0 | Status: Design Phase
 > Author: ReasonKit Team
@@ -54,23 +55,23 @@ error handling.
 
 ### 2.1 Layer Summary
 
-| Layer | Name | Input | Output | Key Components |
-|-------|------|-------|--------|----------------|
-| **1** | Ingestion | Raw files | Parsed documents | PDF, MD, HTML parsers |
-| **2** | Processing | Documents | Chunks + metadata | Chunking, cleaning, extraction |
-| **3** | Embedding | Chunks | Vectors | OpenAI, local ONNX models |
-| **4** | Indexing | Vectors + text | Searchable indexes | HNSW, BM25, RAPTOR tree |
-| **5** | Retrieval | Query | Ranked results | Hybrid search, reranking |
+| Layer | Name       | Input          | Output             | Key Components                 |
+| ----- | ---------- | -------------- | ------------------ | ------------------------------ |
+| **1** | Ingestion  | Raw files      | Parsed documents   | PDF, MD, HTML parsers          |
+| **2** | Processing | Documents      | Chunks + metadata  | Chunking, cleaning, extraction |
+| **3** | Embedding  | Chunks         | Vectors            | OpenAI, local ONNX models      |
+| **4** | Indexing   | Vectors + text | Searchable indexes | HNSW, BM25, RAPTOR tree        |
+| **5** | Retrieval  | Query          | Ranked results     | Hybrid search, reranking       |
 
 ### 2.2 Design Principles
 
-| Principle | Implementation |
-|-----------|----------------|
-| **Modularity** | Each layer is independently testable and replaceable |
-| **Async-first** | All I/O operations use async/await |
-| **Streaming** | Large documents processed as streams, not loaded into memory |
-| **Fail-fast** | Errors propagate immediately with full context |
-| **Observability** | Tracing spans for every operation |
+| Principle         | Implementation                                               |
+| ----------------- | ------------------------------------------------------------ |
+| **Modularity**    | Each layer is independently testable and replaceable         |
+| **Async-first**   | All I/O operations use async/await                           |
+| **Streaming**     | Large documents processed as streams, not loaded into memory |
+| **Fail-fast**     | Errors propagate immediately with full context               |
+| **Observability** | Tracing spans for every operation                            |
 
 ---
 
@@ -238,14 +239,14 @@ impl Default for IngestOptions {
 
 ### 3.3 Implementation Requirements
 
-| Requirement | Details |
-|-------------|---------|
-| PDF Parsing | Use `lopdf` for text extraction; handle OCR fallback |
-| Markdown | Use `pulldown-cmark` with GFM extensions |
-| HTML | Use `scraper` for DOM parsing; extract main content |
-| Deduplication | SHA-256 content hash to prevent duplicates |
-| Streaming | Process files > 10MB as streams |
-| Error Recovery | Continue on individual file errors |
+| Requirement    | Details                                              |
+| -------------- | ---------------------------------------------------- |
+| PDF Parsing    | Use `lopdf` for text extraction; handle OCR fallback |
+| Markdown       | Use `pulldown-cmark` with GFM extensions             |
+| HTML           | Use `scraper` for DOM parsing; extract main content  |
+| Deduplication  | SHA-256 content hash to prevent duplicates           |
+| Streaming      | Process files > 10MB as streams                      |
+| Error Recovery | Continue on individual file errors                   |
 
 ---
 
@@ -646,12 +647,12 @@ impl EmbeddingService {
 
 ### 5.3 Embedding Models Comparison
 
-| Model | Provider | Dimensions | Max Tokens | Cost/1M | Use Case |
-|-------|----------|------------|------------|---------|----------|
-| text-embedding-3-small | OpenAI | 1536 | 8191 | $0.02 | General purpose |
-| text-embedding-3-large | OpenAI | 3072 | 8191 | $0.13 | High accuracy |
-| BGE-M3 | Local | 1024 | 8192 | Free | Self-hosted |
-| Qwen3-Embed-8B | Local | 4096 | 32768 | Free | Long context |
+| Model                  | Provider | Dimensions | Max Tokens | Cost/1M | Use Case        |
+| ---------------------- | -------- | ---------- | ---------- | ------- | --------------- |
+| text-embedding-3-small | OpenAI   | 1536       | 8191       | $0.02   | General purpose |
+| text-embedding-3-large | OpenAI   | 3072       | 8191       | $0.13   | High accuracy   |
+| BGE-M3                 | Local    | 1024       | 8192       | Free    | Self-hosted     |
+| Qwen3-Embed-8B         | Local    | 4096       | 32768      | Free    | Long context    |
 
 ---
 
@@ -1211,25 +1212,25 @@ pub fn rrf_fusion(
 
 ### 8.2 Performance Targets
 
-| Operation | Target Latency | Target Throughput |
-|-----------|---------------|-------------------|
-| Ingestion (per doc) | < 500ms | 100 docs/min |
-| Chunking | < 10ms | 1000 chunks/sec |
-| Embedding (batch) | < 1s | 32 chunks/batch |
-| Vector search | < 50ms | P99 |
-| BM25 search | < 20ms | P99 |
-| Hybrid retrieval | < 100ms | P99 |
-| With reranking | < 300ms | P99 |
+| Operation           | Target Latency | Target Throughput |
+| ------------------- | -------------- | ----------------- |
+| Ingestion (per doc) | < 500ms        | 100 docs/min      |
+| Chunking            | < 10ms         | 1000 chunks/sec   |
+| Embedding (batch)   | < 1s           | 32 chunks/batch   |
+| Vector search       | < 50ms         | P99               |
+| BM25 search         | < 20ms         | P99               |
+| Hybrid retrieval    | < 100ms        | P99               |
+| With reranking      | < 300ms        | P99               |
 
 ---
 
 ## 9. VERSION HISTORY
 
-| Version | Date | Changes |
-|---------|------|---------|
-| 1.0.0 | 2025-12-11 | Initial architecture specification |
+| Version | Date       | Changes                            |
+| ------- | ---------- | ---------------------------------- |
+| 1.0.0   | 2025-12-11 | Initial architecture specification |
 
 ---
 
-*"The best RAG system is the one you can debug."*
-*- ReasonKit Engineering*
+_"The best RAG system is the one you can debug."_
+_- ReasonKit Engineering_

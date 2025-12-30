@@ -12,6 +12,7 @@
 This document provides comprehensive best practices for implementing Model Context Protocol (MCP) servers in Rust, specifically tailored for exposing ReasonKit's RAG and reasoning capabilities. Based on the latest MCP specification (2025-11-25), industry patterns, and consultation with AI reasoning systems, these recommendations prioritize **performance, security, developer experience, and composability**.
 
 **Key Findings:**
+
 - **Tool Design**: Hybrid approach combining coarse-grained session tools with fine-grained atomic tools
 - **Transport**: stdio for Claude Desktop, HTTP/SSE for distributed deployments
 - **Performance**: Lazy initialization + Moka caching can achieve <1ms P99 latency
@@ -33,17 +34,20 @@ The Model Context Protocol is built on **JSON-RPC 2.0** and provides three core 
 3. **Prompts**: Reusable prompt templates
 
 **Key 2025 Updates:**
+
 - Tool calling in sampling requests (server-side agent loops)
 - Parallel tool execution support
 - Task abstraction for work tracking
 - Improved capability declarations (deprecation of ambiguous `includeContext`)
 
 **Transport Options:**
+
 - **stdio**: JSON-RPC over standard input/output (primary for local servers)
 - **HTTP with SSE**: Server-Sent Events for server-to-client messages, HTTP POST for client-to-server
 - **WebSocket**: (Future consideration)
 
 **Protocol Flow:**
+
 ```
 Client                          Server
   |                               |
@@ -63,6 +67,7 @@ Client                          Server
 ```
 
 **References:**
+
 - [MCP Specification 2025-11-25](https://modelcontextprotocol.io/specification/2025-11-25)
 - [One Year of MCP Blog Post](https://blog.modelcontextprotocol.io/posts/2025-11-25-first-mcp-anniversary/)
 - [MCP GitHub Repository](https://github.com/modelcontextprotocol/modelcontextprotocol)
@@ -72,16 +77,19 @@ Client                          Server
 **Repository**: [modelcontextprotocol/rust-sdk](https://github.com/modelcontextprotocol/rust-sdk)
 
 **Core Crates:**
+
 - `rmcp`: Core protocol implementation
 - `rmcp-macros`: Procedural macros for tool generation
 
 **Key Features:**
+
 - Tokio async runtime
 - Type-safe tool definitions via `#[tool_router]` and `#[tool]` macros
 - Automatic JSON Schema generation
 - Built-in protocol compliance
 
 **Basic Server Structure:**
+
 ```rust
 use rmcp::*;
 
@@ -100,6 +108,7 @@ impl MyServer {
 ```
 
 **References:**
+
 - [Rust MCP SDK GitHub](https://github.com/modelcontextprotocol/rust-sdk)
 - [Building MCP Servers in Rust - MCPcat](https://mcpcat.io/guides/building-mcp-server-rust/)
 - [Shuttle Rust MCP Tutorial](https://www.shuttle.dev/blog/2025/07/18/how-to-build-a-stdio-mcp-server-in-rust)
@@ -128,6 +137,7 @@ High-Level (Workflow Tools)        Low-Level (Atomic Tools)
 ```
 
 **Rationale:**
+
 1. **Workflow tools** (e.g., `profile/balanced`) handle complete reasoning chains in one call
    - Reduces LLM decision points (no multi-turn orchestration)
    - Minimizes token overhead (single description vs. 5 tool descriptions)
@@ -139,6 +149,7 @@ High-Level (Workflow Tools)        Low-Level (Atomic Tools)
    - Better for research/development workflows
 
 **Implementation Example:**
+
 ```rust
 pub enum ReasoningTool {
     // Workflow tools
@@ -161,6 +172,7 @@ pub enum ReasoningTool {
 ```
 
 **Tool Schema Design:**
+
 ```json
 {
   "name": "profile/balanced",
@@ -168,9 +180,18 @@ pub enum ReasoningTool {
   "inputSchema": {
     "type": "object",
     "properties": {
-      "query": { "type": "string", "description": "Question or problem to analyze" },
-      "context": { "type": "string", "description": "Optional background context" },
-      "session_id": { "type": "string", "description": "Optional session ID for stateful execution" }
+      "query": {
+        "type": "string",
+        "description": "Question or problem to analyze"
+      },
+      "context": {
+        "type": "string",
+        "description": "Optional background context"
+      },
+      "session_id": {
+        "type": "string",
+        "description": "Optional session ID for stateful execution"
+      }
     },
     "required": ["query"]
   }
@@ -178,6 +199,7 @@ pub enum ReasoningTool {
 ```
 
 **References:**
+
 - [Less is More: 4 MCP Design Patterns](https://www.klavis.ai/blog/less-is-more-mcp-design-patterns-for-ai-agents)
 - [MCP Tool Design Best Practices](https://dev.to/klavisai/less-is-more-4-design-patterns-for-building-better-mcp-servers-3gpf)
 
@@ -243,12 +265,14 @@ impl SessionStore {
 ```
 
 **Advantages:**
+
 - Server owns state (no client-side session management complexity)
 - Efficient for multi-step reasoning chains
 - Supports resumption after failures
 - Auditability: full trace persisted server-side
 
 **Disadvantages:**
+
 - Requires sticky sessions (can complicate load balancing)
 - Memory overhead for active sessions
 - Cleanup complexity (TTL-based expiration)
@@ -293,16 +317,19 @@ pub struct ToolInput {
 ```
 
 **Advantages:**
+
 - Stateless server (easier horizontal scaling)
 - Cross-session composition (reference outputs from different sessions)
 - RESTful architecture (familiar to developers)
 
 **Disadvantages:**
+
 - Client manages URI resolution
 - More network overhead (resource fetches before tool calls)
 - Complexity in URI schema design
 
 **Recommendation for ReasonKit**: **Use Session-Based (Pattern 1)** for initial implementation
+
 - Aligns with existing `ExecutionTrace` and `ProfileRegistry`
 - Simpler client integration (just pass session ID)
 - Can migrate to Resource-Based later if distributed deployment needed
@@ -346,6 +373,7 @@ pub struct BranchCondition {
 ```
 
 **Example Protocol Definition (JSON):**
+
 ```json
 {
   "id": "custom_verification",
@@ -381,6 +409,7 @@ pub struct BranchCondition {
 ```
 
 **MCP Tool Exposure:**
+
 ```rust
 Tool {
     name: "protocol/define".to_string(),
@@ -396,12 +425,14 @@ Tool {
 ```
 
 **Benefits:**
+
 - LLM can create custom reasoning chains on-the-fly
 - Protocols are first-class entities (can be saved, versioned, shared)
 - Supports conditional branching (skip steps if confidence high)
 - Enables protocol nesting (protocols reference other protocols)
 
 **Implementation Consideration:**
+
 ```rust
 // Add to ExecutionTrace
 pub struct ExecutionTrace {
@@ -424,6 +455,7 @@ pub struct ExecutionTrace {
 **Solution: Multi-Layer Caching with Moka**
 
 **Dependency:**
+
 ```toml
 [dependencies]
 moka = { version = "0.12", features = ["future"] }
@@ -532,6 +564,7 @@ impl ProtocolCache {
 ```
 
 **Cache Invalidation Strategy:**
+
 ```rust
 pub enum CacheInvalidation {
     Time(Duration),           // TTL-based (default)
@@ -547,11 +580,13 @@ pub async fn on_document_updated(&self, doc_id: &str) {
 ```
 
 **Performance Target:**
+
 - Cache hit: < 1ms
 - Cache miss (embedding generation): < 50ms (local model) or < 200ms (API call)
 - Full reasoning chain: < 5000ms
 
 **Monitoring:**
+
 ```rust
 pub struct CacheMetrics {
     pub hits: AtomicU64,
@@ -571,6 +606,7 @@ impl EmbeddingCache {
 ```
 
 **References:**
+
 - [Moka High-Performance Cache](https://github.com/moka-rs/moka)
 - [MCP Caching Best Practices](https://gist.github.com/eonist/16f74dea1e0110cee3ef6caff2a5856c)
 - [Advanced MCP Performance Techniques](https://superagi.com/top-10-advanced-techniques-for-optimizing-mcp-server-performance-in-2025/)
@@ -615,20 +651,24 @@ impl ReasoningServer {
 ```
 
 **Initialization Order:**
+
 1. **Server startup**: Minimal (bind transport, register tools) - target <100ms
 2. **First tool call**: Load embedding model, connect to Qdrant - one-time cost
 3. **Subsequent calls**: Use cached connections/models - fast path
 
 **Benefits:**
+
 - Faster server startup (important for Claude Desktop integration)
 - Resources only loaded if actually used
 - Memory efficiency (don't load unused models)
 
 **Trade-off:**
+
 - First request has higher latency (acceptable for reasoning tasks)
 - Need proper error handling (can't panic in lazy init)
 
 **Error Handling Pattern:**
+
 ```rust
 pub async fn embed_query(&self, text: &str) -> Result<Vec<f32>> {
     let model = self.embedding_model.get_or_try_init(|| async {
@@ -642,6 +682,7 @@ pub async fn embed_query(&self, text: &str) -> Result<Vec<f32>> {
 ```
 
 **References:**
+
 - [Rust Lazy Initialization Guide](https://blog.logrocket.com/how-use-lazy-initialization-pattern-rust-1-80/)
 - [Lazy Static Best Practices](https://www.somethingsblog.com/2024/11/02/mastering-lazy-static-in-rust-a-guide-to-thread-safe-global-variables-and-shared-constant-data/)
 
@@ -657,6 +698,7 @@ bb8 = "0.8"
 ```
 
 **Qdrant Connection Pool:**
+
 ```rust
 use bb8::Pool;
 use std::sync::Arc;
@@ -688,6 +730,7 @@ impl QdrantPool {
 ```
 
 **LLM API Connection Pool:**
+
 ```rust
 pub struct LlmClientPool {
     pool: Pool<HttpClientManager>,
@@ -712,6 +755,7 @@ impl LlmClientPool {
 ```
 
 **Integration with MCP Server:**
+
 ```rust
 pub struct ReasoningServer {
     qdrant_pool: Arc<QdrantPool>,
@@ -739,11 +783,13 @@ impl McpServerTrait for ReasoningServer {
 ```
 
 **Pool Sizing Guidelines:**
+
 - **Qdrant**: 5-10 connections (I/O bound, keep low to avoid overwhelming Qdrant)
 - **LLM APIs**: 3-5 connections (rate-limited by provider, respect limits)
 - **Local models**: 1-2 connections (CPU/GPU bound, more connections don't help)
 
 **Monitoring:**
+
 ```rust
 pub struct PoolMetrics {
     pub active_connections: usize,
@@ -790,6 +836,7 @@ impl Default for TimeoutConfig {
 ```
 
 **Implementation with `tokio::time::timeout`:**
+
 ```rust
 pub async fn search_with_timeout(&self, query: SearchQuery) -> Result<Vec<ScoredDocument>> {
     tokio::time::timeout(
@@ -811,6 +858,7 @@ pub async fn generate_with_timeout(&self, prompt: &str) -> Result<String> {
 ```
 
 **Graceful Degradation:**
+
 ```rust
 pub async fn search_with_fallback(&self, query: SearchQuery) -> Result<Vec<ScoredDocument>> {
     // Try vector search first
@@ -829,6 +877,7 @@ pub async fn search_with_fallback(&self, query: SearchQuery) -> Result<Vec<Score
 ```
 
 **References:**
+
 - [Rust Async Timeout Patterns](https://tokio.rs/tokio/topics/time)
 
 ---
@@ -838,6 +887,7 @@ pub async fn search_with_fallback(&self, query: SearchQuery) -> Result<Vec<Score
 ### 4.1 Input Sanitization
 
 **Threat Model:**
+
 - **Command Injection**: Malicious input escapes to shell commands
 - **Path Traversal**: User-controlled file paths access unauthorized files
 - **SQL Injection**: Unsanitized input in database queries
@@ -996,6 +1046,7 @@ pub async fn call_tool(&self, name: &str, args: Value) -> Result<ToolResult> {
 ```
 
 **References:**
+
 - [MCP Security Best Practices](https://modelcontextprotocol.io/specification/draft/basic/security_best_practices)
 - [Input Validation Guide - Writer](https://writer.com/engineering/mcp-security-considerations/)
 - [Red Hat MCP Security Controls](https://www.redhat.com/en/blog/model-context-protocol-mcp-understanding-security-risks-and-controls)
@@ -1114,10 +1165,10 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '2.0'
+          cpus: "2.0"
           memory: 4G
         reservations:
-          cpus: '1.0'
+          cpus: "1.0"
           memory: 2G
     security_opt:
       - no-new-privileges:true
@@ -1128,6 +1179,7 @@ services:
 ```
 
 **References:**
+
 - [MCP Resource Limits - Datadog](https://www.datadoghq.com/blog/monitor-mcp-servers/)
 - [Container Security Best Practices](https://protocolguard.com/resources/mcp-server-hardening/)
 
@@ -1224,15 +1276,17 @@ services:
 networks:
   internal:
     driver: bridge
-    internal: true  # No external access
+    internal: true # No external access
 ```
 
 **Recommendations for ReasonKit:**
+
 1. **Local deployment (Claude Desktop)**: AppArmor profile sufficient
 2. **Cloud deployment**: Full containerization with seccomp + network isolation
 3. **Enterprise**: Add SELinux + regular security audits
 
 **References:**
+
 - [MCP Sandboxing Guide](https://mcpmanager.ai/blog/sandbox-mcp-servers/)
 - [WorkOS MCP Security Best Practices](https://workos.com/blog/mcp-security-risks-best-practices)
 - [OWASP MCP Security Recommendations](https://www.practical-devsecops.com/mcp-security-vulnerabilities/)
@@ -1285,6 +1339,7 @@ impl AuditLogger {
 ```
 
 **Integration with MCP Server:**
+
 ```rust
 impl McpServerTrait for ReasoningServer {
     async fn call_tool(&self, name: &str, args: Value) -> Result<ToolResult> {
@@ -1412,6 +1467,7 @@ tracing::info!("Processing request...");
 ```
 
 **References:**
+
 - [Claude Desktop MCP Integration](https://www.codecademy.com/article/how-to-use-model-context-protocol-mcp-with-claude-step-by-step-guide-with-examples)
 - [MCP Inspector for Debugging](https://modelcontextprotocol.io/legacy/tools/debugging)
 
@@ -1596,6 +1652,7 @@ impl LoadBalancedRegistry {
 ```
 
 **References:**
+
 - [MCP Multi-Server Patterns](https://dev.to/techstuff/part-4-advanced-mcp-patterns-and-tool-chaining-4ll7)
 
 ### 5.4 RAG-Specific Integration Patterns
@@ -1767,6 +1824,7 @@ Tool {
 ```
 
 **References:**
+
 - [True Agentic RAG with MCP](https://medium.com/@adkomyagin/true-agentic-rag-how-i-taught-claude-to-talk-to-my-pdfs-using-model-context-protocol-mcp-9b8671b00de1)
 - [Local RAG with Rust and MCP](https://medium.com/@ksaritek/local-rag-with-rust-and-mcp-private-document-search-for-claude-desktop-6fccb37c024e)
 - [Qdrant MCP Server](https://qdrant.tech/blog/webinar-vibe-coding-rag/)
@@ -1829,6 +1887,7 @@ pub fn gigathink_tool_schema() -> Value {
 ```
 
 **Key Elements for Self-Description:**
+
 1. **Clear purpose**: What does this tool do?
 2. **When to use**: Under what circumstances should LLM call this tool?
 3. **Input constraints**: Min/max lengths, valid ranges
@@ -1885,13 +1944,14 @@ impl Tool {
 ```
 
 **References:**
+
 - [Speakeasy Self-Describing Tools](https://www.speakeasy.com/blog/streamlined-sdk-testing-ai-ready-apis-with-mcp-server-generation)
 
 ### 6.2 Documentation Generation
 
 **Pattern: Auto-Generate Docs from Tool Definitions**
 
-```rust
+````rust
 pub struct DocGenerator;
 
 impl DocGenerator {
@@ -1945,7 +2005,7 @@ impl DocGenerator {
         })
     }
 }
-```
+````
 
 **Auto-Generated Documentation on Server Startup:**
 
@@ -1973,6 +2033,7 @@ impl ReasoningServer {
 ```
 
 **References:**
+
 - [AWS Code Documentation MCP Server](https://awslabs.github.io/mcp/servers/code-doc-gen-mcp-server)
 - [Mintlify MCP Documentation Guide](https://www.mintlify.com/blog/how-to-use-mcp-servers-to-generate-docs)
 
@@ -2152,6 +2213,7 @@ exit $TEST_EXIT
 ```
 
 **References:**
+
 - [MCP Testing Best Practices](https://testomat.io/blog/mcp-server-testing-tools/)
 - [Top MCP Testing Tools 2025](https://testguild.com/top-model-context-protocols-mcp/)
 - [MCP Automated Testing Guide](https://www.byteplus.com/en/topic/541524)
@@ -2316,6 +2378,7 @@ impl ReasoningServer {
 ```
 
 **References:**
+
 - [MCP Debugging Best Practices](https://www.mcpevals.io/blog/debugging-mcp-servers-tips-and-best-practices)
 - [Error Handling in MCP Servers](https://mcpcat.io/guides/error-handling-custom-mcp-servers/)
 - [MCP Error Codes Reference](https://www.mcpevals.io/blog/mcp-error-codes)
@@ -2327,6 +2390,7 @@ impl ReasoningServer {
 ### Phase 1: Core MCP Server (Week 1-2)
 
 **Deliverables:**
+
 1. ✅ Basic MCP server with stdio transport (already exists in `/src/mcp/`)
 2. Expose 5 ThinkTools as atomic tools (gigathink, laserlogic, bedrock, proofguard, brutalhonesty)
 3. Add 3 workflow tools (profile/quick, profile/balanced, profile/paranoid)
@@ -2334,6 +2398,7 @@ impl ReasoningServer {
 5. Claude Desktop integration
 
 **Code Changes:**
+
 ```rust
 // src/mcp/reasonkit_server.rs
 pub struct ReasonKitMcpServer {
@@ -2363,12 +2428,14 @@ impl McpServerTrait for ReasonKitMcpServer {
 ### Phase 2: Session Management (Week 3)
 
 **Deliverables:**
+
 1. Session store with DashMap
 2. Session lifecycle tools (create, step, close)
 3. TTL-based cleanup
 4. Audit logging
 
 **Code Changes:**
+
 ```rust
 // src/mcp/session.rs
 pub struct SessionStore {
@@ -2385,12 +2452,14 @@ Tool::new("session/close", "Close and persist session")
 ### Phase 3: Performance Optimization (Week 4)
 
 **Deliverables:**
+
 1. Embedding cache with Moka
 2. Lazy initialization of models
 3. Connection pooling for Qdrant
 4. Benchmarking suite
 
 **Dependencies to add:**
+
 ```toml
 [dependencies]
 moka = { version = "0.12", features = ["future"] }
@@ -2400,12 +2469,14 @@ bb8 = "0.8"
 ### Phase 4: RAG Integration (Week 5)
 
 **Deliverables:**
+
 1. RAG tools (rag/search, rag/index)
 2. Resources for document access
 3. Hybrid search (vector + BM25)
 4. Reranking support
 
 **Tools:**
+
 ```rust
 Tool::new("rag/search", "Hybrid search over document corpus")
 Tool::new("rag/index", "Index new documents")
@@ -2415,6 +2486,7 @@ Tool::new("rag/rerank", "Rerank search results")
 ### Phase 5: Security Hardening (Week 6)
 
 **Deliverables:**
+
 1. Input sanitization for all tools
 2. Rate limiting
 3. Resource limits
@@ -2424,6 +2496,7 @@ Tool::new("rag/rerank", "Rerank search results")
 ### Phase 6: Testing & Documentation (Week 7)
 
 **Deliverables:**
+
 1. Unit tests (80%+ coverage)
 2. Integration tests
 3. MCP Inspector test suite
@@ -2435,26 +2508,31 @@ Tool::new("rag/rerank", "Rerank search results")
 ## 8. Key Takeaways
 
 ### Tool Design
+
 1. **Hybrid granularity**: Expose both atomic tools and workflow tools
 2. **Session-based state**: Use DashMap for server-side session management
 3. **Self-describing schemas**: Rich JSON Schema with examples and validation
 
 ### Performance
+
 1. **Cache aggressively**: Moka for embeddings (3600s TTL), search results (600s TTL)
 2. **Lazy initialization**: Load models on first request, not server startup
 3. **Connection pooling**: 5-10 Qdrant connections, 3-5 LLM API connections
 
 ### Security
+
 1. **Multi-layer defense**: JSON Schema validation + input sanitization + resource limits + sandboxing
 2. **Audit everything**: Comprehensive logging for compliance
 3. **Fail safely**: Graceful degradation on timeout/failure
 
 ### Developer Experience
+
 1. **Self-describing tools**: Clear descriptions, examples, validation errors
 2. **Auto-generate docs**: Markdown + OpenAPI from tool definitions
 3. **Rich debugging**: Structured errors with trace IDs, suggestions, documentation links
 
 ### Integration
+
 1. **stdio for Claude Desktop**: Critical logging rule (stderr only!)
 2. **Resources for data access**: Expose documents/traces via MCP resources
 3. **Agentic RAG**: Let LLM decide search strategy via multiple tools
@@ -2464,39 +2542,47 @@ Tool::new("rag/rerank", "Rerank search results")
 ## 9. References
 
 ### Official Specifications
+
 - [MCP Specification 2025-11-25](https://modelcontextprotocol.io/specification/2025-11-25)
 - [JSON-RPC 2.0 Specification](https://www.jsonrpc.org/specification)
 
 ### Rust Implementation
+
 - [Official Rust MCP SDK](https://github.com/modelcontextprotocol/rust-sdk)
 - [Building MCP Servers in Rust - MCPcat](https://mcpcat.io/guides/building-mcp-server-rust/)
 - [Shuttle Rust MCP Tutorials](https://www.shuttle.dev/blog/2025/07/18/how-to-build-a-stdio-mcp-server-in-rust)
 
 ### Tool Design
+
 - [Less is More: MCP Design Patterns](https://www.klavis.ai/blog/less-is-more-mcp-design-patterns-for-ai-agents)
 - [MCP Architecture Overview](https://modelcontextprotocol.io/docs/learn/architecture)
 
 ### Performance
+
 - [Moka High-Performance Cache](https://github.com/moka-rs/moka)
 - [MCP Caching Best Practices](https://gist.github.com/eonist/16f74dea1e0110cee3ef6caff2a5856c)
 - [Advanced MCP Performance Techniques](https://superagi.com/top-10-advanced-techniques-for-optimizing-mcp-server-performance-in-2025/)
 
 ### Security
+
 - [MCP Security Best Practices](https://modelcontextprotocol.io/specification/draft/basic/security_best_practices)
 - [Writer MCP Security Guide](https://writer.com/engineering/mcp-security-considerations/)
 - [Red Hat MCP Security Controls](https://www.redhat.com/en/blog/model-context-protocol-mcp-understanding-security-risks-and-controls)
 - [WorkOS MCP Security Best Practices](https://workos.com/blog/mcp-security-risks-best-practices)
 
 ### RAG Integration
+
 - [True Agentic RAG with MCP](https://medium.com/@adkomyagin/true-agentic-rag-how-i-taught-claude-to-talk-to-my-pdfs-using-model-context-protocol-mcp-9b8671b00de1)
 - [Local RAG with Rust and MCP](https://medium.com/@ksaritek/local-rag-with-rust-and-mcp-private-document-search-for-claude-desktop-6fccb37c024e)
 - [Qdrant MCP Server](https://qdrant.tech/blog/webinar-vibe-coding-rag/)
 
 ### Testing
+
 - [MCP Testing Best Practices](https://testomat.io/blog/mcp-server-testing-tools/)
 - [Top MCP Testing Tools 2025](https://testguild.com/top-model-context-protocols-mcp/)
 
 ### Debugging
+
 - [MCP Debugging Best Practices](https://www.mcpevals.io/blog/debugging-mcp-servers-tips-and-best-practices)
 - [Error Handling in MCP Servers](https://mcpcat.io/guides/error-handling-custom-mcp-servers/)
 - [MCP Error Codes Reference](https://www.mcpevals.io/blog/mcp-error-codes)

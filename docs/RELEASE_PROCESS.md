@@ -103,25 +103,25 @@ ReasonKit Core uses a fully automated release pipeline triggered by semantic ver
 
 ReasonKit Core is distributed through multiple channels to maximize accessibility:
 
-| Channel | Package | Command | Primary Use |
-|---------|---------|---------|-------------|
-| **crates.io** | `reasonkit-core` | `cargo install reasonkit-core` | Rust developers |
-| **GitHub Releases** | Binary archives | `curl -fsSL https://reasonkit.sh/install \| bash` | Universal install |
-| **Docker** | `ghcr.io/reasonkit/reasonkit-core` | `docker pull ghcr.io/reasonkit/reasonkit-core` | Containers |
-| **npm** | `@reasonkit/cli` | `npm install -g @reasonkit/cli` | Node.js developers |
-| **PyPI** | `reasonkit` | `pip install reasonkit` | Python developers |
+| Channel             | Package                            | Command                                           | Primary Use        |
+| ------------------- | ---------------------------------- | ------------------------------------------------- | ------------------ |
+| **crates.io**       | `reasonkit-core`                   | `cargo install reasonkit-core`                    | Rust developers    |
+| **GitHub Releases** | Binary archives                    | `curl -fsSL https://reasonkit.sh/install \| bash` | Universal install  |
+| **Docker**          | `ghcr.io/reasonkit/reasonkit-core` | `docker pull ghcr.io/reasonkit/reasonkit-core`    | Containers         |
+| **npm**             | `@reasonkit/cli`                   | `npm install -g @reasonkit/cli`                   | Node.js developers |
+| **PyPI**            | `reasonkit`                        | `pip install reasonkit`                           | Python developers  |
 
 ### Binary Assets Per Release
 
-| Platform | Architecture | Filename | Notes |
-|----------|--------------|----------|-------|
-| Linux | x86_64 | `rk-core-linux-x86_64.tar.gz` | glibc, most Linux distros |
-| Linux | x86_64 (static) | `rk-core-linux-x86_64-musl.tar.gz` | musl, Alpine, minimal containers |
-| Linux | ARM64 | `rk-core-linux-aarch64.tar.gz` | glibc, ARM servers, Raspberry Pi 4+ |
-| Linux | ARM64 (static) | `rk-core-linux-aarch64-musl.tar.gz` | musl, ARM containers |
-| macOS | x86_64 | `rk-core-macos-x86_64.tar.gz` | Intel Macs |
-| macOS | ARM64 | `rk-core-macos-aarch64.tar.gz` | Apple Silicon (M1/M2/M3) |
-| Windows | x86_64 | `rk-core-windows-x86_64.zip` | Windows 10/11 |
+| Platform | Architecture    | Filename                            | Notes                               |
+| -------- | --------------- | ----------------------------------- | ----------------------------------- |
+| Linux    | x86_64          | `rk-core-linux-x86_64.tar.gz`       | glibc, most Linux distros           |
+| Linux    | x86_64 (static) | `rk-core-linux-x86_64-musl.tar.gz`  | musl, Alpine, minimal containers    |
+| Linux    | ARM64           | `rk-core-linux-aarch64.tar.gz`      | glibc, ARM servers, Raspberry Pi 4+ |
+| Linux    | ARM64 (static)  | `rk-core-linux-aarch64-musl.tar.gz` | musl, ARM containers                |
+| macOS    | x86_64          | `rk-core-macos-x86_64.tar.gz`       | Intel Macs                          |
+| macOS    | ARM64           | `rk-core-macos-aarch64.tar.gz`      | Apple Silicon (M1/M2/M3)            |
+| Windows  | x86_64          | `rk-core-windows-x86_64.zip`        | Windows 10/11                       |
 
 Each binary archive includes SHA256 checksums for verification.
 
@@ -148,16 +148,17 @@ Examples:
 
 ### Version Increment Guidelines
 
-| Change Type | Version Bump | Examples |
-|-------------|--------------|----------|
-| Breaking API changes | MAJOR | Remove public function, change return type |
-| New features (backward compatible) | MINOR | Add new ThinkTool, add CLI flag |
-| Bug fixes | PATCH | Fix crash, correct output format |
-| Pre-release | Append suffix | `-alpha.1`, `-beta.2`, `-rc.1` |
+| Change Type                        | Version Bump  | Examples                                   |
+| ---------------------------------- | ------------- | ------------------------------------------ |
+| Breaking API changes               | MAJOR         | Remove public function, change return type |
+| New features (backward compatible) | MINOR         | Add new ThinkTool, add CLI flag            |
+| Bug fixes                          | PATCH         | Fix crash, correct output format           |
+| Pre-release                        | Append suffix | `-alpha.1`, `-beta.2`, `-rc.1`             |
 
 ### Pre-release Behavior
 
 Pre-release versions (containing `-` suffix):
+
 - Marked as "Pre-release" on GitHub
 - NOT published to crates.io
 - NOT tagged as `latest` in Docker
@@ -378,17 +379,18 @@ For testing or special cases:
 
 Matrix builds run in parallel:
 
-| Target | OS | Runner | Cross? |
-|--------|-----|--------|--------|
-| x86_64-unknown-linux-gnu | Linux glibc | ubuntu-22.04 | No |
-| x86_64-unknown-linux-musl | Linux musl | ubuntu-22.04 | No |
-| aarch64-unknown-linux-gnu | Linux ARM64 | ubuntu-22.04 | Yes (cross) |
-| aarch64-unknown-linux-musl | Linux ARM64 musl | ubuntu-22.04 | Yes (cross) |
-| x86_64-apple-darwin | macOS Intel | macos-13 | No |
-| aarch64-apple-darwin | macOS ARM | macos-14 | No |
-| x86_64-pc-windows-msvc | Windows | windows-latest | No |
+| Target                     | OS               | Runner         | Cross?      |
+| -------------------------- | ---------------- | -------------- | ----------- |
+| x86_64-unknown-linux-gnu   | Linux glibc      | ubuntu-22.04   | No          |
+| x86_64-unknown-linux-musl  | Linux musl       | ubuntu-22.04   | No          |
+| aarch64-unknown-linux-gnu  | Linux ARM64      | ubuntu-22.04   | Yes (cross) |
+| aarch64-unknown-linux-musl | Linux ARM64 musl | ubuntu-22.04   | Yes (cross) |
+| x86_64-apple-darwin        | macOS Intel      | macos-13       | No          |
+| aarch64-apple-darwin       | macOS ARM        | macos-14       | No          |
+| x86_64-pc-windows-msvc     | Windows          | windows-latest | No          |
 
 Each binary is:
+
 1. Built with `--release --locked`
 2. Stripped of debug symbols
 3. Packaged as `.tar.gz` (Unix) or `.zip` (Windows)
@@ -408,6 +410,7 @@ Each binary is:
 **Purpose:** Create release with all assets
 
 Uploads:
+
 - All binary archives
 - All SHA256 checksums
 - Combined SHA256SUMS.txt
@@ -561,6 +564,7 @@ Error: Version mismatch! Tag=v0.2.0, Cargo.toml=v0.1.0
 ```
 
 **Solution:** Update Cargo.toml version before tagging:
+
 ```bash
 # Edit Cargo.toml
 git add Cargo.toml Cargo.lock
@@ -575,6 +579,7 @@ Error: failed to run custom build command for `ring`
 ```
 
 **Solution:** The `cross` tool handles most cases. If failing:
+
 ```bash
 # Try building without cross
 cargo build --release --target aarch64-unknown-linux-gnu
@@ -599,6 +604,7 @@ Error: package exceeds maximum allowed size
 ```
 
 **Solution:** Check `exclude` patterns in Cargo.toml:
+
 ```toml
 exclude = [
     "data/**",
@@ -622,13 +628,13 @@ Run with dry_run to test without publishing:
 
 Required GitHub repository secrets:
 
-| Secret | Purpose | How to Obtain |
-|--------|---------|---------------|
-| `CARGO_REGISTRY_TOKEN` | Publish to crates.io | https://crates.io/settings/tokens |
-| `NPM_TOKEN` | Publish to npm | https://www.npmjs.com/settings/~/tokens |
-| `PYPI_API_TOKEN` | Publish to PyPI | https://pypi.org/manage/account/token/ |
-| `DOCKERHUB_USERNAME` | Docker Hub login (optional) | Docker Hub account |
-| `DOCKERHUB_TOKEN` | Docker Hub auth (optional) | Docker Hub access token |
+| Secret                 | Purpose                     | How to Obtain                           |
+| ---------------------- | --------------------------- | --------------------------------------- |
+| `CARGO_REGISTRY_TOKEN` | Publish to crates.io        | https://crates.io/settings/tokens       |
+| `NPM_TOKEN`            | Publish to npm              | https://www.npmjs.com/settings/~/tokens |
+| `PYPI_API_TOKEN`       | Publish to PyPI             | https://pypi.org/manage/account/token/  |
+| `DOCKERHUB_USERNAME`   | Docker Hub login (optional) | Docker Hub account                      |
+| `DOCKERHUB_TOKEN`      | Docker Hub auth (optional)  | Docker Hub access token                 |
 
 ### Setting Secrets
 
@@ -650,6 +656,7 @@ The release pipeline uses [git-cliff](https://git-cliff.org/) for changelog gene
 Configuration file: `cliff.toml`
 
 Commit message format (Conventional Commits):
+
 - `feat:` - Features
 - `fix:` - Bug Fixes
 - `perf:` - Performance
@@ -661,6 +668,7 @@ Commit message format (Conventional Commits):
 - `ci:` - CI/CD
 
 Example commit messages:
+
 ```bash
 git commit -m "feat: add AtomicBreak ThinkTool"
 git commit -m "fix: resolve memory leak in embedding cache"
@@ -686,5 +694,5 @@ https://github.com/reasonkit/reasonkit-core/issues
 
 ---
 
-*ReasonKit Core Release Process v1.0.0 | Apache 2.0*
+_ReasonKit Core Release Process v1.0.0 | Apache 2.0_
 *https://reasonkit.sh*

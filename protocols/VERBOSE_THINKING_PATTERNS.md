@@ -1,4 +1,5 @@
 # VERBOSE THINKING PATTERNS
+
 > Comprehensive Step-by-Step Reasoning Templates for ReasonKit ThinkTools
 > Making AI reasoning transparent, auditable, and debuggable
 
@@ -21,19 +22,20 @@
 
 ## DOCUMENT METADATA
 
-| Field | Value |
-|-------|-------|
-| **Version** | 1.0.0 |
-| **Schema** | `reasonkit-verbose-thinking-v1` |
-| **Created** | 2025-12-22 |
-| **Team** | Team Epsilon (ThinkTools Enhancement) |
-| **License** | Apache 2.0 |
-| **Status** | PRODUCTION READY |
+| Field       | Value                                                                |
+| ----------- | -------------------------------------------------------------------- |
+| **Version** | 1.0.0                                                                |
+| **Schema**  | `reasonkit-verbose-thinking-v1`                                      |
+| **Created** | 2025-12-22                                                           |
+| **Team**    | Team Epsilon (ThinkTools Enhancement)                                |
+| **License** | Apache 2.0                                                           |
+| **Status**  | PRODUCTION READY                                                     |
 | **Purpose** | Define detailed step-by-step thinking patterns for 5 core ThinkTools |
 
 **Inherits From:** `thinktools_v2.yaml`, `proofguard-deep-research-protocol.yaml`
 
 **AI Consultations:**
+
 - Claude Opus 4.5 (design principles for transparency + usefulness)
 - Gemini 2.0 Flash (LaserLogic pattern structure)
 
@@ -64,14 +66,15 @@
 
 **The Solution:** 4-level verbosity structure that reveals depth on demand:
 
-| Level | Name | Content | Use Case |
-|-------|------|---------|----------|
-| **0** | Summary | Single line: `[Module] Verdict + Confidence` | Quick status check |
-| **1** | Standard | Step headers + key findings | Default verbose mode |
-| **2** | Detailed | Sub-step details + intermediate calculations | Debugging reasoning |
-| **3** | Trace | Full JSON provenance + evidence links | Machine audit trail |
+| Level | Name     | Content                                      | Use Case             |
+| ----- | -------- | -------------------------------------------- | -------------------- |
+| **0** | Summary  | Single line: `[Module] Verdict + Confidence` | Quick status check   |
+| **1** | Standard | Step headers + key findings                  | Default verbose mode |
+| **2** | Detailed | Sub-step details + intermediate calculations | Debugging reasoning  |
+| **3** | Trace    | Full JSON provenance + evidence links        | Machine audit trail  |
 
 **Implementation:**
+
 ```bash
 # User can control verbosity
 rk-core think "query" --verbose-level 1  # Standard (default)
@@ -100,6 +103,7 @@ Confidence Breakdown:
 ```
 
 **Key Requirements:**
+
 - Show factor name + individual score + weight contribution
 - Highlight lowest-scoring factor (the bottleneck)
 - Display raw vs. calibrated confidence (if calibration model exists)
@@ -159,6 +163,7 @@ Confidence Breakdown:
 ```
 
 **Severity Levels:**
+
 - `blocking` - Must fix before proceeding (red/⛔)
 - `major` - Should fix, impacts quality (orange/⚠️)
 - `minor` - Optional improvement (yellow/⚡)
@@ -188,6 +193,7 @@ Provenance Depth: 3 hops (conclusion → module → evidence)
 ```
 
 **ID Format:** `[Module:Type:N]`
+
 - `Module`: GigaThink, LaserLogic, BedRock, ProofGuard, BrutalHonesty
 - `Type`: P=Perspective, A=Axiom, C=Conclusion, S=Source, V=Validation
 - `N`: Sequential number within module execution
@@ -228,6 +234,7 @@ verbose_output:
 ## MODULE 1: GIGATHINK (Divergent Thinking)
 
 ### Purpose
+
 Expansive creative thinking engine that generates 10+ perspectives on a problem, exploring unconventional angles and emergent possibilities.
 
 ### Verbose Thinking Pattern (Level 1: Standard)
@@ -363,9 +370,19 @@ Execution Time: 34.2s | Tokens: 3,847 | Version: gigathink-v2.0.0
           },
           "type": {
             "type": "string",
-            "enum": ["analytical", "creative", "adversarial", "implementation",
-                     "cost-benefit", "user-centric", "competitive", "maintenance",
-                     "scientific", "integration", "strategic"]
+            "enum": [
+              "analytical",
+              "creative",
+              "adversarial",
+              "implementation",
+              "cost-benefit",
+              "user-centric",
+              "competitive",
+              "maintenance",
+              "scientific",
+              "integration",
+              "strategic"
+            ]
           },
           "description": {
             "type": "string"
@@ -459,6 +476,7 @@ Execution Time: 34.2s | Tokens: 3,847 | Version: gigathink-v2.0.0
 ## MODULE 2: LASERLOGIC (Deductive Reasoning)
 
 ### Purpose
+
 Precision deductive reasoning with formal fallacy detection, logical chain validation, and argument structure analysis.
 
 ### Verbose Thinking Pattern (Level 1: Standard)
@@ -617,11 +635,23 @@ Execution Time: 28.7s | Tokens: 2,934 | Version: laserlogic-v2.0.0
           "text": { "type": "string" },
           "type": {
             "type": "string",
-            "enum": ["empirical", "analogical", "subjective", "conditional", "axiomatic"]
+            "enum": [
+              "empirical",
+              "analogical",
+              "subjective",
+              "conditional",
+              "axiomatic"
+            ]
           },
           "validity": {
             "type": "string",
-            "enum": ["verified", "plausible", "contested", "unverified", "false"]
+            "enum": [
+              "verified",
+              "plausible",
+              "contested",
+              "unverified",
+              "false"
+            ]
           },
           "source": { "type": "string" }
         }
@@ -660,11 +690,26 @@ Execution Time: 28.7s | Tokens: 2,934 | Version: laserlogic-v2.0.0
         "properties": {
           "type": {
             "type": "string",
-            "enum": ["ad_hominem", "straw_man", "false_dichotomy", "slippery_slope",
-                     "appeal_to_authority", "circular_reasoning", "hasty_generalization",
-                     "post_hoc", "red_herring", "appeal_to_emotion", "burden_of_proof",
-                     "composition_division", "equivocation", "false_cause", "middle_ground",
-                     "no_true_scotsman", "special_pleading", "tu_quoque"]
+            "enum": [
+              "ad_hominem",
+              "straw_man",
+              "false_dichotomy",
+              "slippery_slope",
+              "appeal_to_authority",
+              "circular_reasoning",
+              "hasty_generalization",
+              "post_hoc",
+              "red_herring",
+              "appeal_to_emotion",
+              "burden_of_proof",
+              "composition_division",
+              "equivocation",
+              "false_cause",
+              "middle_ground",
+              "no_true_scotsman",
+              "special_pleading",
+              "tu_quoque"
+            ]
           },
           "location": { "type": "string" },
           "severity": {
@@ -706,6 +751,7 @@ Execution Time: 28.7s | Tokens: 2,934 | Version: laserlogic-v2.0.0
 ## MODULE 3: BEDROCK (First Principles)
 
 ### Purpose
+
 First principles decomposition engine that breaks problems down to axiomatic foundations and rebuilds understanding from fundamental truths.
 
 ### Verbose Thinking Pattern (Level 1: Standard)
@@ -883,8 +929,13 @@ Execution Time: 47.3s | Tokens: 4,256 | Version: bedrock-v2.0.0
               },
               "name": {
                 "type": "string",
-                "enum": ["surface_observations", "underlying_mechanisms",
-                         "governing_principles", "fundamental_axioms", "universal_truths"]
+                "enum": [
+                  "surface_observations",
+                  "underlying_mechanisms",
+                  "governing_principles",
+                  "fundamental_axioms",
+                  "universal_truths"
+                ]
               },
               "question": { "type": "string" },
               "answer": { "type": "string" },
@@ -901,7 +952,13 @@ Execution Time: 47.3s | Tokens: 4,256 | Version: bedrock-v2.0.0
       "type": "array",
       "items": {
         "type": "object",
-        "required": ["id", "statement", "source", "verification_status", "confidence"],
+        "required": [
+          "id",
+          "statement",
+          "source",
+          "verification_status",
+          "confidence"
+        ],
         "properties": {
           "id": { "type": "string" },
           "statement": { "type": "string" },
@@ -988,6 +1045,7 @@ Execution Time: 47.3s | Tokens: 4,256 | Version: bedrock-v2.0.0
 ## MODULE 4: PROOFGUARD (Verification)
 
 ### Purpose
+
 Multi-source verification engine with triangulation protocol, contradiction detection, and source quality assessment.
 
 ### Verbose Thinking Pattern (Level 1: Standard)
@@ -1194,7 +1252,13 @@ Execution Time: 124.6s | Tokens: 6,892 | Version: proofguard-v2.0.0
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "ProofGuard Output Schema",
   "type": "object",
-  "required": ["module", "claims", "triangulation_table", "contradictions", "confidence"],
+  "required": [
+    "module",
+    "claims",
+    "triangulation_table",
+    "contradictions",
+    "confidence"
+  ],
   "properties": {
     "module": {
       "type": "string",
@@ -1228,7 +1292,12 @@ Execution Time: 124.6s | Tokens: 6,892 | Version: proofguard-v2.0.0
                 },
                 "verdict": {
                   "type": "string",
-                  "enum": ["supports", "contradicts", "qualified_support", "neutral"]
+                  "enum": [
+                    "supports",
+                    "contradicts",
+                    "qualified_support",
+                    "neutral"
+                  ]
                 },
                 "accessed": { "type": "boolean" },
                 "confidence": {
@@ -1267,7 +1336,12 @@ Execution Time: 124.6s | Tokens: 6,892 | Version: proofguard-v2.0.0
       "type": "array",
       "items": {
         "type": "object",
-        "required": ["claim_id", "conflicting_evidence", "resolution", "impact"],
+        "required": [
+          "claim_id",
+          "conflicting_evidence",
+          "resolution",
+          "impact"
+        ],
         "properties": {
           "claim_id": { "type": "string" },
           "conflicting_evidence": {
@@ -1322,20 +1396,21 @@ Execution Time: 124.6s | Tokens: 6,892 | Version: proofguard-v2.0.0
 ## MODULE 5: BRUTALHONESTY (Adversarial Critique)
 
 ### Purpose
+
 Adversarial self-critique engine that actively seeks flaws, edge cases, and failure modes in reasoning before conclusions are finalized.
 
 ### Attack Vectors (8 Systematic Tests)
 
-| ID | Attack Vector | Description | Example |
-|----|---------------|-------------|---------|
-| **AV1** | Assumption Challenges | Test every unstated assumption with counter-examples | "Assumes users have stable network" → Test offline scenario |
-| **AV2** | Edge Case Stress Tests | Generate boundary conditions that break logic | Empty input, max input, malformed input, concurrent access |
-| **AV3** | Logical Gap Probing | Find missing steps in reasoning chains | "A → C" with no explanation of B |
-| **AV4** | Evidence Quality Questioning | Attack source credibility and recency | "2019 benchmark may be outdated" |
-| **AV5** | Bias Detection | Scan for cognitive biases (anchoring, confirmation, etc.) | Over-reliance on first estimate (anchoring bias) |
-| **AV6** | Overconfidence Correction | Challenge confidence scores that seem too high | "95% confidence but only 2 sources?" |
-| **AV7** | Hidden Dependency Surfacing | Find implicit requirements not documented | "Requires Rust nightly toolchain" (not mentioned) |
-| **AV8** | Failure Mode Analysis | Predict how/when the solution will break | "RAPTOR fails when summaries lose critical details" |
+| ID      | Attack Vector                | Description                                               | Example                                                     |
+| ------- | ---------------------------- | --------------------------------------------------------- | ----------------------------------------------------------- |
+| **AV1** | Assumption Challenges        | Test every unstated assumption with counter-examples      | "Assumes users have stable network" → Test offline scenario |
+| **AV2** | Edge Case Stress Tests       | Generate boundary conditions that break logic             | Empty input, max input, malformed input, concurrent access  |
+| **AV3** | Logical Gap Probing          | Find missing steps in reasoning chains                    | "A → C" with no explanation of B                            |
+| **AV4** | Evidence Quality Questioning | Attack source credibility and recency                     | "2019 benchmark may be outdated"                            |
+| **AV5** | Bias Detection               | Scan for cognitive biases (anchoring, confirmation, etc.) | Over-reliance on first estimate (anchoring bias)            |
+| **AV6** | Overconfidence Correction    | Challenge confidence scores that seem too high            | "95% confidence but only 2 sources?"                        |
+| **AV7** | Hidden Dependency Surfacing  | Find implicit requirements not documented                 | "Requires Rust nightly toolchain" (not mentioned)           |
+| **AV8** | Failure Mode Analysis        | Predict how/when the solution will break                  | "RAPTOR fails when summaries lose critical details"         |
 
 ### Verbose Thinking Pattern (Level 1: Standard)
 
@@ -1576,9 +1651,16 @@ Execution Time: 56.8s | Tokens: 5,124 | Version: brutalhonesty-v2.0.0
           "id": { "type": "string" },
           "attack_vector": {
             "type": "string",
-            "enum": ["assumption_challenge", "edge_case_stress_test", "logical_gap_probing",
-                     "evidence_quality_questioning", "bias_detection", "overconfidence_correction",
-                     "hidden_dependency_surfacing", "failure_mode_analysis"]
+            "enum": [
+              "assumption_challenge",
+              "edge_case_stress_test",
+              "logical_gap_probing",
+              "evidence_quality_questioning",
+              "bias_detection",
+              "overconfidence_correction",
+              "hidden_dependency_surfacing",
+              "failure_mode_analysis"
+            ]
           },
           "description": { "type": "string" },
           "counter_example": { "type": "string" },
@@ -1614,7 +1696,14 @@ Execution Time: 56.8s | Tokens: 5,124 | Version: brutalhonesty-v2.0.0
         "properties": {
           "bias_type": {
             "type": "string",
-            "enum": ["confirmation", "anchoring", "availability", "hindsight", "sunk_cost", "groupthink"]
+            "enum": [
+              "confirmation",
+              "anchoring",
+              "availability",
+              "hindsight",
+              "sunk_cost",
+              "groupthink"
+            ]
           },
           "description": { "type": "string" },
           "severity": { "type": "string" }
@@ -1703,15 +1792,15 @@ OVERALL_CONFIDENCE = (
 
 ### Module Weights (by Profile)
 
-| Module | Quick | Balanced | Deep | Paranoid | Scientific |
-|--------|-------|----------|------|----------|------------|
-| GigaThink | 0.50 | 0.15 | 0.15 | 0.12 | 0.10 |
-| LaserLogic | 0.50 | 0.25 | 0.20 | 0.18 | 0.20 |
-| BedRock | - | 0.20 | 0.20 | 0.15 | 0.25 |
-| ProofGuard | - | 0.30 | 0.25 | 0.25 | 0.25 |
-| BrutalHonesty | - | - | 0.20 | 0.20 | - |
-| HighReflect | - | - | - | 0.10 | - |
-| RiskRadar | - | - | - | - | 0.20 |
+| Module        | Quick | Balanced | Deep | Paranoid | Scientific |
+| ------------- | ----- | -------- | ---- | -------- | ---------- |
+| GigaThink     | 0.50  | 0.15     | 0.15 | 0.12     | 0.10       |
+| LaserLogic    | 0.50  | 0.25     | 0.20 | 0.18     | 0.20       |
+| BedRock       | -     | 0.20     | 0.20 | 0.15     | 0.25       |
+| ProofGuard    | -     | 0.30     | 0.25 | 0.25     | 0.25       |
+| BrutalHonesty | -     | -        | 0.20 | 0.20     | -          |
+| HighReflect   | -     | -        | -    | 0.10     | -          |
+| RiskRadar     | -     | -        | -    | -        | 0.20       |
 
 ### Contradiction Penalty
 
@@ -1759,13 +1848,13 @@ PROFILE_MULTIPLIERS = {
 
 ### Calibration Bands
 
-| Range | Label | Action |
-|-------|-------|--------|
-| 95-100% | Very High Confidence | Proceed with implementation |
-| 85-94% | High Confidence | Proceed with monitoring |
-| 70-84% | Moderate Confidence | Proceed with caution, plan validation |
-| 50-69% | Low Confidence | Gather more data before deciding |
-| <50% | Insufficient Confidence | Do not proceed, re-analyze with higher profile |
+| Range   | Label                   | Action                                         |
+| ------- | ----------------------- | ---------------------------------------------- |
+| 95-100% | Very High Confidence    | Proceed with implementation                    |
+| 85-94%  | High Confidence         | Proceed with monitoring                        |
+| 70-84%  | Moderate Confidence     | Proceed with caution, plan validation          |
+| 50-69%  | Low Confidence          | Gather more data before deciding               |
+| <50%    | Insufficient Confidence | Do not proceed, re-analyze with higher profile |
 
 ---
 
@@ -1778,6 +1867,7 @@ See verbose thinking patterns above for full markdown examples.
 **File naming:** `thinking_trace_{module}_{timestamp}.md`
 
 **Example:**
+
 ```
 thinking_trace_gigathink_20251222_143022.md
 thinking_trace_laserlogic_20251222_143156.md
@@ -1851,9 +1941,7 @@ thinking_trace_laserlogic_20251222_143156.md
       "actionability": 0.91
     }
   },
-  "next_steps": [
-    "Feed to LaserLogic for logical validation of insights"
-  ]
+  "next_steps": ["Feed to LaserLogic for logical validation of insights"]
 }
 ```
 
@@ -1923,14 +2011,14 @@ print(f"Markdown trace:\n{result.markdown_trace}")
 
 ## CHANGELOG
 
-| Version | Date | Changes |
-|---------|------|---------|
-| **1.0.0** | 2025-12-22 | Initial verbose thinking patterns document |
-|  |  | - Defined 5 design principles (Claude consultation) |
-|  |  | - Created detailed patterns for all 5 modules |
-|  |  | - Established JSON schemas for machine-readable output |
-|  |  | - Documented confidence calculation formulas |
-|  |  | - Added integration guide (CLI, Rust, Python) |
+| Version   | Date       | Changes                                                |
+| --------- | ---------- | ------------------------------------------------------ |
+| **1.0.0** | 2025-12-22 | Initial verbose thinking patterns document             |
+|           |            | - Defined 5 design principles (Claude consultation)    |
+|           |            | - Created detailed patterns for all 5 modules          |
+|           |            | - Established JSON schemas for machine-readable output |
+|           |            | - Documented confidence calculation formulas           |
+|           |            | - Added integration guide (CLI, Rust, Python)          |
 
 ---
 
@@ -1953,10 +2041,10 @@ created: 2025-12-22
 team: Team Epsilon (ThinkTools Enhancement)
 license: Apache-2.0
 status: PRODUCTION READY
-consultation_count: 2  # Claude + Gemini (CONS-008 compliant)
+consultation_count: 2 # Claude + Gemini (CONS-008 compliant)
 ```
 
 ---
 
-*"Turn Prompts into Protocols"*
+_"Turn Prompts into Protocols"_
 *https://reasonkit.sh*

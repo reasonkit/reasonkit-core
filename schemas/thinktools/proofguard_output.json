@@ -79,12 +79,7 @@
       "description": "Verification status for each claim",
       "items": {
         "type": "object",
-        "required": [
-          "claim_id",
-          "sources",
-          "verification_level",
-          "consensus"
-        ],
+        "required": ["claim_id", "sources", "verification_level", "consensus"],
         "properties": {
           "claim_id": {
             "type": "string",
@@ -117,7 +112,13 @@
                 },
                 "supports": {
                   "type": "string",
-                  "enum": ["strongly_supports", "supports", "neutral", "contradicts", "strongly_contradicts"],
+                  "enum": [
+                    "strongly_supports",
+                    "supports",
+                    "neutral",
+                    "contradicts",
+                    "strongly_contradicts"
+                  ],
                   "description": "How this source relates to the claim"
                 },
                 "excerpt": {
@@ -138,7 +139,11 @@
           },
           "consensus": {
             "type": "object",
-            "required": ["agreement_level", "source_count", "tier_distribution"],
+            "required": [
+              "agreement_level",
+              "source_count",
+              "tier_distribution"
+            ],
             "properties": {
               "agreement_level": {
                 "type": "number",
@@ -154,9 +159,9 @@
               "tier_distribution": {
                 "type": "object",
                 "properties": {
-                  "tier_1": {"type": "integer"},
-                  "tier_2": {"type": "integer"},
-                  "tier_3": {"type": "integer"}
+                  "tier_1": { "type": "integer" },
+                  "tier_2": { "type": "integer" },
+                  "tier_3": { "type": "integer" }
                 }
               },
               "confidence_boost": {
@@ -221,25 +226,25 @@
           "source_a": {
             "type": "object",
             "properties": {
-              "tier": {"type": "string"},
-              "url": {"type": "string"},
-              "status": {"type": "string"}
+              "tier": { "type": "string" },
+              "url": { "type": "string" },
+              "status": { "type": "string" }
             }
           },
           "source_b": {
             "type": "object",
             "properties": {
-              "tier": {"type": "string"},
-              "url": {"type": "string"},
-              "status": {"type": "string"}
+              "tier": { "type": "string" },
+              "url": { "type": "string" },
+              "status": { "type": "string" }
             }
           },
           "source_c": {
             "type": "object",
             "properties": {
-              "tier": {"type": "string"},
-              "url": {"type": "string"},
-              "status": {"type": "string"}
+              "tier": { "type": "string" },
+              "url": { "type": "string" },
+              "status": { "type": "string" }
             }
           },
           "consensus": {
@@ -252,13 +257,13 @@
     "source_quality_analysis": {
       "type": "object",
       "properties": {
-        "total_sources": {"type": "integer"},
+        "total_sources": { "type": "integer" },
         "tier_breakdown": {
           "type": "object",
           "properties": {
-            "tier_1_count": {"type": "integer"},
-            "tier_2_count": {"type": "integer"},
-            "tier_3_count": {"type": "integer"}
+            "tier_1_count": { "type": "integer" },
+            "tier_2_count": { "type": "integer" },
+            "tier_3_count": { "type": "integer" }
           }
         },
         "domain_diversity": {
@@ -344,20 +349,20 @@
         "type": "object",
         "required": ["step", "action", "result"],
         "properties": {
-          "step": {"type": "integer"},
-          "action": {"type": "string"},
-          "result": {"type": "string"},
-          "duration_ms": {"type": "integer"}
+          "step": { "type": "integer" },
+          "action": { "type": "string" },
+          "result": { "type": "string" },
+          "duration_ms": { "type": "integer" }
         }
       }
     },
     "metadata": {
       "type": "object",
       "properties": {
-        "execution_time_ms": {"type": "integer"},
-        "token_count": {"type": "integer"},
-        "model_used": {"type": "string"},
-        "searches_performed": {"type": "integer"}
+        "execution_time_ms": { "type": "integer" },
+        "token_count": { "type": "integer" },
+        "model_used": { "type": "string" },
+        "searches_performed": { "type": "integer" }
       }
     }
   }

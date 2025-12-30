@@ -15,6 +15,7 @@
 Model Context Protocol (MCP) has become the de-facto standard for connecting AI systems to external tools and data sources in less than 12 months since its November 2024 launch. This report synthesizes best practices from 2025 production deployments, official specifications, and Rust implementation patterns to guide ReasonKit's MCP server development.
 
 **Key Findings:**
+
 - MCP specification updated to 2025-11-25 with Tasks abstraction, improved OAuth, and extensions
 - Streamable HTTP has replaced SSE as the production transport (March 2025 update)
 - Rust implementations achieve 4,700+ QPS with sub-millisecond latency
@@ -49,12 +50,12 @@ The November 2025 specification marks MCP's one-year anniversary with major prod
 
 #### Key Updates in 2025
 
-| Version | Date | Major Features |
-|---------|------|----------------|
+| Version        | Date     | Major Features                                                  |
+| -------------- | -------- | --------------------------------------------------------------- |
 | **2025-11-25** | Nov 2025 | **Tasks abstraction**, OAuth improvements, extensions framework |
-| **2025-06-18** | Jun 2025 | **Structured outputs**, OAuth 2.1, user elicitation |
-| **2025-03-26** | Mar 2025 | **Streamable HTTP** (replaces SSE) |
-| **2024-11-05** | Nov 2024 | Initial release (HTTP+SSE transport) |
+| **2025-06-18** | Jun 2025 | **Structured outputs**, OAuth 2.1, user elicitation             |
+| **2025-03-26** | Mar 2025 | **Streamable HTTP** (replaces SSE)                              |
+| **2024-11-05** | Nov 2024 | Initial release (HTTP+SSE transport)                            |
 
 ### MCP Adoption Timeline
 
@@ -95,6 +96,7 @@ MCP is based on JSON-RPC 2.0 and deliberately reuses ideas from Language Server 
 **Purpose**: Track asynchronous, long-running work performed by MCP servers.
 
 **Use Cases**:
+
 - Data pipelines processing millions of records
 - Multi-hour code migration or refactoring
 - Test execution with streaming logs
@@ -102,6 +104,7 @@ MCP is based on JSON-RPC 2.0 and deliberately reuses ideas from Language Server 
 - Deep research spawning multiple internal agents
 
 **Flow**:
+
 ```
 Client → Request with task hint
 Server → Immediate ack with taskId
@@ -160,6 +163,7 @@ Each MCP server should have **one clear, well-defined purpose**:
 ```
 
 **ReasonKit Pattern**: Each ThinkTool should be its own MCP server:
+
 - `mcp-server-reasonkit-gigathink`
 - `mcp-server-reasonkit-laserlogic`
 - `mcp-server-reasonkit-bedrock`
@@ -210,6 +214,7 @@ When scaling, **separate servers by**:
 ```
 
 Each server can:
+
 - Scale independently
 - Have its own security policies
 - Be maintained by different teams
@@ -236,11 +241,11 @@ rmcp = { version = "0.8.0", features = ["server"] }
 
 **Source**: [High-Performance Rust MCP Server](https://medium.com/@bohachu/building-a-high-performance-mcp-server-with-rust-a-complete-implementation-guide-8a18ab16b538)
 
-| Metric | Native | Docker | Notes |
-|--------|--------|--------|-------|
+| Metric             | Native | Docker | Notes                     |
+| ------------------ | ------ | ------ | ------------------------- |
 | **Queries/Second** | 4,700+ | 1,700+ | Sub-millisecond responses |
-| **Latency P99** | <1ms | <5ms | Consistent across load |
-| **Memory** | Low | Low | Rust memory safety |
+| **Latency P99**    | <1ms   | <5ms   | Consistent across load    |
+| **Memory**         | Low    | Low    | Rust memory safety        |
 
 **Key Finding**: No correlation between query complexity and response time, indicating efficient implementation.
 
@@ -248,13 +253,13 @@ rmcp = { version = "0.8.0", features = ["server"] }
 
 **Source**: [Shuttle MCP Comparison](https://www.shuttle.dev/blog/2025/09/15/mcp-servers-rust-comparison), [Prism MCP](https://users.rust-lang.org/t/prism-mcp-rust-sdk-v0-1-0-production-grade-model-context-protocol-implementation/133318)
 
-| Framework | Status | Tests | Examples | Spec Version |
-|-----------|--------|-------|----------|--------------|
-| **rmcp** (official) | Production | N/A | Multiple | 2025-11-25 |
-| **Prism MCP SDK** | Production | 229+ | 39 | 2025-06-18 |
-| **mcp-framework** | Production | N/A | Built-in tools | Latest |
-| **rust-mcp-sdk** | Production | N/A | Multiple | All 3 versions |
-| **ultrafast-mcp** | Optimized | N/A | N/A | Latest |
+| Framework           | Status     | Tests | Examples       | Spec Version   |
+| ------------------- | ---------- | ----- | -------------- | -------------- |
+| **rmcp** (official) | Production | N/A   | Multiple       | 2025-11-25     |
+| **Prism MCP SDK**   | Production | 229+  | 39             | 2025-06-18     |
+| **mcp-framework**   | Production | N/A   | Built-in tools | Latest         |
+| **rust-mcp-sdk**    | Production | N/A   | Multiple       | All 3 versions |
+| **ultrafast-mcp**   | Optimized  | N/A   | N/A            | Latest         |
 
 ### Example Implementation Pattern
 
@@ -320,15 +325,18 @@ async fn main() -> Result<()> {
 #### Why Streamable HTTP?
 
 **Old approach (HTTP+SSE)**: Two separate endpoints
+
 - POST `/message` - Client to server
 - GET `/events` - Server to client (SSE stream)
 
 **New approach (Streamable HTTP)**: Single unified endpoint
+
 - POST `/mcp` - Client to server
 - GET `/mcp` - Server to client (optional SSE)
 - Response can be `application/json` OR `text/event-stream`
 
 **Benefits**:
+
 1. **Simpler architecture**: One endpoint vs. two
 2. **Better load balancing**: Single path to route
 3. **Unified session management**: One session ID header
@@ -396,21 +404,23 @@ rk-thinktool --module gigathink --transport stdio
 ```
 
 **Characteristics**:
+
 - **Pros**: Simple, no network config, process isolation
 - **Cons**: Single client, no remote access, process management overhead
 
 ### Transport Selection Guide
 
-| Use Case | Transport | Rationale |
-|----------|-----------|-----------|
-| Development | stdio | Fast iteration, simple debugging |
-| Testing | stdio | Isolated processes, easy setup |
-| Claude Desktop | stdio | Official integration pattern |
-| Remote deployment | Streamable HTTP | Network access, load balancing |
-| Production scale | Streamable HTTP | Horizontal scaling, cloud-native |
-| Enterprise | Streamable HTTP + OAuth | Security, compliance, audit |
+| Use Case          | Transport               | Rationale                        |
+| ----------------- | ----------------------- | -------------------------------- |
+| Development       | stdio                   | Fast iteration, simple debugging |
+| Testing           | stdio                   | Isolated processes, easy setup   |
+| Claude Desktop    | stdio                   | Official integration pattern     |
+| Remote deployment | Streamable HTTP         | Network access, load balancing   |
+| Production scale  | Streamable HTTP         | Horizontal scaling, cloud-native |
+| Enterprise        | Streamable HTTP + OAuth | Security, compliance, audit      |
 
 **ReasonKit Strategy**:
+
 - **reasonkit-core** (OSS): stdio for CLI usage
 - **reasonkit-pro** (Enterprise): Streamable HTTP with OAuth for sidecar deployment
 
@@ -426,11 +436,11 @@ rk-thinktool --module gigathink --transport stdio
 
 #### Core Requirements
 
-| Component | Role | Must Implement |
-|-----------|------|----------------|
-| **MCP Server** | OAuth Resource Server | Protected Resource Metadata (RFC9728) |
-| **MCP Client** | OAuth Client | Resource Indicators (RFC8707) |
-| **Authorization Server** | Token Issuer | OAuth 2.1 with PKCE |
+| Component                | Role                  | Must Implement                        |
+| ------------------------ | --------------------- | ------------------------------------- |
+| **MCP Server**           | OAuth Resource Server | Protected Resource Metadata (RFC9728) |
+| **MCP Client**           | OAuth Client          | Resource Indicators (RFC8707)         |
+| **Authorization Server** | Token Issuer          | OAuth 2.1 with PKCE                   |
 
 #### Security Requirements (MUST)
 
@@ -494,12 +504,14 @@ rk-thinktool --module gigathink --transport stdio
 MCP servers MUST provide authorization server location via:
 
 **Option 1: WWW-Authenticate Header** (Recommended)
+
 ```http
 HTTP/1.1 401 Unauthorized
 WWW-Authenticate: Bearer resource_metadata="https://example.com/.well-known/mcp-metadata"
 ```
 
 **Option 2: OAuth 2.0 Protected Resource Metadata**
+
 ```json
 GET /.well-known/mcp-metadata
 
@@ -515,17 +527,19 @@ GET /.well-known/mcp-metadata
 
 **Source**: [MCP OAuth Guide](https://dev.to/composiodev/mcp-oauth-21-a-complete-guide-3g91)
 
-| Approach | Description | Pros | Cons |
-|----------|-------------|------|------|
-| **Self-Embedded** | MCP server is also auth server | Simple, self-contained | Complex to implement correctly |
-| **Delegated** | Use Auth0, Okta, etc. | Production-ready, tested | External dependency, cost |
+| Approach          | Description                    | Pros                     | Cons                           |
+| ----------------- | ------------------------------ | ------------------------ | ------------------------------ |
+| **Self-Embedded** | MCP server is also auth server | Simple, self-contained   | Complex to implement correctly |
+| **Delegated**     | Use Auth0, Okta, etc.          | Production-ready, tested | External dependency, cost      |
 
 **Recommendation**: Use delegated approach (Auth0, Okta, Ory) for production. Most OAuth 2.1 providers satisfy MCP requirements with:
+
 - Discovery document exposure
 - Dynamic client registration
 - Resource parameter echo in tokens
 
 **ReasonKit Strategy**:
+
 - **reasonkit-core** (OSS): No auth (stdio only)
 - **reasonkit-pro** (Enterprise): Delegated OAuth 2.1 (Auth0/Okta integration)
 
@@ -546,11 +560,13 @@ GET /.well-known/mcp-metadata
 **Source**: [Production-Ready MCP](https://dev.to/raghavajoijode/production-ready-mcp-servers-security-performance-deployment-5e48)
 
 **Anti-Pattern**: Environment variables in production
+
 - Difficult to rotate
 - Leak into logs/build artifacts
 - Static target for attackers
 
 **Best Practice**: Dedicated secrets management
+
 - Azure Key Vault
 - AWS Secrets Manager
 - HashiCorp Vault
@@ -586,14 +602,15 @@ let api_key = secrets_manager.get_secret("mcp/api-key").await?;
 
 **Source**: [Rust MCP Server Benchmarks](https://medium.com/@bohachu/building-a-high-performance-mcp-server-with-rust-a-complete-implementation-guide-8a18ab16b538)
 
-| Implementation | QPS | P99 Latency | Memory |
-|----------------|-----|-------------|--------|
-| Rust (native) | 4,700+ | <1ms | Low |
-| Rust (Docker) | 1,700+ | <5ms | Low |
-| Node.js | ~500 | ~50ms | High |
-| Python | ~200 | ~100ms | High |
+| Implementation | QPS    | P99 Latency | Memory |
+| -------------- | ------ | ----------- | ------ |
+| Rust (native)  | 4,700+ | <1ms        | Low    |
+| Rust (Docker)  | 1,700+ | <5ms        | Low    |
+| Node.js        | ~500   | ~50ms       | High   |
+| Python         | ~200   | ~100ms      | High   |
 
 **Key Findings**:
+
 - Rust is **9-23x faster** than Node.js/Python
 - Sub-millisecond responses enable real-time AI interactions
 - No performance degradation with query complexity
@@ -703,15 +720,16 @@ impl ResourceManager {
 
 ### Performance Targets
 
-| Metric | Target | Notes |
-|--------|--------|-------|
-| Tool call latency | <100ms | P95 for simple tools |
-| Tool call latency | <1s | P95 for complex reasoning |
-| Throughput | >1000 QPS | Per server instance |
-| Memory per server | <100MB | Baseline, excluding caches |
-| Startup time | <1s | Time to ready state |
+| Metric            | Target    | Notes                      |
+| ----------------- | --------- | -------------------------- |
+| Tool call latency | <100ms    | P95 for simple tools       |
+| Tool call latency | <1s       | P95 for complex reasoning  |
+| Throughput        | >1000 QPS | Per server instance        |
+| Memory per server | <100MB    | Baseline, excluding caches |
+| Startup time      | <1s       | Time to ready state        |
 
 **ReasonKit Targets** (from CONS-005):
+
 - All core loops <5ms
 - Sub-second response for ThinkTools
 - Benchmark required for all optimizations
@@ -769,33 +787,33 @@ spec:
         app: reasonkit-mcp
     spec:
       containers:
-      - name: mcp-server
-        image: reasonkit/mcp-server:latest
-        ports:
-        - containerPort: 8080
-          name: http
-        env:
-        - name: MCP_TRANSPORT
-          value: "http"
-        resources:
-          requests:
-            cpu: 100m
-            memory: 128Mi
-          limits:
-            cpu: 500m
-            memory: 512Mi
-        livenessProbe:
-          httpGet:
-            path: /health
-            port: http
-          initialDelaySeconds: 5
-          periodSeconds: 10
-        readinessProbe:
-          httpGet:
-            path: /ready
-            port: http
-          initialDelaySeconds: 3
-          periodSeconds: 5
+        - name: mcp-server
+          image: reasonkit/mcp-server:latest
+          ports:
+            - containerPort: 8080
+              name: http
+          env:
+            - name: MCP_TRANSPORT
+              value: "http"
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: http
+            initialDelaySeconds: 3
+            periodSeconds: 5
 ---
 # Horizontal Pod Autoscaler
 apiVersion: autoscaling/v2
@@ -810,12 +828,12 @@ spec:
   minReplicas: 3
   maxReplicas: 10
   metrics:
-  - type: Resource
-    resource:
-      name: cpu
-      target:
-        type: Utilization
-        averageUtilization: 70
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
 ---
 # Service
 apiVersion: v1
@@ -826,8 +844,8 @@ spec:
   selector:
     app: reasonkit-mcp
   ports:
-  - port: 80
-    targetPort: 8080
+    - port: 80
+      targetPort: 8080
   type: ClusterIP
 ```
 
@@ -869,6 +887,7 @@ spec:
 ```
 
 **Key Components**:
+
 - **CloudFront**: HTTPS, HTTP/2, HTTP/3, DDoS protection
 - **WAF**: Common exploit protection, rate limiting
 - **ALB**: Multi-AZ routing, health checks, target groups
@@ -880,12 +899,12 @@ spec:
 
 **Source**: [MCP Production Guide](https://medium.com/@jalajagr/mcp-in-production-environments-a-complete-guide-6649c62cac81)
 
-| Strategy | Description | Downtime | Risk |
-|----------|-------------|----------|------|
-| **Blue-Green** | Two identical environments, switch traffic | Zero | Low |
-| **Canary** | Gradual rollout (5% → 25% → 100%) | Zero | Very Low |
-| **Rolling** | Update instances one at a time | Zero | Medium |
-| **Recreate** | Stop all, deploy new | Yes | High |
+| Strategy       | Description                                | Downtime | Risk     |
+| -------------- | ------------------------------------------ | -------- | -------- |
+| **Blue-Green** | Two identical environments, switch traffic | Zero     | Low      |
+| **Canary**     | Gradual rollout (5% → 25% → 100%)          | Zero     | Very Low |
+| **Rolling**    | Update instances one at a time             | Zero     | Medium   |
+| **Recreate**   | Stop all, deploy new                       | Yes      | High     |
 
 **Recommended**: Canary deployment for production MCP servers
 
@@ -900,13 +919,13 @@ spec:
   strategy:
     canary:
       steps:
-      - setWeight: 5     # 5% traffic
-      - pause: {duration: 5m}
-      - setWeight: 25    # 25% traffic
-      - pause: {duration: 10m}
-      - setWeight: 50    # 50% traffic
-      - pause: {duration: 10m}
-      - setWeight: 100   # Full rollout
+        - setWeight: 5 # 5% traffic
+        - pause: { duration: 5m }
+        - setWeight: 25 # 25% traffic
+        - pause: { duration: 10m }
+        - setWeight: 50 # 50% traffic
+        - pause: { duration: 10m }
+        - setWeight: 100 # Full rollout
 ```
 
 ### CI/CD Pipeline
@@ -924,30 +943,30 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-    - name: Build Docker image
-      run: docker build -t reasonkit/mcp-server:${{ github.sha }} .
+      - name: Build Docker image
+        run: docker build -t reasonkit/mcp-server:${{ github.sha }} .
 
-    - name: Run tests
-      run: |
-        cargo test --all-features
-        cargo clippy -- -D warnings
-        cargo bench
+      - name: Run tests
+        run: |
+          cargo test --all-features
+          cargo clippy -- -D warnings
+          cargo bench
 
-    - name: Security scan
-      run: |
-        cargo audit
-        snyk test
+      - name: Security scan
+        run: |
+          cargo audit
+          snyk test
 
-    - name: Push to registry
-      run: docker push reasonkit/mcp-server:${{ github.sha }}
+      - name: Push to registry
+        run: docker push reasonkit/mcp-server:${{ github.sha }}
 
-    - name: Deploy to K8s (canary)
-      run: |
-        kubectl set image deployment/reasonkit-mcp \
-          mcp-server=reasonkit/mcp-server:${{ github.sha }}
-        kubectl rollout status deployment/reasonkit-mcp
+      - name: Deploy to K8s (canary)
+        run: |
+          kubectl set image deployment/reasonkit-mcp \
+            mcp-server=reasonkit/mcp-server:${{ github.sha }}
+          kubectl rollout status deployment/reasonkit-mcp
 ```
 
 ---
@@ -960,12 +979,12 @@ jobs:
 
 #### Essential Metrics
 
-| Category | Metrics | Tools |
-|----------|---------|-------|
-| **Performance** | Latency (P50/P95/P99), Throughput (QPS), Error rate | Prometheus, Grafana |
-| **Resources** | CPU, Memory, Disk I/O, Network | cAdvisor, Node Exporter |
-| **Business** | Tool calls, Success rate, Cost per query | Custom dashboards |
-| **Security** | Failed auth, Rate limit hits, Anomalies | CloudWatch, Splunk |
+| Category        | Metrics                                             | Tools                   |
+| --------------- | --------------------------------------------------- | ----------------------- |
+| **Performance** | Latency (P50/P95/P99), Throughput (QPS), Error rate | Prometheus, Grafana     |
+| **Resources**   | CPU, Memory, Disk I/O, Network                      | cAdvisor, Node Exporter |
+| **Business**    | Tool calls, Success rate, Cost per query            | Custom dashboards       |
+| **Security**    | Failed auth, Rate limit hits, Anomalies             | CloudWatch, Splunk      |
 
 #### Logging Strategy
 
@@ -1013,6 +1032,7 @@ async fn call_tool(&self, name: &str, args: Value) -> Result<ToolResult> {
 ```
 
 **Log Requirements**:
+
 - Append-only, tamper-evident storage (S3 immutable, write-once)
 - Include: timestamp, user ID, tool name, input hash, output, duration
 - Retention: 90 days minimum (compliance)
@@ -1022,14 +1042,14 @@ async fn call_tool(&self, name: &str, args: Value) -> Result<ToolResult> {
 
 **Source**: [MCP Production Guide](https://dev.to/raghavajoijode/production-ready-mcp-servers-security-performance-deployment-5e48)
 
-| Test Type | Tool | Purpose |
-|-----------|------|---------|
-| **Unit Tests** | `cargo test` | Individual functions |
-| **Integration Tests** | `cargo test --test integration` | Tool workflows |
-| **Local Testing** | MCP Inspector | Interactive debugging |
-| **Remote Testing** | Network-based client | Real-world scenarios |
-| **Load Testing** | k6, Locust | Performance validation |
-| **Security Testing** | Snyk, cargo-audit | Vulnerability scanning |
+| Test Type             | Tool                            | Purpose                |
+| --------------------- | ------------------------------- | ---------------------- |
+| **Unit Tests**        | `cargo test`                    | Individual functions   |
+| **Integration Tests** | `cargo test --test integration` | Tool workflows         |
+| **Local Testing**     | MCP Inspector                   | Interactive debugging  |
+| **Remote Testing**    | Network-based client            | Real-world scenarios   |
+| **Load Testing**      | k6, Locust                      | Performance validation |
+| **Security Testing**  | Snyk, cargo-audit               | Vulnerability scanning |
 
 #### MCP Inspector
 
@@ -1050,6 +1070,7 @@ npx @modelcontextprotocol/inspector
 ```
 
 **Features**:
+
 - Interactive tool testing
 - Schema inspection
 - Request/response logging
@@ -1087,6 +1108,7 @@ async fn health_check(&self) -> HealthStatus {
 **Source**: [MCP Best Practices](https://mcpcat.io/blog/mcp-server-best-practices/)
 
 Error messages should be:
+
 1. **LLM-parsable**: Machine-readable error codes
 2. **Human-readable**: Clear explanations
 3. **Actionable**: Help agent decide next steps
@@ -1110,6 +1132,7 @@ Err(McpError {
 ```
 
 **Error Codes** (from MCP spec):
+
 - `-32700`: Parse error
 - `-32600`: Invalid request
 - `-32601`: Method not found
@@ -1134,6 +1157,7 @@ ServerInfo {
 ```
 
 **Versioning Rules**:
+
 - **Major**: Breaking changes (e.g., 1.x → 2.0)
 - **Minor**: New features, backward compatible (e.g., 1.2 → 1.3)
 - **Patch**: Bug fixes, no new features (e.g., 1.2.3 → 1.2.4)
@@ -1146,24 +1170,26 @@ ServerInfo {
 
 **ReasonKit MCP Implementation** (from `/home/zyxsys/RK-PROJECT/reasonkit-core/src/mcp/`):
 
-| Component | Status | Spec Version | Notes |
-|-----------|--------|--------------|-------|
-| `mod.rs` | ✅ Implemented | 2025-11-25 | Module structure good |
-| `types.rs` | ✅ Implemented | Current | JSON-RPC 2.0 types |
-| `client.rs` | ✅ Implemented | Current | MCP client with retry |
-| `server.rs` | ✅ Implemented | Current | Basic server |
-| `registry.rs` | ✅ Implemented | Current | Health monitoring |
-| `transport.rs` | ⚠️ stdio only | Current | HTTP not implemented |
-| `tools.rs` | ✅ Implemented | Current | Tool definitions |
-| `lifecycle.rs` | ✅ Implemented | Current | Init/shutdown |
+| Component      | Status         | Spec Version | Notes                 |
+| -------------- | -------------- | ------------ | --------------------- |
+| `mod.rs`       | ✅ Implemented | 2025-11-25   | Module structure good |
+| `types.rs`     | ✅ Implemented | Current      | JSON-RPC 2.0 types    |
+| `client.rs`    | ✅ Implemented | Current      | MCP client with retry |
+| `server.rs`    | ✅ Implemented | Current      | Basic server          |
+| `registry.rs`  | ✅ Implemented | Current      | Health monitoring     |
+| `transport.rs` | ⚠️ stdio only  | Current      | HTTP not implemented  |
+| `tools.rs`     | ✅ Implemented | Current      | Tool definitions      |
+| `lifecycle.rs` | ✅ Implemented | Current      | Init/shutdown         |
 
 **Strengths**:
+
 - Full stdio transport implementation
 - Client with auto-reconnect and retry
 - Health monitoring in registry
 - Good module structure
 
 **Gaps vs. Best Practices**:
+
 - ❌ No Streamable HTTP transport (production standard)
 - ❌ No OAuth 2.1 implementation (required for HTTP)
 - ❌ No Tasks abstraction (Nov 2025 spec)
@@ -1293,6 +1319,7 @@ async fn require_auth(
 **Dependencies**: `oauth2`, `jsonwebtoken`
 
 **ReasonKit Integration**:
+
 - **reasonkit-core** (OSS): No auth (stdio only)
 - **reasonkit-pro** (Paid): Full OAuth 2.1 with Auth0
 
@@ -1301,6 +1328,7 @@ async fn require_auth(
 **Why**: Nov 2025 spec, perfect for long-running ThinkTools
 
 **Use Cases**:
+
 - `ProofGuard`: Multi-source verification (can take minutes)
 - `GigaThink`: 10+ perspective generation
 - `PowerCombo`: Full 5-module chain
@@ -1450,6 +1478,7 @@ criterion_main!(benches);
 ```
 
 **Targets** (from research):
+
 - Individual tool call: <100ms (P95)
 - Batch of 5 tools: <500ms (P95)
 - Throughput: >1000 QPS per instance
@@ -1497,24 +1526,28 @@ CMD ["--transport", "http", "--port", "8080"]
 ### Development Roadmap
 
 **Phase 1: Production HTTP (Q1 2025)**
+
 - [ ] Implement Streamable HTTP transport
 - [ ] Add OAuth 2.1 middleware
 - [ ] Create health check endpoint
 - [ ] Write integration tests
 
 **Phase 2: Advanced Features (Q2 2025)**
+
 - [ ] Tasks abstraction for long operations
 - [ ] Structured outputs (JSON Schema)
 - [ ] Prompt macros for chaining
 - [ ] Performance benchmarks
 
 **Phase 3: Enterprise Deployment (Q3 2025)**
+
 - [ ] Containerization (Docker, K8s)
 - [ ] Monitoring dashboards (Prometheus, Grafana)
 - [ ] Load testing and optimization
 - [ ] Production deployment guides
 
 **Phase 4: Scale & Optimize (Q4 2025)**
+
 - [ ] Connection pooling
 - [ ] Caching strategies
 - [ ] Multi-region deployment
@@ -1658,41 +1691,41 @@ health_check_interval_secs = 30
 
 ### Lifecycle Methods
 
-| Method | Direction | Purpose |
-|--------|-----------|---------|
-| `initialize` | Client → Server | Handshake, capability negotiation |
+| Method        | Direction       | Purpose                            |
+| ------------- | --------------- | ---------------------------------- |
+| `initialize`  | Client → Server | Handshake, capability negotiation  |
 | `initialized` | Client → Server | Notification after successful init |
-| `ping` | Either → Either | Health check |
-| `shutdown` | Client → Server | Graceful shutdown request |
+| `ping`        | Either → Either | Health check                       |
+| `shutdown`    | Client → Server | Graceful shutdown request          |
 
 ### Tool Methods
 
-| Method | Direction | Purpose |
-|--------|-----------|---------|
+| Method       | Direction       | Purpose             |
+| ------------ | --------------- | ------------------- |
 | `tools/list` | Client → Server | Get available tools |
-| `tools/call` | Client → Server | Execute tool |
+| `tools/call` | Client → Server | Execute tool        |
 
 ### Resource Methods
 
-| Method | Direction | Purpose |
-|--------|-----------|---------|
+| Method           | Direction       | Purpose                 |
+| ---------------- | --------------- | ----------------------- |
 | `resources/list` | Client → Server | Get available resources |
-| `resources/read` | Client → Server | Read resource content |
+| `resources/read` | Client → Server | Read resource content   |
 
 ### Prompt Methods
 
-| Method | Direction | Purpose |
-|--------|-----------|---------|
+| Method         | Direction       | Purpose               |
+| -------------- | --------------- | --------------------- |
 | `prompts/list` | Client → Server | Get available prompts |
-| `prompts/get` | Client → Server | Get prompt template |
+| `prompts/get`  | Client → Server | Get prompt template   |
 
 ### Task Methods (Nov 2025)
 
-| Method | Direction | Purpose |
-|--------|-----------|---------|
-| `tasks/create` | Client → Server | Create async task |
-| `tasks/status` | Client → Server | Get task status |
-| `tasks/result` | Client → Server | Get task result |
+| Method         | Direction       | Purpose             |
+| -------------- | --------------- | ------------------- |
+| `tasks/create` | Client → Server | Create async task   |
+| `tasks/status` | Client → Server | Get task status     |
+| `tasks/result` | Client → Server | Get task result     |
 | `tasks/cancel` | Client → Server | Cancel running task |
 
 ---
@@ -1701,13 +1734,13 @@ health_check_interval_secs = 30
 
 ### Mapping
 
-| ThinkTool | MCP Server Name | Primary Tool | Description |
-|-----------|-----------------|--------------|-------------|
-| GigaThink | `reasonkit-gigathink` | `generate_perspectives` | Expansive creative thinking, 10+ viewpoints |
-| LaserLogic | `reasonkit-laserlogic` | `validate_logic` | Precision deductive reasoning, fallacy detection |
-| BedRock | `reasonkit-bedrock` | `decompose_to_axioms` | First principles decomposition |
-| ProofGuard | `reasonkit-proofguard` | `verify_claims` | Multi-source verification, triangulation |
-| BrutalHonesty | `reasonkit-brutalhonesty` | `adversarial_critique` | Ruthless self-critique |
+| ThinkTool     | MCP Server Name           | Primary Tool            | Description                                      |
+| ------------- | ------------------------- | ----------------------- | ------------------------------------------------ |
+| GigaThink     | `reasonkit-gigathink`     | `generate_perspectives` | Expansive creative thinking, 10+ viewpoints      |
+| LaserLogic    | `reasonkit-laserlogic`    | `validate_logic`        | Precision deductive reasoning, fallacy detection |
+| BedRock       | `reasonkit-bedrock`       | `decompose_to_axioms`   | First principles decomposition                   |
+| ProofGuard    | `reasonkit-proofguard`    | `verify_claims`         | Multi-source verification, triangulation         |
+| BrutalHonesty | `reasonkit-brutalhonesty` | `adversarial_critique`  | Ruthless self-critique                           |
 
 ### Example: GigaThink MCP Server
 
@@ -1748,20 +1781,20 @@ impl GigaThinkServer {
 
 ## Appendix C: Glossary
 
-| Term | Definition |
-|------|------------|
-| **MCP** | Model Context Protocol - Standard for AI tool integration |
-| **JSON-RPC 2.0** | Remote procedure call protocol using JSON |
-| **stdio** | Standard input/output transport (local, dev) |
-| **Streamable HTTP** | HTTP transport with optional SSE streaming |
-| **SSE** | Server-Sent Events - HTTP streaming mechanism |
-| **OAuth 2.1** | Modern authorization framework |
-| **PKCE** | Proof Key for Code Exchange - OAuth security extension |
-| **Tool** | Executable function exposed by MCP server |
-| **Resource** | Data source exposed by MCP server |
-| **Prompt** | Template for multi-step workflows |
-| **Task** | Async work tracker (Nov 2025 feature) |
-| **ThinkTool** | ReasonKit reasoning module (GigaThink, LaserLogic, etc.) |
+| Term                | Definition                                                |
+| ------------------- | --------------------------------------------------------- |
+| **MCP**             | Model Context Protocol - Standard for AI tool integration |
+| **JSON-RPC 2.0**    | Remote procedure call protocol using JSON                 |
+| **stdio**           | Standard input/output transport (local, dev)              |
+| **Streamable HTTP** | HTTP transport with optional SSE streaming                |
+| **SSE**             | Server-Sent Events - HTTP streaming mechanism             |
+| **OAuth 2.1**       | Modern authorization framework                            |
+| **PKCE**            | Proof Key for Code Exchange - OAuth security extension    |
+| **Tool**            | Executable function exposed by MCP server                 |
+| **Resource**        | Data source exposed by MCP server                         |
+| **Prompt**          | Template for multi-step workflows                         |
+| **Task**            | Async work tracker (Nov 2025 feature)                     |
+| **ThinkTool**       | ReasonKit reasoning module (GigaThink, LaserLogic, etc.)  |
 
 ---
 

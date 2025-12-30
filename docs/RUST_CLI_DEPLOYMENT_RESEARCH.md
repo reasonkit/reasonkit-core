@@ -28,12 +28,14 @@ This research synthesizes deployment best practices from leading Rust CLI tools 
 `cargo install` is the canonical installation method for Rust developers but has significant limitations:
 
 #### Advantages
+
 - Simple one-command installation
 - Works across all platforms with Rust installed
 - Automatic binary management in `~/.cargo/bin`
 - Direct from source (latest features)
 
 #### Disadvantages
+
 - **Compilation required** - Takes minutes on large codebases
 - **Requires full Rust toolchain** - Not viable for non-Rust users
 - **System dependencies** - Users must have build tools installed
@@ -151,12 +153,14 @@ cross test --target mips64-unknown-linux-gnuabi64
 ```
 
 **How it works:**
+
 - Uses pre-built Docker images with complete toolchains
 - One image per target
 - Transparent to the user
 - No host contamination
 
 **Limitations:**
+
 - Requires Docker or Podman
 - macOS cross-compilation is challenging (Apple restrictions)
 - Build scripts (`build.rs`) may have platform-specific issues
@@ -198,7 +202,7 @@ name: Release
 on:
   push:
     tags:
-      - 'v*'
+      - "v*"
 
 jobs:
   build:
@@ -268,15 +272,18 @@ Replaces the older actions-rs/toolchain which is now unmaintained.
 ```
 
 **What it caches:**
+
 - `~/.cargo` (registry, cache, git dependencies)
 - `./target` (build artifacts)
 
 **Smart optimizations:**
+
 - Sets `CARGO_INCREMENTAL=0` (incremental builds waste time in CI)
 - Skips `~/.cargo/registry/src` (faster to recreate from cache)
 - Restores from previous Cargo.lock versions
 
 **Limitations:**
+
 - 10 GB total cache limit per repository
 - Caches evicted after 7 days of no access
 
@@ -298,6 +305,7 @@ Replaces the older actions-rs/toolchain which is now unmaintained.
 ```
 
 Automatically:
+
 - Builds for multiple targets
 - Creates platform-specific archives (.zip for Windows/macOS, .tar.gz for Linux)
 - Uploads to GitHub Releases
@@ -318,17 +326,20 @@ Automatically:
 ```
 
 **How sccache works:**
+
 - Wraps `rustc` as a compiler shim
 - Caches compilation artifacts (not just dependencies)
 - Designed for ephemeral CI environments
 - Supports cloud storage backends (S3, GCS, Azure)
 
 **Advantages over rust-cache:**
+
 - Can cache across branches
 - Works with distributed teams (shared cache)
 - Caches compiler output, not just dependencies
 
 **Limitations:**
+
 - Network overhead with cloud backends
 - Less effective with incremental compilation artifacts
 - Requires absolute path matching for cache hits
@@ -412,6 +423,7 @@ fn generate_completions(shell: Shell) {
    - apt/rpm: Install to `/usr/share/bash-completion/completions/`
 
 2. **Include in Release Tarball**
+
    ```
    rk-core-v0.1.0-x86_64-linux.tar.gz
    ├── rk-core                    # binary
@@ -585,6 +597,7 @@ assets = [
 **Source:** [Debian APT Rust Integration - It's FOSS](https://news.itsfoss.com/rust-integration-for-apt/), [Debian APT Package Manager Rust - LinuxIAC](https://linuxiac.com/debian-apt-package-manager-to-integrate-rust-code-by-may-2026/)
 
 Julian Andres Klode (APT maintainer) announced **Rust will be integrated into Debian's APT by May 2026**:
+
 - Parsing .deb, .ar, and .tar files in Rust
 - HTTP signature verification using Sequoia
 - Focus: Memory safety and unit testing
@@ -598,6 +611,7 @@ This signals growing Rust adoption in core Linux infrastructure.
 #### Chocolatey
 
 Package structure:
+
 ```
 package/
 ├── reasonkit.nuspec           # Package metadata
@@ -608,6 +622,7 @@ package/
 ```
 
 **reasonkit.nuspec:**
+
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2015/06/nuspec.xsd">
@@ -624,6 +639,7 @@ package/
 ```
 
 **chocolateyinstall.ps1:**
+
 ```powershell
 $packageName = 'reasonkit'
 $url64 = 'https://github.com/username/reasonkit/releases/download/v0.1.0/rk-core-windows.zip'
@@ -674,6 +690,7 @@ cargo release major
 ```
 
 **What it does:**
+
 1. Validates no uncommitted changes
 2. Runs tests
 3. Bumps version in Cargo.toml
@@ -686,6 +703,7 @@ cargo release major
 **Source:** [cargo-release reference](https://github.com/crate-ci/cargo-release/blob/master/docs/reference.md)
 
 **Version bumping logic:**
+
 - `default`: Removes pre-release (0.1.0-pre -> 0.1.0)
 - `patch`: Bumps patch version (0.1.0 -> 0.1.1)
 - `minor`: Bumps minor version (0.1.0 -> 0.2.0)
@@ -744,6 +762,7 @@ commit_parsers = [
 **Source:** [git-cliff GitHub](https://github.com/orhun/git-cliff) (v2.11.0, Apache-2.0 OR MIT)
 
 **Related tools:**
+
 - **release-plz** - Automated releases with version bumping and changelog
 - **cliff-jumper** - NodeJS CLI combining git-cliff + conventional-recommended-bump
 
@@ -767,6 +786,7 @@ release-plz release
 ```
 
 **Features:**
+
 - Automatically detects breaking changes
 - Suggests correct version increment
 - Updates CHANGELOG.md
@@ -774,6 +794,7 @@ release-plz release
 - Publishes to crates.io
 
 **CI Integration:**
+
 ```yaml
 # .github/workflows/release.yml
 name: Release
@@ -802,6 +823,7 @@ jobs:
 ### Why Size Matters
 
 Large binaries:
+
 - Take longer to download (hurts adoption)
 - Consume more disk space
 - Load slower
@@ -828,6 +850,7 @@ panic = "abort"      # Don't include unwinding code
 **Source:** [Tauri App Size Reduction](https://v1.tauri.app/v1/guides/building/app-size/), [Binary Size Optimization](https://markaicode.com/binary-size-optimization-techniques/)
 
 **opt-level options:**
+
 - `"z"` - Aggressive size optimization
 - `"s"` - Standard size optimization
 - `3` - Maximum performance (larger binary)
@@ -842,6 +865,7 @@ lto = true  # or "fat" or "thin"
 ```
 
 **Types:**
+
 - `true` / `"fat"` - Full LTO (slow build, best optimization)
 - `"thin"` - ThinLTO (faster build, good optimization)
 
@@ -853,12 +877,14 @@ lto = true  # or "fat" or "thin"
 #### 3. Strip Symbols
 
 **Rust 1.59+ (built-in):**
+
 ```toml
 [profile.release]
 strip = true  # or "symbols" or "debuginfo"
 ```
 
 **Manual stripping:**
+
 ```bash
 strip target/release/rk-core
 ```
@@ -888,6 +914,7 @@ upx --brute target/release/rk-core
 **Claimed reduction:** Up to 88% overall
 
 **Tradeoffs:**
+
 - **Startup delay** - Binary decompresses at runtime (~10-50ms)
 - **Antivirus false positives** - Malware often uses UPX
 - **Not recommended for end-user software** - Acceptable for embedded/controlled environments
@@ -1037,6 +1064,7 @@ ENTRYPOINT ["/rk-core"]
 **Source:** [rust-musl-builder GitHub](https://github.com/emk/rust-musl-builder)
 
 The rust-musl-builder image includes:
+
 - musl-libc and musl-gcc
 - Static OpenSSL
 - Static libpq (PostgreSQL)
@@ -1056,10 +1084,10 @@ rustc -C target-feature=-crt-static ...
 
 ### Targets Comparison
 
-| Target | libc | Linking | Portability |
-|--------|------|---------|-------------|
-| `x86_64-unknown-linux-gnu` | glibc | Dynamic | Requires matching glibc |
-| `x86_64-unknown-linux-musl` | musl | Static | Any modern Linux |
+| Target                      | libc  | Linking | Portability             |
+| --------------------------- | ----- | ------- | ----------------------- |
+| `x86_64-unknown-linux-gnu`  | glibc | Dynamic | Requires matching glibc |
+| `x86_64-unknown-linux-musl` | musl  | Static  | Any modern Linux        |
 
 **Source:** [Rust musl Static Linking](https://redandgreen.co.uk/static-linking-with-musl/rust-programming/)
 
@@ -1086,6 +1114,7 @@ rustc -C target-feature=-crt-static ...
 cargo-dist provides "Shippable application packaging for Rust."
 
 **Key features:**
+
 - Self-hosting: Push a git tag to trigger release
 - Multi-platform archives
 - GitHub Actions integration
@@ -1106,6 +1135,7 @@ cargo dist plan
 ```
 
 **What it generates:**
+
 - Platform-specific archives (.tar.gz, .zip)
 - Checksums (SHA256)
 - GitHub Release assets
@@ -1135,6 +1165,7 @@ cargo binstall fd-find
 ```
 
 **How it works:**
+
 1. Fetch crate info from crates.io
 2. Search linked repository for pre-built binaries
 3. Fall back to quickinstall.app (third-party binary host)
@@ -1180,6 +1211,7 @@ cargo bundle --release
 ```
 
 **Supported formats:**
+
 - macOS: .app bundles
 - Linux: .deb packages
 - Windows: .msi installers (experimental)
@@ -1194,6 +1226,7 @@ cargo bundle --release
 **Source:** [cargo-packager crate](https://crates.io/crates/cargo-packager)
 
 Supports:
+
 - **macOS:** DMG and .app bundles
 - **Linux:** .deb, AppImage, Pacman
 - **Windows:** NSIS .exe, MSI (WiX)
@@ -1302,6 +1335,7 @@ cargo audit fix
 ```
 
 **Difference from cargo-deny:**
+
 - cargo-audit: Focused on security advisories
 - cargo-deny: Comprehensive (security + licenses + bans + sources)
 
@@ -1310,6 +1344,7 @@ cargo audit fix
 **Source:** [Socket Rust Support Beta](https://socket.dev/blog/rust-support-now-in-beta)
 
 Socket.dev added Rust support in beta (2024):
+
 - Analyzes crates for supply chain risks
 - Detects malicious packages
 - Monitors for new vulnerabilities
@@ -1324,6 +1359,7 @@ Socket.dev added Rust support in beta (2024):
 ### ripgrep (rg)
 
 **Distribution strategy:**
+
 - GitHub Releases with pre-built binaries
 - Homebrew (macOS/Linux)
 - apt/dnf repositories
@@ -1331,6 +1367,7 @@ Socket.dev added Rust support in beta (2024):
 - cargo install
 
 **Key practices:**
+
 - Comprehensive shell completions (213-line Bash script)
 - Man page generation
 - Static linking for Linux (musl)
@@ -1341,11 +1378,13 @@ Socket.dev added Rust support in beta (2024):
 ### bat
 
 **Distribution strategy:**
+
 - All major package managers
 - One-liner install script
 - GitHub Releases with checksums
 
 **Key practices:**
+
 - Syntax highlighting with embedded themes
 - Git integration
 - Pager integration (less)
@@ -1356,11 +1395,13 @@ Socket.dev added Rust support in beta (2024):
 ### fd
 
 **Distribution strategy:**
+
 - Pre-built binaries for all platforms
 - Smart defaults (ignore .gitignore, hidden files)
 - Parallel directory traversal
 
 **Key practices:**
+
 - User-friendly error messages
 - Colored output by default
 - --exec flag for running commands
@@ -1372,6 +1413,7 @@ Socket.dev added Rust support in beta (2024):
 **Important:** exa is abandoned. The community maintains eza as a fork.
 
 **eza features:**
+
 - Icons support (--icons)
 - Git integration
 - Tree view
@@ -1476,24 +1518,28 @@ Socket.dev added Rust support in beta (2024):
 ### Implementation Order
 
 **Phase 1: Foundation (Week 1)**
+
 - Configure Cargo.toml release profile
 - Set up GitHub Actions for CI
 - Generate shell completions
 - Create install script
 
 **Phase 2: Distribution (Week 2)**
+
 - Configure cargo-dist
 - Create Homebrew formula
 - Add cargo-binstall metadata
 - Set up musl builds
 
 **Phase 3: Automation (Week 3)**
+
 - Integrate git-cliff
 - Add cargo-deny to CI
 - Optimize binary size
 - Create release checklist
 
 **Phase 4: Expansion (Week 4)**
+
 - Debian packages
 - Windows installers
 - Docker images
@@ -1536,6 +1582,7 @@ Socket.dev added Rust support in beta (2024):
 ## 15. Sources and References
 
 ### Official Documentation
+
 - [Cargo Install - The Cargo Book](https://doc.rust-lang.org/cargo/commands/cargo-install.html)
 - [Packaging and Distributing - Rust CLI Book](https://rust-cli.github.io/book/tutorial/packaging.html)
 - [Cross-Compilation - The rustup Book](https://rust-lang.github.io/rustup/cross-compilation.html)
@@ -1543,6 +1590,7 @@ Socket.dev added Rust support in beta (2024):
 - [RFC 1721 - crt-static](https://rust-lang.github.io/rfcs/1721-crt-static.html)
 
 ### Tools and Projects
+
 - [cross-rs/cross - GitHub](https://github.com/cross-rs/cross)
 - [cargo-dist - crates.io](https://crates.io/crates/cargo-dist)
 - [cargo-binstall - GitHub](https://github.com/cargo-bins/cargo-binstall)
@@ -1557,12 +1605,14 @@ Socket.dev added Rust support in beta (2024):
 - [rust-musl-builder - GitHub](https://github.com/emk/rust-musl-builder)
 
 ### GitHub Actions
+
 - [Swatinem/rust-cache - GitHub](https://github.com/Swatinem/rust-cache)
 - [dtolnay/rust-toolchain - GitHub](https://github.com/dtolnay/rust-toolchain)
 - [taiki-e/upload-rust-binary-action - GitHub](https://github.com/marketplace/actions/build-and-upload-rust-binary-to-github-releases)
 - [SpectralOps/rust-ci-release-template - GitHub](https://github.com/SpectralOps/rust-ci-release-template)
 
 ### Guides and Tutorials
+
 - [Publishing to Homebrew - Kazushi Kawamura](https://kawamurakazushi.com/20200217-publishing-a-rust-cli-to-homebrew/)
 - [Cross-Compiling with cross-rs - Blog](https://blog.ediri.io/how-to-cross-compile-your-rust-applications-using-cross-rs-and-github-actions)
 - [CLI Shell Completions - Kevin K](https://kbknapp.dev/shell-completions/)
@@ -1572,22 +1622,26 @@ Socket.dev added Rust support in beta (2024):
 - [Comparing Rust Supply Chain Tools - LogRocket](https://blog.logrocket.com/comparing-rust-supply-chain-safety-tools/)
 
 ### Package Managers
+
 - [Chocolatey - Publish a Rust Executable](https://dev.to/tgotwig/publish-a-simple-executable-from-rust-on-chocolatey-2pbl)
 - [How to Publish on Homebrew - Federico Terzi](https://federicoterzi.com/blog/how-to-publish-your-rust-project-on-homebrew/)
 - [Ubuntu Rust Packaging FAQ](https://documentation.ubuntu.com/project/maintainers/niche-package-maintenance/rustc/rust-packaging-faq/)
 
 ### Industry Analysis
+
 - [Rewritten in Rust - CLI Tools](https://zaiste.net/posts/shell-commands-rust/)
 - [14 Rust CLI Tools - It's FOSS](https://itsfoss.com/rust-cli-tools/)
 - [Rust Terminal Tools - Deepu Tech](https://deepu.tech/rust-terminal-tools-linux-mac-windows-fish-zsh/)
 - [Containerization Best Practices 2025](https://markaicode.com/containerization-best-practices-2025/)
 
 ### Recent News
+
 - [Debian APT Rust Integration - It's FOSS](https://news.itsfoss.com/rust-integration-for-apt/)
 - [Updating Rust's musl to 1.2.5 - Rust Blog](https://blog.rust-lang.org/2025/12/05/Updating-musl-1.2.5/)
 - [Rust CI/CD Pipeline Comparison 2025](https://markaicode.com/rust-cicd-pipeline-setup-comparison-2025/)
 
 ### Security
+
 - [RustSec Advisory Database](https://rustsec.org/)
 - [Socket.dev Rust Support](https://socket.dev/blog/rust-support-now-in-beta)
 

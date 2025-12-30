@@ -1,0 +1,101 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ReasonKit Core MCP Protocol",
+  "description": "Schema definition for ReasonKit Core MCP Server capabilities",
+  "type": "object",
+  "definitions": {
+    "ReasoningProfile": {
+      "type": "string",
+      "enum": ["quick", "balanced", "deep", "scientific", "paranoid", "decide"],
+      "description": "The depth and rigor of the reasoning process"
+    },
+    "ThinkTool": {
+      "type": "string",
+      "enum": [
+        "GigaThink",
+        "LaserLogic",
+        "BedRock",
+        "ProofGuard",
+        "BrutalHonesty"
+      ],
+      "description": "Specific cognitive modules to activate"
+    }
+  },
+  "capabilities": {
+    "tools": [
+      {
+        "name": "rk_reason",
+        "description": "Execute a structured reasoning chain on a query",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "query": {
+              "type": "string",
+              "description": "The problem or question to analyze"
+            },
+            "profile": {
+              "$ref": "#/definitions/ReasoningProfile",
+              "default": "balanced"
+            },
+            "context_files": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "List of file paths to include as context"
+            }
+          },
+          "required": ["query"]
+        }
+      },
+      {
+        "name": "rk_retrieve",
+        "description": "Semantic search across the ReasonKit Knowledge Base",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "query": { "type": "string" },
+            "limit": { "type": "integer", "default": 5 },
+            "threshold": { "type": "number", "default": 0.7 }
+          },
+          "required": ["query"]
+        }
+      },
+      {
+        "name": "rk_verify",
+        "description": "Verify a claim using the Triangulation Protocol",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "claim": { "type": "string" },
+            "sources_required": { "type": "integer", "default": 3 }
+          },
+          "required": ["claim"]
+        }
+      }
+    ],
+    "resources": [
+      {
+        "uri": "reasonkit://logs/current",
+        "name": "Current Session Logs",
+        "mimeType": "text/plain"
+      },
+      {
+        "uri": "reasonkit://config/active",
+        "name": "Active Configuration",
+        "mimeType": "application/json"
+      }
+    ],
+    "prompts": [
+      {
+        "name": "architectural_review",
+        "description": "Review a proposed architecture against ReasonKit constraints",
+        "arguments": [
+          {
+            "name": "proposal",
+            "description": "The architectural proposal text",
+            "required": true
+          }
+        ]
+      }
+    ]
+  }
+}

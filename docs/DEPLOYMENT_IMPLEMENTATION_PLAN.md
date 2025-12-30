@@ -37,6 +37,7 @@ pkg-fmt = "tgz"
 ```
 
 **Verification:**
+
 ```bash
 cargo build --release
 ls -lh target/release/rk-core  # Check binary size
@@ -83,7 +84,7 @@ name: Release
 
 on:
   push:
-    tags: ['v*']
+    tags: ["v*"]
 
 jobs:
   build:
@@ -98,10 +99,10 @@ jobs:
               rustup target add x86_64-unknown-linux-musl
               cargo build --release --target x86_64-unknown-linux-musl
           - target: x86_64-apple-darwin
-            os: macos-13  # Intel
+            os: macos-13 # Intel
             build_cmd: cargo build --release --target x86_64-apple-darwin
           - target: aarch64-apple-darwin
-            os: macos-14  # Apple Silicon
+            os: macos-14 # Apple Silicon
             build_cmd: cargo build --release --target aarch64-apple-darwin
           - target: x86_64-pc-windows-msvc
             os: windows-latest
@@ -154,6 +155,7 @@ jobs:
 ```
 
 **Verification:**
+
 ```bash
 # Create test tag
 git tag v0.1.0-test
@@ -234,6 +236,7 @@ fn main() {
 ```
 
 **Verification:**
+
 ```bash
 cargo run --bin generate-completions
 ls -la completions/
@@ -361,12 +364,14 @@ echo "Run '$BINARY_NAME --help' to get started!"
 ```
 
 **Make executable and test:**
+
 ```bash
 chmod +x reasonkit-site/install.sh
 ./reasonkit-site/install.sh
 ```
 
 **Host on website:**
+
 ```bash
 # Upload to reasonkit.sh/install.sh
 # Users can install with:
@@ -393,6 +398,7 @@ cargo dist init
 ```
 
 **Review and commit:**
+
 ```toml
 # Auto-generated in Cargo.toml
 [workspace.metadata.dist]
@@ -408,6 +414,7 @@ targets = [
 ```
 
 **Test locally:**
+
 ```bash
 cargo dist build
 cargo dist plan
@@ -420,6 +427,7 @@ cargo dist plan
 **Task:** Create Homebrew tap for macOS distribution
 
 **Step 1: Create tap repository**
+
 ```bash
 # On GitHub, create: homebrew-tap
 # Repository URL: https://github.com/username/homebrew-tap
@@ -474,6 +482,7 @@ end
 ```
 
 **Step 3: Test locally**
+
 ```bash
 # Install from local tap
 brew tap username/tap
@@ -484,6 +493,7 @@ rk-core --version
 ```
 
 **Step 4: Update after each release**
+
 ```bash
 # Get new SHA256
 shasum -a 256 rk-core-x86_64-apple-darwin.tar.gz
@@ -511,6 +521,7 @@ pkg-fmt = "zip"
 ```
 
 **Test:**
+
 ```bash
 # After creating a release
 cargo binstall reasonkit --dry-run
@@ -542,6 +553,7 @@ cargo binstall reasonkit
 ```
 
 **Verify static linking:**
+
 ```bash
 ldd target/x86_64-unknown-linux-musl/release/rk-core
 # Should output: "not a dynamic executable"
@@ -605,6 +617,7 @@ commit_parsers = [
 ```
 
 **Update release workflow:**
+
 ```yaml
 - name: Generate changelog
   run: |
@@ -613,6 +626,7 @@ commit_parsers = [
 ```
 
 **Manual usage:**
+
 ```bash
 # Generate for latest version
 git cliff --latest -o CHANGELOG.md
@@ -686,6 +700,7 @@ allow-git = []
 ```
 
 **Add to CI:**
+
 ```yaml
 - name: Security & License Check
   run: |
@@ -694,6 +709,7 @@ allow-git = []
 ```
 
 **Local usage:**
+
 ```bash
 # Check everything
 cargo deny check
@@ -741,6 +757,7 @@ ls -lh target/release/rk-core
 ```
 
 **Document results:**
+
 ```
 Before optimization:  10.2 MB (debug)
 After --release:       2.1 MB
@@ -757,7 +774,7 @@ After UPX:             0.6 MB
 
 **File:** `reasonkit-core/docs/RELEASING.md`
 
-```markdown
+````markdown
 # Release Process
 
 ## Prerequisites
@@ -776,6 +793,7 @@ After UPX:             0.6 MB
 # Update version in Cargo.toml
 # Update version in README.md if applicable
 ```
+````
 
 ### 2. Generate Changelog
 
@@ -822,7 +840,8 @@ git push
 - [ ] Verify Homebrew: `brew upgrade reasonkit`
 - [ ] Announce on social media
 - [ ] Update documentation site
-```
+
+````
 
 ---
 
@@ -835,7 +854,7 @@ git push
 ```bash
 # Install cargo-deb
 cargo install cargo-deb
-```
+````
 
 **Update Cargo.toml:**
 
@@ -861,12 +880,14 @@ assets = [
 ```
 
 **Build:**
+
 ```bash
 cargo deb
 # Output: target/debian/reasonkit_0.1.0-1_amd64.deb
 ```
 
 **Test:**
+
 ```bash
 sudo dpkg -i target/debian/reasonkit_0.1.0-1_amd64.deb
 rk-core --version
@@ -874,6 +895,7 @@ sudo dpkg -r reasonkit
 ```
 
 **Add to release:**
+
 ```yaml
 # In .github/workflows/release.yml
 - name: Build .deb package (Linux)
@@ -887,7 +909,7 @@ sudo dpkg -r reasonkit
   if: matrix.os == 'ubuntu-latest'
   uses: softprops/action-gh-release@v1
   with:
-    files: '*.deb'
+    files: "*.deb"
 ```
 
 ---
@@ -897,6 +919,7 @@ sudo dpkg -r reasonkit
 **Task:** Create Chocolatey package
 
 **Create package structure:**
+
 ```
 chocolatey/
 ├── reasonkit.nuspec
@@ -960,6 +983,7 @@ Install-ChocolateyZipPackage @packageArgs
 ```
 
 **Build and test:**
+
 ```powershell
 # Pack
 choco pack
@@ -1003,6 +1027,7 @@ ENTRYPOINT ["/rk-core"]
 ```
 
 **Build and test:**
+
 ```bash
 docker build -t reasonkit:latest .
 docker run --rm reasonkit:latest --version
@@ -1010,6 +1035,7 @@ docker run --rm -v $(pwd):/data reasonkit:latest --help
 ```
 
 **Multi-stage with Alpine:**
+
 ```dockerfile
 FROM rust:1.75-alpine AS builder
 
@@ -1026,6 +1052,7 @@ ENTRYPOINT ["rk-core"]
 ```
 
 **Publish to Docker Hub:**
+
 ```bash
 docker tag reasonkit:latest username/reasonkit:0.1.0
 docker tag reasonkit:latest username/reasonkit:latest
@@ -1041,7 +1068,7 @@ docker push username/reasonkit:latest
 
 **Update README.md:**
 
-```markdown
+````markdown
 # ReasonKit
 
 Structured reasoning protocols for LLMs.
@@ -1049,34 +1076,41 @@ Structured reasoning protocols for LLMs.
 ## Installation
 
 ### Rust Developers
+
 ```bash
 cargo install reasonkit
 # or faster:
 cargo binstall reasonkit
 ```
+````
 
 ### macOS
+
 ```bash
 brew install username/tap/reasonkit
 ```
 
 ### Linux (Debian/Ubuntu)
+
 ```bash
 wget https://github.com/username/reasonkit-core/releases/download/v0.1.0/reasonkit_0.1.0_amd64.deb
 sudo dpkg -i reasonkit_0.1.0_amd64.deb
 ```
 
 ### Windows (Chocolatey)
+
 ```powershell
 choco install reasonkit
 ```
 
 ### Universal
+
 ```bash
 curl -fsSL https://reasonkit.sh/install.sh | bash
 ```
 
 ### From Source
+
 ```bash
 git clone https://github.com/username/reasonkit-core
 cd reasonkit-core
@@ -1101,6 +1135,7 @@ rk-core completions fish > ~/.config/fish/completions/rk-core.fish
 ```bash
 rk-core --help
 ```
+
 ```
 
 ---
@@ -1160,3 +1195,4 @@ rk-core --help
 
 **Status:** Ready for Implementation
 **Next Action:** Begin Phase 1, Day 1 - Optimize Cargo.toml
+```

@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400" width="800" height="400">
+  <defs>
+    <linearGradient id="trunk-grad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#06b6d4"/>
+      <stop offset="50%" stop-color="#a855f7"/>
+      <stop offset="100%" stop-color="#ec4899"/>
+    </linearGradient>
+    <linearGradient id="bg-grad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#0a0d14"/>
+      <stop offset="100%" stop-color="#030508"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="800" height="400" fill="url(#bg-grad)"/>
+
+  <!-- Tree trunk -->
+  <path d="M400 380 Q400 300 400 250 Q380 200 340 170 M400 250 Q420 200 460 170 M400 280 Q360 240 320 220 M400 280 Q440 240 480 220"
+        stroke="url(#trunk-grad)" stroke-width="4" fill="none" filter="url(#glow)" stroke-linecap="round"/>
+
+  <!-- Branch lines -->
+  <path d="M340 170 Q310 140 280 120 M340 170 Q350 130 360 100
+           M460 170 Q490 140 520 120 M460 170 Q450 130 440 100
+           M320 220 Q290 200 260 190 M320 220 Q310 180 300 150
+           M480 220 Q510 200 540 190 M480 220 Q490 180 500 150"
+        stroke="url(#trunk-grad)" stroke-width="2" fill="none" opacity="0.8" stroke-linecap="round"/>
+
+  <!-- Top level nodes (cyan) -->
+  <g filter="url(#glow)">
+    <polygon points="280,120 295,110 310,120 310,135 295,145 280,135" fill="#06b6d4" opacity="0.9"/>
+    <polygon points="360,100 375,90 390,100 390,115 375,125 360,115" fill="#06b6d4" opacity="0.9"/>
+    <polygon points="410,100 425,90 440,100 440,115 425,125 410,115" fill="#06b6d4" opacity="0.9"/>
+    <polygon points="490,120 505,110 520,120 520,135 505,145 490,135" fill="#06b6d4" opacity="0.9"/>
+  </g>
+
+  <!-- Mid level nodes (purple) -->
+  <g filter="url(#glow)">
+    <polygon points="245,190 260,180 275,190 275,205 260,215 245,205" fill="#a855f7" opacity="0.9"/>
+    <polygon points="285,150 300,140 315,150 315,165 300,175 285,165" fill="#a855f7" opacity="0.9"/>
+    <polygon points="485,150 500,140 515,150 515,165 500,175 485,165" fill="#a855f7" opacity="0.9"/>
+    <polygon points="525,190 540,180 555,190 555,205 540,215 525,205" fill="#a855f7" opacity="0.9"/>
+  </g>
+
+  <!-- Lower nodes (pink) -->
+  <g filter="url(#glow)">
+    <polygon points="325,170 340,160 355,170 355,185 340,195 325,185" fill="#ec4899" opacity="0.9"/>
+    <polygon points="445,170 460,160 475,170 475,185 460,195 445,185" fill="#ec4899" opacity="0.9"/>
+    <polygon points="305,220 320,210 335,220 335,235 320,245 305,235" fill="#ec4899" opacity="0.9"/>
+    <polygon points="465,220 480,210 495,220 495,235 480,245 465,235" fill="#ec4899" opacity="0.9"/>
+  </g>
+
+  <!-- Root node -->
+  <g filter="url(#glow)">
+    <polygon points="385,250 400,240 415,250 415,265 400,275 385,265" fill="#ef4444" opacity="0.9"/>
+  </g>
+
+  <!-- Title -->
+  <text x="400" y="360" text-anchor="middle" fill="#f9fafb" font-family="monospace" font-size="14" font-weight="500">
+    ReasonKit - RAPTOR Hierarchical Reasoning
+  </text>
+
+  <!-- Ambient dots -->
+  <circle cx="150" cy="80" r="2" fill="#06b6d4" opacity="0.6"/>
+  <circle cx="650" cy="100" r="1.5" fill="#a855f7" opacity="0.5"/>
+  <circle cx="100" cy="200" r="1" fill="#ec4899" opacity="0.4"/>
+  <circle cx="700" cy="250" r="2" fill="#06b6d4" opacity="0.5"/>
+  <circle cx="180" cy="300" r="1.5" fill="#a855f7" opacity="0.6"/>
+  <circle cx="620" cy="320" r="1" fill="#ec4899" opacity="0.4"/>
+</svg>

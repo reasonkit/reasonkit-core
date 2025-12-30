@@ -1,0 +1,412 @@
+{
+  "module": "ABSOLUTE_REASONING_ENGINE",
+  "version": "1.0.0",
+  "type": "linear_cognitive_enforcement",
+  "description": "A rigid, 10-step protocol ensuring absolute logical completeness and rigor. No step can be skipped. Each step must be completed with validated output before proceeding.",
+  "enforcement_mechanism": "strict_sequential_lock",
+  "validation_requirements": "all_outputs_must_pass_schema_validation",
+
+  "protocol_sequence": [
+    {
+      "step": 1,
+      "id": "DEFINE_SCOPE",
+      "name": "Define Scope",
+      "instruction": "Delineate the exact boundaries of the problem. What is IN and what is OUT? Establish clear success criteria.",
+      "cognitive_stance": "boundary_setting",
+      "time_allocation": "10%_of_total_process",
+      "output_schema": {
+        "primary_objective": "string (single sentence)",
+        "boundary_inclusions": ["string (explicit inclusions)"],
+        "boundary_exclusions": ["string (explicit exclusions)"],
+        "success_definition": "string (measurable success criteria)",
+        "scope_validation": "boolean (self-check: is this scope achievable?)"
+      },
+      "validation_rules": [
+        "primary_objective must be actionable",
+        "inclusions and exclusions must be mutually exclusive",
+        "success_definition must be measurable"
+      ],
+      "failure_modes": [
+        "scope_creep",
+        "vague_boundaries",
+        "unrealistic_objectives"
+      ]
+    },
+    {
+      "step": 2,
+      "id": "IDENTIFY_CONSTRAINTS",
+      "name": "Identify Constraints",
+      "instruction": "List every limiting factor: resources, time, physics, laws, ethics, technology, human factors.",
+      "cognitive_stance": "reality_check",
+      "time_allocation": "15%_of_total_process",
+      "output_schema": {
+        "hard_constraints": ["string (immutable limitations)"],
+        "soft_constraints": ["string (negotiable limitations)"],
+        "resource_limits": {
+          "time": "string (deadline or duration)",
+          "budget": "string (financial limits)",
+          "personnel": "string (team/human resources)",
+          "technology": "string (available tools/platforms)",
+          "data": "string (information availability)"
+        },
+        "risk_assessment": ["string (potential constraint violations)"]
+      },
+      "validation_rules": [
+        "hard_constraints must be physics/law-based",
+        "resource_limits must be quantified",
+        "risk_assessment must include mitigation strategies"
+      ],
+      "failure_modes": [
+        "ignored_limitations",
+        "over-optimistic_assumptions",
+        "resource_mismanagement"
+      ]
+    },
+    {
+      "step": 3,
+      "id": "ESTABLISH_CRITERIA",
+      "name": "Establish Criteria",
+      "instruction": "Define the rubric against which all solutions will be graded. Create objective evaluation standards.",
+      "cognitive_stance": "quality_gate_setting",
+      "time_allocation": "10%_of_total_process",
+      "output_schema": {
+        "must_have_requirements": ["string (non-negotiable criteria)"],
+        "nice_to_have_requirements": ["string (desirable but optional)"],
+        "failure_conditions": ["string (automatic disqualification)"],
+        "evaluation_weights": "object (relative importance of criteria)",
+        "measurement_methods": ["string (how to assess each criterion)"]
+      },
+      "validation_rules": [
+        "must_have must be prioritized over nice_to_have",
+        "failure_conditions must be objective",
+        "measurement_methods must be reproducible"
+      ],
+      "failure_modes": [
+        "subjective_criteria",
+        "moving_goalposts",
+        "incomplete_evaluation_framework"
+      ]
+    },
+    {
+      "step": 4,
+      "id": "DECONSTRUCT_PROBLEM",
+      "name": "Deconstruct Problem",
+      "instruction": "Break the problem down into its atomic constituent parts using First Principles thinking.",
+      "cognitive_stance": "reductionist_analysis",
+      "time_allocation": "15%_of_total_process",
+      "output_schema": {
+        "atomic_components": ["string (smallest solvable units)"],
+        "causal_relationships": {
+          "dependencies": "graph_structure (what requires what)",
+          "feedback_loops": ["string (reinforcing/balancing loops)"],
+          "bottlenecks": ["string (critical path elements)"]
+        },
+        "root_cause_analysis": {
+          "five_whys_depth": "integer (levels of why analysis)",
+          "root_causes": ["string (fundamental causes)"],
+          "symptom_vs_cause": "mapping (what's observed vs what's driving)"
+        },
+        "decomposition_validation": "boolean (can each component be solved independently?)"
+      },
+      "validation_rules": [
+        "atomic_components must be independently solvable",
+        "causal_relationships must form a coherent graph",
+        "root_cause_analysis must reach fundamental level"
+      ],
+      "failure_modes": [
+        "superficial_decomposition",
+        "circular_reasoning",
+        "missing_interdependencies"
+      ]
+    },
+    {
+      "step": 5,
+      "id": "FORMULATE_HYPOTHESES",
+      "name": "Formulate Hypotheses",
+      "instruction": "Generate mutually exclusive, collectively exhaustive (MECE) potential solutions. Force divergence before convergence.",
+      "cognitive_stance": "creative_exploration",
+      "time_allocation": "15%_of_total_process",
+      "output_schema": {
+        "hypothesis_count": "integer (minimum 3, target 5-7)",
+        "hypothesis_list": [
+          {
+            "id": "string (H1, H2, etc.)",
+            "description": "string (clear, actionable solution)",
+            "mechanism": "string (how it works)",
+            "assumptions": ["string (explicit assumptions)"],
+            "confidence_initial": "number (0.0-1.0)",
+            "testability": "string (how to validate this hypothesis)"
+          }
+        ],
+        "mece_validation": {
+          "mutually_exclusive": "boolean (no overlap between hypotheses?)",
+          "collectively_exhaustive": "boolean (covers all possibilities?)",
+          "diversity_score": "number (0.0-1.0, how different are the hypotheses?)"
+        }
+      },
+      "validation_rules": [
+        "minimum 3 hypotheses required",
+        "each hypothesis must be testable",
+        "MECE validation must pass",
+        "diversity_score must be >0.6"
+      ],
+      "failure_modes": [
+        "single_solution_bias",
+        "overlapping_hypotheses",
+        "untestable_proposals"
+      ]
+    },
+    {
+      "step": 6,
+      "id": "GATHER_EVIDENCE",
+      "name": "Gather Evidence",
+      "instruction": "Collect raw data, facts, and precedents to test the hypotheses. Actively seek counter-evidence.",
+      "cognitive_stance": "empirical_collection",
+      "time_allocation": "10%_of_total_process",
+      "output_schema": {
+        "data_sources": [
+          {
+            "source": "string (primary/secondary, qualitative/quantitative)",
+            "reliability_score": "number (0.0-1.0)",
+            "relevance_score": "number (0.0-1.0)",
+            "collection_method": "string"
+          }
+        ],
+        "key_facts": ["string (verified, relevant data points)"],
+        "counter_evidence": ["string (evidence contradicting hypotheses)"],
+        "data_quality_assessment": {
+          "completeness": "number (0.0-1.0)",
+          "accuracy": "number (0.0-1.0)",
+          "bias_check": "boolean (actively sought opposing views?)",
+          "recency": "string (how current is the data?)"
+        },
+        "evidence_mapping": "object (which evidence supports/refutes which hypothesis)"
+      },
+      "validation_rules": [
+        "minimum 3 diverse data sources",
+        "counter_evidence must be included",
+        "data_quality_assessment must score >0.7 overall",
+        "evidence_mapping must cover all hypotheses"
+      ],
+      "failure_modes": [
+        "confirmation_bias",
+        "insufficient_data",
+        "cherry_picked_evidence"
+      ]
+    },
+    {
+      "step": 7,
+      "id": "ANALYZE_DATA",
+      "name": "Analyze Data",
+      "instruction": "Apply rigorous logic and statistical models to the evidence. Identify patterns, correlations, and anomalies.",
+      "cognitive_stance": "analytical_synthesis",
+      "time_allocation": "10%_of_total_process",
+      "output_schema": {
+        "pattern_recognition": [
+          {
+            "pattern": "string (identified pattern)",
+            "supporting_evidence": ["string"],
+            "hypothesis_impact": "string (which hypotheses does this support/weaken)",
+            "confidence_level": "number (0.0-1.0)"
+          }
+        ],
+        "correlation_analysis": {
+          "variable_relationships": "matrix (correlation coefficients)",
+          "causal_links": ["string (inferred causality)"],
+          "confounding_variables": ["string (alternative explanations)"]
+        },
+        "anomaly_detection": [
+          {
+            "anomaly": "string (unexpected finding)",
+            "significance": "string (why it matters)",
+            "hypothesis_implication": "string (what this means for hypotheses)"
+          }
+        ],
+        "statistical_validation": {
+          "method_used": "string (t-test, regression, etc.)",
+          "significance_level": "number (p-value)",
+          "effect_size": "number",
+          "statistical_power": "number (ability to detect true effects)"
+        }
+      },
+      "validation_rules": [
+        "pattern_recognition must be evidence-based",
+        "correlation_analysis must distinguish correlation from causation",
+        "anomaly_detection must be statistically significant",
+        "statistical_validation must use appropriate methods"
+      ],
+      "failure_modes": [
+        "spurious_correlations",
+        "overfitting",
+        "ignoring_anomalies"
+      ]
+    },
+    {
+      "step": 8,
+      "id": "SYNTHESIZE_FINDINGS",
+      "name": "Synthesize Findings",
+      "instruction": "Merge analysis into a coherent narrative or solution structure. Converge from multiple hypotheses to optimal solution.",
+      "cognitive_stance": "integrative_convergence",
+      "time_allocation": "5%_of_total_process",
+      "output_schema": {
+        "primary_recommendation": {
+          "solution": "string (the chosen approach)",
+          "rationale": "string (why this solution)",
+          "expected_outcomes": ["string (predicted results)"],
+          "implementation_requirements": ["string (what's needed to execute)"]
+        },
+        "supporting_arguments": [
+          {
+            "argument": "string",
+            "evidence_support": ["string"],
+            "logical_strength": "number (0.0-1.0)"
+          }
+        ],
+        "discarded_hypotheses": [
+          {
+            "hypothesis_id": "string",
+            "reason_for_discarding": "string",
+            "lessons_learned": "string"
+          }
+        ],
+        "uncertainty_assessment": {
+          "confidence_score": "number (0.0-1.0)",
+          "key_uncertainties": ["string"],
+          "sensitivity_analysis": "string (how robust is the solution?)"
+        }
+      },
+      "validation_rules": [
+        "primary_recommendation must be implementable",
+        "supporting_arguments must be logically sound",
+        "discarded_hypotheses must have clear reasons",
+        "uncertainty_assessment must be realistic"
+      ],
+      "failure_modes": [
+        "premature_convergence",
+        "weak_synthesis",
+        "overconfidence"
+      ]
+    },
+    {
+      "step": 9,
+      "id": "VALIDATE_CONCLUSIONS",
+      "name": "Validate Conclusions",
+      "instruction": "Stress-test the synthesis against the initial Criteria and Constraints. Conduct pre-mortem analysis.",
+      "cognitive_stance": "critical_validation",
+      "time_allocation": "5%_of_total_process",
+      "output_schema": {
+        "criteria_check_matrix": {
+          "must_have_satisfied": ["string (which criteria are met)"],
+          "must_have_violated": ["string (which criteria fail)"],
+          "nice_to_have_achieved": ["string"],
+          "failure_conditions_triggered": ["string"]
+        },
+        "constraint_validation": {
+          "hard_constraints_satisfied": ["string"],
+          "hard_constraints_violated": ["string"],
+          "soft_constraints_addressed": ["string"],
+          "resource_requirements_met": "boolean"
+        },
+        "pre_mortem_analysis": {
+          "failure_scenarios": ["string (ways this could fail)"],
+          "mitigation_strategies": ["string (how to prevent failure)"],
+          "early_warning_signals": ["string (what to monitor)"]
+        },
+        "final_confidence_assessment": {
+          "overall_confidence": "number (0.0-1.0)",
+          "confidence_drivers": ["string (what increases confidence)"],
+          "confidence_limiters": ["string (what decreases confidence)"],
+          "go_no_go_recommendation": "string"
+        }
+      },
+      "validation_rules": [
+        "criteria_check_matrix must show all must-haves satisfied",
+        "constraint_validation must pass all hard constraints",
+        "pre_mortem_analysis must identify realistic failure modes",
+        "final_confidence_assessment must be evidence-based"
+      ],
+      "failure_modes": [
+        "validation_bias",
+        "incomplete_stress_testing",
+        "overconfidence"
+      ]
+    },
+    {
+      "step": 10,
+      "id": "DOCUMENT_PROCESS",
+      "name": "Document Process",
+      "instruction": "Create the final artifact that communicates the result clearly and practically. Ensure reproducibility.",
+      "cognitive_stance": "communication_clarity",
+      "time_allocation": "5%_of_total_process",
+      "output_schema": {
+        "executive_summary": {
+          "problem_statement": "string (1 sentence)",
+          "recommended_solution": "string (1 sentence)",
+          "expected_benefits": ["string (3-5 key outcomes)"],
+          "implementation_effort": "string (high/medium/low)",
+          "confidence_level": "string (high/medium/low)"
+        },
+        "detailed_roadmap": {
+          "implementation_steps": [
+            {
+              "step_number": "integer",
+              "description": "string",
+              "duration": "string",
+              "resources_required": ["string"],
+              "success_criteria": "string",
+              "risks_mitigations": "string"
+            }
+          ],
+          "timeline": "string (overall duration)",
+          "milestones": ["string (key checkpoints)"],
+          "dependencies": "graph_structure"
+        },
+        "audit_trail": {
+          "process_log": "string (link to detailed process documentation)",
+          "decision_rationale": "string (why key decisions were made)",
+          "alternative_considerations": "string (other options evaluated)",
+          "lessons_learned": "string (what was learned during the process)"
+        },
+        "communication_artifacts": [
+          {
+            "artifact_type": "string (presentation, report, prototype, etc.)",
+            "audience": "string",
+            "key_messages": ["string"],
+            "delivery_method": "string"
+          }
+        ]
+      },
+      "validation_rules": [
+        "executive_summary must be accessible to non-experts",
+        "detailed_roadmap must be actionable and sequenced",
+        "audit_trail must enable reproducibility",
+        "communication_artifacts must match audience needs"
+      ],
+      "failure_modes": [
+        "unclear_communication",
+        "missing_implementation_details",
+        "incomplete_documentation"
+      ]
+    }
+  ],
+
+  "enforcement_mechanisms": {
+    "step_locking": "boolean (prevent proceeding without validation)",
+    "quality_gates": "boolean (require peer review at key steps)",
+    "time_limits": "boolean (enforce time allocation per step)",
+    "documentation_mandate": "boolean (require documentation at each step)"
+  },
+
+  "performance_metrics": {
+    "process_completeness": "number (0.0-1.0, all steps completed)",
+    "logical_rigor": "number (0.0-1.0, adherence to protocols)",
+    "outcome_quality": "number (0.0-1.0, solution effectiveness)",
+    "process_efficiency": "number (0.0-1.0, time vs quality balance)"
+  },
+
+  "failure_recovery": {
+    "step_restart": "boolean (ability to restart individual steps)",
+    "process_audit": "boolean (ability to audit and correct process)",
+    "expert_intervention": "boolean (ability to request human oversight)"
+  }
+}

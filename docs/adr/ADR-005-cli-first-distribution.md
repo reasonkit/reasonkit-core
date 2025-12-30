@@ -15,24 +15,24 @@ ReasonKit needs a distribution strategy that enables rapid adoption while mainta
 
 We evaluated several distribution approaches:
 
-| Approach | Time to Value | Friction | Integration | Monetization |
-|----------|---------------|----------|-------------|--------------|
-| **Library-First** | Medium (needs code) | Medium (import, learn API) | Deep | SDK licensing |
-| **CLI-First** | Immediate (one command) | Very Low (install and run) | Medium | CLI features, enterprise |
-| **SaaS-First** | Immediate (signup) | Medium (account, API keys) | Shallow | Usage-based |
-| **IDE Plugin** | Medium (install plugin) | Medium (per-IDE effort) | Deep | Marketplace |
+| Approach          | Time to Value           | Friction                   | Integration | Monetization             |
+| ----------------- | ----------------------- | -------------------------- | ----------- | ------------------------ |
+| **Library-First** | Medium (needs code)     | Medium (import, learn API) | Deep        | SDK licensing            |
+| **CLI-First**     | Immediate (one command) | Very Low (install and run) | Medium      | CLI features, enterprise |
+| **SaaS-First**    | Immediate (signup)      | Medium (account, API keys) | Shallow     | Usage-based              |
+| **IDE Plugin**    | Medium (install plugin) | Medium (per-IDE effort)    | Deep        | Marketplace              |
 
 ### Market Analysis
 
 Successful developer tools often follow a CLI-first pattern:
 
-| Tool | Initial Distribution | Later Expansion |
-|------|---------------------|-----------------|
-| **Docker** | CLI (`docker run`) | Desktop, Compose, Swarm |
-| **kubectl** | CLI | Lens, Rancher, dashboards |
-| **git** | CLI | GitHub, GitLab, GUIs |
-| **terraform** | CLI | Cloud, Enterprise |
-| **llm (Willison)** | CLI | Datasette integration |
+| Tool               | Initial Distribution | Later Expansion           |
+| ------------------ | -------------------- | ------------------------- |
+| **Docker**         | CLI (`docker run`)   | Desktop, Compose, Swarm   |
+| **kubectl**        | CLI                  | Lens, Rancher, dashboards |
+| **git**            | CLI                  | GitHub, GitLab, GUIs      |
+| **terraform**      | CLI                  | Cloud, Enterprise         |
+| **llm (Willison)** | CLI                  | Datasette integration     |
 
 The pattern: **CLI establishes value, ecosystem builds on it.**
 
@@ -160,12 +160,12 @@ print(f"Confidence: {result.confidence}")
 
 ### Mitigations
 
-| Negative | Mitigation |
-|----------|------------|
-| Limited UI | TUI mode (`rk-core --tui`); web dashboard planned |
-| Learning curve | Excellent `--help`; interactive mode; examples |
-| Integration depth | Library/SDK for programmatic use |
-| State management | SQLite audit log persists state; session continuation |
+| Negative          | Mitigation                                            |
+| ----------------- | ----------------------------------------------------- |
+| Limited UI        | TUI mode (`rk-core --tui`); web dashboard planned     |
+| Learning curve    | Excellent `--help`; interactive mode; examples        |
+| Integration depth | Library/SDK for programmatic use                      |
+| State management  | SQLite audit log persists state; session continuation |
 
 ### Adoption Funnel
 

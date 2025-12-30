@@ -13,14 +13,14 @@ ReasonKit Core is a Rust-first reasoning engine that handles sensitive LLM API k
 
 ### Security Posture Overview
 
-| Category | Status | Risk Level | Notes |
-|----------|--------|------------|-------|
-| Unsafe Rust | PASS | LOW | `#![deny(unsafe_code)]` enforced at crate level |
-| Hardcoded Secrets | PASS | LOW | No secrets found in source code |
-| Dependency Vulnerabilities | NEEDS ATTENTION | MEDIUM | 4 vulnerabilities in optional features |
-| Secret Handling | GOOD | LOW | Environment variable pattern used |
-| Input Validation | NEEDS REVIEW | MEDIUM | Some areas need additional validation |
-| Supply Chain | GOOD | LOW | Standard Rust/Cargo ecosystem |
+| Category                   | Status          | Risk Level | Notes                                           |
+| -------------------------- | --------------- | ---------- | ----------------------------------------------- |
+| Unsafe Rust                | PASS            | LOW        | `#![deny(unsafe_code)]` enforced at crate level |
+| Hardcoded Secrets          | PASS            | LOW        | No secrets found in source code                 |
+| Dependency Vulnerabilities | NEEDS ATTENTION | MEDIUM     | 4 vulnerabilities in optional features          |
+| Secret Handling            | GOOD            | LOW        | Environment variable pattern used               |
+| Input Validation           | NEEDS REVIEW    | MEDIUM     | Some areas need additional validation           |
+| Supply Chain               | GOOD            | LOW        | Standard Rust/Cargo ecosystem                   |
 
 ---
 
@@ -34,25 +34,25 @@ None found.
 
 #### MEDIUM Priority
 
-| Crate | Version | Advisory | Severity | Solution | Feature |
-|-------|---------|----------|----------|----------|---------|
-| protobuf | 2.28.0 | RUSTSEC-2024-0437 | MEDIUM | Upgrade to >=3.7.2 | `arf` (optional) |
-| wasmtime | 17.0.3 | RUSTSEC-2025-0118 | LOW (1.8) | Upgrade to >=24.0.5 | `arf` (optional) |
-| wasmtime | 17.0.3 | RUSTSEC-2024-0438 | MEDIUM | Upgrade to >=24.0.2 | `arf` (optional) |
-| wasmtime | 17.0.3 | RUSTSEC-2025-0046 | LOW (3.3) | Upgrade to >=24.0.4 | `arf` (optional) |
+| Crate    | Version | Advisory          | Severity  | Solution            | Feature          |
+| -------- | ------- | ----------------- | --------- | ------------------- | ---------------- |
+| protobuf | 2.28.0  | RUSTSEC-2024-0437 | MEDIUM    | Upgrade to >=3.7.2  | `arf` (optional) |
+| wasmtime | 17.0.3  | RUSTSEC-2025-0118 | LOW (1.8) | Upgrade to >=24.0.5 | `arf` (optional) |
+| wasmtime | 17.0.3  | RUSTSEC-2024-0438 | MEDIUM    | Upgrade to >=24.0.2 | `arf` (optional) |
+| wasmtime | 17.0.3  | RUSTSEC-2025-0046 | LOW (3.3) | Upgrade to >=24.0.4 | `arf` (optional) |
 
 #### Unmaintained Dependencies (8 WARNINGS)
 
-| Crate | Advisory | Status | Action |
-|-------|----------|--------|--------|
-| fxhash 0.2.1 | RUSTSEC-2025-0057 | Unmaintained | Consider rustc-hash |
-| instant 0.1.13 | RUSTSEC-2024-0384 | Unmaintained | Use std::time directly |
-| mach 0.3.2 | RUSTSEC-2020-0168 | Unmaintained | macOS-only, low risk |
-| number_prefix 0.4.0 | RUSTSEC-2025-0119 | Unmaintained | Via indicatif |
-| paste 1.0.15 | RUSTSEC-2024-0436 | Unmaintained | Via wasmtime |
-| rustls-pemfile 1.0.4 | RUSTSEC-2025-0134 | Unmaintained | Via cached-path |
-| rustls-pemfile 2.2.0 | RUSTSEC-2025-0134 | Unmaintained | Via tonic |
-| wasmtime-jit-debug 17.0.3 | RUSTSEC-2024-0442 | Unsound | Via wasmtime |
+| Crate                     | Advisory          | Status       | Action                 |
+| ------------------------- | ----------------- | ------------ | ---------------------- |
+| fxhash 0.2.1              | RUSTSEC-2025-0057 | Unmaintained | Consider rustc-hash    |
+| instant 0.1.13            | RUSTSEC-2024-0384 | Unmaintained | Use std::time directly |
+| mach 0.3.2                | RUSTSEC-2020-0168 | Unmaintained | macOS-only, low risk   |
+| number_prefix 0.4.0       | RUSTSEC-2025-0119 | Unmaintained | Via indicatif          |
+| paste 1.0.15              | RUSTSEC-2024-0436 | Unmaintained | Via wasmtime           |
+| rustls-pemfile 1.0.4      | RUSTSEC-2025-0134 | Unmaintained | Via cached-path        |
+| rustls-pemfile 2.2.0      | RUSTSEC-2025-0134 | Unmaintained | Via tonic              |
+| wasmtime-jit-debug 17.0.3 | RUSTSEC-2024-0442 | Unsound      | Via wasmtime           |
 
 ### Remediation Plan
 
@@ -84,6 +84,7 @@ None found.
 ### Scan Results: PASS
 
 **Patterns Searched:**
+
 - AWS Access Keys (`AKIA...`)
 - OpenAI Keys (`sk-...`)
 - GitHub Tokens (`ghp_...`, `glpat-...`)
@@ -92,12 +93,13 @@ None found.
 
 **Findings:**
 
-| File | Pattern | Type | Risk |
-|------|---------|------|------|
-| Various docs | `sk-...`, `sk-ant-...` | Documentation examples | NONE - Placeholders only |
-| `src/telemetry/privacy.rs` | `AKIA[0-9A-Z]{16}` | Regex pattern for detection | NONE - Detection code |
+| File                       | Pattern                | Type                        | Risk                     |
+| -------------------------- | ---------------------- | --------------------------- | ------------------------ |
+| Various docs               | `sk-...`, `sk-ant-...` | Documentation examples      | NONE - Placeholders only |
+| `src/telemetry/privacy.rs` | `AKIA[0-9A-Z]{16}`     | Regex pattern for detection | NONE - Detection code    |
 
 **Conclusion:** No actual secrets or API keys found in source code. All instances are either:
+
 1. Documentation placeholders (e.g., `export OPENAI_API_KEY="sk-..."`)
 2. Regex patterns for PII detection in telemetry sanitization
 
@@ -115,6 +117,7 @@ None found.
 ReasonKit Core explicitly denies all unsafe code at the crate level. This is enforced by the compiler.
 
 **Search Results:**
+
 - One match found: `#![deny(unsafe_code)]` - This is the prohibition itself
 - No actual `unsafe` blocks in ReasonKit code
 
@@ -147,27 +150,27 @@ fn get_api_key(&self) -> Result<String> {
 
 ### Supported Environment Variables
 
-| Provider | Environment Variable |
-|----------|---------------------|
-| Anthropic | `ANTHROPIC_API_KEY` |
-| OpenAI | `OPENAI_API_KEY` |
-| Google Gemini | `GEMINI_API_KEY` |
-| Azure OpenAI | `AZURE_OPENAI_API_KEY` |
-| AWS Bedrock | `AWS_ACCESS_KEY_ID` + `AWS_SECRET_ACCESS_KEY` |
-| xAI | `XAI_API_KEY` |
-| Groq | `GROQ_API_KEY` |
-| Mistral | `MISTRAL_API_KEY` |
-| DeepSeek | `DEEPSEEK_API_KEY` |
-| Cohere | `COHERE_API_KEY` |
-| Perplexity | `PERPLEXITY_API_KEY` |
-| Cerebras | `CEREBRAS_API_KEY` |
-| TogetherAI | `TOGETHER_API_KEY` |
-| FireworksAI | `FIREWORKS_API_KEY` |
-| Alibaba Qwen | `DASHSCOPE_API_KEY` |
-| OpenRouter | `OPENROUTER_API_KEY` |
-| Cloudflare AI | `CLOUDFLARE_API_KEY` |
-| Tavily (web) | `TAVILY_API_KEY` |
-| Serper (web) | `SERPER_API_KEY` |
+| Provider      | Environment Variable                          |
+| ------------- | --------------------------------------------- |
+| Anthropic     | `ANTHROPIC_API_KEY`                           |
+| OpenAI        | `OPENAI_API_KEY`                              |
+| Google Gemini | `GEMINI_API_KEY`                              |
+| Azure OpenAI  | `AZURE_OPENAI_API_KEY`                        |
+| AWS Bedrock   | `AWS_ACCESS_KEY_ID` + `AWS_SECRET_ACCESS_KEY` |
+| xAI           | `XAI_API_KEY`                                 |
+| Groq          | `GROQ_API_KEY`                                |
+| Mistral       | `MISTRAL_API_KEY`                             |
+| DeepSeek      | `DEEPSEEK_API_KEY`                            |
+| Cohere        | `COHERE_API_KEY`                              |
+| Perplexity    | `PERPLEXITY_API_KEY`                          |
+| Cerebras      | `CEREBRAS_API_KEY`                            |
+| TogetherAI    | `TOGETHER_API_KEY`                            |
+| FireworksAI   | `FIREWORKS_API_KEY`                           |
+| Alibaba Qwen  | `DASHSCOPE_API_KEY`                           |
+| OpenRouter    | `OPENROUTER_API_KEY`                          |
+| Cloudflare AI | `CLOUDFLARE_API_KEY`                          |
+| Tavily (web)  | `TAVILY_API_KEY`                              |
+| Serper (web)  | `SERPER_API_KEY`                              |
 
 ### Privacy-Preserving Telemetry
 
@@ -189,13 +192,13 @@ PII Detection Patterns:
 
 ### Recommendations
 
-| Item | Status | Recommendation |
-|------|--------|----------------|
-| Never log API keys | IMPLEMENTED | Keys only held in memory |
-| Use env vars | IMPLEMENTED | Standard pattern across all providers |
-| Sanitize telemetry | IMPLEMENTED | Privacy filter with PII stripping |
-| Hash queries | IMPLEMENTED | SHA-256 hashing, never store raw |
-| Block sensitive content | IMPLEMENTED | Configurable blocking |
+| Item                    | Status      | Recommendation                        |
+| ----------------------- | ----------- | ------------------------------------- |
+| Never log API keys      | IMPLEMENTED | Keys only held in memory              |
+| Use env vars            | IMPLEMENTED | Standard pattern across all providers |
+| Sanitize telemetry      | IMPLEMENTED | Privacy filter with PII stripping     |
+| Hash queries            | IMPLEMENTED | SHA-256 hashing, never store raw      |
+| Block sensitive content | IMPLEMENTED | Configurable blocking                 |
 
 ### Additional Recommendations for v1.0
 
@@ -209,11 +212,11 @@ PII Detection Patterns:
 
 ### Distribution Channels
 
-| Channel | Security Measures | Status |
-|---------|------------------|--------|
-| `cargo install` | Cargo/crates.io verification | STANDARD |
-| `curl \| bash` installer | HTTPS only, no sudo required | GOOD |
-| npm wrapper | npm registry verification | STANDARD |
+| Channel                  | Security Measures            | Status   |
+| ------------------------ | ---------------------------- | -------- |
+| `cargo install`          | Cargo/crates.io verification | STANDARD |
+| `curl \| bash` installer | HTTPS only, no sudo required | GOOD     |
+| npm wrapper              | npm registry verification    | STANDARD |
 
 ### Cargo.toml Security Review
 
@@ -230,18 +233,19 @@ strip = true         # Strip debug symbols (no leaked paths)
 
 **Direct Dependencies (Core Build):**
 
-| Dependency | Purpose | Security Notes |
-|------------|---------|----------------|
-| reqwest 0.12 | HTTP client | Uses rustls by default (TLS) |
-| rusqlite 0.32 | SQLite | Bundled, no network access |
-| sha2 0.10 | Cryptographic hashing | RustCrypto audited |
-| serde 1.0 | Serialization | Widely audited |
-| tokio 1.x | Async runtime | Industry standard |
-| chrono 0.4 | Date/time | Pure Rust |
+| Dependency    | Purpose               | Security Notes               |
+| ------------- | --------------------- | ---------------------------- |
+| reqwest 0.12  | HTTP client           | Uses rustls by default (TLS) |
+| rusqlite 0.32 | SQLite                | Bundled, no network access   |
+| sha2 0.10     | Cryptographic hashing | RustCrypto audited           |
+| serde 1.0     | Serialization         | Widely audited               |
+| tokio 1.x     | Async runtime         | Industry standard            |
+| chrono 0.4    | Date/time             | Pure Rust                    |
 
 ### Supply Chain Recommendations
 
 1. **Enable Cargo Audit in CI**
+
    ```yaml
    # .github/workflows/security.yml
    - name: Security Audit
@@ -253,6 +257,7 @@ strip = true         # Strip debug symbols (no leaked paths)
    - Review dependency updates before merging
 
 3. **SBOM Generation**
+
    ```bash
    # Generate Software Bill of Materials
    cargo sbom > sbom.json
@@ -267,18 +272,18 @@ strip = true         # Strip debug symbols (no leaked paths)
 
 ### OWASP Top 10 (2021) for ReasonKit Context
 
-| # | Vulnerability | Relevance | ReasonKit Status |
-|---|--------------|-----------|------------------|
-| A01 | Broken Access Control | LOW | CLI tool, no multi-user auth |
-| A02 | Cryptographic Failures | MEDIUM | Uses SHA-256, TLS for API calls |
-| A03 | Injection | MEDIUM | SQLite uses parameterized queries |
-| A04 | Insecure Design | LOW | Security-by-default patterns |
-| A05 | Security Misconfiguration | MEDIUM | Secure defaults, clear docs |
-| A06 | Vulnerable Components | MEDIUM | 4 vulns in optional features |
-| A07 | Auth Failures | LOW | API key auth only |
-| A08 | Software Integrity | LOW | Cargo verification |
-| A09 | Logging Failures | LOW | Privacy-preserving telemetry |
-| A10 | SSRF | MEDIUM | Web module needs review |
+| #   | Vulnerability             | Relevance | ReasonKit Status                  |
+| --- | ------------------------- | --------- | --------------------------------- |
+| A01 | Broken Access Control     | LOW       | CLI tool, no multi-user auth      |
+| A02 | Cryptographic Failures    | MEDIUM    | Uses SHA-256, TLS for API calls   |
+| A03 | Injection                 | MEDIUM    | SQLite uses parameterized queries |
+| A04 | Insecure Design           | LOW       | Security-by-default patterns      |
+| A05 | Security Misconfiguration | MEDIUM    | Secure defaults, clear docs       |
+| A06 | Vulnerable Components     | MEDIUM    | 4 vulns in optional features      |
+| A07 | Auth Failures             | LOW       | API key auth only                 |
+| A08 | Software Integrity        | LOW       | Cargo verification                |
+| A09 | Logging Failures          | LOW       | Privacy-preserving telemetry      |
+| A10 | SSRF                      | MEDIUM    | Web module needs review           |
 
 ### Detailed Analysis
 
@@ -328,17 +333,18 @@ conn.execute(
 
 ### Current Status
 
-| Input Type | Validation | Notes |
-|------------|------------|-------|
-| File paths | PARTIAL | Uses std::path, needs traversal checks |
-| URLs | MINIMAL | API URLs are hardcoded per provider |
-| User queries | SANITIZED | PII stripping in telemetry |
-| Config files | SERDE | Type-safe deserialization |
-| CLI args | CLAP | Type-checked by clap derive |
+| Input Type   | Validation | Notes                                  |
+| ------------ | ---------- | -------------------------------------- |
+| File paths   | PARTIAL    | Uses std::path, needs traversal checks |
+| URLs         | MINIMAL    | API URLs are hardcoded per provider    |
+| User queries | SANITIZED  | PII stripping in telemetry             |
+| Config files | SERDE      | Type-safe deserialization              |
+| CLI args     | CLAP       | Type-checked by clap derive            |
 
 ### Areas for Improvement
 
 1. **Path Traversal Protection**
+
    ```rust
    // Recommended: Validate paths before use
    fn validate_path(path: &Path) -> Result<()> {
@@ -351,6 +357,7 @@ conn.execute(
    ```
 
 2. **Command Injection (CLI Tool Integration)**
+
    ```rust
    // src/thinktool/executor.rs - CLI tool call
    // Current: Uses Command::new with args
@@ -445,13 +452,13 @@ ReasonKit has comprehensive `.gitignore` coverage:
 
 ### `install.sh` Review
 
-| Aspect | Status | Notes |
-|--------|--------|-------|
-| HTTPS only | GOOD | Uses `https://github.com/...` |
-| No sudo | GOOD | Installs to `~/.local/bin` |
-| Fail-safe | GOOD | `set -euo pipefail` |
-| Verification | MISSING | No checksum verification |
-| Interactive | GOOD | Optional interactive mode |
+| Aspect       | Status  | Notes                         |
+| ------------ | ------- | ----------------------------- |
+| HTTPS only   | GOOD    | Uses `https://github.com/...` |
+| No sudo      | GOOD    | Installs to `~/.local/bin`    |
+| Fail-safe    | GOOD    | `set -euo pipefail`           |
+| Verification | MISSING | No checksum verification      |
+| Interactive  | GOOD    | Optional interactive mode     |
 
 ### Recommendations
 
@@ -486,6 +493,7 @@ detailed response within 7 days.
 ## Security Updates
 
 Security advisories will be published via:
+
 - GitHub Security Advisories
 - CHANGELOG.md
 
@@ -500,13 +508,13 @@ We currently do not offer a bug bounty program.
 
 ### Overall Security Grade: B+
 
-| Category | Grade | Notes |
-|----------|-------|-------|
-| Code Security | A | No unsafe code, good patterns |
-| Dependencies | B | Vulns in optional features only |
-| Secret Handling | A | Env vars, privacy filters |
-| Supply Chain | B+ | Standard, could add signing |
-| Documentation | C | Needs security docs |
+| Category        | Grade | Notes                           |
+| --------------- | ----- | ------------------------------- |
+| Code Security   | A     | No unsafe code, good patterns   |
+| Dependencies    | B     | Vulns in optional features only |
+| Secret Handling | A     | Env vars, privacy filters       |
+| Supply Chain    | B+    | Standard, could add signing     |
+| Documentation   | C     | Needs security docs             |
 
 ### Critical Actions Before Launch
 
@@ -528,5 +536,5 @@ Condition: Must complete "Critical Actions Before Launch"
 
 ---
 
-*This security audit was generated as part of the ReasonKit pre-launch validation process.*
-*For updates to this document, re-run the security audit workflow.*
+_This security audit was generated as part of the ReasonKit pre-launch validation process._
+_For updates to this document, re-run the security audit workflow._

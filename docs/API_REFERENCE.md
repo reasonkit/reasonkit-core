@@ -26,11 +26,11 @@ The `rk-core` binary provides the command-line interface for ReasonKit.
 
 ### Global Options
 
-| Flag | Short | Environment Variable | Description |
-|------|-------|---------------------|-------------|
-| `--verbose` | `-v` | - | Increase verbosity (use -v, -vv, or -vvv) |
-| `--config` | `-c` | `REASONKIT_CONFIG` | Path to configuration file |
-| `--data-dir` | `-d` | `REASONKIT_DATA_DIR` | Data directory (default: `./data`) |
+| Flag         | Short | Environment Variable | Description                               |
+| ------------ | ----- | -------------------- | ----------------------------------------- |
+| `--verbose`  | `-v`  | -                    | Increase verbosity (use -v, -vv, or -vvv) |
+| `--config`   | `-c`  | `REASONKIT_CONFIG`   | Path to configuration file                |
+| `--data-dir` | `-d`  | `REASONKIT_DATA_DIR` | Data directory (default: `./data`)        |
 
 ### Commands
 
@@ -44,26 +44,26 @@ rk-core think [OPTIONS] <QUERY>
 
 **Arguments:**
 
-| Argument | Required | Description |
-|----------|----------|-------------|
+| Argument  | Required              | Description                   |
+| --------- | --------------------- | ----------------------------- |
 | `<QUERY>` | Yes (unless `--list`) | The query or input to process |
 
 **Options:**
 
-| Option | Short | Default | Description |
-|--------|-------|---------|-------------|
-| `--protocol` | `-p` | - | Protocol to execute (gigathink, laserlogic, bedrock, proofguard, brutalhonesty) |
-| `--profile` | - | - | Profile to execute (quick, balanced, deep, paranoid, decide, scientific, powercombo) |
-| `--provider` | - | `anthropic` | LLM provider (see [Providers](#llm-providers)) |
-| `--model` | `-m` | Provider default | LLM model to use |
-| `--temperature` | `-t` | `0.7` | Temperature for generation (0.0-2.0) |
-| `--max-tokens` | - | `2000` | Maximum tokens to generate |
-| `--budget` | `-b` | - | Budget constraint (e.g., "30s", "1000t", "$0.50") |
-| `--mock` | - | `false` | Use mock LLM for testing |
-| `--save-trace` | - | `false` | Save execution trace |
-| `--trace-dir` | - | - | Directory for trace output |
-| `--format` | `-f` | `text` | Output format (text, json) |
-| `--list` | - | - | List available protocols and profiles |
+| Option          | Short | Default          | Description                                                                          |
+| --------------- | ----- | ---------------- | ------------------------------------------------------------------------------------ |
+| `--protocol`    | `-p`  | -                | Protocol to execute (gigathink, laserlogic, bedrock, proofguard, brutalhonesty)      |
+| `--profile`     | -     | -                | Profile to execute (quick, balanced, deep, paranoid, decide, scientific, powercombo) |
+| `--provider`    | -     | `anthropic`      | LLM provider (see [Providers](#llm-providers))                                       |
+| `--model`       | `-m`  | Provider default | LLM model to use                                                                     |
+| `--temperature` | `-t`  | `0.7`            | Temperature for generation (0.0-2.0)                                                 |
+| `--max-tokens`  | -     | `2000`           | Maximum tokens to generate                                                           |
+| `--budget`      | `-b`  | -                | Budget constraint (e.g., "30s", "1000t", "$0.50")                                    |
+| `--mock`        | -     | `false`          | Use mock LLM for testing                                                             |
+| `--save-trace`  | -     | `false`          | Save execution trace                                                                 |
+| `--trace-dir`   | -     | -                | Directory for trace output                                                           |
+| `--format`      | `-f`  | `text`           | Output format (text, json)                                                           |
+| `--list`        | -     | -                | List available protocols and profiles                                                |
 
 **Examples:**
 
@@ -102,23 +102,23 @@ rk-core web [OPTIONS] <QUERY>
 
 **Options:**
 
-| Option | Short | Default | Description |
-|--------|-------|---------|-------------|
-| `--depth` | `-d` | `standard` | Research depth (quick, standard, deep, exhaustive) |
-| `--web` | - | `true` | Include web search results |
-| `--kb` | - | `true` | Include knowledge base results |
-| `--provider` | - | `anthropic` | LLM provider |
-| `--format` | `-f` | `text` | Output format (text, json, markdown) |
-| `--output` | `-o` | - | Save report to file |
+| Option       | Short | Default     | Description                                        |
+| ------------ | ----- | ----------- | -------------------------------------------------- |
+| `--depth`    | `-d`  | `standard`  | Research depth (quick, standard, deep, exhaustive) |
+| `--web`      | -     | `true`      | Include web search results                         |
+| `--kb`       | -     | `true`      | Include knowledge base results                     |
+| `--provider` | -     | `anthropic` | LLM provider                                       |
+| `--format`   | `-f`  | `text`      | Output format (text, json, markdown)               |
+| `--output`   | `-o`  | -           | Save report to file                                |
 
 **Depth Levels:**
 
-| Depth | Profile | Duration | Description |
-|-------|---------|----------|-------------|
-| `quick` | GigaThink only | ~30s | Fast exploration |
-| `standard` | GigaThink + LaserLogic | ~2min | Standard research |
-| `deep` | Full balanced | ~5min | Thorough analysis |
-| `exhaustive` | Paranoid profile | ~10min | Maximum verification |
+| Depth        | Profile                | Duration | Description          |
+| ------------ | ---------------------- | -------- | -------------------- |
+| `quick`      | GigaThink only         | ~30s     | Fast exploration     |
+| `standard`   | GigaThink + LaserLogic | ~2min    | Standard research    |
+| `deep`       | Full balanced          | ~5min    | Thorough analysis    |
+| `exhaustive` | Paranoid profile       | ~10min   | Maximum verification |
 
 **Examples:**
 
@@ -145,14 +145,14 @@ rk-core verify [OPTIONS] <CLAIM>
 
 **Options:**
 
-| Option | Short | Default | Description |
-|--------|-------|---------|-------------|
-| `--sources` | `-s` | `3` | Minimum number of sources required |
-| `--web` | - | `true` | Include web search for verification |
-| `--kb` | - | `true` | Include knowledge base sources |
-| `--anchor` | - | `false` | Anchor verified content to ProofLedger |
-| `--format` | `-f` | `text` | Output format (text, json, markdown) |
-| `--output` | `-o` | - | Save verification report to file |
+| Option      | Short | Default | Description                            |
+| ----------- | ----- | ------- | -------------------------------------- |
+| `--sources` | `-s`  | `3`     | Minimum number of sources required     |
+| `--web`     | -     | `true`  | Include web search for verification    |
+| `--kb`      | -     | `true`  | Include knowledge base sources         |
+| `--anchor`  | -     | `false` | Anchor verified content to ProofLedger |
+| `--format`  | `-f`  | `text`  | Output format (text, json, markdown)   |
+| `--output`  | `-o`  | -       | Save verification report to file       |
 
 **Examples:**
 
@@ -177,11 +177,11 @@ rk-core trace <ACTION>
 
 **Subcommands:**
 
-| Action | Description |
-|--------|-------------|
-| `list` | List saved traces |
+| Action      | Description           |
+| ----------- | --------------------- |
+| `list`      | List saved traces     |
 | `view <ID>` | View a specific trace |
-| `clean` | Delete traces |
+| `clean`     | Delete traces         |
 
 **List Options:**
 
@@ -219,12 +219,12 @@ rk-core metrics <ACTION>
 
 **Subcommands:**
 
-| Action | Description |
-|--------|-------------|
-| `report` | Show metrics report with grades |
+| Action         | Description                              |
+| -------------- | ---------------------------------------- |
+| `report`       | Show metrics report with grades          |
 | `stats <NAME>` | Statistics for specific protocol/profile |
-| `path` | Show metrics storage location |
-| `clear` | Clear all metrics data |
+| `path`         | Show metrics storage location            |
+| `clear`        | Clear all metrics data                   |
 
 **Report Options:**
 
@@ -245,10 +245,10 @@ rk-core serve [OPTIONS]
 
 **Options:**
 
-| Option | Default | Description |
-|--------|---------|-------------|
+| Option   | Default     | Description     |
+| -------- | ----------- | --------------- |
 | `--host` | `127.0.0.1` | Host to bind to |
-| `--port` | `8080` | Port to bind to |
+| `--port` | `8080`      | Port to bind to |
 
 #### `rk-core completions` - Shell Completions
 
@@ -318,31 +318,31 @@ rk-core rag stats        Show knowledge base statistics
 
 ReasonKit supports 18+ LLM providers:
 
-| Tier | Provider | Flag Value | Env Variable | Default Model |
-|------|----------|------------|--------------|---------------|
-| **Major Cloud** | Anthropic | `anthropic` | `ANTHROPIC_API_KEY` | claude-sonnet-4 |
-| | OpenAI | `openai` | `OPENAI_API_KEY` | gpt-4o |
-| | Google Gemini | `gemini` | `GEMINI_API_KEY` | gemini-2.0-flash |
-| | Google Vertex | `vertex` | `GOOGLE_APPLICATION_CREDENTIALS` | gemini-2.0-flash |
-| | Azure OpenAI | `azure` | `AZURE_OPENAI_API_KEY` | gpt-4o |
-| | AWS Bedrock | `bedrock` | `AWS_ACCESS_KEY_ID` | claude-sonnet-4 |
-| **Specialized** | xAI (Grok) | `xai` | `XAI_API_KEY` | grok-2 |
-| | Groq | `groq` | `GROQ_API_KEY` | llama-3.3-70b-versatile |
-| | Mistral | `mistral` | `MISTRAL_API_KEY` | mistral-large-latest |
-| | DeepSeek | `deepseek` | `DEEPSEEK_API_KEY` | deepseek-chat |
-| | Cohere | `cohere` | `COHERE_API_KEY` | command-r-plus |
-| | Perplexity | `perplexity` | `PERPLEXITY_API_KEY` | sonar-pro |
-| | Cerebras | `cerebras` | `CEREBRAS_API_KEY` | llama-3.3-70b |
-| **Inference** | Together AI | `together` | `TOGETHER_API_KEY` | Llama-3.3-70B-Instruct |
-| | Fireworks AI | `fireworks` | `FIREWORKS_API_KEY` | llama-v3p3-70b-instruct |
-| | Alibaba Qwen | `qwen` | `DASHSCOPE_API_KEY` | qwen-max |
-| | Cloudflare AI | `cloudflare` | `CLOUDFLARE_API_KEY` | llama-3.3-70b-instruct |
-| **Aggregation** | OpenRouter | `openrouter` | `OPENROUTER_API_KEY` | claude-3.5-sonnet |
-| **CLI Tools** | Claude CLI | `claude-cli` | (browser auth) | - |
-| | Codex CLI | `codex-cli` | (browser auth) | - |
-| | Gemini CLI | `gemini-cli` | (browser auth) | - |
-| | OpenCode CLI | `opencode-cli` | (browser auth) | - |
-| | GitHub Copilot | `copilot-cli` | (browser auth) | - |
+| Tier            | Provider       | Flag Value     | Env Variable                     | Default Model           |
+| --------------- | -------------- | -------------- | -------------------------------- | ----------------------- |
+| **Major Cloud** | Anthropic      | `anthropic`    | `ANTHROPIC_API_KEY`              | claude-sonnet-4         |
+|                 | OpenAI         | `openai`       | `OPENAI_API_KEY`                 | gpt-4o                  |
+|                 | Google Gemini  | `gemini`       | `GEMINI_API_KEY`                 | gemini-2.0-flash        |
+|                 | Google Vertex  | `vertex`       | `GOOGLE_APPLICATION_CREDENTIALS` | gemini-2.0-flash        |
+|                 | Azure OpenAI   | `azure`        | `AZURE_OPENAI_API_KEY`           | gpt-4o                  |
+|                 | AWS Bedrock    | `bedrock`      | `AWS_ACCESS_KEY_ID`              | claude-sonnet-4         |
+| **Specialized** | xAI (Grok)     | `xai`          | `XAI_API_KEY`                    | grok-2                  |
+|                 | Groq           | `groq`         | `GROQ_API_KEY`                   | llama-3.3-70b-versatile |
+|                 | Mistral        | `mistral`      | `MISTRAL_API_KEY`                | mistral-large-latest    |
+|                 | DeepSeek       | `deepseek`     | `DEEPSEEK_API_KEY`               | deepseek-chat           |
+|                 | Cohere         | `cohere`       | `COHERE_API_KEY`                 | command-r-plus          |
+|                 | Perplexity     | `perplexity`   | `PERPLEXITY_API_KEY`             | sonar-pro               |
+|                 | Cerebras       | `cerebras`     | `CEREBRAS_API_KEY`               | llama-3.3-70b           |
+| **Inference**   | Together AI    | `together`     | `TOGETHER_API_KEY`               | Llama-3.3-70B-Instruct  |
+|                 | Fireworks AI   | `fireworks`    | `FIREWORKS_API_KEY`              | llama-v3p3-70b-instruct |
+|                 | Alibaba Qwen   | `qwen`         | `DASHSCOPE_API_KEY`              | qwen-max                |
+|                 | Cloudflare AI  | `cloudflare`   | `CLOUDFLARE_API_KEY`             | llama-3.3-70b-instruct  |
+| **Aggregation** | OpenRouter     | `openrouter`   | `OPENROUTER_API_KEY`             | claude-3.5-sonnet       |
+| **CLI Tools**   | Claude CLI     | `claude-cli`   | (browser auth)                   | -                       |
+|                 | Codex CLI      | `codex-cli`    | (browser auth)                   | -                       |
+|                 | Gemini CLI     | `gemini-cli`   | (browser auth)                   | -                       |
+|                 | OpenCode CLI   | `opencode-cli` | (browser auth)                   | -                       |
+|                 | GitHub Copilot | `copilot-cli`  | (browser auth)                   | -                       |
 
 ---
 
@@ -592,15 +592,15 @@ let config = LlmConfig::for_provider(LlmProvider::AWSBedrock, "anthropic.claude-
 
 Available reasoning profiles:
 
-| Profile | Chain | Min Confidence | Use Case |
-|---------|-------|----------------|----------|
-| `quick` | GigaThink -> LaserLogic | 70% | Fast analysis |
-| `balanced` | gt -> ll -> br -> pg | 80% | Standard analysis |
-| `deep` | All 5 + conditional BH | 85% | Thorough analysis |
-| `paranoid` | All 5 + 2nd verification | 95% | Maximum rigor |
-| `decide` | ll -> br -> bh | 85% | Decision support |
-| `scientific` | gt -> br -> pg | 85% | Research |
-| `powercombo` | All 5 + cross-validation | 95% | Ultimate mode |
+| Profile      | Chain                    | Min Confidence | Use Case          |
+| ------------ | ------------------------ | -------------- | ----------------- |
+| `quick`      | GigaThink -> LaserLogic  | 70%            | Fast analysis     |
+| `balanced`   | gt -> ll -> br -> pg     | 80%            | Standard analysis |
+| `deep`       | All 5 + conditional BH   | 85%            | Thorough analysis |
+| `paranoid`   | All 5 + 2nd verification | 95%            | Maximum rigor     |
+| `decide`     | ll -> br -> bh           | 85%            | Decision support  |
+| `scientific` | gt -> br -> pg           | 85%            | Research          |
+| `powercombo` | All 5 + cross-validation | 95%            | Ultimate mode     |
 
 ### Custom Protocol Definition
 
@@ -872,14 +872,14 @@ ReasonKit implements the Model Context Protocol (MCP) specification (2025-11-25)
 
 ### Available Tools
 
-| Tool Name | Description | Input Schema |
-|-----------|-------------|--------------|
-| `gigathink` | Multi-perspective expansion | `{ query: string, perspectives?: number }` |
-| `laserlogic` | Logical validation | `{ argument: string }` |
-| `bedrock` | First principles decomposition | `{ statement: string }` |
-| `proofguard` | Source triangulation | `{ claim: string, sources?: number }` |
-| `brutalhonesty` | Adversarial critique | `{ work: string }` |
-| `profile_execute` | Execute a reasoning profile | `{ profile: string, query: string }` |
+| Tool Name         | Description                    | Input Schema                               |
+| ----------------- | ------------------------------ | ------------------------------------------ |
+| `gigathink`       | Multi-perspective expansion    | `{ query: string, perspectives?: number }` |
+| `laserlogic`      | Logical validation             | `{ argument: string }`                     |
+| `bedrock`         | First principles decomposition | `{ statement: string }`                    |
+| `proofguard`      | Source triangulation           | `{ claim: string, sources?: number }`      |
+| `brutalhonesty`   | Adversarial critique           | `{ work: string }`                         |
+| `profile_execute` | Execute a reasoning profile    | `{ profile: string, query: string }`       |
 
 ### Tool Definition Schema
 
@@ -1267,6 +1267,7 @@ GROUP BY query_type;
 ReasonKit supports TOML configuration files.
 
 **Default locations:**
+
 - `./reasonkit.toml` (project-local)
 - `~/.config/reasonkit/config.toml` (user)
 - `/etc/reasonkit/config.toml` (system)
@@ -1312,26 +1313,26 @@ qdrant_url = "http://localhost:6334"
 
 ### Environment Variables
 
-| Variable | Description | Default |
-|----------|-------------|---------|
-| `REASONKIT_CONFIG` | Path to configuration file | Auto-detected |
-| `REASONKIT_DATA_DIR` | Data directory | `./data` |
-| `REASONKIT_LOG_LEVEL` | Log level (trace, debug, info, warn, error) | `warn` |
-| `ANTHROPIC_API_KEY` | Anthropic API key | - |
-| `OPENAI_API_KEY` | OpenAI API key | - |
-| `OPENROUTER_API_KEY` | OpenRouter API key | - |
-| `GEMINI_API_KEY` | Google Gemini API key | - |
-| `GROQ_API_KEY` | Groq API key | - |
-| `XAI_API_KEY` | xAI (Grok) API key | - |
-| `MISTRAL_API_KEY` | Mistral API key | - |
-| `DEEPSEEK_API_KEY` | DeepSeek API key | - |
-| `COHERE_API_KEY` | Cohere API key | - |
-| `PERPLEXITY_API_KEY` | Perplexity API key | - |
-| `CEREBRAS_API_KEY` | Cerebras API key | - |
-| `TOGETHER_API_KEY` | Together AI API key | - |
-| `FIREWORKS_API_KEY` | Fireworks AI API key | - |
-| `DASHSCOPE_API_KEY` | Alibaba Qwen API key | - |
-| `CLOUDFLARE_API_KEY` | Cloudflare AI API key | - |
+| Variable              | Description                                 | Default       |
+| --------------------- | ------------------------------------------- | ------------- |
+| `REASONKIT_CONFIG`    | Path to configuration file                  | Auto-detected |
+| `REASONKIT_DATA_DIR`  | Data directory                              | `./data`      |
+| `REASONKIT_LOG_LEVEL` | Log level (trace, debug, info, warn, error) | `warn`        |
+| `ANTHROPIC_API_KEY`   | Anthropic API key                           | -             |
+| `OPENAI_API_KEY`      | OpenAI API key                              | -             |
+| `OPENROUTER_API_KEY`  | OpenRouter API key                          | -             |
+| `GEMINI_API_KEY`      | Google Gemini API key                       | -             |
+| `GROQ_API_KEY`        | Groq API key                                | -             |
+| `XAI_API_KEY`         | xAI (Grok) API key                          | -             |
+| `MISTRAL_API_KEY`     | Mistral API key                             | -             |
+| `DEEPSEEK_API_KEY`    | DeepSeek API key                            | -             |
+| `COHERE_API_KEY`      | Cohere API key                              | -             |
+| `PERPLEXITY_API_KEY`  | Perplexity API key                          | -             |
+| `CEREBRAS_API_KEY`    | Cerebras API key                            | -             |
+| `TOGETHER_API_KEY`    | Together AI API key                         | -             |
+| `FIREWORKS_API_KEY`   | Fireworks AI API key                        | -             |
+| `DASHSCOPE_API_KEY`   | Alibaba Qwen API key                        | -             |
+| `CLOUDFLARE_API_KEY`  | Cloudflare AI API key                       | -             |
 
 ### Provider Configuration
 
@@ -1457,13 +1458,13 @@ let result = some_operation()
 
 ### HTTP Error Codes (API Server)
 
-| Code | Error Type | Description |
-|------|------------|-------------|
-| 400 | `Validation` | Invalid input or schema validation failure |
-| 401 | `Config` | Missing or invalid API key |
-| 404 | `NotFound` | Protocol or resource not found |
-| 429 | `Network` | Rate limit exceeded |
-| 500 | `*` | Unexpected internal error |
+| Code | Error Type   | Description                                |
+| ---- | ------------ | ------------------------------------------ |
+| 400  | `Validation` | Invalid input or schema validation failure |
+| 401  | `Config`     | Missing or invalid API key                 |
+| 404  | `NotFound`   | Protocol or resource not found             |
+| 429  | `Network`    | Rate limit exceeded                        |
+| 500  | `*`          | Unexpected internal error                  |
 
 **Error Response Body:**
 
@@ -1481,25 +1482,25 @@ let result = some_operation()
 
 ### ThinkTools
 
-| Tool | Shortcut | Purpose | Input Field |
-|------|----------|---------|-------------|
-| GigaThink | `gt` | Multi-perspective expansion | `query` |
-| LaserLogic | `ll` | Logical validation, fallacy detection | `argument` |
-| BedRock | `br` | First principles decomposition | `statement` |
-| ProofGuard | `pg` | Source triangulation | `claim` |
-| BrutalHonesty | `bh` | Adversarial self-critique | `work` |
+| Tool          | Shortcut | Purpose                               | Input Field |
+| ------------- | -------- | ------------------------------------- | ----------- |
+| GigaThink     | `gt`     | Multi-perspective expansion           | `query`     |
+| LaserLogic    | `ll`     | Logical validation, fallacy detection | `argument`  |
+| BedRock       | `br`     | First principles decomposition        | `statement` |
+| ProofGuard    | `pg`     | Source triangulation                  | `claim`     |
+| BrutalHonesty | `bh`     | Adversarial self-critique             | `work`      |
 
 ### Profiles
 
-| Profile | Modules | Confidence | Use Case |
-|---------|---------|------------|----------|
-| `quick` | gt -> ll | 70% | Fast analysis |
-| `balanced` | gt -> ll -> br -> pg | 80% | Standard |
-| `deep` | All 5 | 85% | Thorough |
-| `paranoid` | All 5 + 2nd pass | 95% | Maximum rigor |
-| `decide` | ll -> br -> bh | 85% | Decision support |
-| `scientific` | gt -> br -> pg | 85% | Research |
-| `powercombo` | All 5 + validation | 95% | Ultimate mode |
+| Profile      | Modules              | Confidence | Use Case         |
+| ------------ | -------------------- | ---------- | ---------------- |
+| `quick`      | gt -> ll             | 70%        | Fast analysis    |
+| `balanced`   | gt -> ll -> br -> pg | 80%        | Standard         |
+| `deep`       | All 5                | 85%        | Thorough         |
+| `paranoid`   | All 5 + 2nd pass     | 95%        | Maximum rigor    |
+| `decide`     | ll -> br -> bh       | 85%        | Decision support |
+| `scientific` | gt -> br -> pg       | 85%        | Research         |
+| `powercombo` | All 5 + validation   | 95%        | Ultimate mode    |
 
 ### Common Commands
 

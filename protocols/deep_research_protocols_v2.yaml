@@ -546,7 +546,6 @@ protocol_gamma_v2:
 # ─────────────────────────────────────────────────────────────────────────────
 
 protocol_integration:
-
   when_to_use:
     rat_h:
       triggers:

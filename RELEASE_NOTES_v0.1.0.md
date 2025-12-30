@@ -18,13 +18,13 @@ ReasonKit Core v0.1.0 is the initial public release of the AI Thinking Enhanceme
 
 ### ThinkTools (5 Reasoning Modules)
 
-| Module | Shortcut | Purpose |
-|--------|----------|---------|
-| **GigaThink** | `gt` | Multi-perspective expansion (10+ viewpoints) |
-| **LaserLogic** | `ll` | Precision deductive reasoning, fallacy detection |
-| **BedRock** | `br` | First principles decomposition, axiom rebuilding |
-| **ProofGuard** | `pg` | Multi-source verification, contradiction detection |
-| **BrutalHonesty** | `bh` | Adversarial self-critique, find flaws first |
+| Module            | Shortcut | Purpose                                            |
+| ----------------- | -------- | -------------------------------------------------- |
+| **GigaThink**     | `gt`     | Multi-perspective expansion (10+ viewpoints)       |
+| **LaserLogic**    | `ll`     | Precision deductive reasoning, fallacy detection   |
+| **BedRock**       | `br`     | First principles decomposition, axiom rebuilding   |
+| **ProofGuard**    | `pg`     | Multi-source verification, contradiction detection |
+| **BrutalHonesty** | `bh`     | Adversarial self-critique, find flaws first        |
 
 ### Reasoning Profiles
 
@@ -63,21 +63,25 @@ rk-core trace export <id>
 ## Infrastructure
 
 ### Retrieval System
+
 - **Hybrid Search:** Vector + BM25 combination
 - **RRF Fusion:** Reciprocal Rank Fusion for result combining
 - **Query Expansion:** Automatic query variant generation
 - **Cross-Encoder Reranking:** Precision improvement
 
 ### Storage
+
 - **Qdrant Integration:** Vector database support
 - **Tantivy BM25:** Full-text search indexing
 - **In-Memory Mode:** Development and testing
 
 ### Embedding Support
+
 - OpenAI embeddings (ada-002, text-embedding-3-small/large)
 - Local embeddings via ONNX (optional feature)
 
 ### MCP Server
+
 - Protocol Delta tools for verification
 - Anchor/verify/lookup operations
 
@@ -85,18 +89,19 @@ rk-core trace export <id>
 
 ## Quality Gates Passed
 
-| Gate | Command | Status |
-|------|---------|--------|
-| Build | `cargo build --release` | ✅ PASS |
-| Lint | `cargo clippy -- -D warnings` | ✅ PASS |
-| Format | `cargo fmt --check` | ✅ PASS |
-| Tests | `cargo test --lib` | ✅ 187 tests passed |
+| Gate   | Command                       | Status              |
+| ------ | ----------------------------- | ------------------- |
+| Build  | `cargo build --release`       | ✅ PASS             |
+| Lint   | `cargo clippy -- -D warnings` | ✅ PASS             |
+| Format | `cargo fmt --check`           | ✅ PASS             |
+| Tests  | `cargo test --lib`            | ✅ 187 tests passed |
 
 ---
 
 ## Technical Details
 
 ### Dependencies (Key)
+
 - `qdrant-client` 1.10 - Vector database
 - `tantivy` 0.22 - Full-text search
 - `tokio` 1.x - Async runtime
@@ -104,11 +109,13 @@ rk-core trace export <id>
 - `serde` 1.0 - Serialization
 
 ### Optional Features
+
 - `local-embeddings` - BGE-M3 ONNX inference
 - `arf` - Autonomous Reasoning Framework
 - `embedded-qdrant` - Embedded mode
 
 ### Performance Targets
+
 - Core operations: < 5ms latency
 - Reranking: < 200ms for 20 candidates
 - Memory efficient for large documents
@@ -162,5 +169,5 @@ curl -fsSL https://reasonkit.sh/install | bash
 
 ---
 
-*"Designed, Not Dreamed. Turn Prompts into Protocols."*
+_"Designed, Not Dreamed. Turn Prompts into Protocols."_
 *https://reasonkit.sh*

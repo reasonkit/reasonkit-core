@@ -223,9 +223,12 @@
           "items": {
             "type": "object",
             "properties": {
-              "id": {"type": "string"},
-              "type": {"type": "string", "enum": ["premise", "inference", "conclusion"]},
-              "content": {"type": "string"}
+              "id": { "type": "string" },
+              "type": {
+                "type": "string",
+                "enum": ["premise", "inference", "conclusion"]
+              },
+              "content": { "type": "string" }
             }
           }
         },
@@ -234,9 +237,9 @@
           "items": {
             "type": "object",
             "properties": {
-              "from": {"type": "string"},
-              "to": {"type": "string"},
-              "relationship": {"type": "string"}
+              "from": { "type": "string" },
+              "to": { "type": "string" },
+              "relationship": { "type": "string" }
             }
           }
         }
@@ -300,19 +303,19 @@
         "type": "object",
         "required": ["step", "action", "result"],
         "properties": {
-          "step": {"type": "integer"},
-          "action": {"type": "string"},
-          "result": {"type": "string"},
-          "duration_ms": {"type": "integer"}
+          "step": { "type": "integer" },
+          "action": { "type": "string" },
+          "result": { "type": "string" },
+          "duration_ms": { "type": "integer" }
         }
       }
     },
     "metadata": {
       "type": "object",
       "properties": {
-        "execution_time_ms": {"type": "integer"},
-        "token_count": {"type": "integer"},
-        "model_used": {"type": "string"}
+        "execution_time_ms": { "type": "integer" },
+        "token_count": { "type": "integer" },
+        "model_used": { "type": "string" }
       }
     }
   }

@@ -9,13 +9,13 @@
 
 Comprehensive guides for integrating ReasonKit with major LLM providers:
 
-| Provider | Guide | Best For | Quick Start |
-|----------|-------|----------|-------------|
-| **Anthropic (Claude)** | [ANTHROPIC_INTEGRATION.md](./ANTHROPIC_INTEGRATION.md) | Complex reasoning, extended thinking, safety-critical | `rk-core think --provider anthropic "query"` |
-| **OpenAI (GPT)** | [OPENAI_INTEGRATION.md](./OPENAI_INTEGRATION.md) | General reasoning, JSON mode, embeddings | `rk-core think --provider openai "query"` |
-| **Google (Gemini)** | [GOOGLE_INTEGRATION.md](./GOOGLE_INTEGRATION.md) | Long context (2M), multimodal, documents | `rk-core think --provider gemini "query"` |
-| **Groq** | [GROQ_INTEGRATION.md](./GROQ_INTEGRATION.md) | Ultra-fast inference, rapid iteration | `rk-core think --provider groq "query"` |
-| **OpenRouter** | [OPENROUTER_INTEGRATION.md](./OPENROUTER_INTEGRATION.md) | 300+ models, fallback routing, cost optimization | `rk-core think --provider openrouter "query"` |
+| Provider               | Guide                                                    | Best For                                              | Quick Start                                   |
+| ---------------------- | -------------------------------------------------------- | ----------------------------------------------------- | --------------------------------------------- |
+| **Anthropic (Claude)** | [ANTHROPIC_INTEGRATION.md](./ANTHROPIC_INTEGRATION.md)   | Complex reasoning, extended thinking, safety-critical | `rk-core think --provider anthropic "query"`  |
+| **OpenAI (GPT)**       | [OPENAI_INTEGRATION.md](./OPENAI_INTEGRATION.md)         | General reasoning, JSON mode, embeddings              | `rk-core think --provider openai "query"`     |
+| **Google (Gemini)**    | [GOOGLE_INTEGRATION.md](./GOOGLE_INTEGRATION.md)         | Long context (2M), multimodal, documents              | `rk-core think --provider gemini "query"`     |
+| **Groq**               | [GROQ_INTEGRATION.md](./GROQ_INTEGRATION.md)             | Ultra-fast inference, rapid iteration                 | `rk-core think --provider groq "query"`       |
+| **OpenRouter**         | [OPENROUTER_INTEGRATION.md](./OPENROUTER_INTEGRATION.md) | 300+ models, fallback routing, cost optimization      | `rk-core think --provider openrouter "query"` |
 
 ---
 
@@ -23,27 +23,27 @@ Comprehensive guides for integrating ReasonKit with major LLM providers:
 
 ### Speed vs Quality vs Cost
 
-| Provider | Speed | Quality | Cost | Best Profile |
-|----------|-------|---------|------|--------------|
-| **Groq** | Fastest | Good | Lowest | `--quick` |
-| **Gemini Flash** | Very Fast | Good | Very Low | `--quick`, `--balanced` |
-| **OpenAI GPT-4o** | Fast | Excellent | Medium | `--balanced` |
-| **Claude Sonnet** | Fast | Excellent | Medium | `--balanced`, `--deep` |
-| **Claude Opus** | Medium | Best | High | `--deep`, `--paranoid` |
-| **OpenAI o1** | Slow | Excellent | High | `--deep`, `--paranoid` |
+| Provider          | Speed     | Quality   | Cost     | Best Profile            |
+| ----------------- | --------- | --------- | -------- | ----------------------- |
+| **Groq**          | Fastest   | Good      | Lowest   | `--quick`               |
+| **Gemini Flash**  | Very Fast | Good      | Very Low | `--quick`, `--balanced` |
+| **OpenAI GPT-4o** | Fast      | Excellent | Medium   | `--balanced`            |
+| **Claude Sonnet** | Fast      | Excellent | Medium   | `--balanced`, `--deep`  |
+| **Claude Opus**   | Medium    | Best      | High     | `--deep`, `--paranoid`  |
+| **OpenAI o1**     | Slow      | Excellent | High     | `--deep`, `--paranoid`  |
 
 ### Feature Matrix
 
-| Feature | Anthropic | OpenAI | Gemini | Groq | OpenRouter |
-|---------|-----------|--------|--------|------|------------|
-| Max Context | 200K | 200K | 2M | 128K | Varies |
-| Extended Thinking | Yes | Yes (o1) | Yes | No | Via models |
-| JSON Mode | No | Yes | Yes | Yes | Via models |
-| Vision | Yes | Yes | Yes | No | Via models |
-| Audio | No | Yes | Yes | Yes | Via models |
-| Video | No | No | Yes | No | Via models |
-| Embeddings | No | Yes | Yes | No | Via models |
-| Free Tier | No | No | Yes | Limited | Yes |
+| Feature           | Anthropic | OpenAI   | Gemini | Groq    | OpenRouter |
+| ----------------- | --------- | -------- | ------ | ------- | ---------- |
+| Max Context       | 200K      | 200K     | 2M     | 128K    | Varies     |
+| Extended Thinking | Yes       | Yes (o1) | Yes    | No      | Via models |
+| JSON Mode         | No        | Yes      | Yes    | Yes     | Via models |
+| Vision            | Yes       | Yes      | Yes    | No      | Via models |
+| Audio             | No        | Yes      | Yes    | Yes     | Via models |
+| Video             | No        | No       | Yes    | No      | Via models |
+| Embeddings        | No        | Yes      | Yes    | No      | Via models |
+| Free Tier         | No        | No       | Yes    | Limited | Yes        |
 
 ---
 
@@ -134,14 +134,14 @@ rk-core think --profile paranoid "Critical"    # Uses best model
 
 ReasonKit can act as the default reasoning layer inside popular CLI agents:
 
-| Tool | Injection Method | Bypass |
-|------|------------------|--------|
-| `claude` | `--append-system-prompt` | `--no-rk` |
-| `gemini` | Prompt prefix | `--no-rk` |
-| `codex` | Prompt prefix | `--no-rk` |
-| `opencode` | Prompt prefix | `--no-rk` |
-| `cursor-agent` | Prompt prefix | `--no-rk` |
-| `copilot` | via `gh copilot` | `--no-rk` |
+| Tool           | Injection Method         | Bypass    |
+| -------------- | ------------------------ | --------- |
+| `claude`       | `--append-system-prompt` | `--no-rk` |
+| `gemini`       | Prompt prefix            | `--no-rk` |
+| `codex`        | Prompt prefix            | `--no-rk` |
+| `opencode`     | Prompt prefix            | `--no-rk` |
+| `cursor-agent` | Prompt prefix            | `--no-rk` |
+| `copilot`      | via `gh copilot`         | `--no-rk` |
 
 ### Install CLI Defaults
 
@@ -230,5 +230,5 @@ rk-core metrics cost --provider anthropic
 
 ---
 
-*ReasonKit Integrations | v1.0.0 | Apache 2.0*
-*"See How Your AI Thinks"*
+_ReasonKit Integrations | v1.0.0 | Apache 2.0_
+_"See How Your AI Thinks"_

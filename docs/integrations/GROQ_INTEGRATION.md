@@ -79,14 +79,14 @@ retry_delay_ms = 500
 
 ### Available Models
 
-| Model | ID | Context | Speed | Best For | Cost/1M tokens |
-|-------|-----|---------|-------|----------|----------------|
-| **Llama 3.3 70B** | `llama-3.3-70b-versatile` | 128K | 330 tok/s | General purpose | $0.59 in / $0.79 out |
-| **Llama 3.1 405B** | `llama-3.1-405b-reasoning` | 128K | 100 tok/s | Complex reasoning | $5.00 in / $10.00 out |
-| **Llama 3.1 70B** | `llama-3.1-70b-versatile` | 128K | 330 tok/s | Balanced | $0.59 in / $0.79 out |
-| **Llama 3.1 8B** | `llama-3.1-8b-instant` | 128K | 750 tok/s | Ultra-fast | $0.05 in / $0.08 out |
-| **Mixtral 8x7B** | `mixtral-8x7b-32768` | 32K | 575 tok/s | MoE efficiency | $0.24 in / $0.24 out |
-| **Gemma 2 9B** | `gemma2-9b-it` | 8K | 500 tok/s | Instruction tuned | $0.20 in / $0.20 out |
+| Model              | ID                         | Context | Speed     | Best For          | Cost/1M tokens        |
+| ------------------ | -------------------------- | ------- | --------- | ----------------- | --------------------- |
+| **Llama 3.3 70B**  | `llama-3.3-70b-versatile`  | 128K    | 330 tok/s | General purpose   | $0.59 in / $0.79 out  |
+| **Llama 3.1 405B** | `llama-3.1-405b-reasoning` | 128K    | 100 tok/s | Complex reasoning | $5.00 in / $10.00 out |
+| **Llama 3.1 70B**  | `llama-3.1-70b-versatile`  | 128K    | 330 tok/s | Balanced          | $0.59 in / $0.79 out  |
+| **Llama 3.1 8B**   | `llama-3.1-8b-instant`     | 128K    | 750 tok/s | Ultra-fast        | $0.05 in / $0.08 out  |
+| **Mixtral 8x7B**   | `mixtral-8x7b-32768`       | 32K     | 575 tok/s | MoE efficiency    | $0.24 in / $0.24 out  |
+| **Gemma 2 9B**     | `gemma2-9b-it`             | 8K      | 500 tok/s | Instruction tuned | $0.20 in / $0.20 out  |
 
 **Speed Note:** Groq's LPU delivers 5-10x faster inference than GPU-based providers!
 
@@ -325,16 +325,16 @@ results = asyncio.run(process_batch(items))
 
 ### Per-Query Cost Calculator
 
-| Profile | Model | Avg Tokens | Estimated Cost |
-|---------|-------|------------|----------------|
-| `--quick` | Llama 8B | ~2,000 | $0.0002 |
-| `--quick` | Llama 70B | ~2,000 | $0.0014 |
-| `--balanced` | Llama 8B | ~5,000 | $0.0004 |
-| `--balanced` | Llama 70B | ~5,000 | $0.0035 |
-| `--deep` | Llama 70B | ~10,000 | $0.0069 |
-| `--deep` | Llama 405B | ~10,000 | $0.075 |
-| `--paranoid` | Llama 70B | ~20,000 | $0.014 |
-| `--paranoid` | Llama 405B | ~20,000 | $0.150 |
+| Profile      | Model      | Avg Tokens | Estimated Cost |
+| ------------ | ---------- | ---------- | -------------- |
+| `--quick`    | Llama 8B   | ~2,000     | $0.0002        |
+| `--quick`    | Llama 70B  | ~2,000     | $0.0014        |
+| `--balanced` | Llama 8B   | ~5,000     | $0.0004        |
+| `--balanced` | Llama 70B  | ~5,000     | $0.0035        |
+| `--deep`     | Llama 70B  | ~10,000    | $0.0069        |
+| `--deep`     | Llama 405B | ~10,000    | $0.075         |
+| `--paranoid` | Llama 70B  | ~20,000    | $0.014         |
+| `--paranoid` | Llama 405B | ~20,000    | $0.150         |
 
 **Groq is EXTREMELY cost-effective!**
 
@@ -357,12 +357,12 @@ results = asyncio.run(process_batch(items))
 
 ### Speed vs Cost Trade-off
 
-| Provider | Speed | Cost (balanced) | Best For |
-|----------|-------|-----------------|----------|
-| Groq 8B | 750 tok/s | $0.0004 | Rapid iteration |
-| Groq 70B | 330 tok/s | $0.0035 | Daily use |
-| Claude Sonnet | 50 tok/s | $0.09 | Quality-critical |
-| GPT-4o | 60 tok/s | $0.063 | Complex tasks |
+| Provider      | Speed     | Cost (balanced) | Best For         |
+| ------------- | --------- | --------------- | ---------------- |
+| Groq 8B       | 750 tok/s | $0.0004         | Rapid iteration  |
+| Groq 70B      | 330 tok/s | $0.0035         | Daily use        |
+| Claude Sonnet | 50 tok/s  | $0.09           | Quality-critical |
+| GPT-4o        | 60 tok/s  | $0.063          | Complex tasks    |
 
 ---
 
@@ -526,15 +526,16 @@ rk-core think "Final analysis" --provider anthropic --profile deep
 
 ## Groq vs Other Providers
 
-| Feature | Groq | Claude | GPT-4 | Gemini |
-|---------|------|--------|-------|--------|
-| Speed | 750 tok/s | 50 tok/s | 60 tok/s | 100 tok/s |
-| Cost | Lowest | Medium | Medium | Low |
-| Quality | Good | Excellent | Excellent | Good |
-| Context | 128K | 200K | 128K | 2M |
-| Models | Open-source | Proprietary | Proprietary | Proprietary |
+| Feature | Groq        | Claude      | GPT-4       | Gemini      |
+| ------- | ----------- | ----------- | ----------- | ----------- |
+| Speed   | 750 tok/s   | 50 tok/s    | 60 tok/s    | 100 tok/s   |
+| Cost    | Lowest      | Medium      | Medium      | Low         |
+| Quality | Good        | Excellent   | Excellent   | Good        |
+| Context | 128K        | 200K        | 128K        | 2M          |
+| Models  | Open-source | Proprietary | Proprietary | Proprietary |
 
 **When to choose Groq:**
+
 - Speed is critical
 - Cost optimization needed
 - Rapid iteration/prototyping
@@ -543,6 +544,7 @@ rk-core think "Final analysis" --provider anthropic --profile deep
 - Open-source model preference
 
 **When to use others:**
+
 - Maximum reasoning quality needed
 - Extended thinking required
 - Safety-critical decisions
@@ -560,5 +562,5 @@ rk-core think "Final analysis" --provider anthropic --profile deep
 
 ---
 
-*ReasonKit + Groq Integration Guide | v1.0.0 | Apache 2.0*
-*"See How Your AI Thinks - At Lightning Speed"*
+_ReasonKit + Groq Integration Guide | v1.0.0 | Apache 2.0_
+_"See How Your AI Thinks - At Lightning Speed"_

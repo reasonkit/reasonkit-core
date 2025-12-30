@@ -64,7 +64,6 @@ metadata:
 # ─────────────────────────────────────────────────────────────────────────────
 
 search_providers:
-
   web_search_apis:
     tavily:
       purpose: "RAG-optimized search with structured JSON output"
@@ -158,7 +157,6 @@ search_providers:
 # ─────────────────────────────────────────────────────────────────────────────
 
 query_optimization:
-
   hyde_expansion:
     name: "Hypothetical Document Embeddings (HyDE)"
     reference: "arXiv:2212.10496"
@@ -298,7 +296,6 @@ adaptive_routing:
 # ─────────────────────────────────────────────────────────────────────────────
 
 multi_hop_reasoning:
-
   corag:
     name: "Chain-of-Retrieval Augmented Generation"
     reference: "arXiv:2501.14342 (NeurIPS 2025)"
@@ -406,7 +403,7 @@ rate_limiting:
   exponential_backoff:
     base_delay: 1.0
     max_delay: 60.0
-    jitter: 0.5  # Random factor to prevent thundering herd
+    jitter: 0.5 # Random factor to prevent thundering herd
 
   circuit_breaker:
     states:
@@ -414,7 +411,7 @@ rate_limiting:
       open: "Stop requests after consecutive failures"
       half_open: "Allow limited retries"
     failure_threshold: 5
-    recovery_timeout: 30  # seconds
+    recovery_timeout: 30 # seconds
 
   best_practices:
     - "Respect Retry-After headers when available"
@@ -485,7 +482,6 @@ optimized_workflow:
 # ─────────────────────────────────────────────────────────────────────────────
 
 objective_measures:
-
   retrieval_metrics:
     - metric: "Triangulation Coverage"
       formula: "(claims_with_3_sources / total_claims) * 100"

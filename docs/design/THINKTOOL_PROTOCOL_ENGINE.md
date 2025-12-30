@@ -1,4 +1,5 @@
 # ThinkTool Protocol Engine Design
+
 > "Turn Prompts into Protocols" - The Core Value Proposition
 
 **Version**: 1.0.0
@@ -29,23 +30,23 @@ A **ThinkTool** is a structured reasoning protocol specification that:
 
 ### 1.2 ThinkTool vs Traditional Prompting
 
-| Aspect | Traditional Prompting | ThinkTool Protocol |
-|--------|----------------------|-------------------|
-| Structure | Free-form text | Typed schema |
-| Auditability | Opaque | Step-by-step trace |
-| Reproducibility | Low | Deterministic given inputs |
-| Composition | Manual | Protocol chaining |
-| Verification | None | Built-in confidence |
+| Aspect          | Traditional Prompting | ThinkTool Protocol         |
+| --------------- | --------------------- | -------------------------- |
+| Structure       | Free-form text        | Typed schema               |
+| Auditability    | Opaque                | Step-by-step trace         |
+| Reproducibility | Low                   | Deterministic given inputs |
+| Composition     | Manual                | Protocol chaining          |
+| Verification    | None                  | Built-in confidence        |
 
 ### 1.3 Open Source ThinkTools (reasonkit-core)
 
-| Tool | Code | Purpose | Strategy |
-|------|------|---------|----------|
-| **GigaThink** | `gt` | Expansive creative thinking | Generate 10+ perspectives |
-| **LaserLogic** | `ll` | Precision deductive reasoning | Fallacy detection, syllogisms |
-| **BedRock** | `br` | First principles decomposition | Axiom identification |
-| **ProofGuard** | `pg` | Multi-source verification | Triangulation protocol |
-| **BrutalHonesty** | `bh` | Adversarial self-critique | Find flaws first |
+| Tool              | Code | Purpose                        | Strategy                      |
+| ----------------- | ---- | ------------------------------ | ----------------------------- |
+| **GigaThink**     | `gt` | Expansive creative thinking    | Generate 10+ perspectives     |
+| **LaserLogic**    | `ll` | Precision deductive reasoning  | Fallacy detection, syllogisms |
+| **BedRock**       | `br` | First principles decomposition | Axiom identification          |
+| **ProofGuard**    | `pg` | Multi-source verification      | Triangulation protocol        |
+| **BrutalHonesty** | `bh` | Adversarial self-critique      | Find flaws first              |
 
 ---
 
@@ -179,7 +180,9 @@ pub enum StepAction {
     },
     {
       "id": "explore_each",
-      "action": { "Analyze": { "criteria": ["novelty", "relevance", "depth"] } },
+      "action": {
+        "Analyze": { "criteria": ["novelty", "relevance", "depth"] }
+      },
       "prompt_template": "For dimension '{{dimension}}', provide:\n1. Key insight\n2. Evidence/example\n3. Implications\n4. Confidence (0-1)",
       "output_format": "Structured",
       "min_confidence": 0.6,
@@ -195,7 +198,9 @@ pub enum StepAction {
     },
     {
       "id": "confidence_calibration",
-      "action": { "Validate": { "rules": ["coherence", "coverage", "novelty"] } },
+      "action": {
+        "Validate": { "rules": ["coherence", "coverage", "novelty"] }
+      },
       "prompt_template": "Rate overall analysis confidence considering:\n- Coverage of solution space\n- Coherence of perspectives\n- Novelty of insights",
       "output_format": "Score",
       "min_confidence": 0.7,
@@ -408,14 +413,14 @@ pub struct ChainStep {
 
 ### 4.2 Built-in Profiles
 
-| Profile | Chain | Min Confidence | Use Case |
-|---------|-------|----------------|----------|
-| `--quick` | gt → ll | 0.70 | Fast 2-step analysis |
-| `--balanced` | gt → ll → br → pg | 0.80 | Standard 4-module chain |
-| `--deep` | gt → ll → br → pg → hr | 0.85 | Thorough analysis |
-| `--paranoid` | gt → ll → br → pg → bh → rr | 0.95 | Maximum verification |
-| `--decide` | dm → rr → ll → hr | 0.85 | Decision support |
-| `--scientific` | se → ab → br → pg | 0.85 | Research & experiments |
+| Profile        | Chain                       | Min Confidence | Use Case                |
+| -------------- | --------------------------- | -------------- | ----------------------- |
+| `--quick`      | gt → ll                     | 0.70           | Fast 2-step analysis    |
+| `--balanced`   | gt → ll → br → pg           | 0.80           | Standard 4-module chain |
+| `--deep`       | gt → ll → br → pg → hr      | 0.85           | Thorough analysis       |
+| `--paranoid`   | gt → ll → br → pg → bh → rr | 0.95           | Maximum verification    |
+| `--decide`     | dm → rr → ll → hr           | 0.85           | Decision support        |
+| `--scientific` | se → ab → br → pg           | 0.85           | Research & experiments  |
 
 ### 4.3 Profile Definition Example
 
@@ -451,7 +456,7 @@ pub struct ChainStep {
       }
     }
   ],
-  "min_confidence": 0.80,
+  "min_confidence": 0.8,
   "token_budget": 8000
 }
 ```
@@ -558,6 +563,7 @@ Trace saved: ./traces/balanced_20251211_143052.json
 ## 6. Implementation Roadmap
 
 ### Phase 1: Core Engine (MVP)
+
 1. Protocol schema definition (Rust types)
 2. Protocol loader (JSON/YAML files)
 3. Single protocol executor
@@ -565,18 +571,21 @@ Trace saved: ./traces/balanced_20251211_143052.json
 5. GigaThink protocol implementation
 
 ### Phase 2: Composition
+
 1. Profile system
 2. Chain executor
 3. Built-in profiles (quick, balanced, deep, paranoid)
 4. All 5 OSS protocols
 
 ### Phase 3: Auditability
+
 1. Trace store
 2. Trace viewer CLI
 3. Export formats (JSON, Markdown)
 4. Resume from checkpoint
 
 ### Phase 4: Integration
+
 1. RAG integration (retrieve → think)
 2. Multi-provider LLM support
 3. Cost optimization
@@ -641,13 +650,13 @@ src/
 
 ## 9. Success Metrics
 
-| Metric | Target | Measurement |
-|--------|--------|-------------|
-| Protocol execution overhead | < 50ms | Benchmark |
-| Step-to-step latency | < 10ms | Profiling |
-| Trace storage efficiency | < 1KB/step | Size audit |
-| Protocol load time | < 100ms | Startup benchmark |
-| User satisfaction | > 80% prefer structured | Survey |
+| Metric                      | Target                  | Measurement       |
+| --------------------------- | ----------------------- | ----------------- |
+| Protocol execution overhead | < 50ms                  | Benchmark         |
+| Step-to-step latency        | < 10ms                  | Profiling         |
+| Trace storage efficiency    | < 1KB/step              | Size audit        |
+| Protocol load time          | < 100ms                 | Startup benchmark |
+| User satisfaction           | > 80% prefer structured | Survey            |
 
 ---
 
@@ -661,4 +670,4 @@ src/
 
 ---
 
-*ThinkTool Protocol Engine v1.0 | "Turn Prompts into Protocols"*
+_ThinkTool Protocol Engine v1.0 | "Turn Prompts into Protocols"_

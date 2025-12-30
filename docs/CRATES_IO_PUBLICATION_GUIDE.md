@@ -1,4 +1,5 @@
 # Crates.io Publication Guide
+
 ## Publishing reasonkit-core 1.0.0
 
 > **Status:** PREPARATION COMPLETE  
@@ -13,6 +14,7 @@
 This guide provides step-by-step instructions for publishing `reasonkit-core` v1.0.0 to crates.io. All pre-publication checks have been completed.
 
 **Current Status:**
+
 - ✅ Package metadata verified
 - ✅ Cargo.toml properly configured
 - ⚠️ Minor clippy warnings (non-blocking)
@@ -46,6 +48,7 @@ This guide provides step-by-step instructions for publishing `reasonkit-core` v1
 - [x] **Tests:** `cargo test` ✅ PASS (with known `indicatif` issue)
 
 **Clippy Warnings (Non-Blocking):**
+
 - Unused variables in `chunking.rs` (can be fixed with `_` prefix)
 - These are warnings, not errors - package will publish successfully
 
@@ -78,12 +81,14 @@ This guide provides step-by-step instructions for publishing `reasonkit-core` v1
 If you don't have a crates.io account:
 
 1. **Create Account:**
+
    ```bash
    # Visit https://crates.io and sign up with GitHub
    # Or use: cargo login
    ```
 
 2. **Get API Token:**
+
    ```bash
    # Visit https://crates.io/me
    # Generate new token
@@ -165,11 +170,13 @@ cargo install reasonkit
 ### Documentation Updates
 
 - [ ] Add crates.io badge to README.md:
+
   ```markdown
   [![Crates.io](https://img.shields.io/crates/v/reasonkit-core.svg)](https://crates.io/crates/reasonkit-core)
   ```
 
 - [ ] Update installation instructions:
+
   ```bash
   cargo install reasonkit
   ```
@@ -189,18 +196,23 @@ cargo install reasonkit
 ### Common Issues
 
 #### Issue: "crate name already exists"
+
 **Solution:** Check if name is taken: https://crates.io/crates/reasonkit-core
 
 #### Issue: "API token invalid"
+
 **Solution:** Regenerate token at https://crates.io/me and run `cargo login` again
 
 #### Issue: "Package too large"
+
 **Solution:** Check `include` field in Cargo.toml, exclude large files
 
 #### Issue: "Missing required fields"
+
 **Solution:** Verify all metadata in Cargo.toml (license, description, etc.)
 
 #### Issue: "Documentation build failed"
+
 **Solution:** Check for missing docs, run `cargo doc --no-deps` locally
 
 ---
@@ -261,4 +273,3 @@ Publication is successful when:
 **Next Action:** Execute Step 1-4 (Account setup → Publish)  
 **Owner:** Release Team  
 **Updated:** 2025-12-29
-

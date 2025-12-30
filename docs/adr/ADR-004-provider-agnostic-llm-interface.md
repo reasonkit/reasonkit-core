@@ -16,6 +16,7 @@ ReasonKit relies on Large Language Models (LLMs) for reasoning steps. The LLM la
 - **Aggregators**: OpenRouter, Together AI, Groq
 
 Users have different requirements:
+
 1. **Cost**: Some providers are 10-100x cheaper for similar capability
 2. **Privacy**: Enterprise users may require on-premise deployment
 3. **Latency**: Edge cases require low-latency providers
@@ -24,12 +25,12 @@ Users have different requirements:
 
 We evaluated several approaches:
 
-| Approach | Pros | Cons |
-|----------|------|------|
-| **Hard-coded Provider** | Simple, optimized | Vendor lock-in, no flexibility |
-| **Configuration Switch** | User choice, simple | Duplicated code per provider |
-| **Abstract Interface** | Maximum flexibility, testable | More code, abstraction overhead |
-| **LiteLLM/Similar Wrapper** | Pre-built, many providers | External dependency, less control |
+| Approach                    | Pros                          | Cons                              |
+| --------------------------- | ----------------------------- | --------------------------------- |
+| **Hard-coded Provider**     | Simple, optimized             | Vendor lock-in, no flexibility    |
+| **Configuration Switch**    | User choice, simple           | Duplicated code per provider      |
+| **Abstract Interface**      | Maximum flexibility, testable | More code, abstraction overhead   |
+| **LiteLLM/Similar Wrapper** | Pre-built, many providers     | External dependency, less control |
 
 ### Key Requirements
 
@@ -197,25 +198,25 @@ impl LlmManager {
 
 ### Mitigations
 
-| Negative | Mitigation |
-|----------|------------|
-| Abstraction overhead | Keep interface minimal; optimize hot paths |
-| Lowest common denominator | `capabilities()` method exposes provider-specific features |
-| Maintenance burden | OpenAI-compatible API covers many providers; community contributions |
-| Configuration complexity | Sensible defaults; auto-detection of API keys from environment |
+| Negative                  | Mitigation                                                           |
+| ------------------------- | -------------------------------------------------------------------- |
+| Abstraction overhead      | Keep interface minimal; optimize hot paths                           |
+| Lowest common denominator | `capabilities()` method exposes provider-specific features           |
+| Maintenance burden        | OpenAI-compatible API covers many providers; community contributions |
+| Configuration complexity  | Sensible defaults; auto-detection of API keys from environment       |
 
 ### Provider Support Matrix
 
-| Provider | Status | Notes |
-|----------|--------|-------|
-| OpenAI | Stable | GPT-4, GPT-4o, o1-series |
-| Anthropic | Stable | Claude 3.5, Claude 4 |
-| OpenRouter | Stable | 300+ models, automatic routing |
-| Azure OpenAI | Stable | Via OpenAI adapter with custom base_url |
-| Ollama | Stable | Local models via OpenAI-compatible API |
-| Groq | Stable | Fast inference for open models |
-| Together AI | Planned | Open model hosting |
-| Bedrock | Planned | AWS-hosted models |
+| Provider     | Status  | Notes                                   |
+| ------------ | ------- | --------------------------------------- |
+| OpenAI       | Stable  | GPT-4, GPT-4o, o1-series                |
+| Anthropic    | Stable  | Claude 3.5, Claude 4                    |
+| OpenRouter   | Stable  | 300+ models, automatic routing          |
+| Azure OpenAI | Stable  | Via OpenAI adapter with custom base_url |
+| Ollama       | Stable  | Local models via OpenAI-compatible API  |
+| Groq         | Stable  | Fast inference for open models          |
+| Together AI  | Planned | Open model hosting                      |
+| Bedrock      | Planned | AWS-hosted models                       |
 
 ## Related Documents
 

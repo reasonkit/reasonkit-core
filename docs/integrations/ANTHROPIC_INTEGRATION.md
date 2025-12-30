@@ -85,11 +85,11 @@ retry_delay_ms = 1000
 
 ### Available Models
 
-| Model | ID | Context | Best For | Cost/1M tokens |
-|-------|-----|---------|----------|----------------|
-| **Claude Opus 4.5** | `claude-opus-4-20250514` | 200K | Deep research, complex reasoning | $15 in / $75 out |
-| **Claude Sonnet 4** | `claude-sonnet-4-20250514` | 200K | Balanced: speed + quality | $3 in / $15 out |
-| **Claude Haiku** | `claude-3-5-haiku-latest` | 200K | Fast, cost-effective | $0.25 in / $1.25 out |
+| Model               | ID                         | Context | Best For                         | Cost/1M tokens       |
+| ------------------- | -------------------------- | ------- | -------------------------------- | -------------------- |
+| **Claude Opus 4.5** | `claude-opus-4-20250514`   | 200K    | Deep research, complex reasoning | $15 in / $75 out     |
+| **Claude Sonnet 4** | `claude-sonnet-4-20250514` | 200K    | Balanced: speed + quality        | $3 in / $15 out      |
+| **Claude Haiku**    | `claude-3-5-haiku-latest`  | 200K    | Fast, cost-effective             | $0.25 in / $1.25 out |
 
 ---
 
@@ -267,16 +267,16 @@ claude -p "Is this Rust code safe?" --allowedTools "Read" < src/lib.rs
 
 ### Per-Query Cost Calculator
 
-| Profile | Model | Avg Tokens | Estimated Cost |
-|---------|-------|------------|----------------|
-| `--quick` | Haiku | ~2,000 | $0.003 |
-| `--quick` | Sonnet | ~2,000 | $0.036 |
-| `--balanced` | Haiku | ~5,000 | $0.008 |
-| `--balanced` | Sonnet | ~5,000 | $0.090 |
-| `--deep` | Sonnet | ~10,000 | $0.180 |
-| `--deep` | Opus | ~10,000 | $0.900 |
-| `--paranoid` | Opus | ~20,000 | $1.800 |
-| Extended Thinking | Opus | ~50,000 | $4.500 |
+| Profile           | Model  | Avg Tokens | Estimated Cost |
+| ----------------- | ------ | ---------- | -------------- |
+| `--quick`         | Haiku  | ~2,000     | $0.003         |
+| `--quick`         | Sonnet | ~2,000     | $0.036         |
+| `--balanced`      | Haiku  | ~5,000     | $0.008         |
+| `--balanced`      | Sonnet | ~5,000     | $0.090         |
+| `--deep`          | Sonnet | ~10,000    | $0.180         |
+| `--deep`          | Opus   | ~10,000    | $0.900         |
+| `--paranoid`      | Opus   | ~20,000    | $1.800         |
+| Extended Thinking | Opus   | ~50,000    | $4.500         |
 
 ### Monthly Budget Examples
 
@@ -455,5 +455,5 @@ log_file = "~/.reasonkit/logs/anthropic.log"
 
 ---
 
-*ReasonKit + Anthropic Integration Guide | v1.0.0 | Apache 2.0*
-*"See How Your AI Thinks"*
+_ReasonKit + Anthropic Integration Guide | v1.0.0 | Apache 2.0_
+_"See How Your AI Thinks"_

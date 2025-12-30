@@ -52,6 +52,7 @@ assert!(result.verified);
 ## Use Cases
 
 ### 1. Academic Research
+
 ```rust
 // Anchor findings from papers
 let hash = ledger.anchor(
@@ -62,6 +63,7 @@ let hash = ledger.anchor(
 ```
 
 ### 2. Fact Checking
+
 ```rust
 // Verify a claim hasn't drifted
 let original = ledger.get_anchor(&hash)?;
@@ -74,6 +76,7 @@ if !result.verified {
 ```
 
 ### 3. Audit Trail
+
 ```rust
 // List all citations from a source
 let anchors = ledger.list_by_url("https://arxiv.org/abs/2401.18059")?;
@@ -91,10 +94,12 @@ for anchor in anchors {
 ### `ProofLedger`
 
 #### Constructors
+
 - `new(path)` - Create persistent ledger at path
 - `in_memory()` - Create temporary in-memory ledger
 
 #### Methods
+
 - `anchor(content, url, metadata)` - Create immutable anchor, returns hash
 - `get_anchor(hash)` - Retrieve anchor by hash
 - `verify(hash, content)` - Check if content matches anchor
@@ -105,6 +110,7 @@ for anchor in anchors {
 ### `Anchor`
 
 Fields:
+
 - `hash: String` - SHA-256 hash (64 hex chars)
 - `url: String` - Source URL
 - `timestamp: DateTime<Utc>` - When anchored
@@ -114,6 +120,7 @@ Fields:
 ### `VerificationResult`
 
 Fields:
+
 - `verified: bool` - Whether verification passed
 - `original_hash: String` - Hash from anchor
 - `current_hash: String` - Hash of current content
@@ -125,12 +132,14 @@ Fields:
 ## Citation Format
 
 **Traditional:**
+
 ```text
 The market grew by 5% [1].
 [1] https://finance.yahoo.com/article/123
 ```
 
 **Protocol Delta:**
+
 ```text
 The market grew by 5% [1].
 [1] sha256:8f4a1c2b... (Verified 2025-12-23)
@@ -164,6 +173,7 @@ CREATE INDEX idx_anchors_timestamp ON anchors(timestamp);
 - **URL query:** O(log n) via B-tree index
 
 Typical operations:
+
 - Anchor 1KB content: ~0.1ms
 - Verify content: ~0.1ms
 - Query by URL: ~0.01ms
@@ -173,11 +183,13 @@ Typical operations:
 ## Examples
 
 Run the demo:
+
 ```bash
 cargo run --example protocol_delta_demo
 ```
 
 See full examples in:
+
 - `examples/protocol_delta_demo.rs` - Complete workflow
 - `tests/verification_integration.rs` - Test scenarios
 
@@ -203,6 +215,7 @@ cargo test verification
 ### Visual Fetch Integration
 
 When the Python `visual_fetch.py` component is integrated, it will:
+
 1. Render pages with browser automation
 2. Use Vision Language Models to extract content
 3. Pass extracted content to ProofLedger for anchoring
@@ -234,5 +247,5 @@ Apache 2.0 (same as reasonkit-core)
 
 ---
 
-*Part of Protocol Delta - The Anchor*
-*ReasonKit Core v0.1.0*
+_Part of Protocol Delta - The Anchor_
+_ReasonKit Core v0.1.0_

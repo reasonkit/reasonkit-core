@@ -38,11 +38,11 @@ If step 4 passes, you are ready to contribute.
 
 Look for these labels on our [Issues page](https://github.com/reasonkit/reasonkit-core/issues):
 
-| Label | Time Estimate | Best For |
-|-------|---------------|----------|
-| `good first issue` | 1-2 hours | First-time contributors |
-| `documentation` | 30 min - 1 hour | Learning the codebase |
-| `easy` | 1-3 hours | Quick wins |
+| Label              | Time Estimate   | Best For                |
+| ------------------ | --------------- | ----------------------- |
+| `good first issue` | 1-2 hours       | First-time contributors |
+| `documentation`    | 30 min - 1 hour | Learning the codebase   |
+| `easy`             | 1-3 hours       | Quick wins              |
 
 **Quick link:** [Good First Issues](https://github.com/reasonkit/reasonkit-core/issues?q=is:issue+is:open+label:%22good+first+issue%22)
 
@@ -109,6 +109,7 @@ git commit -m "fix(docs): correct typo in README"
 ```
 
 **Common prefixes:**
+
 - `fix:` - Bug fix
 - `feat:` - New feature
 - `docs:` - Documentation only
@@ -144,11 +145,11 @@ Before submitting, verify:
 
 ### Naming
 
-| Type | Convention | Example |
-|------|------------|---------|
-| Functions/variables | `snake_case` | `process_document()` |
-| Types/traits | `PascalCase` | `SearchResult` |
-| Constants | `SCREAMING_SNAKE_CASE` | `MAX_CHUNK_SIZE` |
+| Type                | Convention             | Example              |
+| ------------------- | ---------------------- | -------------------- |
+| Functions/variables | `snake_case`           | `process_document()` |
+| Types/traits        | `PascalCase`           | `SearchResult`       |
+| Constants           | `SCREAMING_SNAKE_CASE` | `MAX_CHUNK_SIZE`     |
 
 ### Error Handling
 
@@ -189,11 +190,11 @@ cargo clippy   # Lint code
 
 ## Where to Ask Questions
 
-| Channel | Best For | Link |
-|---------|----------|------|
-| GitHub Issues | Bug reports, feature requests | [Issues](https://github.com/reasonkit/reasonkit-core/issues) |
-| GitHub Discussions | Questions, ideas, help | [Discussions](https://github.com/reasonkit/reasonkit-core/discussions) |
-| Discord | Real-time chat | [Join Discord](https://discord.gg/reasonkit) |
+| Channel            | Best For                      | Link                                                                   |
+| ------------------ | ----------------------------- | ---------------------------------------------------------------------- |
+| GitHub Issues      | Bug reports, feature requests | [Issues](https://github.com/reasonkit/reasonkit-core/issues)           |
+| GitHub Discussions | Questions, ideas, help        | [Discussions](https://github.com/reasonkit/reasonkit-core/discussions) |
+| Discord            | Real-time chat                | [Join Discord](https://discord.gg/reasonkit)                           |
 
 **Response times:** Issues within 48 hours, PRs within 1 week.
 
@@ -288,6 +289,6 @@ For comprehensive contribution guidelines, see [CONTRIBUTING.md](../CONTRIBUTING
 
 ---
 
-*Thank you for contributing to ReasonKit!*
+_Thank you for contributing to ReasonKit!_
 
 *https://reasonkit.sh*

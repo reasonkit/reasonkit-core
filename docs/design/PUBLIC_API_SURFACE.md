@@ -1,4 +1,5 @@
 # ReasonKit Public API Surface Design
+
 > **Target:** v1.0.0
 > **Scope:** Core traits and interfaces for ThinkTools
 
@@ -7,9 +8,10 @@
 The ReasonKit public API is designed for **extensibility without fragility**. We expose interfaces that allow developers to build custom ThinkTools while keeping the core execution engine internal and safe.
 
 **Principles:**
-*   **Trait-First:** Behavior is defined by traits (`Protocol`, `Step`, `Executor`).
-*   **Type-Safe:** Leverage Rust's type system to prevent invalid protocol states.
-*   **Stable:** The public surface area is minimal to allow internal evolution.
+
+- **Trait-First:** Behavior is defined by traits (`Protocol`, `Step`, `Executor`).
+- **Type-Safe:** Leverage Rust's type system to prevent invalid protocol states.
+- **Stable:** The public surface area is minimal to allow internal evolution.
 
 ## 2. Core Traits
 
@@ -113,11 +115,12 @@ pub trait LlmProvider: Send + Sync {
 
 ## 5. Security Boundary
 
-*   **Sandboxing:** Custom steps execute within the same process but should be logically isolated.
-*   **Secrets:** API keys are never passed directly to custom steps; the `ExecutionContext` handles authentication internally via the `LlmClient`.
+- **Sandboxing:** Custom steps execute within the same process but should be logically isolated.
+- **Secrets:** API keys are never passed directly to custom steps; the `ExecutionContext` handles authentication internally via the `LlmClient`.
 
 ## 6. Stability Guarantee
 
 We follow semantic versioning.
-*   `reasonkit::thinktool` - Stable
-*   `reasonkit::experimental` - Unstable, subject to change.
+
+- `reasonkit::thinktool` - Stable
+- `reasonkit::experimental` - Unstable, subject to change.

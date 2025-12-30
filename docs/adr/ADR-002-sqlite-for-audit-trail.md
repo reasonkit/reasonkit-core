@@ -15,13 +15,13 @@ ReasonKit's core value proposition is **auditable AI reasoning**. Every reasonin
 
 We evaluated several storage options:
 
-| Option | Pros | Cons |
-|--------|------|------|
-| **PostgreSQL** | Full SQL, excellent querying, ACID, proven at scale | Requires server, complex setup, connection management |
-| **File-based (JSON/JSONL)** | Simple, portable, human-readable | No indexing, slow queries, no ACID, append-only complexity |
-| **Redis** | Fast, good for recent data | In-memory (data loss risk), limited querying, requires server |
-| **SQLite** | Zero setup, single file, full SQL, ACID, excellent tooling | Single-writer limitation, no replication |
-| **Embedded RocksDB/LevelDB** | Very fast writes, LSM-tree efficiency | No SQL, complex queries require custom code |
+| Option                       | Pros                                                       | Cons                                                          |
+| ---------------------------- | ---------------------------------------------------------- | ------------------------------------------------------------- |
+| **PostgreSQL**               | Full SQL, excellent querying, ACID, proven at scale        | Requires server, complex setup, connection management         |
+| **File-based (JSON/JSONL)**  | Simple, portable, human-readable                           | No indexing, slow queries, no ACID, append-only complexity    |
+| **Redis**                    | Fast, good for recent data                                 | In-memory (data loss risk), limited querying, requires server |
+| **SQLite**                   | Zero setup, single file, full SQL, ACID, excellent tooling | Single-writer limitation, no replication                      |
+| **Embedded RocksDB/LevelDB** | Very fast writes, LSM-tree efficiency                      | No SQL, complex queries require custom code                   |
 
 ### Key Requirements
 
@@ -34,6 +34,7 @@ We evaluated several storage options:
 ### Simon Willison's LLM CLI Precedent
 
 The `llm` CLI tool (by Simon Willison) uses SQLite for all conversation logging and demonstrates the pattern's viability:
+
 - Automatic logging to `~/.llm/logs.db`
 - Full queryability via SQL
 - Integration with Datasette for visualization
@@ -44,6 +45,7 @@ The `llm` CLI tool (by Simon Willison) uses SQLite for all conversation logging 
 **We will use SQLite as the primary storage for audit trails and reasoning logs.**
 
 Specifically:
+
 - Default database location: `~/.reasonkit/audit.db`
 - Write-ahead logging (WAL) mode for concurrent reads during writes
 - Schema versioned with migrations
@@ -114,12 +116,12 @@ CREATE INDEX idx_steps_confidence ON steps(confidence);
 
 ### Mitigations
 
-| Negative | Mitigation |
-|----------|------------|
-| Single writer | WAL mode allows concurrent reads; queued writes for multi-process |
-| No replication | Export functionality for backup; enterprise version can use PostgreSQL |
-| File locking | Document limitation; recommend local filesystem for database |
-| Scale ceiling | Per-user databases; enterprise tier with PostgreSQL for shared deployments |
+| Negative       | Mitigation                                                                 |
+| -------------- | -------------------------------------------------------------------------- |
+| Single writer  | WAL mode allows concurrent reads; queued writes for multi-process          |
+| No replication | Export functionality for backup; enterprise version can use PostgreSQL     |
+| File locking   | Document limitation; recommend local filesystem for database               |
+| Scale ceiling  | Per-user databases; enterprise tier with PostgreSQL for shared deployments |
 
 ### Query Examples
 

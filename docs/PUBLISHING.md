@@ -279,7 +279,7 @@ Follow Semantic Versioning (SemVer):
 
 When publishing, prepare release notes:
 
-```markdown
+````markdown
 # reasonkit-core v0.1.0
 
 ## Features
@@ -302,6 +302,7 @@ When publishing, prepare release notes:
 ```bash
 cargo install reasonkit-core
 ```
+````
 
 ## Documentation
 
@@ -318,9 +319,11 @@ cargo install reasonkit-core
 ## Next Release
 
 Planned for v0.2.0:
+
 - Embedded Qdrant mode
 - RAPTOR hierarchical retrieval
 - Additional language support
+
 ```
 
 ## Checklist Summary
@@ -359,3 +362,4 @@ After publishing:
 **Last Updated**: 2025-12-23
 
 **Maintained By**: ReasonKit Team
+```

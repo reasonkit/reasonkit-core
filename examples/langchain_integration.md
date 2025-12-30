@@ -3,6 +3,7 @@
 This prototype demonstrates how **ReasonKit** (a Rust-based verified reasoning engine) can be integrated into **LangChain** (a Python agent framework) to create a "Glass Box" agent.
 
 Unlike standard "Black Box" agents that think obscurely, this agent delegates critical reasoning steps to ReasonKit's verified `ThinkTools`, providing:
+
 1.  **Structured Reasoning**: Chains like `GigaThink` (divergent) -> `LaserLogic` (convergent).
 2.  **Auditability**: Every reasoning step is a structured artifact, not just text stream.
 3.  **Verification**: The `ProofGuard` tool provides 3-source triangulation for claims.
@@ -58,7 +59,7 @@ class ReasonKitTool(BaseTool):
         """Executes the rk-core binary and returns the structured output."""
         try:
             # Construct command: rk-core think "query" --profile profile --format json --mock
-            # Note: --mock is used here to avoid needing live API keys for this demo. 
+            # Note: --mock is used here to avoid needing live API keys for this demo.
             # In production, remove --mock and provide provider credentials.
             cmd = [
                 RK_CORE_PATH,
@@ -66,24 +67,24 @@ class ReasonKitTool(BaseTool):
                 query,
                 "--profile", profile,
                 "--format", "json",
-                "--mock" 
+                "--mock"
             ]
-            
+
             result = subprocess.run(cmd, capture_output=True, text=True, check=True)
             data = json.loads(result.stdout)
-            
+
             # Format the output for the LLM to understand
             summary = []
             summary.append(f"--- ReasonKit Analysis ({profile}) ---")
             summary.append(f"Confidence: {data.get('confidence', 0.0) * 100:.1f}%")
-            
+
             # Extract key steps (simplified for the agent's context)
             steps = data.get('steps', [])
             for step in steps:
                 step_id = step.get('step_id')
                 success = "✓" if step.get('success') else "✗"
                 summary.append(f"Step {step_id}: {success}")
-                
+
             # Extract the final synthesized output if available
             # (The JSON structure depends on your specific rk-core output schema)
             # This is a generic fallback:
@@ -108,7 +109,7 @@ class ReasonKitTool(BaseTool):
 
 def run_agent_demo():
     print("🤖 Initializing Glass Box Agent with ReasonKit Tools...")
-    
+
     # Initialize the tool
     rk_tool = ReasonKitTool()
     tools = [rk_tool]
@@ -117,11 +118,11 @@ def run_agent_demo():
     # In a real scenario, use ChatOpenAI, ChatAnthropic, etc.
     llm = FakeListLLM(responses=[
         "I need to use complex reasoning for this. I will use ReasonKit.",
-        "Action: reasonkit_think\nAction Input: 'What are the ethical implications of AGI?'", 
-        "Observation: [ReasonKit Output]", 
+        "Action: reasonkit_think\nAction Input: 'What are the ethical implications of AGI?'",
+        "Observation: [ReasonKit Output]",
         "Based on the structured analysis, here is the answer..."
     ])
-    
+
     # Simple ReAct Prompt
     template = """Answer the following questions as best you can. You have access to the following tools:
 
@@ -152,8 +153,8 @@ def run_agent_demo():
     # Run the Agent
     query = "Analyze the ethical implications of AGI using a balanced perspective."
     print(f"\n❓ User Query: {query}")
-    
-    # We mock the execution flow since FakeListLLM is static, 
+
+    # We mock the execution flow since FakeListLLM is static,
     # but this shows how the tool is integrated.
     try:
         # In a real run with a real LLM, this would call the tool automatically.
@@ -161,7 +162,7 @@ def run_agent_demo():
         print("\n⚙️  Agent decides to call ReasonKit...")
         tool_output = rk_tool.run({"query": query, "profile": "balanced"})
         print(f"\n📄 Tool Output (ReasonKit Artifact):\n{tool_output}")
-        
+
     except Exception as e:
         print(f"Agent execution failed: {e}")
 
@@ -174,4 +175,4 @@ if __name__ == "__main__":
 1.  **Tool Registration**: We subclass `BaseTool` to create `ReasonKitTool`. This exposes the `rk-core think` CLI command as a callable function within Python.
 2.  **Structured Execution**: When the Python agent calls the tool, it shells out to the optimized Rust binary.
 3.  **Config-Driven**: The agent can select profiles (`quick`, `paranoid`) defined in your YAML configuration, leveraging the work we just finished.
-4.  **Artifact Return**: Instead of just text, the tool returns a summary of the *verification steps* (Confidence, Step Success), making the reasoning "Glass Box".
+4.  **Artifact Return**: Instead of just text, the tool returns a summary of the _verification steps_ (Confidence, Step Success), making the reasoning "Glass Box".

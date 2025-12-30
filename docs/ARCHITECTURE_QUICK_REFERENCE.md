@@ -24,18 +24,18 @@ A vertical industrial architecture diagram showing a three-layer reasoning pipel
 
 ## 🎨 Color Reference
 
-| Element | Color | Hex |
-|---------|-------|-----|
-| CLI Interface | Electric Cyan | `#06b6d4` |
-| Protocol Layer | Electric Cyan | `#06b6d4` |
-| LLM Layer (Warning) | Alert Orange | `#f97316` |
-| GigaThink | Electric Cyan | `#06b6d4` |
-| LaserLogic | Cyber Green | `#10b981` |
-| BedRock | Amber | `#ff9500` |
-| ProofGuard | Accent Purple | `#a855f7` |
-| BrutalHonesty | Alert Orange | `#f97316` |
-| Telemetry | Cyber Green | `#10b981` |
-| Background | Void Black | `#030508` |
+| Element             | Color         | Hex       |
+| ------------------- | ------------- | --------- |
+| CLI Interface       | Electric Cyan | `#06b6d4` |
+| Protocol Layer      | Electric Cyan | `#06b6d4` |
+| LLM Layer (Warning) | Alert Orange  | `#f97316` |
+| GigaThink           | Electric Cyan | `#06b6d4` |
+| LaserLogic          | Cyber Green   | `#10b981` |
+| BedRock             | Amber         | `#ff9500` |
+| ProofGuard          | Accent Purple | `#a855f7` |
+| BrutalHonesty       | Alert Orange  | `#f97316` |
+| Telemetry           | Cyber Green   | `#10b981` |
+| Background          | Void Black    | `#030508` |
 
 ---
 
@@ -61,4 +61,3 @@ Negative: human figures, hands, faces, generic tech stock photos, cluttered UI, 
 
 _"Designed, Not Dreamed. Turn Prompts into Protocols."_  
 *https://reasonkit.sh*
-

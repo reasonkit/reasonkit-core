@@ -95,32 +95,32 @@ The ReasonKit Plugin Architecture enables developers to extend the core reasonin
 
 Custom reasoning modules that extend the core ThinkTools (GigaThink, LaserLogic, BedRock, ProofGuard, BrutalHonesty).
 
-| Category | Examples | Use Case |
-|----------|----------|----------|
-| **Domain-Specific** | LegalLogic, MedicalReasoner, FinanceAnalyst | Industry expertise |
-| **Cognitive Patterns** | SocraticDialogue, DevilsAdvocate, RedTeam | Reasoning strategies |
-| **Analysis Tools** | CodeReview, SecurityAudit, RiskAssessment | Technical analysis |
-| **Creative Tools** | IdeaGenerator, StoryWeaver, DesignThinking | Creative processes |
+| Category               | Examples                                    | Use Case             |
+| ---------------------- | ------------------------------------------- | -------------------- |
+| **Domain-Specific**    | LegalLogic, MedicalReasoner, FinanceAnalyst | Industry expertise   |
+| **Cognitive Patterns** | SocraticDialogue, DevilsAdvocate, RedTeam   | Reasoning strategies |
+| **Analysis Tools**     | CodeReview, SecurityAudit, RiskAssessment   | Technical analysis   |
+| **Creative Tools**     | IdeaGenerator, StoryWeaver, DesignThinking  | Creative processes   |
 
 ### 2.2 Integration Plugins
 
 Connect ReasonKit to external systems and services.
 
-| Category | Examples | Purpose |
-|----------|----------|---------|
-| **LLM Providers** | LocalLlama, OllamaAdapter, CustomEndpoint | Model integration |
-| **Storage Backends** | PostgresStore, MongoStore, S3Archive | Persistence |
-| **Output Formatters** | PDFExporter, JiraIntegration, SlackNotifier | Delivery |
-| **Data Sources** | ArxivFetcher, GitHubReader, ConfluenceSync | Ingestion |
+| Category              | Examples                                    | Purpose           |
+| --------------------- | ------------------------------------------- | ----------------- |
+| **LLM Providers**     | LocalLlama, OllamaAdapter, CustomEndpoint   | Model integration |
+| **Storage Backends**  | PostgresStore, MongoStore, S3Archive        | Persistence       |
+| **Output Formatters** | PDFExporter, JiraIntegration, SlackNotifier | Delivery          |
+| **Data Sources**      | ArxivFetcher, GitHubReader, ConfluenceSync  | Ingestion         |
 
 ### 2.3 Protocol Plugins
 
 Pre-defined reasoning workflows and chains.
 
-| Category | Examples | Purpose |
-|----------|----------|---------|
-| **Industry Protocols** | SOC2Compliance, FDAReview, LegalDiscovery | Compliance |
-| **Workflow Templates** | DesignReview, IncidentResponse, RootCause | Processes |
+| Category               | Examples                                      | Purpose       |
+| ---------------------- | --------------------------------------------- | ------------- |
+| **Industry Protocols** | SOC2Compliance, FDAReview, LegalDiscovery     | Compliance    |
+| **Workflow Templates** | DesignReview, IncidentResponse, RootCause     | Processes     |
 | **Chain Compositions** | DeepResearch, QuickDecision, ConsensusBuilder | Orchestration |
 
 ---
@@ -2776,13 +2776,13 @@ impl RegistryClient {
 
 ### 14.1 Testing Requirements
 
-| Requirement | Description | Enforcement |
-|-------------|-------------|-------------|
-| **Unit Tests** | Core logic coverage | >= 80% coverage |
+| Requirement           | Description          | Enforcement          |
+| --------------------- | -------------------- | -------------------- |
+| **Unit Tests**        | Core logic coverage  | >= 80% coverage      |
 | **Integration Tests** | End-to-end execution | Required for publish |
-| **Security Scan** | Vulnerability check | Automated on publish |
-| **Documentation** | README + API docs | Required fields |
-| **Performance** | Benchmark baseline | No > 2x regression |
+| **Security Scan**     | Vulnerability check  | Automated on publish |
+| **Documentation**     | README + API docs    | Required fields      |
+| **Performance**       | Benchmark baseline   | No > 2x regression   |
 
 ### 14.2 Quality Checklist
 
@@ -3483,28 +3483,28 @@ thinktool_plugin!(
 
 ### 16.2 Compatibility Matrix
 
-| ReasonKit Version | Plugin API Version | Notes |
-|-------------------|-------------------|-------|
-| 0.1.x | 1.0 | Initial plugin support |
-| 0.2.x | 1.0 | Backward compatible |
-| 1.0.x | 2.0 | Breaking changes (planned) |
+| ReasonKit Version | Plugin API Version | Notes                      |
+| ----------------- | ------------------ | -------------------------- |
+| 0.1.x             | 1.0                | Initial plugin support     |
+| 0.2.x             | 1.0                | Backward compatible        |
+| 1.0.x             | 2.0                | Breaking changes (planned) |
 
 ---
 
 ## Appendix A: Error Codes
 
-| Code | Name | Description |
-|------|------|-------------|
-| `PLUG-001` | `PluginNotFound` | Plugin ID not found in registry |
-| `PLUG-002` | `PluginLoadFailed` | Failed to load plugin binary/module |
-| `PLUG-003` | `PluginInitFailed` | Plugin initialization error |
-| `PLUG-004` | `PluginConflict` | Duplicate plugin ID |
-| `PLUG-005` | `ManifestInvalid` | Invalid plugin.toml |
-| `PLUG-006` | `DependencyMissing` | Required dependency not found |
-| `PLUG-007` | `DependencyCycle` | Circular dependency detected |
-| `PLUG-008` | `CapabilityDenied` | Requested capability not granted |
-| `PLUG-009` | `ResourceExhausted` | Resource limit exceeded |
-| `PLUG-010` | `SignatureInvalid` | Package signature verification failed |
+| Code       | Name                | Description                           |
+| ---------- | ------------------- | ------------------------------------- |
+| `PLUG-001` | `PluginNotFound`    | Plugin ID not found in registry       |
+| `PLUG-002` | `PluginLoadFailed`  | Failed to load plugin binary/module   |
+| `PLUG-003` | `PluginInitFailed`  | Plugin initialization error           |
+| `PLUG-004` | `PluginConflict`    | Duplicate plugin ID                   |
+| `PLUG-005` | `ManifestInvalid`   | Invalid plugin.toml                   |
+| `PLUG-006` | `DependencyMissing` | Required dependency not found         |
+| `PLUG-007` | `DependencyCycle`   | Circular dependency detected          |
+| `PLUG-008` | `CapabilityDenied`  | Requested capability not granted      |
+| `PLUG-009` | `ResourceExhausted` | Resource limit exceeded               |
+| `PLUG-010` | `SignatureInvalid`  | Package signature verification failed |
 
 ---
 
@@ -3523,5 +3523,5 @@ thinktool_plugin!(
 
 ---
 
-*ReasonKit Plugin Architecture v1.0.0 | Apache 2.0*
+_ReasonKit Plugin Architecture v1.0.0 | Apache 2.0_
 *https://reasonkit.sh/docs/plugins*

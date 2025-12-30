@@ -8,30 +8,31 @@
 
 ## 🧩 Core Modules
 
-| Module | ID | Purpose | Duration | Key Metric |
-|--------|----|---------|---------:|------------|
-| **GigaThink** | `gt` | Expansive creative thinking | 30-90s | 10+ perspectives |
-| **LaserLogic** | `ll` | Deductive reasoning | 20-60s | 0 fallacies |
-| **BedRock** | `br` | First principles | 40-120s | 5 layers deep |
-| **ProofGuard** | `pg` | Multi-source verification | 60-180s | 3+ sources |
-| **BrutalHonesty** | `bh` | Adversarial critique | 30-90s | 5+ critiques |
+| Module            | ID   | Purpose                     | Duration | Key Metric       |
+| ----------------- | ---- | --------------------------- | -------: | ---------------- |
+| **GigaThink**     | `gt` | Expansive creative thinking |   30-90s | 10+ perspectives |
+| **LaserLogic**    | `ll` | Deductive reasoning         |   20-60s | 0 fallacies      |
+| **BedRock**       | `br` | First principles            |  40-120s | 5 layers deep    |
+| **ProofGuard**    | `pg` | Multi-source verification   |  60-180s | 3+ sources       |
+| **BrutalHonesty** | `bh` | Adversarial critique        |   30-90s | 5+ critiques     |
 
 ---
 
 ## 🎯 Reasoning Profiles
 
-| Profile | Modules | Execution | Confidence | Duration | Use When |
-|---------|---------|-----------|:----------:|---------:|----------|
-| `--quick` | gt, ll | Parallel | 70% | ~60s | Fast exploration |
-| `--balanced` | gt, ll, br, pg | Sequential | 80% | ~180s | Standard analysis |
-| `--deep` | All 5 | Sequential + Feedback | 85% | ~300s | Complex problems |
-| `--paranoid` | All 5 | Multi-Pass | 95% | ~600s | Security critical |
+| Profile      | Modules        | Execution             | Confidence | Duration | Use When          |
+| ------------ | -------------- | --------------------- | :--------: | -------: | ----------------- |
+| `--quick`    | gt, ll         | Parallel              |    70%     |     ~60s | Fast exploration  |
+| `--balanced` | gt, ll, br, pg | Sequential            |    80%     |    ~180s | Standard analysis |
+| `--deep`     | All 5          | Sequential + Feedback |    85%     |    ~300s | Complex problems  |
+| `--paranoid` | All 5          | Multi-Pass            |    95%     |    ~600s | Security critical |
 
 ---
 
 ## ⚖️ Confidence Scoring
 
 ### Module Weights
+
 ```
 ProofGuard:     0.30  (highest - verification is critical)
 LaserLogic:     0.25  (logical rigor)
@@ -41,6 +42,7 @@ BrutalHonesty:  0.10  (adjusts, doesn't determine)
 ```
 
 ### Contradiction Penalties
+
 ```
 None:     1.00  (no penalty)
 Minor:    0.95  (5% reduction)
@@ -50,6 +52,7 @@ Blocking: 0.50  (50% reduction)
 ```
 
 ### Profile Multipliers
+
 ```
 Quick:    1.00  (baseline)
 Balanced: 1.05  (+5% for thoroughness)
@@ -58,6 +61,7 @@ Paranoid: 1.15  (+15%)
 ```
 
 ### Calibration Bands
+
 ```
 95-100%: Very High → Proceed with implementation
 85-94%:  High      → Proceed with monitoring
@@ -71,6 +75,7 @@ Paranoid: 1.15  (+15%)
 ## 🔗 Chain Patterns
 
 ### Quick (Parallel)
+
 ```
 gt ─────┐
         ├─→ Synthesize
@@ -78,17 +83,20 @@ ll ─────┘
 ```
 
 ### Balanced (Sequential)
+
 ```
 gt → br → ll → pg → Synthesize
 ```
 
 ### Deep (With Feedback)
+
 ```
 gt → br → ll → pg → bh ──→ Synthesize
                      └─→ Re-run if flaws found
 ```
 
 ### Paranoid (Multi-Pass)
+
 ```
 Pass 1: gt → br → ll → pg
 Pass 2: bh → identify flaws
@@ -102,15 +110,16 @@ Pass 4: Final pg → bh → Synthesize
 
 ReasonKit supports intuitive aliases for all commands:
 
-| Intent | Aliases | Routes To |
-|--------|---------|-----------|
-| **Creative** | `gt`, `giga`, `creative`, `rainbow` | GigaThink |
-| **Logical** | `ll`, `laser`, `logic`, `deduce` | LaserLogic |
-| **Foundation** | `br`, `roots`, `foundation`, `base` | BedRock |
-| **Verify** | `pg`, `proof`, `verify`, `check`, `guard` | ProofGuard |
-| **Critique** | `bh`, `brutal`, `critique`, `honest` | BrutalHonesty |
+| Intent         | Aliases                                   | Routes To     |
+| -------------- | ----------------------------------------- | ------------- |
+| **Creative**   | `gt`, `giga`, `creative`, `rainbow`       | GigaThink     |
+| **Logical**    | `ll`, `laser`, `logic`, `deduce`          | LaserLogic    |
+| **Foundation** | `br`, `roots`, `foundation`, `base`       | BedRock       |
+| **Verify**     | `pg`, `proof`, `verify`, `check`, `guard` | ProofGuard    |
+| **Critique**   | `bh`, `brutal`, `critique`, `honest`      | BrutalHonesty |
 
 **Examples:**
+
 ```bash
 rk-core think --protocol rainbow "Brainstorm ideas"       # → GigaThink
 rk-core think --protocol verify "Check this claim"        # → ProofGuard
@@ -189,6 +198,7 @@ print(f"Confidence: {result.confidence.overall:.1%}")
 ## 📊 Module Outputs
 
 ### GigaThink
+
 ```json
 {
   "perspectives": [/* 10-25 viewpoints */],
@@ -199,16 +209,24 @@ print(f"Confidence: {result.confidence.overall:.1%}")
 ```
 
 ### LaserLogic
+
 ```json
 {
-  "premises": [/* extracted premises */],
-  "deductive_chains": [/* logical chains */],
-  "fallacies_detected": [/* 18 fallacy types */],
-  "conclusion": {"statement": "...", "strength": 0.90}
+  "premises": [
+    /* extracted premises */
+  ],
+  "deductive_chains": [
+    /* logical chains */
+  ],
+  "fallacies_detected": [
+    /* 18 fallacy types */
+  ],
+  "conclusion": { "statement": "...", "strength": 0.9 }
 }
 ```
 
 ### BedRock
+
 ```json
 {
   "decomposition_layers": [/* 5 layers */],
@@ -219,22 +237,38 @@ print(f"Confidence: {result.confidence.overall:.1%}")
 ```
 
 ### ProofGuard
+
 ```json
 {
-  "claims_extracted": [/* factual claims */],
-  "verification_results": [/* per-claim verification */],
-  "triangulation_table": [/* 3-source table */],
-  "contradictions": [/* conflicts found */]
+  "claims_extracted": [
+    /* factual claims */
+  ],
+  "verification_results": [
+    /* per-claim verification */
+  ],
+  "triangulation_table": [
+    /* 3-source table */
+  ],
+  "contradictions": [
+    /* conflicts found */
+  ]
 }
 ```
 
 ### BrutalHonesty
+
 ```json
 {
-  "critiques": [/* adversarial critiques */],
-  "edge_cases": [/* failure scenarios */],
-  "biases_detected": [/* cognitive biases */],
-  "overall_assessment": {"verdict": "...", "fatal_flaws_found": 0}
+  "critiques": [
+    /* adversarial critiques */
+  ],
+  "edge_cases": [
+    /* failure scenarios */
+  ],
+  "biases_detected": [
+    /* cognitive biases */
+  ],
+  "overall_assessment": { "verdict": "...", "fatal_flaws_found": 0 }
 }
 ```
 
@@ -243,6 +277,7 @@ print(f"Confidence: {result.confidence.overall:.1%}")
 ## 🔍 Contradiction Detection
 
 ### Comparison Pairs
+
 ```
 GigaThink ↔ LaserLogic:  Are gt insights logically sound?
 BedRock ↔ ProofGuard:    Do br axioms match pg facts?
@@ -251,6 +286,7 @@ ProofGuard ↔ BrutalHonesty: Did bh find unverified claims?
 ```
 
 ### Resolution Strategy
+
 1. Investigate nature of contradiction
 2. Re-run affected modules with tighter constraints
 3. Lower confidence to minimum of conflicting modules
@@ -261,6 +297,7 @@ ProofGuard ↔ BrutalHonesty: Did bh find unverified claims?
 ## 🛠️ Configuration
 
 ### `config/thinktools.toml`
+
 ```toml
 [thinktools]
 default_profile = "balanced"
@@ -288,12 +325,14 @@ attack_intensity = 0.8
 ## ✅ Best Practices
 
 ### Choose Right Profile
+
 - **Brainstorming?** → `--quick`
 - **Design decision?** → `--balanced`
 - **Research synthesis?** → `--deep`
 - **Security review?** → `--paranoid`
 
 ### Interpret Confidence
+
 - **95%+** = Ship it
 - **85-94%** = Monitor closely
 - **70-84%** = Plan validation
@@ -301,6 +340,7 @@ attack_intensity = 0.8
 - **<50%** = Don't proceed
 
 ### Handle Low Confidence
+
 1. Check for contradictions
 2. Add more sources (ProofGuard)
 3. Run BrutalHonesty critique
@@ -310,29 +350,30 @@ attack_intensity = 0.8
 
 ## 📚 Resources
 
-| Resource | Location |
-|----------|----------|
+| Resource          | Location                       |
+| ----------------- | ------------------------------ |
 | **Full Protocol** | `protocols/thinktools_v2.yaml` |
-| **User Guide** | `docs/THINKTOOLS_V2_GUIDE.md` |
-| **JSON Schemas** | `schemas/thinktools/*.json` |
-| **API Docs** | https://docs.rs/reasonkit-core |
+| **User Guide**    | `docs/THINKTOOLS_V2_GUIDE.md`  |
+| **JSON Schemas**  | `schemas/thinktools/*.json`    |
+| **API Docs**      | https://docs.rs/reasonkit-core |
 
 ---
 
 ## 🐛 Troubleshooting
 
-| Problem | Solution |
-|---------|----------|
-| Low confidence | Run higher profile (deep/paranoid) |
-| Module conflicts | Check verbose logs, re-run with constraints |
-| Slow execution | Use lower profile or cache ProofGuard sources |
-| Schema validation fails | Ensure all required fields present |
+| Problem                 | Solution                                      |
+| ----------------------- | --------------------------------------------- |
+| Low confidence          | Run higher profile (deep/paranoid)            |
+| Module conflicts        | Check verbose logs, re-run with constraints   |
+| Slow execution          | Use lower profile or cache ProofGuard sources |
+| Schema validation fails | Ensure all required fields present            |
 
 ---
 
 ## 📐 Formulas
 
 ### Overall Confidence
+
 ```
 CONFIDENCE =
   (Σ(module_conf × module_weight) / Σ(weights))
@@ -341,11 +382,13 @@ CONFIDENCE =
 ```
 
 ### Module Confidence (Generic)
+
 ```
 MODULE_CONF = Σ(factor_value × factor_weight)
 ```
 
 ### Contradiction Penalty
+
 ```
 PENALTY =
   1.00 if no contradictions
@@ -376,5 +419,5 @@ Security/Safety critical? → Yes → --paranoid (95% conf, 600s)
 
 ---
 
-*ThinkTools V2 Quick Reference | reasonkit-core | Apache 2.0*
+_ThinkTools V2 Quick Reference | reasonkit-core | Apache 2.0_
 *https://reasonkit.sh*

@@ -70,25 +70,25 @@ Tokens: 2,847 | Cost: $0.032 | Time: 8.2s
 
 ## Understanding the Output
 
-| Section | What It Means |
-|---------|---------------|
-| **Protocol** | Which ThinkTools ran (e.g., `balanced` = 4 modules) |
-| **Confidence** | How certain the analysis is (70-95% depending on profile) |
-| **Perspectives** | Different angles you might have missed (from GigaThink) |
-| **First Principles** | Core axioms and hidden assumptions (from BedRock) |
-| **Verdict** | Synthesized recommendation after all analysis |
-| **Tokens/Cost** | LLM usage for transparency |
+| Section              | What It Means                                             |
+| -------------------- | --------------------------------------------------------- |
+| **Protocol**         | Which ThinkTools ran (e.g., `balanced` = 4 modules)       |
+| **Confidence**       | How certain the analysis is (70-95% depending on profile) |
+| **Perspectives**     | Different angles you might have missed (from GigaThink)   |
+| **First Principles** | Core axioms and hidden assumptions (from BedRock)         |
+| **Verdict**          | Synthesized recommendation after all analysis             |
+| **Tokens/Cost**      | LLM usage for transparency                                |
 
 ---
 
 ## Profile Selection Guide
 
-| Profile | When to Use | Time | Confidence |
-|---------|-------------|------|------------|
-| `--quick` | Daily decisions, sanity checks | ~30s | 70% |
-| `--balanced` | Important choices, need multiple angles | ~2min | 80% |
-| `--deep` | Major decisions, thorough analysis | ~5min | 85% |
-| `--paranoid` | High-stakes, cannot afford mistakes | ~10min | 95% |
+| Profile      | When to Use                             | Time   | Confidence |
+| ------------ | --------------------------------------- | ------ | ---------- |
+| `--quick`    | Daily decisions, sanity checks          | ~30s   | 70%        |
+| `--balanced` | Important choices, need multiple angles | ~2min  | 80%        |
+| `--deep`     | Major decisions, thorough analysis      | ~5min  | 85%        |
+| `--paranoid` | High-stakes, cannot afford mistakes     | ~10min | 95%        |
 
 ### Quick Reference
 
@@ -112,13 +112,13 @@ rk-core think "Is this production-ready?" --profile paranoid
 
 Each ThinkTool catches a specific blind spot:
 
-| Tool | Icon | What It Catches | Shortcut |
-|------|------|-----------------|----------|
-| **GigaThink** | `gt` | Angles you missed (10+ perspectives) | Divergent thinking |
-| **LaserLogic** | `ll` | Flawed reasoning, fallacies | Convergent analysis |
-| **BedRock** | `br` | Overcomplicated answers | First principles |
-| **ProofGuard** | `pg` | Unverified claims | Source triangulation |
-| **BrutalHonesty** | `bh` | Your blind spots | Adversarial critique |
+| Tool              | Icon | What It Catches                      | Shortcut             |
+| ----------------- | ---- | ------------------------------------ | -------------------- |
+| **GigaThink**     | `gt` | Angles you missed (10+ perspectives) | Divergent thinking   |
+| **LaserLogic**    | `ll` | Flawed reasoning, fallacies          | Convergent analysis  |
+| **BedRock**       | `br` | Overcomplicated answers              | First principles     |
+| **ProofGuard**    | `pg` | Unverified claims                    | Source triangulation |
+| **BrutalHonesty** | `bh` | Your blind spots                     | Adversarial critique |
 
 ### Run Individual Tools
 
@@ -161,18 +161,18 @@ print(f"Verdict: {analysis['verdict']}")
 ### Node.js
 
 ```javascript
-const { execSync } = require('child_process');
+const { execSync } = require("child_process");
 
-function reason(query, profile = 'balanced') {
+function reason(query, profile = "balanced") {
   const result = execSync(
     `rk-core think "${query}" --profile ${profile} --format json`,
-    { encoding: 'utf-8' }
+    { encoding: "utf-8" },
   );
   return JSON.parse(result);
 }
 
 // Usage
-const analysis = reason('Is this API design correct?');
+const analysis = reason("Is this API design correct?");
 console.log(`Confidence: ${analysis.confidence}`);
 console.log(`Verdict: ${analysis.verdict}`);
 ```
@@ -322,13 +322,13 @@ rk-core think "query" --profile balanced --format json
 
 ## Next Steps
 
-| Goal | Resource |
-|------|----------|
-| Full CLI options | [`docs/CLI_REFERENCE.md`](/home/zyxsys/RK-PROJECT/reasonkit-core/docs/CLI_REFERENCE.md) |
-| API documentation | [`docs/API_REFERENCE.md`](/home/zyxsys/RK-PROJECT/reasonkit-core/docs/API_REFERENCE.md) |
-| ThinkTool deep dive | [`docs/THINKTOOLS_QUICK_REFERENCE.md`](/home/zyxsys/RK-PROJECT/reasonkit-core/docs/THINKTOOLS_QUICK_REFERENCE.md) |
-| Architecture overview | [`ARCHITECTURE.md`](/home/zyxsys/RK-PROJECT/reasonkit-core/ARCHITECTURE.md) |
-| Real-world examples | [`docs/USE_CASES.md`](/home/zyxsys/RK-PROJECT/reasonkit-core/docs/USE_CASES.md) |
+| Goal                  | Resource                                                                                                          |
+| --------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| Full CLI options      | [`docs/CLI_REFERENCE.md`](/home/zyxsys/RK-PROJECT/reasonkit-core/docs/CLI_REFERENCE.md)                           |
+| API documentation     | [`docs/API_REFERENCE.md`](/home/zyxsys/RK-PROJECT/reasonkit-core/docs/API_REFERENCE.md)                           |
+| ThinkTool deep dive   | [`docs/THINKTOOLS_QUICK_REFERENCE.md`](/home/zyxsys/RK-PROJECT/reasonkit-core/docs/THINKTOOLS_QUICK_REFERENCE.md) |
+| Architecture overview | [`ARCHITECTURE.md`](/home/zyxsys/RK-PROJECT/reasonkit-core/ARCHITECTURE.md)                                       |
+| Real-world examples   | [`docs/USE_CASES.md`](/home/zyxsys/RK-PROJECT/reasonkit-core/docs/USE_CASES.md)                                   |
 
 ---
 

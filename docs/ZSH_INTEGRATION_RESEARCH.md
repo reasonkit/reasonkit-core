@@ -11,13 +11,13 @@ Zsh integration offers significant UX enhancements for ReasonKit CLI users. This
 
 ### Value Matrix
 
-| Integration Tier | Effort | Impact | Priority |
-|-----------------|--------|--------|----------|
-| Shell Completions | Low | High | P0 |
-| ZLE Widgets | Medium | High | P1 |
-| Oh-My-Zsh Plugin | Medium | Medium | P2 |
-| fzf-style Keybindings | Medium | High | P1 |
-| Async Prompt Integration | High | Low | P3 |
+| Integration Tier         | Effort | Impact | Priority |
+| ------------------------ | ------ | ------ | -------- |
+| Shell Completions        | Low    | High   | P0       |
+| ZLE Widgets              | Medium | High   | P1       |
+| Oh-My-Zsh Plugin         | Medium | Medium | P2       |
+| fzf-style Keybindings    | Medium | High   | P1       |
+| Async Prompt Integration | High   | Low    | P3       |
 
 ---
 
@@ -164,13 +164,13 @@ preexec() {
 
 ### Widget Categories
 
-| Category | Keybinding | Function |
-|----------|-----------|----------|
-| Quick Think | `Ctrl+R T` | Run quick profile on buffer |
-| Deep Think | `Ctrl+R D` | Run deep profile on buffer |
-| Explain Error | `Ctrl+E` | Explain last error |
-| Inline Reason | `Alt+R` | Replace buffer with result |
-| Command Suggest | `Alt+S` | Suggest command for task |
+| Category        | Keybinding | Function                    |
+| --------------- | ---------- | --------------------------- |
+| Quick Think     | `Ctrl+R T` | Run quick profile on buffer |
+| Deep Think      | `Ctrl+R D` | Run deep profile on buffer  |
+| Explain Error   | `Ctrl+E`   | Explain last error          |
+| Inline Reason   | `Alt+R`    | Replace buffer with result  |
+| Command Suggest | `Alt+S`    | Suggest command for task    |
 
 ### Effort Estimate
 
@@ -347,14 +347,14 @@ bindkey '^Rh' rk-history-search
 
 ### Keybinding Reference Card
 
-| Keybinding | Function | Description |
-|------------|----------|-------------|
-| `Ctrl+R P` | Profile selector | fzf picker for reasoning profiles |
-| `Ctrl+R V` | Provider selector | fzf picker for LLM providers |
-| `Ctrl+R H` | History search | Search previous RK commands |
-| `Ctrl+R T` | Quick think | Run quick profile on buffer |
-| `Ctrl+R D` | Deep think | Run deep profile on buffer |
-| `Ctrl+R C` | Compare | Compare raw vs enhanced |
+| Keybinding | Function          | Description                       |
+| ---------- | ----------------- | --------------------------------- |
+| `Ctrl+R P` | Profile selector  | fzf picker for reasoning profiles |
+| `Ctrl+R V` | Provider selector | fzf picker for LLM providers      |
+| `Ctrl+R H` | History search    | Search previous RK commands       |
+| `Ctrl+R T` | Quick think       | Run quick profile on buffer       |
+| `Ctrl+R D` | Deep think        | Run deep profile on buffer        |
+| `Ctrl+R C` | Compare           | Compare raw vs enhanced           |
 
 ### Effort Estimate
 
@@ -435,34 +435,34 @@ precmd() {
 
 ### Phase 1: Foundation (Week 1)
 
-| Task | Priority | Effort | Deliverable |
-|------|----------|--------|-------------|
-| Add clap_complete | P0 | 2h | Shell completions for Zsh/Bash/Fish |
-| Basic documentation | P0 | 1h | Installation instructions |
-| Test on common shells | P0 | 2h | Verified completions |
+| Task                  | Priority | Effort | Deliverable                         |
+| --------------------- | -------- | ------ | ----------------------------------- |
+| Add clap_complete     | P0       | 2h     | Shell completions for Zsh/Bash/Fish |
+| Basic documentation   | P0       | 1h     | Installation instructions           |
+| Test on common shells | P0       | 2h     | Verified completions                |
 
 ### Phase 2: Interactive (Week 2-3)
 
-| Task | Priority | Effort | Deliverable |
-|------|----------|--------|-------------|
-| Core ZLE widgets | P1 | 4h | 5 essential widgets |
-| fzf integration | P1 | 4h | Interactive selectors |
-| Keybinding docs | P1 | 2h | Reference card |
+| Task             | Priority | Effort | Deliverable           |
+| ---------------- | -------- | ------ | --------------------- |
+| Core ZLE widgets | P1       | 4h     | 5 essential widgets   |
+| fzf integration  | P1       | 4h     | Interactive selectors |
+| Keybinding docs  | P1       | 2h     | Reference card        |
 
 ### Phase 3: Ecosystem (Week 4+)
 
-| Task | Priority | Effort | Deliverable |
-|------|----------|--------|-------------|
-| Oh-My-Zsh plugin | P2 | 6h | Installable plugin |
-| Plugin repo setup | P2 | 2h | GitHub repo with releases |
-| Community testing | P2 | N/A | Beta feedback |
+| Task              | Priority | Effort | Deliverable               |
+| ----------------- | -------- | ------ | ------------------------- |
+| Oh-My-Zsh plugin  | P2       | 6h     | Installable plugin        |
+| Plugin repo setup | P2       | 2h     | GitHub repo with releases |
+| Community testing | P2       | N/A    | Beta feedback             |
 
 ### Phase 4: Advanced (Future)
 
-| Task | Priority | Effort | Deliverable |
-|------|----------|--------|-------------|
-| Async prompt | P3 | 8h | Background status |
-| Powerlevel10k segment | P3 | 4h | Native segment |
+| Task                  | Priority | Effort | Deliverable       |
+| --------------------- | -------- | ------ | ----------------- |
+| Async prompt          | P3       | 8h     | Background status |
+| Powerlevel10k segment | P3       | 4h     | Native segment    |
 
 ---
 
@@ -481,11 +481,11 @@ clap_complete = "4.5"  # For build-time generation
 
 ### Optional (User-Side)
 
-| Dependency | Purpose | Required For |
-|------------|---------|--------------|
-| fzf | Interactive selection | Tier 4 features |
-| Oh-My-Zsh | Plugin framework | Tier 3 features |
-| Powerlevel10k | Prompt integration | Tier 5 features |
+| Dependency    | Purpose               | Required For    |
+| ------------- | --------------------- | --------------- |
+| fzf           | Interactive selection | Tier 4 features |
+| Oh-My-Zsh     | Plugin framework      | Tier 3 features |
+| Powerlevel10k | Prompt integration    | Tier 5 features |
 
 ---
 
@@ -493,13 +493,13 @@ clap_complete = "4.5"  # For build-time generation
 
 ### Existing AI CLI Shell Integrations
 
-| Tool | Shell Integration | Approach |
-|------|-------------------|----------|
-| **ShellGPT** | Basic aliases | Python wrapper, `sgpt` alias |
-| **Butterfish** | Shell mode | Embedded shell with AI context |
-| **ShellSage** | Widget-based | Zsh widgets for error explanation |
-| **Shai** | Inline replacement | Replace buffer with AI response |
-| **GitHub Copilot CLI** | Suggest command | `gh copilot suggest` |
+| Tool                   | Shell Integration  | Approach                          |
+| ---------------------- | ------------------ | --------------------------------- |
+| **ShellGPT**           | Basic aliases      | Python wrapper, `sgpt` alias      |
+| **Butterfish**         | Shell mode         | Embedded shell with AI context    |
+| **ShellSage**          | Widget-based       | Zsh widgets for error explanation |
+| **Shai**               | Inline replacement | Replace buffer with AI response   |
+| **GitHub Copilot CLI** | Suggest command    | `gh copilot suggest`              |
 
 ### ReasonKit Differentiation
 
@@ -513,12 +513,12 @@ clap_complete = "4.5"  # For build-time generation
 
 ## Risks and Mitigations
 
-| Risk | Probability | Impact | Mitigation |
-|------|-------------|--------|------------|
-| Shell compatibility issues | Medium | Medium | Test on Zsh 5.8+, document requirements |
-| fzf dependency complaints | Low | Low | Make fzf features optional |
-| Keybinding conflicts | Medium | Low | Use `Ctrl+R` prefix, allow customization |
-| Slow widget execution | Low | High | Background execution, caching |
+| Risk                       | Probability | Impact | Mitigation                               |
+| -------------------------- | ----------- | ------ | ---------------------------------------- |
+| Shell compatibility issues | Medium      | Medium | Test on Zsh 5.8+, document requirements  |
+| fzf dependency complaints  | Low         | Low    | Make fzf features optional               |
+| Keybinding conflicts       | Medium      | Low    | Use `Ctrl+R` prefix, allow customization |
+| Slow widget execution      | Low         | High   | Background execution, caching            |
 
 ---
 
@@ -546,5 +546,5 @@ The shell completions alone will significantly improve UX for power users, and t
 
 ---
 
-*Research completed: 2025-12-24*
-*Status: Ready for implementation planning*
+_Research completed: 2025-12-24_
+_Status: Ready for implementation planning_

@@ -28,25 +28,25 @@ ReasonKit Core is a Rust-based structured prompt engineering framework supportin
 
 ### Key Components Under Test
 
-| Component | Description | Risk Level |
-|-----------|-------------|------------|
-| **ThinkTool Executor** | Protocol chain execution engine | CRITICAL |
-| **LLM Provider Client** | 18+ provider integrations | CRITICAL |
-| **Profile System** | 7 reasoning profiles (quick, balanced, deep, paranoid, decide, scientific, powercombo) | HIGH |
-| **ProofLedger** | Content verification and drift detection | HIGH |
-| **CLI Interface** | rk-core command-line tool | HIGH |
-| **Trace System** | Execution tracing and metrics | MEDIUM |
-| **Storage Layer** | Document and embedding storage (optional feature) | MEDIUM |
+| Component               | Description                                                                            | Risk Level |
+| ----------------------- | -------------------------------------------------------------------------------------- | ---------- |
+| **ThinkTool Executor**  | Protocol chain execution engine                                                        | CRITICAL   |
+| **LLM Provider Client** | 18+ provider integrations                                                              | CRITICAL   |
+| **Profile System**      | 7 reasoning profiles (quick, balanced, deep, paranoid, decide, scientific, powercombo) | HIGH       |
+| **ProofLedger**         | Content verification and drift detection                                               | HIGH       |
+| **CLI Interface**       | rk-core command-line tool                                                              | HIGH       |
+| **Trace System**        | Execution tracing and metrics                                                          | MEDIUM     |
+| **Storage Layer**       | Document and embedding storage (optional feature)                                      | MEDIUM     |
 
 ### Test Coverage Targets
 
-| Test Type | Current | Target | Priority |
-|-----------|---------|--------|----------|
-| Unit Tests | 240 passing | 300+ | P0 |
-| Integration Tests | ~50 | 100+ | P0 |
-| E2E Tests | ~25 | 50+ | P1 |
-| Performance Benchmarks | 8 suites | 12 suites | P1 |
-| Provider Mock Tests | Partial | Complete (18 providers) | P0 |
+| Test Type              | Current     | Target                  | Priority |
+| ---------------------- | ----------- | ----------------------- | -------- |
+| Unit Tests             | 240 passing | 300+                    | P0       |
+| Integration Tests      | ~50         | 100+                    | P0       |
+| E2E Tests              | ~25         | 50+                     | P1       |
+| Performance Benchmarks | 8 suites    | 12 suites               | P1       |
+| Provider Mock Tests    | Partial     | Complete (18 providers) | P0       |
 
 ---
 
@@ -705,7 +705,7 @@ jobs:
   "analyze_interactions": {
     "content": "Key interactions identified...",
     "tokens": { "input": 200, "output": 150 },
-    "confidence": 0.80
+    "confidence": 0.8
   },
   "synthesize": {
     "content": "Synthesis: Main themes are...",
@@ -721,15 +721,15 @@ jobs:
 
 ### Benchmark Thresholds
 
-| Benchmark | Target | Warning | Critical |
-|-----------|--------|---------|----------|
-| Protocol execution (mock) | < 5ms | < 10ms | < 50ms |
-| Profile chain (quick) | < 15ms | < 30ms | < 100ms |
-| Profile chain (balanced) | < 30ms | < 60ms | < 200ms |
-| Profile chain (deep) | < 50ms | < 100ms | < 300ms |
-| Concurrent execution (8x) | < 100ms | < 200ms | < 500ms |
-| Template rendering | < 1ms | < 5ms | < 10ms |
-| Trace serialization | < 2ms | < 5ms | < 20ms |
+| Benchmark                 | Target  | Warning | Critical |
+| ------------------------- | ------- | ------- | -------- |
+| Protocol execution (mock) | < 5ms   | < 10ms  | < 50ms   |
+| Profile chain (quick)     | < 15ms  | < 30ms  | < 100ms  |
+| Profile chain (balanced)  | < 30ms  | < 60ms  | < 200ms  |
+| Profile chain (deep)      | < 50ms  | < 100ms | < 300ms  |
+| Concurrent execution (8x) | < 100ms | < 200ms | < 500ms  |
+| Template rendering        | < 1ms   | < 5ms   | < 10ms   |
+| Trace serialization       | < 2ms   | < 5ms   | < 20ms   |
 
 ### Performance Test Suite
 
@@ -881,14 +881,14 @@ jobs:
 
 ### Platform Support Matrix
 
-| Platform | Architecture | Priority | CI Coverage |
-|----------|--------------|----------|-------------|
-| Linux x86_64 | x86_64-unknown-linux-gnu | P0 | Full |
-| Linux ARM64 | aarch64-unknown-linux-gnu | P1 | Full |
-| macOS x86_64 | x86_64-apple-darwin | P1 | Full |
-| macOS ARM64 | aarch64-apple-darwin | P0 | Full |
-| Windows x86_64 | x86_64-pc-windows-msvc | P2 | Core tests |
-| Windows ARM64 | aarch64-pc-windows-msvc | P3 | Core tests |
+| Platform       | Architecture              | Priority | CI Coverage |
+| -------------- | ------------------------- | -------- | ----------- |
+| Linux x86_64   | x86_64-unknown-linux-gnu  | P0       | Full        |
+| Linux ARM64    | aarch64-unknown-linux-gnu | P1       | Full        |
+| macOS x86_64   | x86_64-apple-darwin       | P1       | Full        |
+| macOS ARM64    | aarch64-apple-darwin      | P0       | Full        |
+| Windows x86_64 | x86_64-pc-windows-msvc    | P2       | Core tests  |
+| Windows ARM64  | aarch64-pc-windows-msvc   | P3       | Core tests  |
 
 ### CI Matrix Configuration
 
@@ -1030,16 +1030,16 @@ mod platform_tests {
 
 ### Launch Day Critical Paths
 
-| Path | Description | Test Coverage |
-|------|-------------|---------------|
-| CP-1 | CLI --help displays correctly | `test_cli_help_displays` |
-| CP-2 | Mock mode works without API keys | `test_cli_mock_execution` |
+| Path | Description                           | Test Coverage                |
+| ---- | ------------------------------------- | ---------------------------- |
+| CP-1 | CLI --help displays correctly         | `test_cli_help_displays`     |
+| CP-2 | Mock mode works without API keys      | `test_cli_mock_execution`    |
 | CP-3 | All 5 ThinkTools execute successfully | `test_all_protocols_execute` |
-| CP-4 | All 7 profiles execute successfully | `test_all_profiles_execute` |
-| CP-5 | JSON output is valid | `test_json_output_valid` |
-| CP-6 | Error messages are user-friendly | `test_error_messages` |
-| CP-7 | Trace files are created correctly | `test_trace_creation` |
-| CP-8 | Metrics are recorded accurately | `test_metrics_accuracy` |
+| CP-4 | All 7 profiles execute successfully   | `test_all_profiles_execute`  |
+| CP-5 | JSON output is valid                  | `test_json_output_valid`     |
+| CP-6 | Error messages are user-friendly      | `test_error_messages`        |
+| CP-7 | Trace files are created correctly     | `test_trace_creation`        |
+| CP-8 | Metrics are recorded accurately       | `test_metrics_accuracy`      |
 
 ### Critical Path Test Implementation
 
@@ -1182,13 +1182,13 @@ mod critical_paths {
 
 ### Failover Test Matrix
 
-| Scenario | Primary | Fallback | Expected Behavior |
-|----------|---------|----------|-------------------|
-| F-1 | Anthropic timeout | OpenAI | Automatic retry with fallback |
-| F-2 | Rate limit hit | Queue + retry | Exponential backoff |
-| F-3 | Invalid API key | Error with clear message | Fail fast with guidance |
-| F-4 | Network failure | Cached response (if any) | Graceful degradation |
-| F-5 | Provider down | Alternative provider | Automatic rerouting |
+| Scenario | Primary           | Fallback                 | Expected Behavior             |
+| -------- | ----------------- | ------------------------ | ----------------------------- |
+| F-1      | Anthropic timeout | OpenAI                   | Automatic retry with fallback |
+| F-2      | Rate limit hit    | Queue + retry            | Exponential backoff           |
+| F-3      | Invalid API key   | Error with clear message | Fail fast with guidance       |
+| F-4      | Network failure   | Cached response (if any) | Graceful degradation          |
+| F-5      | Provider down     | Alternative provider     | Automatic rerouting           |
 
 ### Failover Test Implementation
 
@@ -1394,7 +1394,7 @@ on:
     branches: [main]
   schedule:
     # Run daily at 6am UTC
-    - cron: '0 6 * * *'
+    - cron: "0 6 * * *"
 
 env:
   CARGO_TERM_COLOR: always
@@ -1626,11 +1626,11 @@ criterion_main!(benches);
 
 ## Document History
 
-| Version | Date | Author | Changes |
-|---------|------|--------|---------|
-| 1.0.0 | 2025-12-28 | Testing Specialist | Initial comprehensive test plan |
+| Version | Date       | Author             | Changes                         |
+| ------- | ---------- | ------------------ | ------------------------------- |
+| 1.0.0   | 2025-12-28 | Testing Specialist | Initial comprehensive test plan |
 
 ---
 
-*ReasonKit Core - Designed, Not Dreamed*
+_ReasonKit Core - Designed, Not Dreamed_
 *https://reasonkit.sh*

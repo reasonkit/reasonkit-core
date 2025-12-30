@@ -1,4 +1,5 @@
 # LLM CLI & Datasette Ecosystem Integration
+
 > ReasonKit Data Infrastructure: CLI-First AI Workflows
 > Simon Willison's LLM ecosystem for reproducible, auditable AI operations
 
@@ -6,15 +7,15 @@
 
 ## EXECUTIVE SUMMARY
 
-| Capability | Tool | ReasonKit Use Case | Status |
-|------------|------|-------------------|--------|
-| **CLI LLM Access** | `llm` | Universal model routing | INTEGRATE |
-| **Conversation Logging** | logs.db | Audit trails, research replay | CRITICAL |
-| **Embeddings** | `llm embed` | Semantic search, clustering | HIGH |
-| **RAG Tools** | llm-tools-rag | Document retrieval | HIGH |
-| **Data Exploration** | Datasette | SQL-based AI querying | MEDIUM |
-| **Local Models** | llm-ollama, llm-gguf | Cost-free inference | HIGH |
-| **Tool Plugins** | llm-tools-* | Calculator, SQL, web search | HIGH |
+| Capability               | Tool                 | ReasonKit Use Case            | Status    |
+| ------------------------ | -------------------- | ----------------------------- | --------- |
+| **CLI LLM Access**       | `llm`                | Universal model routing       | INTEGRATE |
+| **Conversation Logging** | logs.db              | Audit trails, research replay | CRITICAL  |
+| **Embeddings**           | `llm embed`          | Semantic search, clustering   | HIGH      |
+| **RAG Tools**            | llm-tools-rag        | Document retrieval            | HIGH      |
+| **Data Exploration**     | Datasette            | SQL-based AI querying         | MEDIUM    |
+| **Local Models**         | llm-ollama, llm-gguf | Cost-free inference           | HIGH      |
+| **Tool Plugins**         | llm-tools-\*         | Calculator, SQL, web search   | HIGH      |
 
 ---
 
@@ -881,7 +882,7 @@ done > literature_review.md
 ### 15.1 Setup Tasks
 
 - [ ] Install `llm` CLI tool
-- [ ] Install essential plugins (llm-anthropic, llm-ollama, llm-tools-*)
+- [ ] Install essential plugins (llm-anthropic, llm-ollama, llm-tools-\*)
 - [ ] Configure API keys
 - [ ] Create ReasonKit-specific templates
 - [ ] Set up logs.db backup schedule
@@ -933,17 +934,17 @@ datasette publish github research.db \
 
 ## APPENDIX A: Plugin Reference
 
-| Plugin | Command | Use Case |
-|--------|---------|----------|
-| llm-anthropic | `llm -m claude-*` | Claude models |
-| llm-ollama | `llm -m llama3.2` | Local Ollama |
-| llm-openrouter | `llm -m openrouter/*` | Multi-provider |
-| llm-tools-sqlite | `-T SQLite("db")` | Database queries |
-| llm-tools-rag | `-T RAG` | Document retrieval |
-| llm-tools-exa | `-T web_search` | Web search |
-| llm-cluster | `llm cluster` | Semantic clustering |
-| llm-fragments-github | `-f github:repo` | GitHub context |
-| llm-fragments-pdf | `-a paper.pdf` | PDF extraction |
+| Plugin               | Command               | Use Case            |
+| -------------------- | --------------------- | ------------------- |
+| llm-anthropic        | `llm -m claude-*`     | Claude models       |
+| llm-ollama           | `llm -m llama3.2`     | Local Ollama        |
+| llm-openrouter       | `llm -m openrouter/*` | Multi-provider      |
+| llm-tools-sqlite     | `-T SQLite("db")`     | Database queries    |
+| llm-tools-rag        | `-T RAG`              | Document retrieval  |
+| llm-tools-exa        | `-T web_search`       | Web search          |
+| llm-cluster          | `llm cluster`         | Semantic clustering |
+| llm-fragments-github | `-f github:repo`      | GitHub context      |
+| llm-fragments-pdf    | `-a paper.pdf`        | PDF extraction      |
 
 ---
 
@@ -965,6 +966,6 @@ print(f"Estimated monthly cost: ${total:.2f}")  # ~$5.25/month typical
 
 ---
 
-*Document Version: 1.0*
-*Integration with: Simon Willison's LLM CLI ecosystem*
-*See: https://llm.datasette.io/en/latest/*
+_Document Version: 1.0_
+_Integration with: Simon Willison's LLM CLI ecosystem_
+_See: https://llm.datasette.io/en/latest/_

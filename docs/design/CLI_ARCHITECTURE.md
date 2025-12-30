@@ -1,4 +1,5 @@
 # CLI ARCHITECTURE DESIGN SPECIFICATION
+
 > ReasonKit Core Command Line Interface
 > Version: 1.0.0 | Status: Design Phase
 > Author: ReasonKit Team
@@ -39,13 +40,13 @@ and provides both interactive and scriptable interfaces.
 
 ### 2.1 Core Principles
 
-| Principle | Implementation |
-|-----------|----------------|
-| **Unix Philosophy** | One thing well, composable, text streams |
-| **Progressive Disclosure** | Simple defaults, expert options available |
-| **Scriptability** | JSON/JSONL output, exit codes, stdin support |
-| **Discoverability** | Rich help, examples, shell completions |
-| **Performance** | Async by default, streaming output, progress bars |
+| Principle                  | Implementation                                    |
+| -------------------------- | ------------------------------------------------- |
+| **Unix Philosophy**        | One thing well, composable, text streams          |
+| **Progressive Disclosure** | Simple defaults, expert options available         |
+| **Scriptability**          | JSON/JSONL output, exit codes, stdin support      |
+| **Discoverability**        | Rich help, examples, shell completions            |
+| **Performance**            | Async by default, streaming output, progress bars |
 
 ### 2.2 Output Philosophy
 
@@ -1170,11 +1171,11 @@ rk-core doctor check --json | jq -e '.status == "healthy"'
 
 ## VERSION HISTORY
 
-| Version | Date | Changes |
-|---------|------|---------|
-| 1.0.0 | 2025-12-11 | Initial design specification |
+| Version | Date       | Changes                      |
+| ------- | ---------- | ---------------------------- |
+| 1.0.0   | 2025-12-11 | Initial design specification |
 
 ---
 
-*"Great CLIs are discovered, not designed."*
-*- ReasonKit Engineering*
+_"Great CLIs are discovered, not designed."_
+_- ReasonKit Engineering_

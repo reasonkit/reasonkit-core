@@ -47,16 +47,16 @@ The MCP module provides:
 
 ### Core Files
 
-| File | Purpose | Key Types |
-|------|---------|-----------|
-| `mod.rs` | Module entry point | Re-exports all public types |
-| `types.rs` | MCP protocol types | `McpRequest`, `McpResponse`, `McpError` |
-| **`client.rs`** | **NEW** MCP client | `McpClient`, `McpClientConfig`, `McpClientTrait` |
-| `server.rs` | MCP server implementation | `McpServer`, `McpServerTrait`, `ServerStatus` |
-| `registry.rs` | Server registry | `McpRegistry`, `HealthCheck`, `HealthStatus` |
-| `transport.rs` | Transport implementations | `StdioTransport`, `Transport` trait |
-| `tools.rs` | Tool definitions | `Tool`, `ToolResult`, `ResourceTemplate` |
-| `lifecycle.rs` | Lifecycle management | `InitializeParams`, `InitializeResult` |
+| File            | Purpose                   | Key Types                                        |
+| --------------- | ------------------------- | ------------------------------------------------ |
+| `mod.rs`        | Module entry point        | Re-exports all public types                      |
+| `types.rs`      | MCP protocol types        | `McpRequest`, `McpResponse`, `McpError`          |
+| **`client.rs`** | **NEW** MCP client        | `McpClient`, `McpClientConfig`, `McpClientTrait` |
+| `server.rs`     | MCP server implementation | `McpServer`, `McpServerTrait`, `ServerStatus`    |
+| `registry.rs`   | Server registry           | `McpRegistry`, `HealthCheck`, `HealthStatus`     |
+| `transport.rs`  | Transport implementations | `StdioTransport`, `Transport` trait              |
+| `tools.rs`      | Tool definitions          | `Tool`, `ToolResult`, `ResourceTemplate`         |
+| `lifecycle.rs`  | Lifecycle management      | `InitializeParams`, `InitializeResult`           |
 
 ## Quick Start
 
@@ -177,16 +177,16 @@ Based on MCP specification version: **2025-11-25**
 
 ### Client Features (NEW)
 
-| Feature | Status | Description |
-|---------|--------|-------------|
-| Connection Management | ✅ | Connect, disconnect, reconnect |
-| Tool Discovery | ✅ | List available tools |
-| Tool Execution | ✅ | Call tools with arguments |
-| Resource Access | ✅ | List and read resources |
-| Automatic Retry | ✅ | Exponential backoff (max 3 retries) |
-| Statistics | ✅ | Request/response metrics |
-| Health Checks | ✅ | Ping with 5s timeout |
-| State Management | ✅ | Connection state tracking |
+| Feature               | Status | Description                         |
+| --------------------- | ------ | ----------------------------------- |
+| Connection Management | ✅     | Connect, disconnect, reconnect      |
+| Tool Discovery        | ✅     | List available tools                |
+| Tool Execution        | ✅     | Call tools with arguments           |
+| Resource Access       | ✅     | List and read resources             |
+| Automatic Retry       | ✅     | Exponential backoff (max 3 retries) |
+| Statistics            | ✅     | Request/response metrics            |
+| Health Checks         | ✅     | Ping with 5s timeout                |
+| State Management      | ✅     | Connection state tracking           |
 
 ## Configuration
 
@@ -365,6 +365,7 @@ cargo test --lib mcp::client::tests
 ## Security
 
 Following CONS-001 (No Node.js):
+
 - ✅ All MCP clients and servers implemented in Rust
 - ✅ No Node.js dependencies
 - ✅ Memory-safe communication

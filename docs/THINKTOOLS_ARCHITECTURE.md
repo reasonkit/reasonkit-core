@@ -605,5 +605,5 @@ reasonkit-core/
 
 ---
 
-*ThinkTools V2 Architecture | reasonkit-core | 2025-12-22*
+_ThinkTools V2 Architecture | reasonkit-core | 2025-12-22_
 *https://reasonkit.sh*

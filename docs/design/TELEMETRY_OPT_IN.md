@@ -1,4 +1,5 @@
 # Telemetry Opt-In Design
+
 > **Philosophy:** Privacy Default. Opt-In Value.
 
 ## 1. Overview
@@ -50,6 +51,7 @@ reasoning_data = false
 Before any data packet leaves the machine, it passes through the `PrivacyFilter`.
 
 **Mechanism:**
+
 1.  **Regex Redaction:** Scans for Email, IP, API Key patterns (`sk-...`), Credit Cards.
 2.  **Allowlist Fields:** Only specific JSON fields (`duration_ms`, `error_code`, `protocol_id`) are allowed.
 3.  **Hash Salting:** User IDs are hashed with a daily rotating salt to prevent long-term tracking without consent.
@@ -57,23 +59,27 @@ Before any data packet leaves the machine, it passes through the `PrivacyFilter`
 ## 4. Data Points Collected (If Enabled)
 
 ### Standard Telemetry
-*   **Version:** `0.1.0`
-*   **OS:** `linux-x86_64`
-*   **Command:** `think`
-*   **Protocol ID:** `gigathink`
-*   **Success:** `true`
-*   **Duration:** `450ms`
-*   **Error Code:** `None`
+
+- **Version:** `0.1.0`
+- **OS:** `linux-x86_64`
+- **Command:** `think`
+- **Protocol ID:** `gigathink`
+- **Success:** `true`
+- **Duration:** `450ms`
+- **Error Code:** `None`
 
 ### Enhanced Telemetry (Opt-In "Reasoning Data")
-*   **Step Sequence:** `[analyze, critique, synthesize]`
-*   **Confidence Scores:** `[0.8, 0.4, 0.9]`
-*   **Token Counts:** `input: 500, output: 200`
+
+- **Step Sequence:** `[analyze, critique, synthesize]`
+- **Confidence Scores:** `[0.8, 0.4, 0.9]`
+- **Token Counts:** `input: 500, output: 200`
 
 ## 5. Transparency
 
 Users can view exactly what is being sent by running:
+
 ```bash
 rk-core telemetry --dry-run
 ```
+
 This prints the JSON payload to stdout instead of sending it.

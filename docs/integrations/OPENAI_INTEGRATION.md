@@ -84,13 +84,13 @@ retry_delay_ms = 1000
 
 ### Available Models
 
-| Model | ID | Context | Best For | Cost/1M tokens |
-|-------|-----|---------|----------|----------------|
-| **GPT-4o** | `gpt-4o` | 128K | Balanced performance | $2.50 in / $10 out |
-| **GPT-4o-mini** | `gpt-4o-mini` | 128K | Fast, cost-effective | $0.15 in / $0.60 out |
-| **GPT-4-turbo** | `gpt-4-turbo` | 128K | Long context, vision | $10 in / $30 out |
-| **o1** | `o1` | 200K | Complex reasoning | $15 in / $60 out |
-| **o1-mini** | `o1-mini` | 128K | Fast reasoning | $3 in / $12 out |
+| Model           | ID            | Context | Best For             | Cost/1M tokens       |
+| --------------- | ------------- | ------- | -------------------- | -------------------- |
+| **GPT-4o**      | `gpt-4o`      | 128K    | Balanced performance | $2.50 in / $10 out   |
+| **GPT-4o-mini** | `gpt-4o-mini` | 128K    | Fast, cost-effective | $0.15 in / $0.60 out |
+| **GPT-4-turbo** | `gpt-4-turbo` | 128K    | Long context, vision | $10 in / $30 out     |
+| **o1**          | `o1`          | 200K    | Complex reasoning    | $15 in / $60 out     |
+| **o1-mini**     | `o1-mini`     | 128K    | Fast reasoning       | $3 in / $12 out      |
 
 ---
 
@@ -291,16 +291,16 @@ let embedding = embedder.embed("Your text here").await?;
 
 ### Per-Query Cost Calculator
 
-| Profile | Model | Avg Tokens | Estimated Cost |
-|---------|-------|------------|----------------|
-| `--quick` | GPT-4o-mini | ~2,000 | $0.002 |
-| `--quick` | GPT-4o | ~2,000 | $0.027 |
-| `--balanced` | GPT-4o-mini | ~5,000 | $0.004 |
-| `--balanced` | GPT-4o | ~5,000 | $0.063 |
-| `--deep` | GPT-4o | ~10,000 | $0.125 |
-| `--deep` | o1 | ~10,000 | $0.750 |
-| `--paranoid` | GPT-4o | ~20,000 | $0.250 |
-| `--paranoid` | o1 | ~20,000 | $1.500 |
+| Profile      | Model       | Avg Tokens | Estimated Cost |
+| ------------ | ----------- | ---------- | -------------- |
+| `--quick`    | GPT-4o-mini | ~2,000     | $0.002         |
+| `--quick`    | GPT-4o      | ~2,000     | $0.027         |
+| `--balanced` | GPT-4o-mini | ~5,000     | $0.004         |
+| `--balanced` | GPT-4o      | ~5,000     | $0.063         |
+| `--deep`     | GPT-4o      | ~10,000    | $0.125         |
+| `--deep`     | o1          | ~10,000    | $0.750         |
+| `--paranoid` | GPT-4o      | ~20,000    | $0.250         |
+| `--paranoid` | o1          | ~20,000    | $1.500         |
 
 ### Monthly Budget Examples
 
@@ -511,18 +511,19 @@ rk-core think "Analysis" \
 
 ## Comparison: GPT-4o vs o1
 
-| Feature | GPT-4o | o1 |
-|---------|--------|-----|
-| Speed | Fast | Slower (reasoning) |
-| Cost | Lower | Higher |
-| JSON mode | Yes | Limited |
-| Function calling | Yes | No |
-| Vision | Yes | No |
-| Complex reasoning | Good | Excellent |
-| Multi-step math | Good | Excellent |
-| Code generation | Excellent | Good |
+| Feature           | GPT-4o    | o1                 |
+| ----------------- | --------- | ------------------ |
+| Speed             | Fast      | Slower (reasoning) |
+| Cost              | Lower     | Higher             |
+| JSON mode         | Yes       | Limited            |
+| Function calling  | Yes       | No                 |
+| Vision            | Yes       | No                 |
+| Complex reasoning | Good      | Excellent          |
+| Multi-step math   | Good      | Excellent          |
+| Code generation   | Excellent | Good               |
 
 **Recommendation:**
+
 - Use GPT-4o for most ReasonKit tasks
 - Use o1 for `--deep` and `--paranoid` profiles
 - Use GPT-4o-mini for `--quick` and cost-sensitive tasks
@@ -539,5 +540,5 @@ rk-core think "Analysis" \
 
 ---
 
-*ReasonKit + OpenAI Integration Guide | v1.0.0 | Apache 2.0*
-*"See How Your AI Thinks"*
+_ReasonKit + OpenAI Integration Guide | v1.0.0 | Apache 2.0_
+_"See How Your AI Thinks"_

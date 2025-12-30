@@ -14,11 +14,7 @@
         "bias": ["anchoring?", "confirmation?"],
         "strat": "string"
       },
-      "plan": [
-        "step_1_desc",
-        "step_2_desc",
-        "step_3_desc"
-      ],
+      "plan": ["step_1_desc", "step_2_desc", "step_3_desc"],
       "exec": [
         {
           "i": 1,

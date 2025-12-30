@@ -53,14 +53,14 @@ This guide defines the strategy, architecture, and implementation details for Re
 
 ### Key Principles
 
-| Principle | Description |
-|-----------|-------------|
-| **Native Feel** | Each SDK should feel idiomatic to its language |
-| **Type Safety** | Full type coverage with IDE support |
-| **Async-First** | Async/await where the language supports it |
-| **Error Handling** | Language-appropriate error patterns |
-| **Documentation** | Rich docs, examples, and tutorials |
-| **Performance** | Minimal overhead over direct Rust FFI |
+| Principle          | Description                                    |
+| ------------------ | ---------------------------------------------- |
+| **Native Feel**    | Each SDK should feel idiomatic to its language |
+| **Type Safety**    | Full type coverage with IDE support            |
+| **Async-First**    | Async/await where the language supports it     |
+| **Error Handling** | Language-appropriate error patterns            |
+| **Documentation**  | Rich docs, examples, and tutorials             |
+| **Performance**    | Minimal overhead over direct Rust FFI          |
 
 ---
 
@@ -68,25 +68,25 @@ This guide defines the strategy, architecture, and implementation details for Re
 
 ### Language Priority Matrix
 
-| Priority | Language | Binding Technology | Target Audience | Timeline |
-|----------|----------|-------------------|-----------------|----------|
-| **P0** | Python | PyO3 | Data Scientists, ML Engineers | v0.1.0 |
-| **P1** | Node.js/TypeScript | napi-rs | Web Developers, Full-Stack | v0.2.0 |
-| **P2** | Go | cgo | Backend Engineers, DevOps | v0.3.0 |
-| **P3** | Ruby | rb-sys (future) | Web Developers | v0.5.0+ |
-| **P3** | Java/Kotlin | JNI (future) | Enterprise | v0.5.0+ |
+| Priority | Language           | Binding Technology | Target Audience               | Timeline |
+| -------- | ------------------ | ------------------ | ----------------------------- | -------- |
+| **P0**   | Python             | PyO3               | Data Scientists, ML Engineers | v0.1.0   |
+| **P1**   | Node.js/TypeScript | napi-rs            | Web Developers, Full-Stack    | v0.2.0   |
+| **P2**   | Go                 | cgo                | Backend Engineers, DevOps     | v0.3.0   |
+| **P3**   | Ruby               | rb-sys (future)    | Web Developers                | v0.5.0+  |
+| **P3**   | Java/Kotlin        | JNI (future)       | Enterprise                    | v0.5.0+  |
 
 ### SDK vs CLI Comparison
 
-| Feature | SDK | CLI |
-|---------|-----|-----|
-| **Use Case** | Programmatic integration | Interactive/scripting |
-| **Installation** | `pip install`, `npm install` | `cargo install`, `brew` |
-| **Configuration** | Code-based | File/env-based |
-| **Output** | Structured objects | Text/JSON |
-| **Async Support** | Full async/await | N/A |
-| **Error Handling** | Exceptions/errors | Exit codes |
-| **Memory Management** | Language-native | N/A |
+| Feature               | SDK                          | CLI                     |
+| --------------------- | ---------------------------- | ----------------------- |
+| **Use Case**          | Programmatic integration     | Interactive/scripting   |
+| **Installation**      | `pip install`, `npm install` | `cargo install`, `brew` |
+| **Configuration**     | Code-based                   | File/env-based          |
+| **Output**            | Structured objects           | Text/JSON               |
+| **Async Support**     | Full async/await             | N/A                     |
+| **Error Handling**    | Exceptions/errors            | Exit codes              |
+| **Memory Management** | Language-native              | N/A                     |
 
 ### Parity Goals
 
@@ -567,15 +567,15 @@ Documentation: https://docs.reasonkit.sh/node
 #### Basic Usage
 
 ```typescript
-import { ReasonKit } from '@reasonkit/core';
+import { ReasonKit } from "@reasonkit/core";
 
 // Initialize client
-const rk = new ReasonKit({ apiKey: 'sk-ant-...' });
+const rk = new ReasonKit({ apiKey: "sk-ant-..." });
 
 // Simple thinking request
 const result = await rk.think({
-  query: 'Should we adopt microservices architecture?',
-  profile: 'balanced',
+  query: "Should we adopt microservices architecture?",
+  profile: "balanced",
 });
 
 console.log(result.conclusion);
@@ -590,12 +590,12 @@ for (const step of result.trace.steps) {
 #### Advanced Usage
 
 ```typescript
-import { ReasonKit, Config, ThinkTools } from '@reasonkit/core';
+import { ReasonKit, Config, ThinkTools } from "@reasonkit/core";
 
 // Custom configuration
 const config: Config = {
-  provider: 'anthropic',
-  model: 'claude-sonnet-4',
+  provider: "anthropic",
+  model: "claude-sonnet-4",
   temperature: 0.7,
   maxTokens: 4000,
   timeout: 60000,
@@ -606,46 +606,46 @@ const rk = new ReasonKit(config);
 
 // Execute specific ThinkTools
 const result = await rk.think({
-  query: 'Evaluate this startup idea: AI-powered code review',
+  query: "Evaluate this startup idea: AI-powered code review",
   thinktools: [
     ThinkTools.GigaThink,
     ThinkTools.LaserLogic,
     ThinkTools.ProofGuard,
   ],
-  budget: '60s',
+  budget: "60s",
   saveTrace: true,
 });
 
 // Access detailed results
 console.log(`Perspectives: ${result.perspectives.length}`);
-console.log(`Fallacies: ${result.fallacies.join(', ')}`);
+console.log(`Fallacies: ${result.fallacies.join(", ")}`);
 console.log(`Verification: ${result.verificationStatus}`);
 
 // Save execution trace
-await result.trace.save('./traces/startup-analysis.json');
+await result.trace.save("./traces/startup-analysis.json");
 ```
 
 #### Streaming Support
 
 ```typescript
-import { ReasonKit } from '@reasonkit/core';
+import { ReasonKit } from "@reasonkit/core";
 
-const rk = new ReasonKit({ apiKey: 'sk-ant-...' });
+const rk = new ReasonKit({ apiKey: "sk-ant-..." });
 
 // Stream execution steps
 for await (const event of rk.thinkStream({
-  query: 'Analyze the quantum computing market',
-  profile: 'deep',
+  query: "Analyze the quantum computing market",
+  profile: "deep",
 })) {
   switch (event.type) {
-    case 'step_start':
+    case "step_start":
       console.log(`Starting: ${event.stepName}`);
       break;
-    case 'step_complete':
+    case "step_complete":
       console.log(`Completed: ${event.stepName}`);
       console.log(`  Output: ${event.output.slice(0, 100)}...`);
       break;
-    case 'final':
+    case "final":
       console.log(`\nFinal: ${event.conclusion}`);
       break;
   }
@@ -757,7 +757,7 @@ impl Reasoner {
 
 export interface Config {
   apiKey?: string;
-  provider?: 'anthropic' | 'openai' | 'openrouter' | 'groq' | 'gemini';
+  provider?: "anthropic" | "openai" | "openrouter" | "groq" | "gemini";
   model?: string;
   temperature?: number;
   maxTokens?: number;
@@ -769,7 +769,7 @@ export interface Config {
 export interface ThinkOptions {
   query: string;
   protocol?: string;
-  profile?: 'quick' | 'balanced' | 'deep' | 'paranoid';
+  profile?: "quick" | "balanced" | "deep" | "paranoid";
   thinktools?: ThinkTool[];
   budget?: string;
   saveTrace?: boolean;
@@ -781,7 +781,7 @@ export interface ThinkResult {
   confidence: number;
   perspectives: string[];
   fallacies: string[];
-  verificationStatus: 'verified' | 'partial' | 'unverified';
+  verificationStatus: "verified" | "partial" | "unverified";
   trace: ExecutionTrace;
 }
 
@@ -800,21 +800,21 @@ export interface StepTrace {
   name: string;
   startedAt: Date;
   completedAt: Date;
-  status: 'success' | 'failed' | 'skipped';
+  status: "success" | "failed" | "skipped";
   input: string;
   output: string;
   tokensUsed: number;
 }
 
 export type ThinkTool =
-  | 'gigathink'
-  | 'laserlogic'
-  | 'bedrock'
-  | 'proofguard'
-  | 'brutalhonesty';
+  | "gigathink"
+  | "laserlogic"
+  | "bedrock"
+  | "proofguard"
+  | "brutalhonesty";
 
 export interface StreamEvent {
-  type: 'step_start' | 'step_complete' | 'step_error' | 'final';
+  type: "step_start" | "step_complete" | "step_error" | "final";
   stepName?: string;
   output?: string;
   conclusion?: string;
@@ -839,11 +839,7 @@ export interface StreamEvent {
       "require": "./dist/index.js"
     }
   },
-  "files": [
-    "dist",
-    "native",
-    "README.md"
-  ],
+  "files": ["dist", "native", "README.md"],
   "scripts": {
     "build": "tsup && napi build --release",
     "build:debug": "tsup && napi build",
@@ -1247,16 +1243,16 @@ require (
 
 All SDKs MUST support these configuration options:
 
-| Option | Type | Default | Description |
-|--------|------|---------|-------------|
-| `api_key` | string | env var | API key for LLM provider |
-| `provider` | string | `"anthropic"` | LLM provider name |
-| `model` | string | provider default | Model identifier |
-| `temperature` | float | `0.7` | Generation temperature |
-| `max_tokens` | int | `4000` | Max output tokens |
-| `timeout` | duration | `60s` | Request timeout |
-| `retry_attempts` | int | `3` | Retry count on failure |
-| `base_url` | string | provider default | Custom API endpoint |
+| Option           | Type     | Default          | Description              |
+| ---------------- | -------- | ---------------- | ------------------------ |
+| `api_key`        | string   | env var          | API key for LLM provider |
+| `provider`       | string   | `"anthropic"`    | LLM provider name        |
+| `model`          | string   | provider default | Model identifier         |
+| `temperature`    | float    | `0.7`            | Generation temperature   |
+| `max_tokens`     | int      | `4000`           | Max output tokens        |
+| `timeout`        | duration | `60s`            | Request timeout          |
+| `retry_attempts` | int      | `3`              | Retry count on failure   |
+| `base_url`       | string   | provider default | Custom API endpoint      |
 
 ### Environment Variables
 
@@ -1309,17 +1305,17 @@ import {
   RateLimitError,
   TimeoutError,
   BudgetExceededError,
-} from '@reasonkit/core';
+} from "@reasonkit/core";
 
 try {
-  const result = await rk.think({ query: '...', profile: 'deep' });
+  const result = await rk.think({ query: "...", profile: "deep" });
 } catch (error) {
   if (error instanceof RateLimitError) {
     console.log(`Rate limited. Retry after ${error.retryAfter}s`);
   } else if (error instanceof BudgetExceededError) {
     console.log(`Budget exceeded: ${error.budgetType}`);
   } else if (error instanceof TimeoutError) {
-    console.log('Request timed out');
+    console.log("Request timed out");
   } else if (error instanceof ProviderError) {
     console.log(`Provider error: ${error.message}`);
   } else if (error instanceof ReasonKitError) {
@@ -1353,12 +1349,12 @@ if err != nil {
 
 All SDKs MUST support configurable logging levels:
 
-| Level | Description |
-|-------|-------------|
-| `error` | Only errors |
-| `warn` | Errors and warnings |
-| `info` | General operational info |
-| `debug` | Detailed debugging info |
+| Level   | Description                   |
+| ------- | ----------------------------- |
+| `error` | Only errors                   |
+| `warn`  | Errors and warnings           |
+| `info`  | General operational info      |
+| `debug` | Detailed debugging info       |
 | `trace` | Full request/response logging |
 
 #### Python
@@ -1376,10 +1372,10 @@ logger = logging.getLogger("reasonkit")
 #### TypeScript
 
 ```typescript
-import { ReasonKit, LogLevel } from '@reasonkit/core';
+import { ReasonKit, LogLevel } from "@reasonkit/core";
 
 const rk = new ReasonKit({
-  apiKey: '...',
+  apiKey: "...",
   logLevel: LogLevel.Debug,
 });
 ```
@@ -1394,11 +1390,11 @@ log.SetLevel(log.DebugLevel)
 
 ### Async Support
 
-| Language | Async Pattern | Notes |
-|----------|---------------|-------|
-| Python | `async/await` | AsyncReasonKit class |
-| Node.js | `async/await` | All methods async by default |
-| Go | goroutines + channels | ThinkStream returns channel |
+| Language | Async Pattern         | Notes                        |
+| -------- | --------------------- | ---------------------------- |
+| Python   | `async/await`         | AsyncReasonKit class         |
+| Node.js  | `async/await`         | All methods async by default |
+| Go       | goroutines + channels | ThinkStream returns channel  |
 
 ---
 
@@ -1477,34 +1473,34 @@ class TestReasonKitClient:
 
 ```typescript
 // tests/unit/client.test.ts
-import { describe, it, expect, vi } from 'vitest';
-import { ReasonKit } from '../src/client';
+import { describe, it, expect, vi } from "vitest";
+import { ReasonKit } from "../src/client";
 
-describe('ReasonKit Client', () => {
-  it('should initialize with API key', () => {
-    const rk = new ReasonKit({ apiKey: 'test-key' });
-    expect(rk.config.apiKey).toBe('test-key');
+describe("ReasonKit Client", () => {
+  it("should initialize with API key", () => {
+    const rk = new ReasonKit({ apiKey: "test-key" });
+    expect(rk.config.apiKey).toBe("test-key");
   });
 
-  it('should throw on missing API key', () => {
-    expect(() => new ReasonKit({})).toThrow('API key required');
+  it("should throw on missing API key", () => {
+    expect(() => new ReasonKit({})).toThrow("API key required");
   });
 
-  it('should call executor on think', async () => {
-    const rk = new ReasonKit({ apiKey: 'test-key' });
-    vi.spyOn(rk['executor'], 'execute').mockResolvedValue({
-      conclusion: 'Test conclusion',
+  it("should call executor on think", async () => {
+    const rk = new ReasonKit({ apiKey: "test-key" });
+    vi.spyOn(rk["executor"], "execute").mockResolvedValue({
+      conclusion: "Test conclusion",
       confidence: 0.85,
       perspectives: [],
       trace: null,
     });
 
     const result = await rk.think({
-      query: 'Test query',
-      profile: 'balanced',
+      query: "Test query",
+      profile: "balanced",
     });
 
-    expect(result.conclusion).toBe('Test conclusion');
+    expect(result.conclusion).toBe("Test conclusion");
   });
 });
 ```
@@ -1661,7 +1657,7 @@ class TestCrossSDKConsistency:
 
 ### README Template
 
-```markdown
+````markdown
 # ReasonKit Python SDK
 
 > Structured AI reasoning framework - Turn Prompts into Protocols
@@ -1675,6 +1671,7 @@ class TestCrossSDKConsistency:
 ```bash
 pip install reasonkit
 ```
+````
 
 ## Quick Start
 
@@ -1700,44 +1697,47 @@ print(result.conclusion)
 ## License
 
 Apache 2.0 - see [LICENSE](LICENSE)
+
 ```
 
 ### API Reference Structure
 
 ```
+
 docs/
-├── index.md                 # Overview
-├── getting-started.md       # Quick start guide
-├── installation.md          # Installation instructions
-├── configuration.md         # Configuration options
+├── index.md # Overview
+├── getting-started.md # Quick start guide
+├── installation.md # Installation instructions
+├── configuration.md # Configuration options
 ├── thinktools/
-│   ├── index.md             # ThinkTools overview
-│   ├── gigathink.md         # GigaThink documentation
-│   ├── laserlogic.md        # LaserLogic documentation
-│   ├── bedrock.md           # BedRock documentation
-│   ├── proofguard.md        # ProofGuard documentation
-│   └── brutalhonesty.md     # BrutalHonesty documentation
+│ ├── index.md # ThinkTools overview
+│ ├── gigathink.md # GigaThink documentation
+│ ├── laserlogic.md # LaserLogic documentation
+│ ├── bedrock.md # BedRock documentation
+│ ├── proofguard.md # ProofGuard documentation
+│ └── brutalhonesty.md # BrutalHonesty documentation
 ├── profiles/
-│   ├── index.md             # Profiles overview
-│   └── custom.md            # Custom profiles
+│ ├── index.md # Profiles overview
+│ └── custom.md # Custom profiles
 ├── providers/
-│   ├── index.md             # Providers overview
-│   ├── anthropic.md         # Anthropic configuration
-│   ├── openai.md            # OpenAI configuration
-│   └── openrouter.md        # OpenRouter configuration
+│ ├── index.md # Providers overview
+│ ├── anthropic.md # Anthropic configuration
+│ ├── openai.md # OpenAI configuration
+│ └── openrouter.md # OpenRouter configuration
 ├── api-reference/
-│   ├── client.md            # Client class reference
-│   ├── results.md           # Result types
-│   ├── traces.md            # Execution traces
-│   └── errors.md            # Error types
+│ ├── client.md # Client class reference
+│ ├── results.md # Result types
+│ ├── traces.md # Execution traces
+│ └── errors.md # Error types
 ├── guides/
-│   ├── async.md             # Async usage guide
-│   ├── streaming.md         # Streaming guide
-│   ├── budgets.md           # Budget management
-│   └── testing.md           # Testing guide
+│ ├── async.md # Async usage guide
+│ ├── streaming.md # Streaming guide
+│ ├── budgets.md # Budget management
+│ └── testing.md # Testing guide
 └── migration/
-    └── v0-to-v1.md          # Migration guides
-```
+└── v0-to-v1.md # Migration guides
+
+````
 
 ### Auto-Generated API Docs
 
@@ -1753,7 +1753,7 @@ plugins:
             show_source: true
             show_signature_annotations: true
             members_order: source
-```
+````
 
 #### TypeScript (TypeDoc)
 
@@ -1809,7 +1809,7 @@ name: Publish Python SDK
 on:
   push:
     tags:
-      - 'python-v*'
+      - "python-v*"
 
 jobs:
   build:
@@ -1817,7 +1817,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
-        python-version: ['3.9', '3.10', '3.11', '3.12', '3.13']
+        python-version: ["3.9", "3.10", "3.11", "3.12", "3.13"]
     steps:
       - uses: actions/checkout@v4
 
@@ -1884,7 +1884,7 @@ name: Publish Node.js SDK
 on:
   push:
     tags:
-      - 'node-v*'
+      - "node-v*"
 
 jobs:
   build:
@@ -1986,20 +1986,20 @@ PATCH: Bug fixes (backward compatible)
 
 ### Version Naming Convention
 
-| Component | Version Format | Example |
-|-----------|---------------|---------|
-| reasonkit-core (Rust) | `v0.1.0` | `v0.1.0` |
-| Python SDK | `0.1.0` (PyPI) | `reasonkit==0.1.0` |
-| Node.js SDK | `0.1.0` (npm) | `@reasonkit/core@0.1.0` |
-| Go SDK | `v0.1.0` (Go modules) | `github.com/reasonkit/reasonkit-go@v0.1.0` |
+| Component             | Version Format        | Example                                    |
+| --------------------- | --------------------- | ------------------------------------------ |
+| reasonkit-core (Rust) | `v0.1.0`              | `v0.1.0`                                   |
+| Python SDK            | `0.1.0` (PyPI)        | `reasonkit==0.1.0`                         |
+| Node.js SDK           | `0.1.0` (npm)         | `@reasonkit/core@0.1.0`                    |
+| Go SDK                | `v0.1.0` (Go modules) | `github.com/reasonkit/reasonkit-go@v0.1.0` |
 
 ### Compatibility Matrix
 
-| Core Version | Python SDK | Node.js SDK | Go SDK | Status |
-|--------------|------------|-------------|--------|--------|
-| 0.1.x | 0.1.x | 0.1.x | 0.1.x | Current |
-| 0.2.x | 0.2.x | 0.2.x | 0.2.x | Planned |
-| 1.0.x | 1.0.x | 1.0.x | 1.0.x | Future |
+| Core Version | Python SDK | Node.js SDK | Go SDK | Status  |
+| ------------ | ---------- | ----------- | ------ | ------- |
+| 0.1.x        | 0.1.x      | 0.1.x       | 0.1.x  | Current |
+| 0.2.x        | 0.2.x      | 0.2.x       | 0.2.x  | Planned |
+| 1.0.x        | 1.0.x      | 1.0.x       | 1.0.x  | Future  |
 
 ### Deprecation Policy
 
@@ -2167,7 +2167,7 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: "3.11"
       - name: Install dependencies
         run: pip install -e ".[dev]"
       - name: Lint (ruff)
@@ -2207,7 +2207,7 @@ jobs:
       - name: Setup Go
         uses: actions/setup-go@v5
         with:
-          go-version: '1.21'
+          go-version: "1.21"
       - name: Lint (golangci-lint)
         uses: golangci/golangci-lint-action@v4
       - name: Test
@@ -2221,12 +2221,12 @@ jobs:
 
 Track SDK overhead compared to direct Rust FFI:
 
-| Operation | Rust Core | Python SDK | Node.js SDK | Go SDK |
-|-----------|-----------|------------|-------------|--------|
-| Think (quick) | 100ms | 105ms | 103ms | 102ms |
-| Think (balanced) | 500ms | 510ms | 505ms | 503ms |
-| Streaming start | 50ms | 55ms | 52ms | 51ms |
-| Memory overhead | - | +5MB | +10MB | +2MB |
+| Operation        | Rust Core | Python SDK | Node.js SDK | Go SDK |
+| ---------------- | --------- | ---------- | ----------- | ------ |
+| Think (quick)    | 100ms     | 105ms      | 103ms       | 102ms  |
+| Think (balanced) | 500ms     | 510ms      | 505ms       | 503ms  |
+| Streaming start  | 50ms      | 55ms       | 52ms        | 51ms   |
+| Memory overhead  | -         | +5MB       | +10MB       | +2MB   |
 
 **Target**: <10% overhead for all operations.
 
@@ -2340,9 +2340,9 @@ result = rk.think("Your question", profile="balanced")
 
 ```typescript
 // Node.js
-import { ReasonKit } from '@reasonkit/core';
-const rk = new ReasonKit({ apiKey: '...' });
-const result = await rk.think({ query: 'Your question', profile: 'balanced' });
+import { ReasonKit } from "@reasonkit/core";
+const rk = new ReasonKit({ apiKey: "..." });
+const result = await rk.think({ query: "Your question", profile: "balanced" });
 ```
 
 ```go

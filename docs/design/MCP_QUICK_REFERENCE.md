@@ -26,6 +26,7 @@
 ```
 
 **Why?**
+
 - Workflow tools reduce LLM decision overhead (1 call vs 5 calls)
 - Atomic tools enable custom composition
 - Best of both worlds: efficiency + flexibility
@@ -53,6 +54,7 @@ pub struct SessionStore {
 ```
 
 **Benefits:**
+
 - Server owns state (simple client integration - just pass session ID)
 - Efficient for multi-step chains
 - Full audit trail
@@ -89,6 +91,7 @@ cache: Cache::builder()
 ```
 
 **Target Performance:**
+
 - Cache hit: < 1ms
 - Embedding generation: < 50ms (local) / < 200ms (API)
 - Full reasoning chain: < 5000ms
@@ -108,6 +111,7 @@ static QDRANT_CLIENT: LazyLock<QdrantClient> = LazyLock::new(|| {
 ```
 
 **Benefits:**
+
 - Fast server startup (< 100ms)
 - Resources loaded only if needed
 - First request pays one-time cost
@@ -189,7 +193,7 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '2.0'
+          cpus: "2.0"
           memory: 4G
     security_opt:
       - no-new-privileges:true
@@ -241,6 +245,7 @@ Resource::new("rag://collections/{name}", "Collection")
 ```
 
 **Pattern:** Let LLM orchestrate RAG pipeline via multiple tool calls
+
 - Better than fixed RAG: LLM can adapt strategy per query
 - Claude autonomously decides: initial search → refinement → verification
 
@@ -268,6 +273,7 @@ json!({
 ```
 
 **Include:**
+
 - Clear purpose (what/when to use)
 - Concrete examples
 - Validation constraints
@@ -321,9 +327,7 @@ pub struct ErrorDetails {
     "code": -32602,
     "message": "Invalid parameters",
     "data": {
-      "validation_errors": [
-        "query: String too short (minimum 10 characters)"
-      ],
+      "validation_errors": ["query: String too short (minimum 10 characters)"],
       "suggestion": "Query should be a complete sentence.",
       "documentation_link": "https://reasonkit.sh/docs/tools/gigathink",
       "trace_id": "123e4567-e89b-12d3-a456-426614174000"
@@ -358,36 +362,42 @@ where
 ## 8. Implementation Roadmap
 
 ### Phase 1: Core MCP Server (Week 1-2)
+
 - ✅ stdio transport (already exists)
 - Expose 5 ThinkTools + 3 profiles
 - Tool schema + validation
 - Claude Desktop integration
 
 ### Phase 2: Session Management (Week 3)
+
 - DashMap session store
 - Session lifecycle tools
 - TTL cleanup
 - Audit logging
 
 ### Phase 3: Performance (Week 4)
+
 - Moka caching (3 layers)
 - Lazy initialization
 - Connection pooling
 - Benchmarking
 
 ### Phase 4: RAG Integration (Week 5)
+
 - rag/search, rag/index tools
 - Resources for documents
 - Hybrid search
 - Reranking
 
 ### Phase 5: Security (Week 6)
+
 - Input sanitization
 - Rate limiting
 - Resource limits
 - AppArmor/containerization
 
 ### Phase 6: Testing & Docs (Week 7)
+
 - 80%+ test coverage
 - MCP Inspector suite
 - Auto-generated docs
@@ -487,12 +497,14 @@ pub struct ServerMetrics {
 ## 12. Quick Wins
 
 ### Immediate Impact (< 1 week)
+
 1. Add Moka caching for embeddings → 10-100x speedup on cache hits
 2. Lazy load embedding model → 5-10s faster startup
 3. Add JSON Schema validation → Catch 80% of invalid inputs
 4. Rich error messages → 50% reduction in debugging time
 
 ### High Value (1-2 weeks)
+
 1. Session-based execution → Enable multi-step reasoning
 2. Workflow tools (profiles) → 5x reduction in LLM tokens
 3. Auto-generated docs → Always up-to-date

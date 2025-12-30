@@ -68,10 +68,13 @@ echo "  Shell: $SHELL"
 #### Issue: Xcode Command Line Tools Not Installed
 
 **Error Message:**
+
 ```
 error: linker `cc` not found
 ```
+
 or
+
 ```
 xcrun: error: invalid active developer path
 ```
@@ -79,6 +82,7 @@ xcrun: error: invalid active developer path
 **Cause:** Rust requires C compiler and linker from Xcode Command Line Tools.
 
 **Solution:**
+
 ```bash
 # Install Xcode Command Line Tools
 xcode-select --install
@@ -98,6 +102,7 @@ xcode-select -p
 #### Issue: OpenSSL Not Found on macOS
 
 **Error Message:**
+
 ```
 error: failed to run custom build command for `openssl-sys`
 Could not find directory of OpenSSL installation
@@ -106,6 +111,7 @@ Could not find directory of OpenSSL installation
 **Cause:** macOS no longer ships with OpenSSL headers. Homebrew OpenSSL is not automatically linked.
 
 **Solution:**
+
 ```bash
 # Install OpenSSL via Homebrew
 brew install openssl@3
@@ -119,6 +125,7 @@ cargo install reasonkit-core
 ```
 
 **For Apple Silicon (M1/M2/M3):**
+
 ```bash
 # Homebrew on Apple Silicon uses /opt/homebrew
 export OPENSSL_DIR="/opt/homebrew/opt/openssl@3"
@@ -132,11 +139,14 @@ export PKG_CONFIG_PATH="/opt/homebrew/opt/openssl@3/lib/pkgconfig:$PKG_CONFIG_PA
 #### Issue: Apple Silicon Architecture Mismatch
 
 **Error Message:**
+
 ```
 error[E0463]: can't find crate for `std`
 note: the `aarch64-apple-darwin` target may not be installed
 ```
+
 or
+
 ```
 ld: building for macOS-arm64 but attempting to link with file built for macOS-x86_64
 ```
@@ -144,6 +154,7 @@ ld: building for macOS-arm64 but attempting to link with file built for macOS-x8
 **Cause:** Rust toolchain installed for wrong architecture, or mixing x86_64 and arm64 binaries.
 
 **Solution:**
+
 ```bash
 # Check current architecture
 uname -m
@@ -170,10 +181,13 @@ arch  # Shows current execution architecture
 #### Issue: Build Essentials Missing (Ubuntu/Debian)
 
 **Error Message:**
+
 ```
 error: linker `cc` not found
 ```
+
 or
+
 ```
 error: could not compile `ring` due to previous error
 ```
@@ -181,18 +195,21 @@ error: could not compile `ring` due to previous error
 **Cause:** C compiler (gcc/clang) and essential build tools not installed.
 
 **Solution (Ubuntu/Debian):**
+
 ```bash
 sudo apt update
 sudo apt install build-essential pkg-config libssl-dev
 ```
 
 **Solution (Fedora):**
+
 ```bash
 sudo dnf groupinstall "Development Tools"
 sudo dnf install pkg-config openssl-devel
 ```
 
 **Solution (Arch):**
+
 ```bash
 sudo pacman -S base-devel pkg-config openssl
 ```
@@ -204,11 +221,14 @@ sudo pacman -S base-devel pkg-config openssl
 #### Issue: libssl-dev / openssl-devel Missing
 
 **Error Message:**
+
 ```
 error: failed to run custom build command for `openssl-sys`
 Could not find openssl via pkg-config
 ```
+
 or
+
 ```
 Header openssl/ssl.h not found
 ```
@@ -216,11 +236,13 @@ Header openssl/ssl.h not found
 **Cause:** OpenSSL development headers not installed.
 
 **Solution (Ubuntu/Debian):**
+
 ```bash
 sudo apt install libssl-dev
 ```
 
 **Solution (Fedora/RHEL/CentOS):**
+
 ```bash
 sudo dnf install openssl-devel
 # or for older systems
@@ -228,11 +250,13 @@ sudo yum install openssl-devel
 ```
 
 **Solution (Arch):**
+
 ```bash
 sudo pacman -S openssl
 ```
 
 **Solution (Alpine):**
+
 ```bash
 apk add openssl-dev musl-dev
 ```
@@ -244,10 +268,13 @@ apk add openssl-dev musl-dev
 #### Issue: pkg-config Not Found
 
 **Error Message:**
+
 ```
 error: could not find system library 'openssl' required by the 'openssl-sys' crate
 ```
+
 or
+
 ```
 pkg-config not found
 ```
@@ -255,16 +282,19 @@ pkg-config not found
 **Cause:** pkg-config utility is missing.
 
 **Solution (Ubuntu/Debian):**
+
 ```bash
 sudo apt install pkg-config
 ```
 
 **Solution (Fedora):**
+
 ```bash
 sudo dnf install pkgconf-pkg-config
 ```
 
 **Solution (Arch):**
+
 ```bash
 sudo pacman -S pkgconf
 ```
@@ -276,6 +306,7 @@ sudo pacman -S pkgconf
 #### Issue: GLIBC Version Too Old
 
 **Error Message:**
+
 ```
 /lib/x86_64-linux-gnu/libc.so.6: version `GLIBC_2.32' not found
 ```
@@ -283,6 +314,7 @@ sudo pacman -S pkgconf
 **Cause:** Pre-built binary requires newer glibc than your system provides.
 
 **Solution:**
+
 ```bash
 # Check your glibc version
 ldd --version
@@ -306,10 +338,13 @@ docker run -it ubuntu:22.04
 #### Issue: MSVC Build Tools Missing
 
 **Error Message:**
+
 ```
 error: linker `link.exe` not found
 ```
+
 or
+
 ```
 error: could not find `link.exe`
 ```
@@ -317,6 +352,7 @@ error: could not find `link.exe`
 **Cause:** Visual Studio Build Tools not installed.
 
 **Solution:**
+
 ```powershell
 # Option 1: Install Visual Studio Build Tools (recommended)
 # Download from: https://visualstudio.microsoft.com/visual-cpp-build-tools/
@@ -336,14 +372,17 @@ cargo install reasonkit-core
 #### Issue: Rust Not Using Correct Linker on Windows
 
 **Error Message:**
+
 ```
 error: linking with `link.exe` failed
 ```
+
 with various sub-errors about missing libraries.
 
 **Cause:** Rust cannot find MSVC linker or wrong toolchain selected.
 
 **Solution:**
+
 ```powershell
 # Check current default toolchain
 rustup show
@@ -362,14 +401,17 @@ rustup target add x86_64-pc-windows-msvc
 #### Issue: Long Path Names on Windows
 
 **Error Message:**
+
 ```
 error: failed to open file: The system cannot find the path specified
 ```
+
 or compilation fails with path-related errors.
 
 **Cause:** Windows MAX_PATH (260 character) limitation.
 
 **Solution:**
+
 ```powershell
 # Enable long paths (requires admin PowerShell)
 New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem" `
@@ -390,6 +432,7 @@ cd rk && cargo build --release
 
 **Error Message:**
 Compilation is extremely slow, or:
+
 ```
 error: could not write to file
 ```
@@ -397,6 +440,7 @@ error: could not write to file
 **Cause:** Compiling on Windows filesystem from WSL is slow. Or WSL disk is full.
 
 **Solution:**
+
 ```bash
 # Work within Linux filesystem (not /mnt/c/)
 cd ~
@@ -421,10 +465,13 @@ docker system prune -a  # if using Docker in WSL
 ### Error: Rust/Cargo Not Found
 
 **Error Message:**
+
 ```bash
 cargo: command not found
 ```
+
 or
+
 ```bash
 rustc: command not found
 ```
@@ -432,6 +479,7 @@ rustc: command not found
 **Cause:** Rust is not installed, or PATH is not configured.
 
 **Solution:**
+
 ```bash
 # Install Rust
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
@@ -451,6 +499,7 @@ cargo --version
 ### Error: Permission Denied
 
 **Error Message:**
+
 ```
 error: could not write to /usr/local/bin/rk-core
 Permission denied (os error 13)
@@ -459,6 +508,7 @@ Permission denied (os error 13)
 **Cause:** Attempting to install to system directory without sudo, or incorrect permissions.
 
 **Solution:**
+
 ```bash
 # Use user-local installation (recommended)
 cargo install reasonkit-core
@@ -480,14 +530,17 @@ CARGO_INSTALL_ROOT="$HOME/.local" cargo install reasonkit-core
 ### Error: PATH Not Set
 
 **Error Message:**
+
 ```bash
 rk-core: command not found
 ```
+
 (after successful installation)
 
 **Cause:** Installation directory not in PATH.
 
 **Solution:**
+
 ```bash
 # For cargo install (default location: ~/.cargo/bin)
 echo 'export PATH="$HOME/.cargo/bin:$PATH"' >> ~/.bashrc
@@ -512,10 +565,13 @@ fish_add_path ~/.cargo/bin
 ### Error: Version Conflicts
 
 **Error Message:**
+
 ```
 error: failed to select a version for the requirement `tokio = "^1"`
 ```
+
 or
+
 ```
 error[E0308]: mismatched types (version conflict between dependencies)
 ```
@@ -523,6 +579,7 @@ error[E0308]: mismatched types (version conflict between dependencies)
 **Cause:** Conflicting dependency versions, often from outdated Cargo.lock.
 
 **Solution:**
+
 ```bash
 # Update Rust toolchain
 rustup update
@@ -549,6 +606,7 @@ cargo build --release
 ### Error: Cargo Install Timeout
 
 **Error Message:**
+
 ```
 error: failed to download `reasonkit-core`
 Timeout while downloading
@@ -557,6 +615,7 @@ Timeout while downloading
 **Cause:** Slow network, or crates.io temporarily unavailable.
 
 **Solution:**
+
 ```bash
 # Set longer timeout
 CARGO_HTTP_TIMEOUT=120 cargo install reasonkit-core
@@ -582,15 +641,18 @@ cp target/release/rk-core ~/.local/bin/
 ### Error: Out of Memory During Compilation
 
 **Error Message:**
+
 ```
 error: could not compile `reasonkit-core`
 Killed
 ```
+
 (compilation terminates abruptly)
 
 **Cause:** Insufficient RAM for compilation (especially with LTO enabled).
 
 **Solution:**
+
 ```bash
 # Reduce parallelism
 CARGO_BUILD_JOBS=1 cargo install reasonkit-core
@@ -627,6 +689,7 @@ See [Platform-Specific Issues](#issue-pkg-config-not-found) above.
 ### C Compiler Missing
 
 **Error Message:**
+
 ```
 error: linker `cc` not found
 ```
@@ -635,19 +698,20 @@ error: linker `cc` not found
 
 **Solution by Platform:**
 
-| Platform | Command |
-|----------|---------|
-| Ubuntu/Debian | `sudo apt install build-essential` |
-| Fedora | `sudo dnf groupinstall "Development Tools"` |
-| Arch | `sudo pacman -S base-devel` |
-| macOS | `xcode-select --install` |
-| Windows | Install Visual Studio Build Tools |
+| Platform      | Command                                     |
+| ------------- | ------------------------------------------- |
+| Ubuntu/Debian | `sudo apt install build-essential`          |
+| Fedora        | `sudo dnf groupinstall "Development Tools"` |
+| Arch          | `sudo pacman -S base-devel`                 |
+| macOS         | `xcode-select --install`                    |
+| Windows       | Install Visual Studio Build Tools           |
 
 ---
 
 ### CMake Not Found (for certain optional features)
 
 **Error Message:**
+
 ```
 error: failed to run custom build command for `ring`
 CMake not found
@@ -656,6 +720,7 @@ CMake not found
 **Cause:** Some dependencies require CMake for building.
 
 **Solution:**
+
 ```bash
 # Ubuntu/Debian
 sudo apt install cmake
@@ -675,6 +740,7 @@ winget install Kitware.CMake
 ### Perl Not Found (for OpenSSL build)
 
 **Error Message:**
+
 ```
 error: failed to run custom build command for `openssl-sys`
 Can't locate... (Perl error)
@@ -683,6 +749,7 @@ Can't locate... (Perl error)
 **Cause:** Perl is required to build OpenSSL from source.
 
 **Solution:**
+
 ```bash
 # Ubuntu/Debian
 sudo apt install perl
@@ -704,10 +771,13 @@ brew install perl
 ### Corporate Proxy Configuration
 
 **Error Message:**
+
 ```
 error: failed to download from `https://crates.io/`
 ```
+
 or
+
 ```
 error: unable to get local issuer certificate
 ```
@@ -715,6 +785,7 @@ error: unable to get local issuer certificate
 **Cause:** Corporate proxy blocking or intercepting HTTPS traffic.
 
 **Solution:**
+
 ```bash
 # Set proxy environment variables
 export http_proxy="http://proxy.company.com:8080"
@@ -744,6 +815,7 @@ cainfo = "/path/to/corporate-ca-bundle.crt"
 ### Firewall Blocking crates.io
 
 **Error Message:**
+
 ```
 error: failed to download `reasonkit-core`
 Could not resolve host: crates.io
@@ -752,6 +824,7 @@ Could not resolve host: crates.io
 **Cause:** Firewall blocking access to crates.io or GitHub.
 
 **Solution:**
+
 ```bash
 # Test connectivity
 curl -I https://crates.io
@@ -776,6 +849,7 @@ cargo build --release --offline  # Uses vendored dependencies if available
 ### DNS Resolution Failures
 
 **Error Message:**
+
 ```
 error: failed to resolve: `crates.io`
 ```
@@ -783,6 +857,7 @@ error: failed to resolve: `crates.io`
 **Cause:** DNS server not responding or misconfigured.
 
 **Solution:**
+
 ```bash
 # Test DNS
 nslookup crates.io
@@ -802,6 +877,7 @@ sudo systemctl restart systemd-resolved
 ### SSL/TLS Certificate Errors
 
 **Error Message:**
+
 ```
 error: [60] SSL certificate problem: unable to get local issuer certificate
 ```
@@ -809,6 +885,7 @@ error: [60] SSL certificate problem: unable to get local issuer certificate
 **Cause:** CA certificates outdated or missing.
 
 **Solution:**
+
 ```bash
 # Ubuntu/Debian
 sudo apt install ca-certificates
@@ -833,10 +910,13 @@ export SSL_CERT_FILE=/etc/ssl/certs/ca-certificates.crt
 ### Binary Runs But Crashes Immediately
 
 **Error Message:**
+
 ```
 Segmentation fault (core dumped)
 ```
+
 or
+
 ```
 Illegal instruction
 ```
@@ -844,6 +924,7 @@ Illegal instruction
 **Cause:** Binary compiled for different CPU architecture or features.
 
 **Solution:**
+
 ```bash
 # Rebuild from source with compatible settings
 RUSTFLAGS="-C target-cpu=native" cargo install reasonkit-core --force
@@ -857,6 +938,7 @@ RUSTFLAGS="-C target-cpu=generic" cargo install reasonkit-core --force
 ### Configuration File Not Found
 
 **Error Message:**
+
 ```
 Error: Config file not found at ~/.config/reasonkit/config.toml
 ```
@@ -864,6 +946,7 @@ Error: Config file not found at ~/.config/reasonkit/config.toml
 **Cause:** First run without configuration file.
 
 **Solution:**
+
 ```bash
 # Create default configuration
 mkdir -p ~/.config/reasonkit
@@ -886,6 +969,7 @@ rk-core doctor check
 ### API Key Environment Variable Not Set
 
 **Error Message:**
+
 ```
 Error: API key not found. Set ANTHROPIC_API_KEY environment variable.
 ```
@@ -893,6 +977,7 @@ Error: API key not found. Set ANTHROPIC_API_KEY environment variable.
 **Cause:** LLM provider API key not configured.
 
 **Solution:**
+
 ```bash
 # Set temporarily
 export ANTHROPIC_API_KEY="sk-ant-..."
@@ -973,6 +1058,7 @@ When opening an issue, include:
 
 ```markdown
 ## Environment
+
 - **OS:** [e.g., Ubuntu 22.04, macOS 14.0, Windows 11]
 - **Architecture:** [e.g., x86_64, aarch64/Apple Silicon]
 - **Rust version:** `rustc --version`
@@ -981,7 +1067,9 @@ When opening an issue, include:
 
 ## Error
 ```
+
 [Paste exact error message here]
+
 ```
 
 ## Steps to Reproduce
@@ -1001,12 +1089,12 @@ When opening an issue, include:
 
 ### Community Resources
 
-| Resource | URL | Purpose |
-|----------|-----|---------|
-| GitHub Discussions | [github.com/reasonkit/reasonkit-core/discussions](https://github.com/reasonkit/reasonkit-core/discussions) | Q&A, feature requests |
-| GitHub Issues | [github.com/reasonkit/reasonkit-core/issues](https://github.com/reasonkit/reasonkit-core/issues) | Bug reports |
-| Discord | [discord.gg/reasonkit](https://discord.gg/reasonkit) | Real-time community help |
-| Documentation | [reasonkit.sh/docs](https://reasonkit.sh/docs) | Official docs |
+| Resource           | URL                                                                                                        | Purpose                  |
+| ------------------ | ---------------------------------------------------------------------------------------------------------- | ------------------------ |
+| GitHub Discussions | [github.com/reasonkit/reasonkit-core/discussions](https://github.com/reasonkit/reasonkit-core/discussions) | Q&A, feature requests    |
+| GitHub Issues      | [github.com/reasonkit/reasonkit-core/issues](https://github.com/reasonkit/reasonkit-core/issues)           | Bug reports              |
+| Discord            | [discord.gg/reasonkit](https://discord.gg/reasonkit)                                                       | Real-time community help |
+| Documentation      | [reasonkit.sh/docs](https://reasonkit.sh/docs)                                                             | Official docs            |
 
 ### Support Channels
 
@@ -1023,32 +1111,32 @@ When opening an issue, include:
 
 ## Quick Reference: Common Fixes
 
-| Problem | Quick Fix |
-|---------|-----------|
-| `cargo: command not found` | `curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs \| sh && source ~/.cargo/env` |
-| `rk-core: command not found` | `export PATH="$HOME/.cargo/bin:$PATH"` |
-| OpenSSL errors (macOS) | `brew install openssl@3 && export OPENSSL_DIR=$(brew --prefix openssl@3)` |
-| OpenSSL errors (Linux) | `sudo apt install libssl-dev` or `sudo dnf install openssl-devel` |
-| linker not found | `sudo apt install build-essential` or `xcode-select --install` |
-| pkg-config not found | `sudo apt install pkg-config` |
-| Permission denied | Use `cargo install` (installs to ~/.cargo/bin, no sudo) |
-| Compilation killed (OOM) | `CARGO_BUILD_JOBS=1 cargo install reasonkit-core` |
-| Proxy issues | `export https_proxy="http://proxy:port"` |
+| Problem                      | Quick Fix                                                                                |
+| ---------------------------- | ---------------------------------------------------------------------------------------- |
+| `cargo: command not found`   | `curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs \| sh && source ~/.cargo/env` |
+| `rk-core: command not found` | `export PATH="$HOME/.cargo/bin:$PATH"`                                                   |
+| OpenSSL errors (macOS)       | `brew install openssl@3 && export OPENSSL_DIR=$(brew --prefix openssl@3)`                |
+| OpenSSL errors (Linux)       | `sudo apt install libssl-dev` or `sudo dnf install openssl-devel`                        |
+| linker not found             | `sudo apt install build-essential` or `xcode-select --install`                           |
+| pkg-config not found         | `sudo apt install pkg-config`                                                            |
+| Permission denied            | Use `cargo install` (installs to ~/.cargo/bin, no sudo)                                  |
+| Compilation killed (OOM)     | `CARGO_BUILD_JOBS=1 cargo install reasonkit-core`                                        |
+| Proxy issues                 | `export https_proxy="http://proxy:port"`                                                 |
 
 ---
 
 ## Installation Methods Summary
 
-| Method | Command | Best For |
-|--------|---------|----------|
-| **Cargo Install** | `cargo install reasonkit-core` | Rust developers, most reliable |
-| **Universal Script** | `curl -fsSL https://reasonkit.sh/install \| bash` | Quick setup, auto-detection |
-| **From Source** | `git clone ... && cargo build --release` | Development, customization |
-| **npm** | `npm install -g @reasonkit/cli` | Node.js ecosystem (wrapper) |
-| **pip** | `pip install reasonkit` | Python ecosystem (bindings) |
+| Method               | Command                                           | Best For                       |
+| -------------------- | ------------------------------------------------- | ------------------------------ |
+| **Cargo Install**    | `cargo install reasonkit-core`                    | Rust developers, most reliable |
+| **Universal Script** | `curl -fsSL https://reasonkit.sh/install \| bash` | Quick setup, auto-detection    |
+| **From Source**      | `git clone ... && cargo build --release`          | Development, customization     |
+| **npm**              | `npm install -g @reasonkit/cli`                   | Node.js ecosystem (wrapper)    |
+| **pip**              | `pip install reasonkit`                           | Python ecosystem (bindings)    |
 
 ---
 
-*Document Version: 1.0.0*
-*Last Updated: 2025-12-28*
-*Maintainer: ReasonKit Team*
+_Document Version: 1.0.0_
+_Last Updated: 2025-12-28_
+_Maintainer: ReasonKit Team_
