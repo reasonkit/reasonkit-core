@@ -41,19 +41,21 @@
 
 // ============================================================================
 // CORE MODULES (always available)
-// ============================================================================
-
 pub mod bindings;
 pub mod constants;
 pub mod error;
 pub mod evaluation;
 pub mod ingestion;
+pub mod m2;
 pub mod mcp;
 pub mod processing;
 pub mod telemetry;
 pub mod thinktool;
 pub mod verification;
 pub mod web;
+
+// Multi-Language Code Intelligence Enhancement
+pub mod code_intelligence;
 
 // ============================================================================
 // MEMORY MODULES (optional - enable with `memory` feature)

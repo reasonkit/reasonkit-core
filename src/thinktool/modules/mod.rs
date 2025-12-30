@@ -31,12 +31,14 @@ use serde::{Deserialize, Serialize};
 
 pub mod bedrock;
 pub mod brutalhonesty;
+pub mod brutalhonesty_enhanced;
 pub mod gigathink;
 pub mod laserlogic;
 pub mod proofguard;
 
 pub use bedrock::BedRock;
 pub use brutalhonesty::BrutalHonesty;
+pub use brutalhonesty_enhanced::BrutalHonestyEnhanced;
 pub use gigathink::GigaThink;
 pub use laserlogic::LaserLogic;
 pub use proofguard::ProofGuard;

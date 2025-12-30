@@ -116,13 +116,15 @@ pub mod tot;
 pub mod toulmin;
 pub mod trace;
 pub mod triangulation;
-pub mod tripartite;
-pub mod yaml_loader;
+pub mod validation;
+pub mod validation_executor;
 
 // Re-exports
-pub use bedrock_tot::{
-    BedRockToTConfig, BedRockToTPrompts, BedRockToTResult, Principle, PrincipleExploration,
-    PrincipleType,
+pub use validation::{
+    ComplianceResult, ComplianceStatus, ComplianceViolation, DeepSeekValidationConfig,
+    DeepSeekValidationEngine, DeepSeekValidationResult, DetectedBias, MethodologyStatus,
+    RegulatoryStatus, StatisticalResult, ValidationCategory, ValidationFinding, ValidationPerformance,
+    ValidationVerdict,
 };
 pub use benchmark::{
     Answer, BenchmarkProblem, BenchmarkResults, BenchmarkRunner, CalibrationMetrics,
@@ -209,8 +211,4 @@ pub use triangulation::{
     TriangulationIssueType, TriangulationPrompts, TriangulationResult, Triangulator,
     VerificationConfidence, VerificationRecommendation,
 };
-pub use tripartite::{
-    AlgorithmicDepth, AlgorithmicResponse, AutonomousResponse, CheckResult, CheckStatus,
-    ReasoningStep, ReflectiveCheck, ReflectiveResponse, StepType, TripartiteConfig,
-    TripartiteMetrics, TripartitePrompts, TripartiteResult,
-};
+pub use validation_executor::{ValidationExecutorConfig, ValidationLevel, ValidatingProtocolExecutor};

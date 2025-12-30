@@ -112,6 +112,38 @@ pub enum Error {
     /// MCP error
     #[error("MCP error: {0}")]
     Mcp(String),
+
+    /// M2 API execution error
+    #[error("M2 execution error: {0}")]
+    M2ExecutionError(String),
+
+    /// M2 rate limit exceeded
+    #[error("M2 rate limit exceeded")]
+    RateLimitExceeded,
+
+    /// M2 budget exceeded
+    #[error("M2 budget exceeded: {0} > {1}")]
+    BudgetExceeded(f64, f64),
+
+    /// M2 protocol validation error
+    #[error("M2 protocol validation error: {0}")]
+    M2ProtocolValidation(String),
+
+    /// M2 constraint violation
+    #[error("M2 constraint violation: {0}")]
+    M2ConstraintViolation(String),
+
+    /// M2 framework incompatibility
+    #[error("M2 framework incompatibility: {0}")]
+    M2FrameworkIncompatibility(String),
+
+    /// Resource exhausted
+    #[error("Resource exhausted: {0}")]
+    ResourceExhausted(String),
+
+    /// Template not found
+    #[error("Template not found: {0}")]
+    TemplateNotFound(String),
 }
 
 impl Error {

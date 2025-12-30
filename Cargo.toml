@@ -210,6 +210,7 @@ embedded-qdrant = []  # For embedded mode without external server
 local-embeddings = ["ort", "tokenizers", "ndarray"]  # BGE-M3 ONNX local inference
 arf = ["sled", "wasmtime", "sysinfo", "petgraph", "rust-bert", "parking_lot"]  # Optional ARF module
 memory = ["dep:reasonkit-mem", "dep:qdrant-client", "dep:tantivy"]  # Optional memory infrastructure via reasonkit-mem
+code-intelligence = []  # EXPERIMENTAL: Multi-language code intelligence (incomplete - do not use)
 
 # Package metadata for crates.io
 [package.metadata.docs.rs]

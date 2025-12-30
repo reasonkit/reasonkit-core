@@ -283,7 +283,7 @@ All contributors are recognized:
 
 1. **Check existing issues** - Your question may already be answered
 2. **Ask in Discussions** - [GitHub Discussions](https://github.com/reasonkit/reasonkit-core/discussions)
-4. **Open an issue** - Use the "Question" template
+3. **Open an issue** - Use the "Question" template
 
 ### Response Times
 
