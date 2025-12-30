@@ -8,7 +8,7 @@
 
 **Industrial-Grade Reasoning Infrastructure | Rust-Native | Auditable AI**
 
-<img src="./assets/launch/hero-reasoning-engine.svg" alt="ReasonKit Core - Industrial Reasoning Engine" width="100%" />
+<img src="./assets/img/hero_reasoning_engine.png" alt="ReasonKit Core - Industrial Reasoning Engine" width="100%" />
 
 [![CI](https://img.shields.io/github/actions/workflow/status/reasonkit/reasonkit-core/ci.yml?branch=main&style=flat-square&logo=github&label=CI&color=06b6d4&logoColor=06b6d4)](https://github.com/reasonkit/reasonkit-core/actions)
 [![Crates.io](https://img.shields.io/crates/v/reasonkit-core?style=flat-square&logo=rust&color=10b981&logoColor=f9fafb)](https://crates.io/crates/reasonkit-core)
@@ -63,10 +63,6 @@ rk-core think --profile balanced "Should we migrate to microservices?"
 
 Each ThinkTool acts as a **variance reduction filter**, transforming probabilistic outputs into increasingly deterministic reasoning paths.
 
-<div align="center">
-<img src="./assets/launch/thinktools-overview.svg" alt="ReasonKit ThinkTools - 5 Cognitive Modules" width="100%" />
-</div>
-
 | ThinkTool         | Operation    | What It Does                                    |
 | ----------------- | ------------ | ----------------------------------------------- |
 | **GigaThink**     | `Diverge()`  | Generate 10+ perspectives, explore widely       |
@@ -78,7 +74,7 @@ Each ThinkTool acts as a **variance reduction filter**, transforming probabilist
 ### The Chain Effect
 
 <div align="center">
-<img src="./assets/launch/variance-reduction-chart.svg" alt="Variance Reduction Through ThinkTool Chain" width="100%" />
+<img src="./assets/img/chart_variance_reduction.png" alt="Variance Reduction Through ThinkTool Chain" width="100%" />
 </div>
 
 | Stage          | Variance | Reduction |
@@ -123,7 +119,7 @@ rk-core think --profile paranoid "Validate cryptographic implementation"
 ## Execution Trace Example
 
 <div align="center">
-<img src="./assets/launch/terminal-mockup.svg" alt="ReasonKit Terminal - Execution Trace" width="100%" />
+<img src="./assets/img/terminal_mockup.png" alt="ReasonKit Terminal - Execution Trace" width="100%" />
 </div>
 
 **What This Shows:**
