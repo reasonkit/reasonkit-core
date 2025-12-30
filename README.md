@@ -1,6 +1,12 @@
 <div align="center">
 
-<img src="./assets/svg/header-logo-badges.svg" alt="ReasonKit - Turn Prompts into Protocols" width="100%" />
+# ReasonKit
+
+### **Turn Prompts into Protocols**
+
+> _"Designed, Not Dreamed."_ — Structure beats intelligence. Engineering over hope.
+
+**Industrial-Grade Reasoning Infrastructure | Rust-Native | Auditable AI**
 
 <img src="./assets/launch/hero-reasoning-engine.svg" alt="ReasonKit Core - Industrial Reasoning Engine" width="100%" />
 
