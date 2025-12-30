@@ -1,6 +1,6 @@
 [package]
 name = "reasonkit-core"
-version = "1.0.0"
+version = "1.0.1"
 edition = "2021"
 rust-version = "1.74"
 authors = ["ReasonKit Team <hello@reasonkit.sh>"]
