@@ -2,10 +2,19 @@
 //!
 //! Tool definitions, inputs, and results for MCP servers.
 
+use crate::error::Result;
+use async_trait::async_trait;
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 use std::collections::HashMap;
 use uuid::Uuid;
+
+/// Tool handler trait
+#[async_trait]
+pub trait ToolHandler: Send + Sync {
+    /// Execute the tool
+    async fn call(&self, arguments: HashMap<String, Value>) -> Result<ToolResult>;
+}
 
 /// Tool definition
 #[derive(Debug, Clone, Serialize, Deserialize)]

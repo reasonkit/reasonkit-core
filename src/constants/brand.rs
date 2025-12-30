@@ -3,7 +3,7 @@
 // ============================================================
 // CANONICAL SOURCE - Synchronized with reasonkit-site/main.css
 // Reference: /RK-PROJECT/BRAND_IDENTITY.md
-// Updated: 2025-12-30 (v1.1.0 - Landing Page Sync)
+// Updated: 2025-12-30 (v1.0.0 - Launch)
 // ============================================================
 
 /// Brand color constants (Landing Page Standard)
@@ -107,6 +107,6 @@ pub mod identity {
 
 /// Version info
 pub mod version {
-    pub const BRAND_VERSION: &str = "1.1.0";
+    pub const BRAND_VERSION: &str = "1.0.0";
     pub const BRAND_UPDATED: &str = "2025-12-30";
 }

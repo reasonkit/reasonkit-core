@@ -2,12 +2,15 @@
 //!
 //! Base server trait and concrete implementation for MCP servers.
 
+use super::lifecycle::InitializeResult;
+use super::tools::{Tool, ToolHandler, ToolResult};
 use super::transport::Transport;
 use super::types::*;
 use crate::error::{Error, Result};
 use async_trait::async_trait;
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
+use std::collections::HashMap;
 use std::sync::Arc;
 use tokio::sync::RwLock;
 use uuid::Uuid;
@@ -91,7 +94,22 @@ pub trait McpServerTrait: Send + Sync {
 
     /// Perform a health check
     async fn health_check(&self) -> Result<bool>;
+
+    /// List available tools
+    async fn list_tools(&self) -> Vec<Tool>;
+
+    /// Call a tool
+    async fn call_tool(
+        &self,
+        name: &str,
+        arguments: HashMap<String, serde_json::Value>,
+    ) -> Result<ToolResult>;
+
+    /// Register a tool
+    async fn register_tool(&self, tool: Tool, handler: Arc<dyn ToolHandler>);
 }
+
+type ToolRegistry = HashMap<String, (Tool, Arc<dyn ToolHandler>)>;
 
 /// Concrete MCP server implementation
 pub struct McpServer {
@@ -111,6 +129,8 @@ pub struct McpServer {
     metrics: Arc<RwLock<ServerMetrics>>,
     /// Server started at
     started_at: DateTime<Utc>,
+    /// Registered tools
+    tools: Arc<RwLock<ToolRegistry>>,
 }
 
 impl McpServer {
@@ -130,6 +150,7 @@ impl McpServer {
             status: Arc::new(RwLock::new(ServerStatus::Starting)),
             metrics: Arc::new(RwLock::new(ServerMetrics::default())),
             started_at: Utc::now(),
+            tools: Arc::new(RwLock::new(HashMap::new())),
         }
     }
 
@@ -293,6 +314,32 @@ impl McpServerTrait for McpServer {
             }
         }
     }
+
+    async fn list_tools(&self) -> Vec<Tool> {
+        let tools = self.tools.read().await;
+        tools.values().map(|(t, _)| t.clone()).collect()
+    }
+
+    async fn call_tool(
+        &self,
+        name: &str,
+        arguments: HashMap<String, serde_json::Value>,
+    ) -> Result<ToolResult> {
+        let handler = {
+            let tools = self.tools.read().await;
+            tools.get(name).map(|(_, handler)| Arc::clone(handler))
+        };
+
+        match handler {
+            Some(handler) => handler.call(arguments).await,
+            None => Err(Error::Mcp(format!("Tool not found: {}", name))),
+        }
+    }
+
+    async fn register_tool(&self, tool: Tool, handler: Arc<dyn ToolHandler>) {
+        let mut tools = self.tools.write().await;
+        tools.insert(tool.name.clone(), (tool, handler));
+    }
 }
 
 /// Server-side Stdio Transport (uses current process stdin/stdout)
@@ -365,7 +412,7 @@ pub async fn run_server() -> Result<()> {
         tools: Some(ToolsCapability { list_changed: true }),
     };
 
-    let mut server = McpServer::new("reasonkit-core", info, capabilities, transport.clone());
+    let server = McpServer::new("reasonkit-core", info, capabilities, transport.clone());
 
     // Main loop
     let stdin = tokio::io::stdin();
@@ -389,6 +436,24 @@ pub async fn run_server() -> Result<()> {
             Ok(m) => m,
             Err(e) => {
                 eprintln!("Failed to parse JSON: {}", e);
+
+                let response = serde_json::json!({
+                    "jsonrpc": "2.0",
+                    "id": serde_json::Value::Null,
+                    "error": {
+                        "code": ErrorCode::PARSE_ERROR.0,
+                        "message": e.to_string()
+                    }
+                });
+
+                let response_str = serde_json::to_string(&response).map_err(Error::from)?;
+                let mut stdout = transport.stdout.lock().await;
+                stdout
+                    .write_all(response_str.as_bytes())
+                    .await
+                    .map_err(Error::from)?;
+                stdout.write_all(b"\n").await.map_err(Error::from)?;
+                stdout.flush().await.map_err(Error::from)?;
                 continue;
             }
         };
@@ -398,17 +463,63 @@ pub async fn run_server() -> Result<()> {
             // It's a request or notification
             if let Some(id) = msg.get("id") {
                 // Request
-                let result = match method {
+                let result: Result<serde_json::Value> = match method {
                     "initialize" => {
-                        let params = msg
-                            .get("params")
-                            .cloned()
-                            .unwrap_or(serde_json::Value::Null);
-                        server.initialize(params).await
+                        server.set_status(ServerStatus::Running).await;
+                        let init =
+                            InitializeResult::new(server.info.clone(), server.capabilities.clone());
+                        Ok(serde_json::to_value(init).map_err(Error::from)?)
                     }
-                    "shutdown" => server.shutdown().await.map(|_| serde_json::json!(null)),
+                    "shutdown" => {
+                        server.set_status(ServerStatus::Stopping).await;
+                        Ok(serde_json::json!(null))
+                    }
                     "ping" => Ok(serde_json::json!({})),
-                    _ => Err(Error::network(format!("Method not found: {}", method))),
+                    "tools/list" => {
+                        let tools = server.list_tools().await;
+                        Ok(serde_json::json!({ "tools": tools }))
+                    }
+                    "tools/call" => {
+                        let params = match msg.get("params").and_then(|p| p.as_object()) {
+                            Some(params) => params,
+                            None => Err(Error::Mcp("Invalid params".to_string()))?,
+                        };
+
+                        let name = match params.get("name").and_then(|v| v.as_str()) {
+                            Some(name) => name,
+                            None => Err(Error::Mcp("Missing tool name".to_string()))?,
+                        };
+
+                        let args: std::result::Result<HashMap<String, serde_json::Value>, Error> =
+                            match params.get("arguments") {
+                                Some(v) if v.is_object() => {
+                                    serde_json::from_value(v.clone()).map_err(Error::from)
+                                }
+                                Some(_) => Err(Error::Mcp("Invalid tool arguments".to_string())),
+                                None => Ok(HashMap::new()),
+                            };
+
+                        match args {
+                            Ok(args) => match server.call_tool(name, args).await {
+                                Ok(res) => serde_json::to_value(res).map_err(Error::from),
+                                Err(e) => Err(e),
+                            },
+                            Err(e) => Err(e),
+                        }
+                    }
+                    _ => Err(Error::Mcp(format!("Method not found: {}", method))),
+                };
+
+                let (code, message) = match &result {
+                    Err(Error::Mcp(message)) if message.starts_with("Method not found:") => {
+                        (ErrorCode::METHOD_NOT_FOUND.0, message.clone())
+                    }
+                    Err(Error::Mcp(message)) if message.starts_with("Tool not found:") => {
+                        (ErrorCode::TOOL_NOT_FOUND.0, message.clone())
+                    }
+                    Err(Error::Mcp(message)) => (ErrorCode::INVALID_PARAMS.0, message.clone()),
+                    Err(e) => (ErrorCode::INTERNAL_ERROR.0, e.to_string()),
+                    Ok(_) => (0, String::new()),
                 };
 
                 let response = match result {
@@ -417,21 +528,29 @@ pub async fn run_server() -> Result<()> {
                         "id": id,
                         "result": res
                     }),
-                    Err(e) => serde_json::json!({
+                    Err(_) => serde_json::json!({
                         "jsonrpc": "2.0",
                         "id": id,
                         "error": {
-                            "code": -32601,
-                            "message": e.to_string()
+                            "code": code,
+                            "message": message
                         }
                     }),
                 };
 
-                let response_str = serde_json::to_string(&response).unwrap();
-                let mut stdout = tokio::io::stdout();
-                stdout.write_all(response_str.as_bytes()).await.unwrap();
-                stdout.write_all(b"\n").await.unwrap();
-                stdout.flush().await.unwrap();
+                let json_line = serde_json::to_string(&response).map_err(Error::from)?;
+                let mut stdout = transport.stdout.lock().await;
+                stdout
+                    .write_all(json_line.as_bytes())
+                    .await
+                    .map_err(Error::from)?;
+                stdout.write_all(b"\n").await.map_err(Error::from)?;
+                stdout.flush().await.map_err(Error::from)?;
+
+                if method == "shutdown" {
+                    server.set_status(ServerStatus::Stopped).await;
+                    break;
+                }
             } else {
                 // Notification
                 if method == "notifications/initialized" {
@@ -447,6 +566,7 @@ pub async fn run_server() -> Result<()> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::mcp::tools::ToolResultContent;
 
     #[test]
     fn test_server_status() {
@@ -460,5 +580,47 @@ mod tests {
         let metrics = ServerMetrics::default();
         assert_eq!(metrics.requests_total, 0);
         assert_eq!(metrics.errors_total, 0);
+    }
+
+    #[tokio::test]
+    async fn test_tool_execution() {
+        let transport = Arc::new(ServerStdioTransport::new());
+        let info = ServerInfo {
+            name: "test".to_string(),
+            version: "1.0".to_string(),
+            description: None,
+            vendor: None,
+        };
+        let capabilities = ServerCapabilities::default();
+        let server = McpServer::new("test", info, capabilities, transport);
+
+        struct EchoTool;
+        #[async_trait]
+        impl ToolHandler for EchoTool {
+            async fn call(&self, args: HashMap<String, serde_json::Value>) -> Result<ToolResult> {
+                let msg = args
+                    .get("message")
+                    .and_then(|v| v.as_str())
+                    .unwrap_or("default");
+                Ok(ToolResult::text(format!("Echo: {}", msg)))
+            }
+        }
+
+        server
+            .register_tool(Tool::simple("echo", "Echoes back"), Arc::new(EchoTool))
+            .await;
+
+        let tools = server.list_tools().await;
+        assert_eq!(tools.len(), 1);
+        assert_eq!(tools[0].name, "echo");
+
+        let mut args = HashMap::new();
+        args.insert("message".to_string(), serde_json::json!("hello"));
+
+        let result = server.call_tool("echo", args).await.unwrap();
+        match &result.content[0] {
+            ToolResultContent::Text { text } => assert_eq!(text, "Echo: hello"),
+            _ => panic!("Wrong content type"),
+        }
     }
 }
