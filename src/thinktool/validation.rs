@@ -572,12 +572,9 @@ impl DeepSeekValidationEngine {
     ) -> String {
         let mut prompt = String::new();
         
-        prompt.push_str(&format!(
-            "# REASONING CHAIN VALIDATION ANALYSIS\n\n"
-        ));
+        prompt.push_str(&format!("# REASONING CHAIN VALIDATION ANALYSIS\n\n"));
         
-        prompt.push_str(&format!(
-            "**Protocol**: {}\n"
+        prompt.push_str(&format!("**Protocol**: {}\n"
             "**Input**: {}\n"
             "**Chain Length**: {} steps\n"
             "**Overall Confidence**: {:.1}%\n\n",
