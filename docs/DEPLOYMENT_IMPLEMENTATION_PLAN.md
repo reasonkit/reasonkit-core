@@ -158,8 +158,8 @@ jobs:
 
 ```bash
 # Create test tag
-git tag v0.1.0-test
-git push origin v0.1.0-test
+git tag v1.0.0-test
+git push origin v1.0.0-test
 
 # Watch GitHub Actions run
 # Check that binaries are created and uploaded
@@ -446,21 +446,21 @@ cd Formula
 class Reasonkit < Formula
   desc "Structured reasoning protocols for LLMs"
   homepage "https://reasonkit.sh"
-  version "0.1.0"
+  version "1.0.0"
   license "Apache-2.0"
 
   on_macos do
     if Hardware::CPU.arm?
-      url "https://github.com/username/reasonkit-core/releases/download/v0.1.0/rk-core-aarch64-apple-darwin.tar.gz"
+      url "https://github.com/username/reasonkit-core/releases/download/v1.0.0/rk-core-aarch64-apple-darwin.tar.gz"
       sha256 "CHECKSUM_HERE"
     else
-      url "https://github.com/username/reasonkit-core/releases/download/v0.1.0/rk-core-x86_64-apple-darwin.tar.gz"
+      url "https://github.com/username/reasonkit-core/releases/download/v1.0.0/rk-core-x86_64-apple-darwin.tar.gz"
       sha256 "CHECKSUM_HERE"
     end
   end
 
   on_linux do
-    url "https://github.com/username/reasonkit-core/releases/download/v0.1.0/rk-core-x86_64-unknown-linux-musl.tar.gz"
+    url "https://github.com/username/reasonkit-core/releases/download/v1.0.0/rk-core-x86_64-unknown-linux-musl.tar.gz"
     sha256 "CHECKSUM_HERE"
   end
 
@@ -632,7 +632,7 @@ commit_parsers = [
 git cliff --latest -o CHANGELOG.md
 
 # Generate for specific range
-git cliff v0.1.0..v0.2.0 -o CHANGELOG.md
+git cliff v1.0.0..v1.1.0 -o CHANGELOG.md
 
 # Preview unreleased changes
 git cliff --unreleased
@@ -798,17 +798,17 @@ After UPX:             0.6 MB
 ### 2. Generate Changelog
 
 ```bash
-git cliff --tag v0.1.0 -o CHANGELOG.md
+git cliff --tag v1.0.0 -o CHANGELOG.md
 git add CHANGELOG.md
-git commit -m "chore(release): prepare for v0.1.0"
+git commit -m "chore(release): prepare for v1.0.0"
 ```
 
 ### 3. Create Tag
 
 ```bash
-git tag -a v0.1.0 -m "Release v0.1.0"
+git tag -a v1.0.0 -m "Release v1.0.0"
 git push origin main
-git push origin v0.1.0
+git push origin v1.0.0
 ```
 
 ### 4. Monitor Release
@@ -829,7 +829,7 @@ cargo publish
 cd ../homebrew-tap/Formula
 # Update reasonkit.rb with new version and checksums
 # Get checksums from GitHub release
-git commit -m "Update reasonkit to v0.1.0"
+git commit -m "Update reasonkit to v1.0.0"
 git push
 ```
 
@@ -883,13 +883,13 @@ assets = [
 
 ```bash
 cargo deb
-# Output: target/debian/reasonkit_0.1.0-1_amd64.deb
+# Output: target/debian/reasonkit_1.0.0-1_amd64.deb
 ```
 
 **Test:**
 
 ```bash
-sudo dpkg -i target/debian/reasonkit_0.1.0-1_amd64.deb
+sudo dpkg -i target/debian/reasonkit_1.0.0-1_amd64.deb
 rk-core --version
 sudo dpkg -r reasonkit
 ```
@@ -937,7 +937,7 @@ chocolatey/
 <package xmlns="http://schemas.microsoft.com/packaging/2015/06/nuspec.xsd">
   <metadata>
     <id>reasonkit</id>
-    <version>0.1.0</version>
+    <version>1.0.0</version>
     <packageSourceUrl>https://github.com/username/reasonkit-core</packageSourceUrl>
     <owners>Your Name</owners>
     <title>ReasonKit</title>
@@ -968,7 +968,7 @@ $ErrorActionPreference = 'Stop'
 
 $packageName = 'reasonkit'
 $toolsDir = "$(Split-Path -parent $MyInvocation.MyCommand.Definition)"
-$url64 = 'https://github.com/username/reasonkit-core/releases/download/v0.1.0/rk-core-x86_64-pc-windows-msvc.zip'
+$url64 = 'https://github.com/username/reasonkit-core/releases/download/v1.0.0/rk-core-x86_64-pc-windows-msvc.zip'
 $checksum64 = 'CHECKSUM_HERE'
 
 $packageArgs = @{
@@ -1054,9 +1054,9 @@ ENTRYPOINT ["rk-core"]
 **Publish to Docker Hub:**
 
 ```bash
-docker tag reasonkit:latest username/reasonkit:0.1.0
+docker tag reasonkit:latest username/reasonkit:1.0.0
 docker tag reasonkit:latest username/reasonkit:latest
-docker push username/reasonkit:0.1.0
+docker push username/reasonkit:1.0.0
 docker push username/reasonkit:latest
 ```
 
@@ -1093,8 +1093,8 @@ brew install username/tap/reasonkit
 ### Linux (Debian/Ubuntu)
 
 ```bash
-wget https://github.com/username/reasonkit-core/releases/download/v0.1.0/reasonkit_0.1.0_amd64.deb
-sudo dpkg -i reasonkit_0.1.0_amd64.deb
+wget https://github.com/username/reasonkit-core/releases/download/v1.0.0/reasonkit_1.0.0_amd64.deb
+sudo dpkg -i reasonkit_1.0.0_amd64.deb
 ```
 
 ### Windows (Chocolatey)

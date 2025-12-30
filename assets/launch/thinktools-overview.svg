@@ -1,0 +1,223 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 320" fill="none">
+  <defs>
+    <!-- ═══════════════════════════════════════════════════════════════════════
+         REASONKIT BRAND-COMPLIANT SVG DEFINITIONS
+         Source: /docs/SVG_BRAND_SPECIFICATION.md v1.0.0
+         ═══════════════════════════════════════════════════════════════════════ -->
+    
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#0a0d14"/>
+      <stop offset="100%" stop-color="#030508"/>
+    </linearGradient>
+    
+    <linearGradient id="heroGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#06b6d4"/>
+      <stop offset="50%" stop-color="#a855f7"/>
+      <stop offset="100%" stop-color="#ec4899"/>
+    </linearGradient>
+    
+    <linearGradient id="cyanGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#06b6d4"/>
+      <stop offset="100%" stop-color="#0891b2"/>
+    </linearGradient>
+    
+    <linearGradient id="greenGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#10b981"/>
+      <stop offset="100%" stop-color="#059669"/>
+    </linearGradient>
+    
+    <linearGradient id="yellowGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fbbf24"/>
+      <stop offset="100%" stop-color="#f59e0b"/>
+    </linearGradient>
+    
+    <linearGradient id="purpleGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#a855f7"/>
+      <stop offset="100%" stop-color="#7c3aed"/>
+    </linearGradient>
+    
+    <linearGradient id="orangeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f97316"/>
+      <stop offset="100%" stop-color="#ea580c"/>
+    </linearGradient>
+    
+    <filter id="softGlow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="2" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    
+    <filter id="cardShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#000" flood-opacity="0.4"/>
+    </filter>
+    
+    <!-- Circuit pattern -->
+    <pattern id="circuitPattern" x="0" y="0" width="60" height="60" patternUnits="userSpaceOnUse">
+      <g stroke="#06b6d4" stroke-width="0.25" fill="none" opacity="0.05">
+        <path d="M0 30 L60 30"/>
+        <path d="M30 0 L30 60"/>
+        <circle cx="30" cy="30" r="2" fill="#06b6d4" opacity="0.08"/>
+      </g>
+    </pattern>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1200" height="320" fill="url(#bgGrad)"/>
+  <rect width="1200" height="320" fill="url(#circuitPattern)"/>
+  
+  <!-- Title -->
+  <text x="600" y="40" fill="#f9fafb" font-family="Inter, -apple-system, sans-serif" font-size="20" font-weight="700" text-anchor="middle">ThinkTools: Variance Reduction Filters</text>
+  <text x="600" y="62" fill="#9ca3af" font-family="JetBrains Mono, SF Mono, monospace" font-size="11" text-anchor="middle">Each tool transforms probabilistic outputs into increasingly deterministic reasoning paths</text>
+  
+  <!-- Connection line -->
+  <line x1="120" y1="165" x2="1080" y2="165" stroke="#1f2937" stroke-width="2"/>
+  
+  <!-- Arrows between cards -->
+  <g fill="#4b5563">
+    <polygon points="255,165 245,160 245,170"/>
+    <polygon points="475,165 465,160 465,170"/>
+    <polygon points="695,165 685,160 685,170"/>
+    <polygon points="915,165 905,160 905,170"/>
+  </g>
+  
+  <!-- GigaThink Card -->
+  <g transform="translate(120, 95)" filter="url(#cardShadow)">
+    <rect x="0" y="0" width="200" height="140" rx="10" fill="#0a0d14" stroke="#06b6d4" stroke-width="2"/>
+    
+    <!-- Icon -->
+    <g transform="translate(30, 35)" filter="url(#softGlow)">
+      <circle cx="0" cy="0" r="18" fill="none" stroke="#06b6d4" stroke-width="1.5"/>
+      <g stroke="#06b6d4" stroke-width="1.2">
+        <line x1="0" y1="-18" x2="0" y2="-28"/>
+        <line x1="13" y1="-13" x2="20" y2="-20"/>
+        <line x1="18" y1="0" x2="28" y2="0"/>
+        <line x1="13" y1="13" x2="20" y2="20"/>
+        <line x1="0" y1="18" x2="0" y2="25"/>
+        <line x1="-13" y1="13" x2="-20" y2="20"/>
+        <line x1="-18" y1="0" x2="-28" y2="0"/>
+        <line x1="-13" y1="-13" x2="-20" y2="-20"/>
+      </g>
+      <circle cx="0" cy="0" r="5" fill="#06b6d4"/>
+    </g>
+    
+    <!-- Text -->
+    <text x="70" y="30" fill="#06b6d4" font-family="Inter, -apple-system, sans-serif" font-size="16" font-weight="700">GigaThink</text>
+    <text x="70" y="48" fill="#9ca3af" font-family="JetBrains Mono, SF Mono, monospace" font-size="10">💡 Diverge()</text>
+    
+    <text x="15" y="90" fill="#9ca3af" font-family="Inter, -apple-system, sans-serif" font-size="11">Generate 10+ perspectives</text>
+    <text x="15" y="108" fill="#6b7280" font-family="Inter, -apple-system, sans-serif" font-size="10">Exploit probability widely</text>
+    
+    <rect x="15" y="118" width="55" height="18" rx="9" fill="#06b6d4" fill-opacity="0.15" stroke="#06b6d4" stroke-width="1"/>
+    <text x="42" y="131" fill="#06b6d4" font-family="JetBrains Mono, SF Mono, monospace" font-size="9" text-anchor="middle">-13%</text>
+  </g>
+  
+  <!-- LaserLogic Card -->
+  <g transform="translate(340, 95)" filter="url(#cardShadow)">
+    <rect x="0" y="0" width="200" height="140" rx="10" fill="#0a0d14" stroke="#10b981" stroke-width="2"/>
+    
+    <!-- Icon -->
+    <g transform="translate(30, 35)" filter="url(#softGlow)">
+      <line x1="-25" y1="0" x2="-8" y2="0" stroke="#10b981" stroke-width="2.5"/>
+      <polygon points="0,-15 18,15 -18,15" fill="none" stroke="#10b981" stroke-width="1.5"/>
+      <g stroke="#10b981" stroke-width="1.2">
+        <line x1="10" y1="10" x2="25" y2="-8"/>
+        <line x1="10" y1="15" x2="28" y2="15"/>
+      </g>
+      <circle cx="27" cy="-8" r="3" fill="#10b981"/>
+      <circle cx="30" cy="15" r="3" fill="#10b981"/>
+    </g>
+    
+    <!-- Text -->
+    <text x="70" y="30" fill="#10b981" font-family="Inter, -apple-system, sans-serif" font-size="16" font-weight="700">LaserLogic</text>
+    <text x="70" y="48" fill="#9ca3af" font-family="JetBrains Mono, SF Mono, monospace" font-size="10">⚡ Converge()</text>
+    
+    <text x="15" y="90" fill="#9ca3af" font-family="Inter, -apple-system, sans-serif" font-size="11">Logical validation</text>
+    <text x="15" y="108" fill="#6b7280" font-family="Inter, -apple-system, sans-serif" font-size="10">Detect fallacies & gaps</text>
+    
+    <rect x="15" y="118" width="55" height="18" rx="9" fill="#10b981" fill-opacity="0.15" stroke="#10b981" stroke-width="1"/>
+    <text x="42" y="131" fill="#10b981" font-family="JetBrains Mono, SF Mono, monospace" font-size="9" text-anchor="middle">-14%</text>
+  </g>
+  
+  <!-- BedRock Card -->
+  <g transform="translate(560, 95)" filter="url(#cardShadow)">
+    <rect x="0" y="0" width="200" height="140" rx="10" fill="#0a0d14" stroke="#fbbf24" stroke-width="2"/>
+    
+    <!-- Icon -->
+    <g transform="translate(30, 35)" filter="url(#softGlow)">
+      <g transform="translate(-12, 5)">
+        <polygon points="12,0 24,7 24,21 12,28 0,21 0,7" fill="#fbbf24" fill-opacity="0.2" stroke="#fbbf24" stroke-width="1.2"/>
+      </g>
+      <g transform="translate(0, -8)">
+        <polygon points="12,0 24,7 24,21 12,28 0,21 0,7" fill="#fbbf24" fill-opacity="0.25" stroke="#fbbf24" stroke-width="1.2"/>
+      </g>
+    </g>
+    
+    <!-- Text -->
+    <text x="70" y="30" fill="#fbbf24" font-family="Inter, -apple-system, sans-serif" font-size="16" font-weight="700">BedRock</text>
+    <text x="70" y="48" fill="#9ca3af" font-family="JetBrains Mono, SF Mono, monospace" font-size="10">🪨 Ground()</text>
+    
+    <text x="15" y="90" fill="#9ca3af" font-family="Inter, -apple-system, sans-serif" font-size="11">First principles rebuild</text>
+    <text x="15" y="108" fill="#6b7280" font-family="Inter, -apple-system, sans-serif" font-size="10">Identify axiom gaps</text>
+    
+    <rect x="15" y="118" width="55" height="18" rx="9" fill="#fbbf24" fill-opacity="0.15" stroke="#fbbf24" stroke-width="1"/>
+    <text x="42" y="131" fill="#fbbf24" font-family="JetBrains Mono, SF Mono, monospace" font-size="9" text-anchor="middle">-16%</text>
+  </g>
+  
+  <!-- ProofGuard Card -->
+  <g transform="translate(780, 95)" filter="url(#cardShadow)">
+    <rect x="0" y="0" width="200" height="140" rx="10" fill="#0a0d14" stroke="#a855f7" stroke-width="2"/>
+    
+    <!-- Icon -->
+    <g transform="translate(30, 35)" filter="url(#softGlow)">
+      <polygon points="0,-22 20,-11 20,11 0,22 -20,11 -20,-11" fill="#a855f7" fill-opacity="0.15" stroke="#a855f7" stroke-width="1.5"/>
+      <path d="M-7 0 L-3 5 L10 -7" stroke="#10b981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    </g>
+    
+    <!-- Text -->
+    <text x="70" y="30" fill="#a855f7" font-family="Inter, -apple-system, sans-serif" font-size="16" font-weight="700">ProofGuard</text>
+    <text x="70" y="48" fill="#9ca3af" font-family="JetBrains Mono, SF Mono, monospace" font-size="10">🛡️ Verify()</text>
+    
+    <text x="15" y="90" fill="#9ca3af" font-family="Inter, -apple-system, sans-serif" font-size="11">Multi-source triangulation</text>
+    <text x="15" y="108" fill="#6b7280" font-family="Inter, -apple-system, sans-serif" font-size="10">Require 3+ sources</text>
+    
+    <rect x="15" y="118" width="55" height="18" rx="9" fill="#a855f7" fill-opacity="0.15" stroke="#a855f7" stroke-width="1"/>
+    <text x="42" y="131" fill="#a855f7" font-family="JetBrains Mono, SF Mono, monospace" font-size="9" text-anchor="middle">-14%</text>
+  </g>
+  
+  <!-- BrutalHonesty Card -->
+  <g transform="translate(1000, 95)" filter="url(#cardShadow)">
+    <rect x="0" y="0" width="200" height="140" rx="10" fill="#0a0d14" stroke="#f97316" stroke-width="2"/>
+    
+    <!-- Icon -->
+    <g transform="translate(30, 35)" filter="url(#softGlow)">
+      <g stroke="#f97316" stroke-width="1" opacity="0.6">
+        <path d="M-22 -8 Q-12 -5 -5 -2"/>
+        <path d="M-22 0 Q-12 0 -5 0"/>
+        <path d="M-22 8 Q-12 5 -5 2"/>
+      </g>
+      <circle cx="0" cy="0" r="12" fill="#f97316" fill-opacity="0.2" stroke="#f97316" stroke-width="1.5"/>
+      <text x="0" y="4" fill="#f97316" font-family="JetBrains Mono, SF Mono, monospace" font-size="12" text-anchor="middle">✕</text>
+      <line x1="14" y1="0" x2="28" y2="0" stroke="#10b981" stroke-width="1.5"/>
+      <circle cx="32" cy="0" r="4" fill="#10b981"/>
+    </g>
+    
+    <!-- Text -->
+    <text x="70" y="30" fill="#f97316" font-family="Inter, -apple-system, sans-serif" font-size="14" font-weight="700">BrutalHonesty</text>
+    <text x="70" y="48" fill="#9ca3af" font-family="JetBrains Mono, SF Mono, monospace" font-size="10">🔥 Critique()</text>
+    
+    <text x="15" y="90" fill="#9ca3af" font-family="Inter, -apple-system, sans-serif" font-size="11">Adversarial red team</text>
+    <text x="15" y="108" fill="#6b7280" font-family="Inter, -apple-system, sans-serif" font-size="10">Attack & find flaws</text>
+    
+    <rect x="15" y="118" width="55" height="18" rx="9" fill="#f97316" fill-opacity="0.15" stroke="#f97316" stroke-width="1"/>
+    <text x="42" y="131" fill="#f97316" font-family="JetBrains Mono, SF Mono, monospace" font-size="9" text-anchor="middle">+verify</text>
+  </g>
+  
+  <!-- Footer summary -->
+  <g transform="translate(600, 275)">
+    <rect x="-180" y="0" width="360" height="35" rx="17" fill="#111827" stroke="#10b981" stroke-width="1.5"/>
+    <text x="0" y="15" fill="#9ca3af" font-family="JetBrains Mono, SF Mono, monospace" font-size="10" text-anchor="middle">Total Variance Reduction:</text>
+    <text x="0" y="28" fill="#10b981" font-family="JetBrains Mono, SF Mono, monospace" font-size="11" text-anchor="middle" font-weight="700">85% → 28% = 67% reduction</text>
+  </g>
+</svg>

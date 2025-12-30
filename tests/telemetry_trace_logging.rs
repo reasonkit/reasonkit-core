@@ -47,7 +47,7 @@ async fn test_trace_logging_basic() -> TelemetryResult<()> {
     .map_err(|e| TelemetryError::Database(e.to_string()))?;
 
     let trace_row = stmt
-        .query_row(&[&trace_event_id.to_string()], |row| {
+        .query_row([&trace_event_id.to_string()], |row| {
             Ok((
                 row.get::<_, String>(0)?, // id
                 row.get::<_, String>(1)?, // session_id
@@ -84,7 +84,7 @@ async fn test_trace_logging_multiple_traces() -> TelemetryResult<()> {
     let session_id = collector.session_id();
 
     // Record multiple traces
-    let thinktools = vec!["GigaThink", "LaserLogic", "BedRock", "ProofGuard"];
+    let thinktools = ["GigaThink", "LaserLogic", "BedRock", "ProofGuard"];
 
     for (i, thinktool) in thinktools.iter().enumerate() {
         let trace_event = TraceEvent::new(session_id, thinktool.to_string())
@@ -102,7 +102,7 @@ async fn test_trace_logging_multiple_traces() -> TelemetryResult<()> {
     let count: i64 = conn
         .query_row(
             "SELECT COUNT(*) FROM reasoning_traces WHERE session_id = ?1",
-            &[&session_id.to_string()],
+            [&session_id.to_string()],
             |row| row.get(0),
         )
         .map_err(|e| TelemetryError::Database(e.to_string()))?;
@@ -165,7 +165,7 @@ async fn test_trace_logging_with_query() -> TelemetryResult<()> {
     let linked_query_id: Option<String> = conn
         .query_row(
             "SELECT query_id FROM reasoning_traces WHERE id = ?1",
-            &[&trace_event_id.to_string()],
+            [&trace_event_id.to_string()],
             |row| row.get(0),
         )
         .map_err(|e| TelemetryError::Database(e.to_string()))?;
@@ -234,7 +234,7 @@ async fn test_trace_logging_step_types_json() -> TelemetryResult<()> {
     let step_types_json: String = conn
         .query_row(
             "SELECT step_types FROM reasoning_traces WHERE id = ?1",
-            &[&trace_event_id.to_string()],
+            [&trace_event_id.to_string()],
             |row| row.get(0),
         )
         .map_err(|e| TelemetryError::Database(e.to_string()))?;

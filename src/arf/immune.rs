@@ -617,7 +617,7 @@ mod tests {
         };
 
         let violations = ImmuneSystem::check_resource_violations_static(&metrics, &limits);
-        assert!(violations.len() > 0);
+        assert!(!violations.is_empty());
         assert!(violations[0].contains("CPU usage"));
     }
 

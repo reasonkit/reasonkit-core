@@ -21,7 +21,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Simulate research workflow
     println!("📚 Research Phase: Anchoring Claims\n");
 
-    let claims = vec![
+    let claims = [
         (
             "GPT-4 achieved 86.4% accuracy on the MMLU benchmark.",
             "https://arxiv.org/abs/2303.08774",

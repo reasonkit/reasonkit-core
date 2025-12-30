@@ -1579,7 +1579,7 @@ k6 run scripts/load_test.js
 # config/mcp.toml
 [server]
 name = "reasonkit-mcp-server"
-version = "0.1.0"
+version = "1.0.0"
 protocol_version = "2025-11-25"
 
 [transport]

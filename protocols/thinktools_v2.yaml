@@ -85,7 +85,7 @@ thinktool_modules:
   powercombo:
     id: powercombo
     name: PowerCombo (Experimental)
-    version: 0.1.0
+    version: 1.0.0
     description: Ultimate reasoning mode - all 5 ThinkTools combined (Currently falls back to GigaThink)
     category: meta
     tier: experimental

@@ -8,15 +8,16 @@
 
 use chrono::Utc;
 use criterion::{criterion_group, criterion_main, BenchmarkId, Criterion, Throughput};
+use reasonkit::reasonkit_mem::Document as MemDocument;
 use reasonkit::{
-    retrieval::HybridRetriever, Chunk, Document, DocumentType, EmbeddingIds, RetrievalConfig,
-    Source, SourceType,
+    retrieval::HybridRetriever, Chunk, Document as CoreDocument, DocumentType, EmbeddingIds,
+    RetrievalConfig, Source, SourceType,
 };
 use std::time::Duration;
 use uuid::Uuid;
 
 /// Create a realistic test document
-fn create_test_document(id: usize, size: usize) -> Document {
+fn create_test_document(id: usize, size: usize) -> CoreDocument {
     let source = Source {
         source_type: SourceType::Local,
         url: None,
@@ -36,7 +37,7 @@ fn create_test_document(id: usize, size: usize) -> Document {
     )
     .repeat(size / 200); // Repeat to reach desired size
 
-    let mut doc = Document::new(DocumentType::Note, source).with_content(content.clone());
+    let mut doc = CoreDocument::new(DocumentType::Note, source).with_content(content.clone());
 
     // Create realistic chunks (512 chars each)
     let chunk_size = 512;
@@ -69,7 +70,8 @@ async fn setup_test_corpus(num_docs: usize, doc_size: usize) -> HybridRetriever 
 
     for i in 0..num_docs {
         let doc = create_test_document(i, doc_size);
-        retriever.add_document(&doc).await.unwrap();
+        let mem_doc: MemDocument = doc.into();
+        retriever.add_document(&mem_doc).await.unwrap();
     }
 
     retriever
@@ -281,8 +283,9 @@ fn bench_indexing_memory(c: &mut Criterion) {
                     || {
                         // Setup: create fresh retriever and documents
                         let retriever = HybridRetriever::in_memory().unwrap();
-                        let docs: Vec<_> =
-                            (0..size).map(|i| create_test_document(i, 2048)).collect();
+                        let docs: Vec<MemDocument> = (0..size)
+                            .map(|i| create_test_document(i, 2048).into())
+                            .collect();
                         (retriever, docs)
                     },
                     |(retriever, docs)| {

@@ -47,7 +47,7 @@ This research synthesizes deployment best practices from leading Rust CLI tools 
 # Cargo.toml
 [package]
 name = "reasonkit"
-version = "0.1.0"
+version = "1.0.0"
 edition = "2021"
 
 [[bin]]
@@ -425,7 +425,7 @@ fn generate_completions(shell: Shell) {
 2. **Include in Release Tarball**
 
    ```
-   rk-core-v0.1.0-x86_64-linux.tar.gz
+   rk-core-v1.0.0-x86_64-linux.tar.gz
    ├── rk-core                    # binary
    ├── completions/
    │   ├── rk-core.bash
@@ -468,7 +468,7 @@ macOS developers expect `brew install` - it's the de facto standard. Tools witho
 cargo build --release --target x86_64-apple-darwin
 
 # Create tarball
-tar czf rk-core-0.1.0-x86_64-apple-darwin.tar.gz -C target/x86_64-apple-darwin/release rk-core
+tar czf rk-core-1.0.0-x86_64-apple-darwin.tar.gz -C target/x86_64-apple-darwin/release rk-core
 
 # Upload to GitHub releases
 ```
@@ -492,9 +492,9 @@ cd Formula
 class Reasonkit < Formula
   desc "Structured reasoning for LLMs"
   homepage "https://reasonkit.sh"
-  url "https://github.com/username/reasonkit/releases/download/v0.1.0/rk-core-0.1.0-x86_64-apple-darwin.tar.gz"
+  url "https://github.com/username/reasonkit/releases/download/v1.0.0/rk-core-1.0.0-x86_64-apple-darwin.tar.gz"
   sha256 "abc123..."  # Get with: shasum -a 256 file.tar.gz
-  version "0.1.0"
+  version "1.0.0"
   license "Apache-2.0"
 
   def install
@@ -520,7 +520,7 @@ end
 class Reasonkit < Formula
   desc "Structured reasoning for LLMs"
   homepage "https://reasonkit.sh"
-  url "https://github.com/username/reasonkit/archive/refs/tags/v0.1.0.tar.gz"
+  url "https://github.com/username/reasonkit/archive/refs/tags/v1.0.0.tar.gz"
   sha256 "def456..."
   license "Apache-2.0"
 
@@ -564,7 +564,7 @@ cargo install cargo-deb
 # Create .deb package
 cargo deb
 
-# Output: target/debian/reasonkit_0.1.0-1_amd64.deb
+# Output: target/debian/reasonkit_1.0.0-1_amd64.deb
 
 # Install locally
 cargo deb --install
@@ -628,7 +628,7 @@ package/
 <package xmlns="http://schemas.microsoft.com/packaging/2015/06/nuspec.xsd">
   <metadata>
     <id>reasonkit</id>
-    <version>0.1.0</version>
+    <version>1.0.0</version>
     <authors>Your Name</authors>
     <description>Structured reasoning for LLMs</description>
     <projectUrl>https://reasonkit.sh</projectUrl>
@@ -642,7 +642,7 @@ package/
 
 ```powershell
 $packageName = 'reasonkit'
-$url64 = 'https://github.com/username/reasonkit/releases/download/v0.1.0/rk-core-windows.zip'
+$url64 = 'https://github.com/username/reasonkit/releases/download/v1.0.0/rk-core-windows.zip'
 $checksum64 = 'abc123...'
 
 Install-ChocolateyZipPackage $packageName $url64 "$(Split-Path -parent $MyInvocation.MyCommand.Definition)"
@@ -655,7 +655,7 @@ Install-ChocolateyZipPackage $packageName $url64 "$(Split-Path -parent $MyInvoca
 choco pack
 
 # Push (requires API key from chocolatey.org)
-choco push reasonkit.0.1.0.nupkg --source https://push.chocolatey.org
+choco push reasonkit.1.0.0.nupkg --source https://push.chocolatey.org
 ```
 
 **Source:** [Publish on Chocolatey - DEV](https://dev.to/tgotwig/publish-a-simple-executable-from-rust-on-chocolatey-2pbl)
@@ -679,13 +679,13 @@ cargo install cargo-release
 # Dry run (preview changes)
 cargo release --dry-run
 
-# Release patch version (0.1.0 -> 0.1.1)
+# Release patch version (1.0.0 -> 1.0.1)
 cargo release patch
 
-# Release minor version (0.1.0 -> 0.2.0)
+# Release minor version (1.0.0 -> 1.1.0)
 cargo release minor
 
-# Release major version (0.1.0 -> 1.0.0)
+# Release major version (1.0.0 -> 2.0.0)
 cargo release major
 ```
 
@@ -704,10 +704,10 @@ cargo release major
 
 **Version bumping logic:**
 
-- `default`: Removes pre-release (0.1.0-pre -> 0.1.0)
-- `patch`: Bumps patch version (0.1.0 -> 0.1.1)
-- `minor`: Bumps minor version (0.1.0 -> 0.2.0)
-- `major`: Bumps major version (0.1.0 -> 1.0.0)
+- `default`: Removes pre-release (1.0.0-pre -> 1.0.0)
+- `patch`: Bumps patch version (1.0.0 -> 1.0.1)
+- `minor`: Bumps minor version (1.0.0 -> 1.1.0)
+- `major`: Bumps major version (1.0.0 -> 2.0.0)
 
 **Recent versions:** 0.25.18 (2025-04-09), 0.25.17 (2025-02-05)
 
@@ -725,7 +725,7 @@ cargo install git-cliff
 git cliff -o CHANGELOG.md
 
 # For specific range
-git cliff --tag v0.1.0..v0.2.0
+git cliff --tag v1.0.0..v1.1.0
 
 # With custom config
 git cliff --config cliff.toml

@@ -295,25 +295,6 @@ impl McpServerTrait for McpServer {
     }
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_server_status() {
-        let status = ServerStatus::Running;
-        let json = serde_json::to_string(&status).unwrap();
-        assert_eq!(json, "\"running\"");
-    }
-
-    #[test]
-    fn test_metrics_default() {
-        let metrics = ServerMetrics::default();
-        assert_eq!(metrics.requests_total, 0);
-        assert_eq!(metrics.errors_total, 0);
-    }
-}
-
 /// Server-side Stdio Transport (uses current process stdin/stdout)
 pub struct ServerStdioTransport {
     stdout: tokio::sync::Mutex<tokio::io::Stdout>,
@@ -461,4 +442,23 @@ pub async fn run_server() -> Result<()> {
     }
 
     Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_server_status() {
+        let status = ServerStatus::Running;
+        let json = serde_json::to_string(&status).unwrap();
+        assert_eq!(json, "\"running\"");
+    }
+
+    #[test]
+    fn test_metrics_default() {
+        let metrics = ServerMetrics::default();
+        assert_eq!(metrics.requests_total, 0);
+        assert_eq!(metrics.errors_total, 0);
+    }
 }

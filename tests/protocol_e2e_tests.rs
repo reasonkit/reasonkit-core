@@ -11,7 +11,7 @@
 //! - Token usage aggregation
 //! - Trace generation
 
-use reasonkit::thinktool::{ExecutorConfig, ProtocolExecutor, ProtocolInput, ProtocolOutput};
+use reasonkit::thinktool::{ExecutorConfig, ProtocolExecutor, ProtocolInput};
 
 // ═══════════════════════════════════════════════════════════════════════════
 // INDIVIDUAL PROTOCOL TESTS

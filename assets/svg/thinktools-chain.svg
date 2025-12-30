@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 250" fill="none">
+  <defs>
+    <linearGradient id="heroGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#06b6d4"/>
+      <stop offset="50%" stop-color="#a855f7"/>
+      <stop offset="100%" stop-color="#ec4899"/>
+    </linearGradient>
+    <marker id="arrowCyan" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#06b6d4"/>
+    </marker>
+    <filter id="softGlow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="2" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  <rect width="800" height="250" fill="#030508"/>
+
+  <text x="400" y="30" fill="#f9fafb" font-family="Inter, sans-serif" font-size="24" font-weight="700" text-anchor="middle">ThinkTools: Variance Reduction Chain</text>
+
+  <g transform="translate(30, 70)">
+    <rect width="120" height="100" rx="8" fill="#0a0d14" stroke="#06b6d4" stroke-width="2" filter="url(#softGlow)"/>
+    <text x="60" y="25" fill="#06b6d4" font-family="Inter, sans-serif" font-size="14" font-weight="700" text-anchor="middle">GigaThink 💡</text>
+    <text x="60" y="50" fill="#f9fafb" font-family="JetBrains Mono, monospace" font-size="12" text-anchor="middle">Diverge()</text>
+    <text x="60" y="75" fill="#9ca3af" font-family="Inter, sans-serif" font-size="10" text-anchor="middle">Explore widely</text>
+    <text x="60" y="90" fill="#06b6d4" font-family="JetBrains Mono, monospace" font-size="10" text-anchor="middle">Var: ~85%</text>
+  </g>
+
+  <line x1="150" y1="120" x2="180" y2="120" stroke="#06b6d4" stroke-width="2" marker-end="url(#arrowCyan)" transform="translate(30, 70)"/>
+
+  <g transform="translate(180, 70)">
+    <rect width="120" height="100" rx="8" fill="#0a0d14" stroke="#10b981" stroke-width="2"/>
+    <text x="60" y="25" fill="#10b981" font-family="Inter, sans-serif" font-size="14" font-weight="700" text-anchor="middle">LaserLogic ⚡</text>
+    <text x="60" y="50" fill="#f9fafb" font-family="JetBrains Mono, monospace" font-size="12" text-anchor="middle">Converge()</text>
+    <text x="60" y="75" fill="#9ca3af" font-family="Inter, sans-serif" font-size="10" text-anchor="middle">Logical validation</text>
+    <text x="60" y="90" fill="#10b981" font-family="JetBrains Mono, monospace" font-size="10" text-anchor="middle">Var: ~60%</text>
+  </g>
+
+  <line x1="150" y1="120" x2="180" y2="120" stroke="#10b981" stroke-width="2" marker-end="url(#arrowCyan)" transform="translate(180, 70)"/>
+
+  <g transform="translate(330, 70)">
+    <rect width="120" height="100" rx="8" fill="#0a0d14" stroke="#fbbf24" stroke-width="2"/>
+    <text x="60" y="25" fill="#fbbf24" font-family="Inter, sans-serif" font-size="14" font-weight="700" text-anchor="middle">BedRock 🪨</text>
+    <text x="60" y="50" fill="#f9fafb" font-family="JetBrains Mono, monospace" font-size="12" text-anchor="middle">Ground()</text>
+    <text x="60" y="75" fill="#9ca3af" font-family="Inter, sans-serif" font-size="10" text-anchor="middle">First principles</text>
+    <text x="60" y="90" fill="#fbbf24" font-family="JetBrains Mono, monospace" font-size="10" text-anchor="middle">Var: ~45%</text>
+  </g>
+
+  <line x1="150" y1="120" x2="180" y2="120" stroke="#fbbf24" stroke-width="2" marker-end="url(#arrowCyan)" transform="translate(330, 70)"/>
+
+  <g transform="translate(480, 70)">
+    <rect width="120" height="100" rx="8" fill="#0a0d14" stroke="#a855f7" stroke-width="2"/>
+    <text x="60" y="25" fill="#a855f7" font-family="Inter, sans-serif" font-size="14" font-weight="700" text-anchor="middle">ProofGuard 🛡️</text>
+    <text x="60" y="50" fill="#f9fafb" font-family="JetBrains Mono, monospace" font-size="12" text-anchor="middle">Verify()</text>
+    <text x="60" y="75" fill="#9ca3af" font-family="Inter, sans-serif" font-size="10" text-anchor="middle">Triangulation</text>
+    <text x="60" y="90" fill="#a855f7" font-family="JetBrains Mono, monospace" font-size="10" text-anchor="middle">Var: ~35%</text>
+  </g>
+
+  <line x1="150" y1="120" x2="180" y2="120" stroke="#a855f7" stroke-width="2" marker-end="url(#arrowCyan)" transform="translate(480, 70)"/>
+
+  <g transform="translate(630, 70)">
+    <rect width="120" height="100" rx="8" fill="#0a0d14" stroke="#f97316" stroke-width="2"/>
+    <text x="60" y="25" fill="#f97316" font-family="Inter, sans-serif" font-size="14" font-weight="700" text-anchor="middle">BrutalHonesty 🔥</text>
+    <text x="60" y="50" fill="#f9fafb" font-family="JetBrains Mono, monospace" font-size="12" text-anchor="middle">Critique()</text>
+    <text x="60" y="75" fill="#9ca3af" font-family="Inter, sans-serif" font-size="10" text-anchor="middle">Adversarial</text>
+    <text x="60" y="90" fill="#f97316" font-family="JetBrains Mono, monospace" font-size="10" text-anchor="middle">Var: ~28%</text>
+  </g>
+
+  <g transform="translate(760, 120)">
+    <circle cx="0" cy="0" r="15" fill="#10b981" filter="url(#softGlow)"/>
+    <text x="25" y="5" fill="#f9fafb" font-family="JetBrains Mono, monospace" font-size="12">Deterministic Output</text>
+  </g>
+  
+  <line x1="0" y1="200" x2="800" y2="200" stroke="#1f2937" stroke-width="1"/>
+  <text x="400" y="230" fill="#9ca3af" font-family="JetBrains Mono, monospace" font-size="12" text-anchor="middle">Raw LLM Variance (~85%) → Protocol-Constrained Variance (~28%)</text>
+</svg>
+

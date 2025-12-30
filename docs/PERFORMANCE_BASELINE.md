@@ -396,4 +396,4 @@ ReasonKit Core meets its performance targets for all local operations. The prima
 ---
 
 _Document generated: 2025-12-28_
-_ReasonKit Core v0.1.0_
+_ReasonKit Core v1.0.0_

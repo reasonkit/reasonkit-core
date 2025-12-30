@@ -1,4 +1,4 @@
-# ReasonKit v0.1.0 Release Notes
+# ReasonKit v1.0.0 Release Notes
 
 > **"From Prompt to Protocol"**
 

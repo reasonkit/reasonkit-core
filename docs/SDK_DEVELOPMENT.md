@@ -4,7 +4,7 @@
 
 **Version:** 1.0.0
 **Last Updated:** 2025-12-28
-**Core Version Compatibility:** reasonkit-core v0.1.0+
+**Core Version Compatibility:** reasonkit-core v1.0.0+
 **License:** Apache 2.0
 
 ---
@@ -70,7 +70,7 @@ This guide defines the strategy, architecture, and implementation details for Re
 
 | Priority | Language           | Binding Technology | Target Audience               | Timeline |
 | -------- | ------------------ | ------------------ | ----------------------------- | -------- |
-| **P0**   | Python             | PyO3               | Data Scientists, ML Engineers | v0.1.0   |
+| **P0**   | Python             | PyO3               | Data Scientists, ML Engineers | v1.0.0   |
 | **P1**   | Node.js/TypeScript | napi-rs            | Web Developers, Full-Stack    | v0.2.0   |
 | **P2**   | Go                 | cgo                | Backend Engineers, DevOps     | v0.3.0   |
 | **P3**   | Ruby               | rb-sys (future)    | Web Developers                | v0.5.0+  |
@@ -449,7 +449,7 @@ build-backend = "maturin"
 
 [project]
 name = "reasonkit"
-version = "0.1.0"
+version = "1.0.0"
 description = "Structured AI reasoning framework - Turn Prompts into Protocols"
 readme = "README.md"
 license = { text = "Apache-2.0" }
@@ -482,7 +482,7 @@ dev = [
     "pytest-asyncio>=0.21.0",
     "pytest-cov>=4.0.0",
     "mypy>=1.0.0",
-    "ruff>=0.1.0",
+    "ruff>=1.0.0",
     "maturin>=1.4.0",
 ]
 docs = [
@@ -659,7 +659,7 @@ for await (const event of rk.thinkStream({
 ```toml
 [package]
 name = "reasonkit-node-native"
-version = "0.1.0"
+version = "1.0.0"
 edition = "2021"
 
 [lib]
@@ -827,7 +827,7 @@ export interface StreamEvent {
 ```json
 {
   "name": "@reasonkit/core",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Structured AI reasoning framework - Turn Prompts into Protocols",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -1954,8 +1954,8 @@ jobs:
 go mod init github.com/reasonkit/reasonkit-go
 
 # Tag release
-git tag v0.1.0
-git push origin v0.1.0
+git tag v1.0.0
+git push origin v1.0.0
 
 # pkg.go.dev automatically indexes tagged releases
 ```
@@ -1963,10 +1963,10 @@ git push origin v0.1.0
 #### Publishing Process
 
 1. Ensure `go.mod` has correct module path
-2. Create annotated tag: `git tag -a v0.1.0 -m "Release v0.1.0"`
-3. Push tag: `git push origin v0.1.0`
+2. Create annotated tag: `git tag -a v1.0.0 -m "Release v1.0.0"`
+3. Push tag: `git push origin v1.0.0`
 4. pkg.go.dev auto-indexes within ~1 hour
-5. Verify at: `https://pkg.go.dev/github.com/reasonkit/reasonkit-go@v0.1.0`
+5. Verify at: `https://pkg.go.dev/github.com/reasonkit/reasonkit-go@v1.0.0`
 
 ---
 
@@ -1988,10 +1988,10 @@ PATCH: Bug fixes (backward compatible)
 
 | Component             | Version Format        | Example                                    |
 | --------------------- | --------------------- | ------------------------------------------ |
-| reasonkit-core (Rust) | `v0.1.0`              | `v0.1.0`                                   |
-| Python SDK            | `0.1.0` (PyPI)        | `reasonkit==0.1.0`                         |
-| Node.js SDK           | `0.1.0` (npm)         | `@reasonkit/core@0.1.0`                    |
-| Go SDK                | `v0.1.0` (Go modules) | `github.com/reasonkit/reasonkit-go@v0.1.0` |
+| reasonkit-core (Rust) | `v1.0.0`              | `v1.0.0`                                   |
+| Python SDK            | `1.0.0` (PyPI)        | `reasonkit==1.0.0`                         |
+| Node.js SDK           | `1.0.0` (npm)         | `@reasonkit/core@1.0.0`                    |
+| Go SDK                | `v1.0.0` (Go modules) | `github.com/reasonkit/reasonkit-go@v1.0.0` |
 
 ### Compatibility Matrix
 

@@ -70,7 +70,7 @@ cargo add reasonkit-core
 
 ```toml
 [dependencies]
-reasonkit-core = { version = "0.1.0", features = ["local-embeddings"] }
+reasonkit-core = { version = "1.0.0", features = ["local-embeddings"] }
 ```
 
 Available features:
@@ -1051,4 +1051,4 @@ Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for gui
 ---
 
 **Generated:** 2025-12-23
-**ReasonKit Core Version:** 0.1.0
+**ReasonKit Core Version:** 1.0.0

@@ -332,7 +332,7 @@ All telemetry events share a common envelope:
 
   "source": {
     "product": "reasonkit-core",
-    "version": "0.1.0",
+    "version": "1.0.0",
     "tier": "oss",
     "os": "linux",
     "arch": "x86_64",

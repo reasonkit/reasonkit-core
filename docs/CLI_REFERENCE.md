@@ -2,8 +2,20 @@
 
 > Quick reference guide for the `rk-core` command-line interface
 
-**Version:** 0.1.0
+**Version:** 1.0.0
 **License:** Apache 2.0
+
+---
+
+## Status
+
+Implemented:
+- `mcp`
+- `serve-mcp`
+- `completions`
+
+Planned (scaffolded; returns "not implemented" in v1.0.0):
+- `ingest`, `query`, `think`, `index`, `stats`, `export`, `serve`, `web`, `verify`, `trace`, `rag`, `metrics`
 
 ---
 
@@ -41,20 +53,20 @@ OPTIONS:
 
 ```bash
 # Debug logging
-rk-core -vv query "quantum computing"
+rk-core -vv mcp list-servers
 
 # Custom data directory
-rk-core -d /mnt/data/reasonkit query "machine learning"
+rk-core -d /mnt/data/reasonkit mcp list-tools
 
 # Use config file
-rk-core -c ~/.reasonkit/config.toml stats
+rk-core -c ~/.reasonkit/config.toml mcp list-prompts
 ```
 
 ---
 
 ## Commands
 
-### 1. ingest - Ingest Documents
+### 1. ingest - Ingest Documents (planned)
 
 Ingest documents (PDF, Markdown, HTML, JSON) into the knowledge base.
 
@@ -111,7 +123,7 @@ Total: 1 document, 42 chunks
 
 ---
 
-### 2. query - Search Knowledge Base
+### 2. query - Search Knowledge Base (planned)
 
 Search the knowledge base using semantic (vector) or hybrid (vector + BM25) search.
 
@@ -198,7 +210,7 @@ complex multi-step reasoning when prompted to "think step by step."
 
 ---
 
-### 3. think - Execute ThinkTool Protocols
+### 3. think - Execute ThinkTool Protocols (planned)
 
 Execute structured reasoning protocols using LLMs.
 
@@ -363,7 +375,7 @@ Execution Summary:
 
 ---
 
-### 4. index - Manage Index
+### 4. index - Manage Index (planned)
 
 Manage BM25 and vector indexes.
 
@@ -418,7 +430,7 @@ Last rebuild: 2025-12-23 01:15:22 UTC
 
 ---
 
-### 5. stats - Knowledge Base Statistics
+### 5. stats - Knowledge Base Statistics (planned)
 
 Display comprehensive statistics about the knowledge base.
 
@@ -493,7 +505,7 @@ Last updated: 2025-12-23 01:30:45 UTC
 
 ---
 
-### 6. export - Export Data
+### 6. export - Export Data (planned)
 
 Export documents and metadata to JSON or JSONL format.
 
@@ -551,7 +563,7 @@ rk-core export documents.jsonl | gzip > documents.jsonl.gz
 
 ---
 
-### 7. serve - Start API Server
+### 7. serve - Start API Server (planned)
 
 Start HTTP API server for programmatic access.
 
@@ -587,7 +599,7 @@ rk-core -vv serve
 ```
 ReasonKit Core API Server
 ═══════════════════════════════════════
-Version: 0.1.0
+Version: 1.0.0
 Listening on: http://127.0.0.1:8080
 
 Endpoints:
@@ -606,7 +618,7 @@ Press Ctrl+C to stop
 
 ```bash
 curl http://localhost:8080/health
-# {"status": "ok", "version": "0.1.0"}
+# {"status": "ok", "version": "1.0.0"}
 ```
 
 **Query**
@@ -868,4 +880,4 @@ rk-core think "query" --protocol laserlogic --provider groq
 ---
 
 **Last Updated:** 2025-12-23
-**Version:** 0.1.0
+**Version:** 1.0.0

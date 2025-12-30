@@ -476,7 +476,7 @@ system:
   os: "Ubuntu 22.04"
 
 software:
-  reasonkit_version: "0.1.0"
+  reasonkit_version: "1.0.0"
   reasonkit_commit: "abc123"
   rust_version: "1.74.0"
   langchain_version: "0.2.16"
@@ -639,7 +639,7 @@ cargo build --release
 ### Metadata
 
 - Date: 2025-01-15
-- ReasonKit: 0.1.0 (commit abc123)
+- ReasonKit: 1.0.0 (commit abc123)
 - LangChain: 0.2.16
 - Methodology: Standard (100 iterations, 3 warmup, mock LLM)
 
@@ -798,4 +798,4 @@ A: Yes! Follow the same methodology. We welcome community benchmarks against any
 
 _"Trust, but verify." -- This document exists so you can verify._
 
-_Last updated: 2025-12-28 | ReasonKit Core v0.1.0_
+_Last updated: 2025-12-28 | ReasonKit Core v1.0.0_

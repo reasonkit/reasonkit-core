@@ -1,6 +1,6 @@
 # ReasonKit Core API Reference
 
-**Version:** 0.1.0
+**Version:** 1.0.0
 **License:** Apache 2.0
 **Website:** https://reasonkit.sh
 
@@ -1015,7 +1015,7 @@ Add to Claude Desktop configuration (`~/.config/claude/claude_desktop_config.jso
     },
     "serverInfo": {
       "name": "reasonkit-core",
-      "version": "0.1.0"
+      "version": "1.0.0"
     }
   }
 }
@@ -1526,7 +1526,7 @@ rk-core think --list
 
 ---
 
-**Version:** 0.1.0
+**Version:** 1.0.0
 **Last Updated:** December 2025
 **License:** Apache 2.0
 **Website:** https://reasonkit.sh

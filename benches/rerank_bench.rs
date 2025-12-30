@@ -112,8 +112,10 @@ fn bench_rerank_configs(c: &mut Criterion) {
     });
 
     // With score threshold
-    let mut threshold_config = RerankerConfig::default();
-    threshold_config.score_threshold = Some(0.3);
+    let threshold_config = RerankerConfig {
+        score_threshold: Some(0.3),
+        ..Default::default()
+    };
     let threshold_reranker = Reranker::new(threshold_config);
     group.bench_function("with_threshold", |b| {
         b.to_async(&rt).iter(|| async {

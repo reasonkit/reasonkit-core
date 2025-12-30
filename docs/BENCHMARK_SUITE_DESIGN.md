@@ -818,7 +818,7 @@ reproducibility:
   # Environment specification
   environment:
     rust_version: "1.83.0"
-    reasonkit_version: "0.1.0"
+    reasonkit_version: "1.0.0"
     reasonkit_commit: "abc123def456"
     os: "Linux 6.12.57"
 
@@ -1127,7 +1127,7 @@ $ rk-core benchmark gsm8k --samples 100 --profiles baseline,balanced
   "benchmark_run": {
     "id": "run_20251228_143022",
     "timestamp": "2025-12-28T14:30:22Z",
-    "reasonkit_version": "0.1.0",
+    "reasonkit_version": "1.0.0",
     "commit": "abc123"
   },
   "benchmarks": [

@@ -719,7 +719,7 @@ Debug info:
 
   System info:
     - OS: linux x86_64
-    - ReasonKit version: 0.1.0
+    - ReasonKit version: 1.0.0
     - Rust version: 1.75.0
 
 How to fix:

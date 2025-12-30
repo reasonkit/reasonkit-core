@@ -3,7 +3,7 @@
 ## Rust-First RAG/Vector System for AI Reasoning Enhancement
 
 > **STATUS**: DESIGN DRAFT - LOCAL ONLY (Not yet on GitHub)
-> **VERSION**: 0.1.0
+> **VERSION**: 1.0.0
 > **DATE**: 2025-12-11
 
 ---
@@ -379,7 +379,7 @@ data/
 ```toml
 [package]
 name = "reasonkit-core"
-version = "0.1.0"
+version = "1.0.0"
 edition = "2024"
 
 [dependencies]

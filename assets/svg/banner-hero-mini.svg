@@ -1,0 +1,104 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 200" fill="none">
+  <defs>
+    <!-- ═══════════════════════════════════════════════════════════════════════
+         REASONKIT BRAND-COMPLIANT SVG DEFINITIONS
+         Source: /docs/SVG_BRAND_SPECIFICATION.md v1.0.0
+         ═══════════════════════════════════════════════════════════════════════ -->
+
+    <!-- Background Gradient -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#0a0d14"/>
+      <stop offset="50%" stop-color="#030508"/>
+      <stop offset="100%" stop-color="#030508"/>
+    </linearGradient>
+
+    <!-- Hero Gradient: Cyan → Purple → Pink -->
+    <linearGradient id="heroGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#06b6d4"/>
+      <stop offset="50%" stop-color="#a855f7"/>
+      <stop offset="100%" stop-color="#ec4899"/>
+    </linearGradient>
+
+    <!-- Cyan / Green / Orange gradients -->
+    <linearGradient id="cyanGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#06b6d4"/>
+      <stop offset="100%" stop-color="#0891b2"/>
+    </linearGradient>
+    <linearGradient id="greenGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#10b981"/>
+      <stop offset="100%" stop-color="#059669"/>
+    </linearGradient>
+    <linearGradient id="orangeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f97316"/>
+      <stop offset="100%" stop-color="#ea580c"/>
+    </linearGradient>
+
+    <!-- Soft Glow -->
+    <filter id="softGlow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="2" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="820" height="200" rx="20" fill="url(#bgGrad)"/>
+
+  <!-- Subtle circuit grid -->
+  <g opacity="0.15" stroke="#06b6d4" stroke-width="0.3">
+    <path d="M40 40 H780 M40 100 H780 M40 160 H780" opacity="0.25"/>
+    <path d="M100 20 V180 M260 20 V180 M420 20 V180 M580 20 V180 M740 20 V180" opacity="0.18"/>
+    <circle cx="110" cy="60" r="2" fill="#06b6d4" opacity="0.35"/>
+    <circle cx="710" cy="140" r="2" fill="#06b6d4" opacity="0.25"/>
+  </g>
+
+  <!-- Crystalline core icon -->
+  <g transform="translate(120,100)">
+    <circle r="54" fill="#030508" stroke="url(#heroGrad)" stroke-width="2.5" filter="url(#softGlow)"/>
+    <polygon points="-32,0 0,-44 32,0 0,44" fill="url(#heroGrad)" opacity="0.95"/>
+    <polygon points="-32,0 0,-18 32,0 0,18" fill="#030508" opacity="0.85"/>
+    <polygon points="0,-44 18,-8 0,8 -18,-8" fill="url(#cyanGrad)" opacity="0.9"/>
+    <polygon points="-18,8 0,44 18,8 0,-8" fill="url(#greenGrad)" opacity="0.9"/>
+  </g>
+
+  <!-- Main title -->
+  <text x="230" y="88"
+        font-family="Inter, -apple-system, BlinkMacSystemFont, sans-serif"
+        font-weight="700"
+        font-size="36"
+        letter-spacing="1"
+        fill="#f9fafb">
+    ReasonKit Core
+  </text>
+
+  <!-- Tagline -->
+  <text x="230" y="118"
+        font-family="Inter, -apple-system, BlinkMacSystemFont, sans-serif"
+        font-weight="500"
+        font-size="16"
+        fill="#9ca3af">
+    Turn Prompts into Protocols · Designed, Not Dreamed
+  </text>
+
+  <!-- Rust / Zero-Trust badges -->
+  <g font-family="JetBrains Mono, SF Mono, Consolas, monospace"
+     font-size="12" text-anchor="middle">
+
+    <!-- Rust-native -->
+    <g transform="translate(360,152)">
+      <rect x="-70" y="-14" width="140" height="28" rx="14"
+            fill="#111827" stroke="#06b6d4" stroke-width="1.2"/>
+      <text y="4" fill="#06b6d4">RUST-NATIVE CORE</text>
+    </g>
+
+    <!-- Zero-trust logic -->
+    <g transform="translate(560,152)">
+      <rect x="-82" y="-14" width="164" height="28" rx="14"
+            fill="#111827" stroke="#10b981" stroke-width="1.2"/>
+      <text y="4" fill="#10b981">ZERO-TRUST LOGIC LAYERS</text>
+    </g>
+  </g>
+</svg>
+

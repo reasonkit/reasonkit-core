@@ -42,7 +42,7 @@ fn chunk_fixed_size(text: &str, chunk_size: usize, overlap: usize) -> Vec<String
 /// Semantic chunking (sentence-based)
 fn chunk_by_sentences(text: &str, max_chunk_size: usize) -> Vec<String> {
     let sentences: Vec<&str> = text
-        .split(|c| c == '.' || c == '!' || c == '?')
+        .split(|c| ['.', '!', '?'].contains(&c))
         .filter(|s| !s.trim().is_empty())
         .collect();
 

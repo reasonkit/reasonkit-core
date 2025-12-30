@@ -1,0 +1,144 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 700" fill="none">
+  <defs>
+    <!-- ═══════════════════════════════════════════════════════════════════════
+         REASONKIT BRAND-COMPLIANT SVG DEFINITIONS
+         Source: /docs/SVG_BRAND_SPECIFICATION.md v1.0.0
+         ═══════════════════════════════════════════════════════════════════════ -->
+    
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#0a0d14"/>
+      <stop offset="100%" stop-color="#030508"/>
+    </linearGradient>
+    
+    <linearGradient id="terminalGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#111827"/>
+      <stop offset="100%" stop-color="#0a0d14"/>
+    </linearGradient>
+    
+    <linearGradient id="headerGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#1f2937"/>
+      <stop offset="100%" stop-color="#111827"/>
+    </linearGradient>
+    
+    <filter id="cardShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="8" stdDeviation="16" flood-color="#000" flood-opacity="0.5"/>
+    </filter>
+    
+    <filter id="softGlow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="1.5" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="900" height="700" fill="url(#bgGrad)"/>
+  
+  <!-- Terminal window -->
+  <g transform="translate(50, 40)" filter="url(#cardShadow)">
+    <!-- Window frame -->
+    <rect x="0" y="0" width="800" height="620" rx="12" fill="url(#terminalGrad)" stroke="#1f2937" stroke-width="1"/>
+    
+    <!-- Title bar -->
+    <rect x="0" y="0" width="800" height="40" rx="12" fill="url(#headerGrad)"/>
+    <rect x="0" y="28" width="800" height="12" fill="url(#headerGrad)"/>
+    
+    <!-- Window controls -->
+    <circle cx="20" cy="20" r="6" fill="#ef4444"/>
+    <circle cx="44" cy="20" r="6" fill="#fbbf24"/>
+    <circle cx="68" cy="20" r="6" fill="#10b981"/>
+    
+    <!-- Title -->
+    <text x="400" y="26" fill="#9ca3af" font-family="JetBrains Mono, SF Mono, monospace" font-size="12" text-anchor="middle">rk-core — reasonkit v1.0.0</text>
+    
+    <!-- Terminal content -->
+    <g transform="translate(20, 55)">
+      <!-- Command line -->
+      <text x="0" y="15" fill="#10b981" font-family="JetBrains Mono, SF Mono, monospace" font-size="13">❯</text>
+      <text x="20" y="15" fill="#f9fafb" font-family="JetBrains Mono, SF Mono, monospace" font-size="13">rk-core think --profile balanced "Should we migrate to microservices?"</text>
+      
+      <!-- Separator -->
+      <text x="0" y="45" fill="#4b5563" font-family="JetBrains Mono, SF Mono, monospace" font-size="12">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</text>
+      
+      <!-- Chain header -->
+      <text x="0" y="70" fill="#9ca3af" font-family="JetBrains Mono, SF Mono, monospace" font-size="12">ThinkTool Chain:</text>
+      <text x="130" y="70" fill="#06b6d4" font-family="JetBrains Mono, SF Mono, monospace" font-size="12">GigaThink</text>
+      <text x="215" y="70" fill="#4b5563" font-family="JetBrains Mono, SF Mono, monospace" font-size="12">→</text>
+      <text x="235" y="70" fill="#10b981" font-family="JetBrains Mono, SF Mono, monospace" font-size="12">LaserLogic</text>
+      <text x="325" y="70" fill="#4b5563" font-family="JetBrains Mono, SF Mono, monospace" font-size="12">→</text>
+      <text x="345" y="70" fill="#fbbf24" font-family="JetBrains Mono, SF Mono, monospace" font-size="12">BedRock</text>
+      <text x="420" y="70" fill="#4b5563" font-family="JetBrains Mono, SF Mono, monospace" font-size="12">→</text>
+      <text x="440" y="70" fill="#a855f7" font-family="JetBrains Mono, SF Mono, monospace" font-size="12">ProofGuard</text>
+      
+      <!-- Variance line -->
+      <text x="0" y="95" fill="#9ca3af" font-family="JetBrains Mono, SF Mono, monospace" font-size="12">Variance Reduction:</text>
+      <text x="160" y="95" fill="#f97316" font-family="JetBrains Mono, SF Mono, monospace" font-size="12">85%</text>
+      <text x="200" y="95" fill="#4b5563" font-family="JetBrains Mono, SF Mono, monospace" font-size="12">→</text>
+      <text x="220" y="95" fill="#06b6d4" font-family="JetBrains Mono, SF Mono, monospace" font-size="12">72%</text>
+      <text x="255" y="95" fill="#4b5563" font-family="JetBrains Mono, SF Mono, monospace" font-size="12">→</text>
+      <text x="275" y="95" fill="#10b981" font-family="JetBrains Mono, SF Mono, monospace" font-size="12">58%</text>
+      <text x="310" y="95" fill="#4b5563" font-family="JetBrains Mono, SF Mono, monospace" font-size="12">→</text>
+      <text x="330" y="95" fill="#fbbf24" font-family="JetBrains Mono, SF Mono, monospace" font-size="12">42%</text>
+      <text x="365" y="95" fill="#4b5563" font-family="JetBrains Mono, SF Mono, monospace" font-size="12">→</text>
+      <text x="385" y="95" fill="#a855f7" font-family="JetBrains Mono, SF Mono, monospace" font-size="12" font-weight="600">28%</text>
+      
+      <!-- Blank line -->
+      
+      <!-- GigaThink output -->
+      <text x="0" y="130" fill="#06b6d4" font-family="JetBrains Mono, SF Mono, monospace" font-size="12" font-weight="600">[GigaThink]</text>
+      <text x="100" y="130" fill="#f9fafb" font-family="JetBrains Mono, SF Mono, monospace" font-size="12">10 PERSPECTIVES GENERATED</text>
+      <text x="340" y="130" fill="#6b7280" font-family="JetBrains Mono, SF Mono, monospace" font-size="11">(Variance: 85%)</text>
+      
+      <text x="20" y="150" fill="#9ca3af" font-family="JetBrains Mono, SF Mono, monospace" font-size="11">1. OPERATIONAL: Maintenance overhead +40% initially</text>
+      <text x="20" y="168" fill="#9ca3af" font-family="JetBrains Mono, SF Mono, monospace" font-size="11">2. TEAM TOPOLOGY: Conway's Law - do we have the teams?</text>
+      <text x="20" y="186" fill="#9ca3af" font-family="JetBrains Mono, SF Mono, monospace" font-size="11">3. COST ANALYSIS: Infrastructure scales non-linearly</text>
+      <text x="20" y="204" fill="#6b7280" font-family="JetBrains Mono, SF Mono, monospace" font-size="11">...</text>
+      <text x="20" y="222" fill="#06b6d4" font-family="JetBrains Mono, SF Mono, monospace" font-size="11">Variance after exploration: 72% (-13%)</text>
+      
+      <!-- LaserLogic output -->
+      <text x="0" y="252" fill="#10b981" font-family="JetBrains Mono, SF Mono, monospace" font-size="12" font-weight="600">[LaserLogic]</text>
+      <text x="105" y="252" fill="#f9fafb" font-family="JetBrains Mono, SF Mono, monospace" font-size="12">HIDDEN ASSUMPTIONS DETECTED</text>
+      <text x="370" y="252" fill="#6b7280" font-family="JetBrains Mono, SF Mono, monospace" font-size="11">(Variance: 72%)</text>
+      
+      <text x="20" y="272" fill="#f97316" font-family="JetBrains Mono, SF Mono, monospace" font-size="11">⚠ Assuming network latency is negligible (Fallacy: Distributed Computing)</text>
+      <text x="20" y="290" fill="#f97316" font-family="JetBrains Mono, SF Mono, monospace" font-size="11">⚠ Assuming team has distributed tracing expertise</text>
+      <text x="20" y="308" fill="#f97316" font-family="JetBrains Mono, SF Mono, monospace" font-size="11">⚠ Logical gap: No evidence microservices solve stated problem</text>
+      <text x="20" y="326" fill="#10b981" font-family="JetBrains Mono, SF Mono, monospace" font-size="11">Variance after validation: 58% (-14%)</text>
+      
+      <!-- BedRock output -->
+      <text x="0" y="356" fill="#fbbf24" font-family="JetBrains Mono, SF Mono, monospace" font-size="12" font-weight="600">[BedRock]</text>
+      <text x="85" y="356" fill="#f9fafb" font-family="JetBrains Mono, SF Mono, monospace" font-size="12">FIRST PRINCIPLES DECOMPOSITION</text>
+      <text x="375" y="356" fill="#6b7280" font-family="JetBrains Mono, SF Mono, monospace" font-size="11">(Variance: 58%)</text>
+      
+      <text x="20" y="376" fill="#9ca3af" font-family="JetBrains Mono, SF Mono, monospace" font-size="11">• Axiom: Monoliths are simpler to reason about (empirical)</text>
+      <text x="20" y="394" fill="#9ca3af" font-family="JetBrains Mono, SF Mono, monospace" font-size="11">• Axiom: Distributed systems introduce partitions (CAP theorem)</text>
+      <text x="20" y="412" fill="#f97316" font-family="JetBrains Mono, SF Mono, monospace" font-size="11">• Gap: Cannot prove maintainability improvement without data</text>
+      <text x="20" y="430" fill="#fbbf24" font-family="JetBrains Mono, SF Mono, monospace" font-size="11">Variance after grounding: 42% (-16%)</text>
+      
+      <!-- ProofGuard output -->
+      <text x="0" y="460" fill="#a855f7" font-family="JetBrains Mono, SF Mono, monospace" font-size="12" font-weight="600">[ProofGuard]</text>
+      <text x="100" y="460" fill="#f9fafb" font-family="JetBrains Mono, SF Mono, monospace" font-size="12">TRIANGULATION RESULT</text>
+      <text x="310" y="460" fill="#6b7280" font-family="JetBrains Mono, SF Mono, monospace" font-size="11">(Variance: 42%)</text>
+      
+      <text x="20" y="480" fill="#9ca3af" font-family="JetBrains Mono, SF Mono, monospace" font-size="11">• 3/5 sources: Microservices increase complexity initially</text>
+      <text x="20" y="498" fill="#9ca3af" font-family="JetBrains Mono, SF Mono, monospace" font-size="11">• 2/5 sources: Some teams report success</text>
+      <text x="20" y="516" fill="#fbbf24" font-family="JetBrains Mono, SF Mono, monospace" font-size="11">• Confidence: 0.72 (MEDIUM) - Mixed evidence</text>
+      <text x="20" y="534" fill="#a855f7" font-family="JetBrains Mono, SF Mono, monospace" font-size="11">Variance after verification: 28% (-14%)</text>
+      
+      <!-- Final verdict -->
+      <text x="0" y="564" fill="#4b5563" font-family="JetBrains Mono, SF Mono, monospace" font-size="12">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</text>
+    </g>
+  </g>
+  
+  <!-- Verdict badge (floating) -->
+  <g transform="translate(750, 595)">
+    <rect x="-85" y="-28" width="170" height="56" rx="8" fill="#111827" stroke="#10b981" stroke-width="2" filter="url(#cardShadow)"/>
+    <text x="0" y="-8" fill="#10b981" font-family="JetBrains Mono, SF Mono, monospace" font-size="10" text-anchor="middle" font-weight="600">✓ VERDICT</text>
+    <text x="0" y="12" fill="#f9fafb" font-family="Inter, -apple-system, sans-serif" font-size="14" text-anchor="middle" font-weight="700">87% Confidence</text>
+  </g>
+  
+  <!-- Footer tagline -->
+  <text x="450" y="685" fill="#6b7280" font-family="JetBrains Mono, SF Mono, monospace" font-size="10" text-anchor="middle">Probabilistic Input → Deterministic Protocol → Auditable Output</text>
+</svg>

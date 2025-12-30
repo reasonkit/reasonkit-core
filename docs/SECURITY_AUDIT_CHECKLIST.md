@@ -1,6 +1,6 @@
 # ReasonKit Core - Pre-Launch Security Audit Checklist
 
-> Security Audit Report for ReasonKit Core v0.1.0
+> Security Audit Report for ReasonKit Core v1.0.0
 > License: Apache 2.0 (Open Source)
 > Target Audience: Enterprise AI Engineers
 > Audit Date: 2025-12-28
@@ -528,7 +528,7 @@ We currently do not offer a bug bounty program.
 ```
 Auditor: Claude Code (Security Specialist Agent)
 Date: 2025-12-28
-Version Audited: reasonkit-core v0.1.0
+Version Audited: reasonkit-core v1.0.0
 Commit: [current HEAD]
 Status: CONDITIONAL PASS
 Condition: Must complete "Critical Actions Before Launch"

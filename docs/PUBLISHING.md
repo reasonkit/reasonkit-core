@@ -7,7 +7,7 @@ This document provides a comprehensive checklist for publishing `reasonkit-core`
 ### 1. Package Metadata (Cargo.toml)
 
 - [x] **name**: `reasonkit-core` (unique on crates.io)
-- [x] **version**: `0.1.0` (follows semantic versioning)
+- [x] **version**: `1.0.0` (follows semantic versioning)
 - [x] **edition**: `2021` (current Rust edition)
 - [x] **rust-version**: `1.70` (minimum supported Rust version)
 - [x] **authors**: `ReasonKit Team <hello@reasonkit.sh>`
@@ -94,7 +94,7 @@ cargo publish --dry-run
 cargo package --list | less
 
 # Check package size
-ls -lh target/package/reasonkit-core-0.1.0.crate
+ls -lh target/package/reasonkit-core-1.0.0.crate
 ```
 
 ### Pre-Publish Checks
@@ -122,10 +122,10 @@ rk-core --help
 
 ```bash
 # Create annotated tag for version
-git tag -a v0.1.0 -m "Release version 0.1.0"
+git tag -a v1.0.0 -m "Release version 1.0.0"
 
 # Push tag to remote
-git push origin v0.1.0
+git push origin v1.0.0
 ```
 
 ### Actual Publishing
@@ -182,13 +182,13 @@ pre-release-replacements = [
 Then use:
 
 ```bash
-# Patch version (0.1.0 -> 0.1.1)
+# Patch version (1.0.0 -> 0.1.1)
 cargo release patch
 
-# Minor version (0.1.0 -> 0.2.0)
+# Minor version (1.0.0 -> 0.2.0)
 cargo release minor
 
-# Major version (0.1.0 -> 1.0.0)
+# Major version (1.0.0 -> 2.0.0)
 cargo release major
 ```
 
@@ -267,7 +267,7 @@ cargo deny check
 
 Follow Semantic Versioning (SemVer):
 
-- **0.1.0**: Initial development release
+- **1.0.0**: Initial development release
 - **0.x.y**: Pre-1.0 versions (breaking changes allowed in minor)
 - **1.0.0**: First stable release (API stability commitment)
 - **x.y.z**: Major.Minor.Patch
@@ -280,7 +280,7 @@ Follow Semantic Versioning (SemVer):
 When publishing, prepare release notes:
 
 ````markdown
-# reasonkit-core v0.1.0
+# reasonkit-core v1.0.0
 
 ## Features
 

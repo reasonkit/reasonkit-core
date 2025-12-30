@@ -637,7 +637,7 @@ All events share a common envelope for cloud sync:
   "event_type": "query|feedback|trace|tool|billing",
   "timestamp": "2025-12-28T10:30:00.000Z",
   "source": {
-    "client_version": "0.1.0",
+    "client_version": "1.0.0",
     "client_id_hash": "sha256-hash-of-installation-id",
     "tier": "pro",
     "os_family": "linux"

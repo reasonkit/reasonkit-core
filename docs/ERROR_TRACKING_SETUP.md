@@ -1485,7 +1485,7 @@ Every error report MUST include:
 /// Minimum required error context
 pub struct RequiredContext {
     // Application Info
-    pub reasonkit_version: String,      // e.g., "0.1.0"
+    pub reasonkit_version: String,      // e.g., "1.0.0"
     pub build_timestamp: String,        // Build time
     pub git_commit: String,             // Short SHA
 

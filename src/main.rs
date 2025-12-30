@@ -511,6 +511,12 @@ async fn initialize_telemetry_if_enabled() -> anyhow::Result<()> {
     Ok(())
 }
 
+fn unimplemented_command(name: &str) -> anyhow::Result<()> {
+    anyhow::bail!(
+        "{name} command is not implemented in this release. See the CLI reference for status."
+    )
+}
+
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
     let cli = Cli::parse();
@@ -537,56 +543,55 @@ async fn main() -> anyhow::Result<()> {
 
         #[cfg(feature = "memory")]
         Commands::Ingest { .. } => {
-            // Implementation omitted for brevity in restoration
-            println!("Ingest command placeholder");
+            return unimplemented_command("ingest");
         }
 
         #[cfg(feature = "memory")]
         Commands::Query { .. } => {
-            println!("Query command placeholder");
+            return unimplemented_command("query");
         }
 
         #[cfg(feature = "memory")]
         Commands::Index { .. } => {
-            println!("Index command placeholder");
+            return unimplemented_command("index");
         }
 
         Commands::Stats => {
-            println!("Stats command placeholder");
+            return unimplemented_command("stats");
         }
 
         #[cfg(feature = "memory")]
         Commands::Export { .. } => {
-            println!("Export command placeholder");
+            return unimplemented_command("export");
         }
 
         Commands::Serve { .. } => {
-            println!("Serve command placeholder");
+            return unimplemented_command("serve");
         }
 
         Commands::Think { .. } => {
-            println!("Think command placeholder");
+            return unimplemented_command("think");
         }
 
         Commands::Web { .. } => {
-            println!("Web command placeholder");
+            return unimplemented_command("web");
         }
 
         Commands::Verify { .. } => {
-            println!("Verify command placeholder");
+            return unimplemented_command("verify");
         }
 
         Commands::Trace { .. } => {
-            println!("Trace command placeholder");
+            return unimplemented_command("trace");
         }
 
         #[cfg(feature = "memory")]
         Commands::Rag { .. } => {
-            println!("Rag command placeholder");
+            return unimplemented_command("rag");
         }
 
         Commands::Metrics { .. } => {
-            println!("Metrics command placeholder");
+            return unimplemented_command("metrics");
         }
 
         Commands::Completions { shell } => {

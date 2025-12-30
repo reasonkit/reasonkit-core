@@ -1,6 +1,6 @@
 [package]
 name = "reasonkit-core"
-version = "1.0.0"
+version = "1.1.0"
 edition = "2021"
 rust-version = "1.74"
 authors = ["ReasonKit Team <hello@reasonkit.sh>"]
@@ -210,16 +210,6 @@ embedded-qdrant = []  # For embedded mode without external server
 local-embeddings = ["ort", "tokenizers", "ndarray"]  # BGE-M3 ONNX local inference
 arf = ["sled", "wasmtime", "sysinfo", "petgraph", "rust-bert", "parking_lot"]  # Optional ARF module
 memory = ["dep:reasonkit-mem", "dep:qdrant-client", "dep:tantivy"]  # Optional memory infrastructure via reasonkit-mem
-
-[profile.release]
-lto = true
-codegen-units = 1
-opt-level = 3
-strip = true
-
-[profile.bench]
-lto = true
-codegen-units = 1
 
 # Package metadata for crates.io
 [package.metadata.docs.rs]

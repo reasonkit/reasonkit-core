@@ -25,6 +25,8 @@ Verify installation:
 rk-core --version
 ```
 
+> Note: In v1.0.0, CLI commands other than `mcp`, `serve-mcp`, and `completions` are scaffolded and will return "not implemented". Examples below reflect the planned interface.
+
 ---
 
 ## First Query (Copy-Paste Ready)
@@ -371,4 +373,4 @@ BUDGET:
 
 ---
 
-**Version:** 0.1.0 | **License:** Apache 2.0 | **Website:** [reasonkit.sh](https://reasonkit.sh)
+**Version:** 1.0.0 | **License:** Apache 2.0 | **Website:** [reasonkit.sh](https://reasonkit.sh)

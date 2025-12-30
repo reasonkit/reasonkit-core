@@ -1393,7 +1393,7 @@ jobs:
 # Find which commit caused regression
 git bisect start
 git bisect bad HEAD
-git bisect good v0.1.0
+git bisect good v1.0.0
 
 # Automated bisect with benchmark
 git bisect run bash -c '

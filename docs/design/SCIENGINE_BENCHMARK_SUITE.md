@@ -607,7 +607,7 @@ hardware:
 
 software:
   rust_version: "1.83.0"
-  reasonkit_version: "0.1.0"
+  reasonkit_version: "1.0.0"
   reasonkit_commit: "def456"
 
 reproducibility:

@@ -2,7 +2,7 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "ReasonKit Paper Sources",
   "description": "Academic papers for theoretical grounding of ReasonKit",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "generated_at": "2025-12-11T00:00:00Z",
   "papers": {
     "core_reasoning": [

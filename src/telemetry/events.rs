@@ -422,7 +422,7 @@ mod tests {
 
     #[test]
     fn test_session_lifecycle() {
-        let session = SessionEvent::start("0.1.0".to_string());
+        let session = SessionEvent::start(crate::VERSION.to_string());
         assert!(session.ended_at.is_none());
 
         let ended = session.end();

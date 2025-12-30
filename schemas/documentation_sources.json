@@ -2,7 +2,7 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "ReasonKit Documentation Sources",
   "description": "Documentation to index for the ReasonKit knowledge base",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "generated_at": "2025-12-11T00:00:00Z",
   "documentation": {
     "cli_tools": [

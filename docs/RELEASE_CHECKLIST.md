@@ -1,8 +1,8 @@
-# Release Checklist - reasonkit-core v0.1.0
+# Release Checklist - reasonkit-core v1.0.0
 
 **Date:** 2025-12-25
 **Status:** VERIFIED
-**Version:** 0.1.0
+**Version:** 1.0.0
 
 ---
 
@@ -107,8 +107,8 @@ cargo doc --no-deps --open
 
 ```bash
 git add -A
-git commit -m "chore: prepare v0.1.0 release"
-git tag -a v0.1.0 -m "ReasonKit Core v0.1.0"
+git commit -m "chore: prepare v1.0.0 release"
+git tag -a v1.0.0 -m "ReasonKit Core v1.0.0"
 git push origin main --tags
 ```
 

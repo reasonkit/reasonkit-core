@@ -355,7 +355,7 @@ Add these to your repository README:
    - Check metrics and summaries
 
 4. **First Release**
-   - Tag a release: `git tag v0.1.0 && git push --tags`
+   - Tag a release: `git tag v1.0.0 && git push --tags`
    - Verify cross-platform builds
    - Test install script
 

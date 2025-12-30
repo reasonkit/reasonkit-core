@@ -824,7 +824,7 @@ class PluginMetadata:
     author: str = ""
     license: str = "Apache-2.0"
     repository: Optional[str] = None
-    reasonkit_version: str = ">=0.1.0"
+    reasonkit_version: str = ">=1.0.0"
     dependencies: List[Dict[str, str]] = field(default_factory=list)
     capabilities: List[Capability] = field(default_factory=list)
     tags: List[str] = field(default_factory=list)
@@ -1212,13 +1212,13 @@ documentation = "https://my-plugin.example.com/docs"
 
 [plugin.reasonkit]
 # Required: Minimum ReasonKit version
-min_version = "0.1.0"
+min_version = "1.0.0"
 
 # Optional: Maximum compatible version
 max_version = "1.0.0"
 
 # Optional: Tested ReasonKit versions
-tested_versions = ["0.1.0", "0.2.0"]
+tested_versions = ["1.0.0", "1.1.0"]
 
 [plugin.capabilities]
 # List required capabilities
@@ -2814,7 +2814,7 @@ vuln_severity_block = "high"
 
 [compatibility]
 # Minimum ReasonKit version
-min_reasonkit = "0.1.0"
+min_reasonkit = "1.0.0"
 
 # Maximum ReasonKit version (optional)
 max_reasonkit = "2.0.0"
@@ -3041,7 +3041,7 @@ impl LegalAnalyzer {
                 author: "ReasonKit Community".to_string(),
                 license: "Apache-2.0".to_string(),
                 repository: Some("https://github.com/reasonkit/legal-analyzer".to_string()),
-                reasonkit_version: ">=0.1.0".to_string(),
+                reasonkit_version: ">=1.0.0".to_string(),
                 dependencies: vec![],
                 capabilities: vec![Capability::LlmAccess, Capability::ConfigAccess],
                 tags: vec!["legal".to_string(), "compliance".to_string(), "contracts".to_string()],

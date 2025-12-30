@@ -13,7 +13,7 @@ ReasonKit collects telemetry to improve the reasoning engine. However, we strict
 When a user runs `rk-core` for the first time, they are presented with a configuration wizard.
 
 ```text
-Welcome to ReasonKit v0.1.0!
+Welcome to ReasonKit v1.0.0!
 
 ReasonKit improves by learning from usage patterns. We would like to collect
 anonymous usage data (error rates, performance metrics).
@@ -60,7 +60,7 @@ Before any data packet leaves the machine, it passes through the `PrivacyFilter`
 
 ### Standard Telemetry
 
-- **Version:** `0.1.0`
+- **Version:** `1.0.0`
 - **OS:** `linux-x86_64`
 - **Command:** `think`
 - **Protocol ID:** `gigathink`

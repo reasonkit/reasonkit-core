@@ -317,5 +317,5 @@ IDE_EXTENSIONS:
 
 ---
 
-_reasonkit-core v0.1.0 | Structured Prompt Engineering Framework | Apache 2.0_
+_reasonkit-core v1.1.0 | Structured Prompt Engineering Framework | Apache 2.0_
 _"See How Your AI Thinks"_

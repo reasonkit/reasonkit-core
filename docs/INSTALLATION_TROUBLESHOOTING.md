@@ -1003,7 +1003,7 @@ echo 'ANTHROPIC_API_KEY=sk-ant-...' >> .env
 ```bash
 # 1. Check binary exists and runs
 rk-core --version
-# Expected: reasonkit-core 0.1.0
+# Expected: reasonkit-core 1.0.0
 
 # 2. Check help displays correctly
 rk-core --help

@@ -2,7 +2,7 @@
 
 > Central hub for all ReasonKit Core documentation
 
-**Version:** 0.1.0
+**Version:** 1.0.0
 **License:** Apache 2.0
 **Last Updated:** 2025-12-23
 
@@ -93,7 +93,7 @@ cargo install reasonkit-core
 
 ```bash
 rk-core --version
-# reasonkit-core 0.1.0
+# reasonkit-core 1.0.0
 ```
 
 ---
@@ -698,7 +698,7 @@ Apache 2.0
 
 ## Version History
 
-### v0.1.0 (2025-12-23)
+### v1.0.0 (2025-12-23)
 
 Initial release:
 

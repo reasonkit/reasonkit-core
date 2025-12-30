@@ -10,7 +10,7 @@
 ```toml
 [package]
 name = "reasonkit"
-version = "0.1.0"
+version = "1.0.0"
 edition = "2021"
 license = "Apache-2.0"
 repository = "https://github.com/username/reasonkit"
@@ -123,9 +123,9 @@ clap_complete = "4"
 class Reasonkit < Formula
   desc "Structured reasoning for LLMs"
   homepage "https://reasonkit.sh"
-  url "https://github.com/user/reasonkit/releases/download/v0.1.0/rk-core-0.1.0-x86_64-apple-darwin.tar.gz"
+  url "https://github.com/user/reasonkit/releases/download/v1.0.0/rk-core-1.0.0-x86_64-apple-darwin.tar.gz"
   sha256 "abc123..."
-  version "0.1.0"
+  version "1.0.0"
   license "Apache-2.0"
 
   def install
@@ -199,9 +199,9 @@ body = """
 cargo install cargo-release
 
 # Release workflow
-cargo release patch --execute  # 0.1.0 -> 0.1.1
-cargo release minor --execute  # 0.1.0 -> 0.2.0
-cargo release major --execute  # 0.1.0 -> 1.0.0
+cargo release patch --execute  # 1.0.0 -> 1.0.1
+cargo release minor --execute  # 1.0.0 -> 1.1.0
+cargo release major --execute  # 1.0.0 -> 2.0.0
 ```
 
 **What it does:**
@@ -288,7 +288,7 @@ case "$OS" in
   *) echo "Unsupported OS: $OS"; exit 1 ;;
 esac
 
-VERSION="0.1.0"
+VERSION="1.0.0"
 URL="https://github.com/user/reasonkit/releases/download/v${VERSION}/rk-core-${VERSION}-${TARGET}.tar.gz"
 
 echo "Installing ReasonKit ${VERSION} for ${TARGET}..."
@@ -395,8 +395,8 @@ cargo binstall reasonkit  # Faster, if binaries available
 brew install reasonkit
 
 # Linux (Debian/Ubuntu)
-wget https://github.com/user/reasonkit/releases/download/v0.1.0/reasonkit_0.1.0_amd64.deb
-sudo dpkg -i reasonkit_0.1.0_amd64.deb
+wget https://github.com/user/reasonkit/releases/download/v1.0.0/reasonkit_1.0.0_amd64.deb
+sudo dpkg -i reasonkit_1.0.0_amd64.deb
 
 # Windows (Chocolatey)
 choco install reasonkit

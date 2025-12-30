@@ -135,8 +135,6 @@ ReasonKit follows [Semantic Versioning 2.0.0](https://semver.org/):
 MAJOR.MINOR.PATCH[-PRERELEASE][+BUILD]
 
 Examples:
-  0.1.0         - Initial development
-  0.2.0         - New features (breaking changes allowed in 0.x)
   1.0.0         - First stable release
   1.1.0         - New backward-compatible features
   1.1.1         - Bug fixes
@@ -177,7 +175,7 @@ git pull origin main
 git status  # Should show no changes
 
 # 2. Update version in Cargo.toml
-# Edit Cargo.toml: version = "0.2.0"
+# Edit Cargo.toml: version = "1.1.0"
 
 # 3. Run quality gates
 cargo build --release
@@ -187,12 +185,12 @@ cargo test --lib
 
 # 4. Commit version bump
 git add Cargo.toml Cargo.lock
-git commit -m "chore: release v0.2.0"
+git commit -m "chore: release v1.1.0"
 
 # 5. Create and push tag
-git tag -a v0.2.0 -m "Release v0.2.0"
+git tag -a v1.1.0 -m "Release v1.1.0"
 git push origin main
-git push origin v0.2.0
+git push origin v1.1.0
 
 # 6. Monitor release at:
 # https://github.com/reasonkit/reasonkit-core/actions
@@ -205,17 +203,17 @@ Install cargo-release for automated version management:
 ```bash
 cargo install cargo-release
 
-# Patch release (0.1.0 -> 0.1.1)
+# Patch release (1.0.0 -> 1.0.1)
 cargo release patch --execute
 
-# Minor release (0.1.0 -> 0.2.0)
+# Minor release (1.0.0 -> 1.1.0)
 cargo release minor --execute
 
-# Major release (0.1.0 -> 1.0.0)
+# Major release (1.0.0 -> 2.0.0)
 cargo release major --execute
 
 # Pre-release
-cargo release --execute -- 0.2.0-alpha.1
+cargo release --execute -- 1.1.0-alpha.1
 ```
 
 Add to `Cargo.toml` for cargo-release configuration:
@@ -313,7 +311,7 @@ The standard way to create a release:
 
 ```bash
 # Create annotated tag
-git tag -a v0.2.0 -m "Release v0.2.0
+git tag -a v1.1.0 -m "Release v1.1.0
 
 Features:
 - Added new ThinkTool: AtomicBreak
@@ -325,22 +323,22 @@ Bug Fixes:
 "
 
 # Push tag to trigger release
-git push origin v0.2.0
+git push origin v1.1.0
 ```
 
 ### Method 2: GitHub UI
 
 1. Go to https://github.com/reasonkit/reasonkit-core/releases
 2. Click "Draft a new release"
-3. Create a new tag (e.g., `v0.2.0`)
+3. Create a new tag (e.g., `v1.1.0`)
 4. Fill in release notes
 5. Publish release
 
 ### Method 3: GitHub CLI
 
 ```bash
-gh release create v0.2.0 \
-  --title "ReasonKit Core v0.2.0" \
+gh release create v1.1.0 \
+  --title "ReasonKit Core v1.1.0" \
   --notes-file RELEASE_NOTES.md \
   --prerelease  # Optional: for pre-releases
 ```
@@ -472,7 +470,7 @@ cargo publish --locked
 ```bash
 docker buildx build \
   --platform linux/amd64,linux/arm64 \
-  --tag ghcr.io/reasonkit/reasonkit-core:0.2.0 \
+  --tag ghcr.io/reasonkit/reasonkit-core:1.1.0 \
   --tag ghcr.io/reasonkit/reasonkit-core:latest \
   --push \
   .
@@ -512,13 +510,13 @@ curl -fsSL https://github.com/reasonkit/reasonkit-core/releases/latest/download/
 
 ```bash
 # Start development on next version
-git checkout -b develop-v0.3.0
+git checkout -b develop-v1.2.0
 
 # Bump Cargo.toml to next dev version
-# version = "0.3.0-dev"
+# version = "1.2.0-dev"
 
 git add Cargo.toml
-git commit -m "chore: begin v0.3.0 development"
+git commit -m "chore: begin v1.2.0 development"
 ```
 
 ---
@@ -529,25 +527,25 @@ git commit -m "chore: begin v0.3.0 development"
 
 ```bash
 # 1. Yank crate from crates.io (cannot be undone!)
-cargo yank --version 0.2.0
+cargo yank --version 1.1.0
 
 # 2. Delete GitHub release
-gh release delete v0.2.0 --yes
+gh release delete v1.1.0 --yes
 
 # 3. Delete tag
-git push --delete origin v0.2.0
-git tag -d v0.2.0
+git push --delete origin v1.1.0
+git tag -d v1.1.0
 
 # 4. Create fixed release with patch version
-# (e.g., v0.2.1 with fix)
+# (e.g., v1.1.1 with fix)
 ```
 
 ### Docker Rollback
 
 ```bash
 # Tag previous version as latest
-docker pull ghcr.io/reasonkit/reasonkit-core:0.1.0
-docker tag ghcr.io/reasonkit/reasonkit-core:0.1.0 ghcr.io/reasonkit/reasonkit-core:latest
+docker pull ghcr.io/reasonkit/reasonkit-core:1.0.0
+docker tag ghcr.io/reasonkit/reasonkit-core:1.0.0 ghcr.io/reasonkit/reasonkit-core:latest
 docker push ghcr.io/reasonkit/reasonkit-core:latest
 ```
 
@@ -560,7 +558,7 @@ docker push ghcr.io/reasonkit/reasonkit-core:latest
 #### Version Mismatch Error
 
 ```
-Error: Version mismatch! Tag=v0.2.0, Cargo.toml=v0.1.0
+Error: Version mismatch! Tag=v1.1.0, Cargo.toml=v1.0.0
 ```
 
 **Solution:** Update Cargo.toml version before tagging:
@@ -568,8 +566,8 @@ Error: Version mismatch! Tag=v0.2.0, Cargo.toml=v0.1.0
 ```bash
 # Edit Cargo.toml
 git add Cargo.toml Cargo.lock
-git commit -m "chore: bump version to 0.2.0"
-git tag -a v0.2.0 -m "Release v0.2.0"
+git commit -m "chore: bump version to 1.1.0"
+git tag -a v1.1.0 -m "Release v1.1.0"
 ```
 
 #### Cross-Compilation Failure

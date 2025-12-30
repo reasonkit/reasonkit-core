@@ -11,7 +11,7 @@
 
 use criterion::{criterion_group, criterion_main, Criterion, SamplingMode};
 use reasonkit::ingestion::DocumentIngester;
-use reasonkit::thinktool::{ExecutorConfig, LlmConfig, ProtocolExecutor, ProtocolInput};
+use reasonkit::thinktool::{ExecutorConfig, ProtocolExecutor, ProtocolInput};
 use std::time::Duration;
 use tokio::runtime::Runtime;
 

@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 220" fill="none">
+  <defs>
+    <linearGradient id="heroGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#06b6d4"/>
+      <stop offset="50%" stop-color="#a855f7"/>
+      <stop offset="100%" stop-color="#ec4899"/>
+    </linearGradient>
+    <filter id="softGlow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="2" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  <rect width="800" height="220" fill="#030508"/>
+
+  <g transform="translate(50, 40)" filter="url(#softGlow)">
+    <path d="M10 0 L30 0 L40 10 L40 30 L30 40 L10 40 L0 30 L0 10 Z" fill="url(#heroGrad)" opacity="0.8"/>
+    <path d="M15 15 L35 15 M15 25 L25 25 M15 15 L15 35 M35 15 L35 25 L25 25 L35 35" stroke="#06b6d4" stroke-width="3" fill="none"/>
+    <text x="55" y="32" fill="#f9fafb" font-family="Inter, sans-serif" font-size="32" font-weight="700" letter-spacing="1">ReasonKit</text>
+  </g>
+
+  <text x="50" y="100" fill="#f9fafb" font-family="Inter, sans-serif" font-size="24" font-weight="600">Turn Prompts into Protocols</text>
+
+  <text x="50" y="135" fill="#9ca3af" font-family="Inter, sans-serif" font-size="16" font-style="italic">"Designed, Not Dreamed." — Structure beats intelligence. Engineering over hope.</text>
+
+  <text x="50" y="170" fill="#06b6d4" font-family="JetBrains Mono, monospace" font-size="14" font-weight="600">Industrial-Grade Reasoning Infrastructure | Rust-Native | Zero-Trust Logic</text>
+
+  <g transform="translate(50, 195)">
+    <rect x="0" y="0" width="90" height="20" rx="3" fill="#111827" stroke="#06b6d4" stroke-width="1"/>
+    <text x="45" y="14" fill="#06b6d4" font-family="JetBrains Mono, monospace" font-size="10" text-anchor="middle">CI: passing</text>
+
+    <rect x="100" y="0" width="110" height="20" rx="3" fill="#111827" stroke="#06b6d4" stroke-width="1"/>
+    <text x="155" y="14" fill="#06b6d4" font-family="JetBrains Mono, monospace" font-size="10" text-anchor="middle">crates.io: v1.0.0</text>
+
+    <rect x="220" y="0" width="120" height="20" rx="3" fill="#111827" stroke="#06b6d4" stroke-width="1"/>
+    <text x="280" y="14" fill="#06b6d4" font-family="JetBrains Mono, monospace" font-size="10" text-anchor="middle">license: Apache 2.0</text>
+  </g>
+</svg>
+
