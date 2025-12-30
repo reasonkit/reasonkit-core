@@ -265,76 +265,76 @@ pub enum LlmProvider {
     OpenAI,
 
     /// Google Gemini via AI Studio (OpenAI-compatible)
-    /// Base: https://generativelanguage.googleapis.com/v1beta/openai/
+    /// Base: <https://generativelanguage.googleapis.com/v1beta/openai/>
     GoogleGemini,
 
     /// Google Vertex AI (requires GCP auth)
-    /// Base: https://aiplatform.googleapis.com/v1/projects/{project}/locations/{location}/endpoints/openapi
+    /// Base: <https://aiplatform.googleapis.com/v1/projects/{project}/locations/{location}/endpoints/openapi>
     GoogleVertex,
 
     /// Azure OpenAI Service
-    /// Base: https://{resource}.openai.azure.com/openai/deployments/{deployment}
+    /// Base: <https://{resource}.openai.azure.com/openai/deployments/{deployment}>
     AzureOpenAI,
 
     /// AWS Bedrock (OpenAI-compatible via Converse API)
-    /// Base: https://bedrock-runtime.{region}.amazonaws.com
+    /// Base: <https://bedrock-runtime.{region}.amazonaws.com>
     AWSBedrock,
 
     // ─────────────────────────────────────────────────────────────────────────
     // TIER 2: Specialized AI Providers
     // ─────────────────────────────────────────────────────────────────────────
     /// xAI Grok models
-    /// Base: https://api.x.ai/v1
+    /// Base: <https://api.x.ai/v1>
     XAI,
 
     /// Groq (ultra-fast inference)
-    /// Base: https://api.groq.com/openai/v1
+    /// Base: <https://api.groq.com/openai/v1>
     Groq,
 
     /// Mistral AI
-    /// Base: https://api.mistral.ai/v1/
+    /// Base: <https://api.mistral.ai/v1/>
     Mistral,
 
     /// DeepSeek (research-focused)
-    /// Base: https://api.deepseek.com/v1
+    /// Base: <https://api.deepseek.com/v1>
     DeepSeek,
 
     /// Cohere (enterprise NLP)
-    /// Base: https://api.cohere.ai/v1
+    /// Base: <https://api.cohere.ai/v1>
     Cohere,
 
     /// Perplexity (search-augmented)
-    /// Base: https://api.perplexity.ai
+    /// Base: <https://api.perplexity.ai>
     Perplexity,
 
     /// Cerebras (wafer-scale inference)
-    /// Base: https://api.cerebras.ai/v1
+    /// Base: <https://api.cerebras.ai/v1>
     Cerebras,
 
     // ─────────────────────────────────────────────────────────────────────────
     // TIER 3: Inference Platforms
     // ─────────────────────────────────────────────────────────────────────────
     /// Together AI (open model hosting)
-    /// Base: https://api.together.xyz/v1
+    /// Base: <https://api.together.xyz/v1>
     TogetherAI,
 
     /// Fireworks AI (fast open model inference)
-    /// Base: https://api.fireworks.ai/inference/v1
+    /// Base: <https://api.fireworks.ai/inference/v1>
     FireworksAI,
 
     /// Alibaba Qwen / DashScope
-    /// Base: https://dashscope-intl.aliyuncs.com/compatible-mode/v1
+    /// Base: <https://dashscope-intl.aliyuncs.com/compatible-mode/v1>
     AlibabaQwen,
 
     // ─────────────────────────────────────────────────────────────────────────
     // TIER 4: Aggregation/Gateway Layers
     // ─────────────────────────────────────────────────────────────────────────
     /// OpenRouter (300+ models, automatic fallbacks)
-    /// Base: https://openrouter.ai/api/v1
+    /// Base: <https://openrouter.ai/api/v1>
     OpenRouter,
 
     /// Cloudflare AI Gateway (unified endpoint)
-    /// Base: https://gateway.ai.cloudflare.com/v1/{account_id}/{gateway_id}/
+    /// Base: <https://gateway.ai.cloudflare.com/v1/{account_id}/{gateway_id}/>
     CloudflareAI,
 }
 
@@ -917,7 +917,7 @@ impl UnifiedLlmClient {
             "model": self.config.model,
             "max_tokens": request.max_tokens.unwrap_or(self.config.max_tokens),
             "temperature": request.temperature.unwrap_or(self.config.temperature),
-            "system": request.system.unwrap_or_else(|| "You are a helpful assistant.".to_string()),
+            "system": request.system.unwrap_or_else(|| "You are ReasonKit, a structured reasoning engine. You answer precisely and accurately.".to_string()),
             "messages": messages
         });
 

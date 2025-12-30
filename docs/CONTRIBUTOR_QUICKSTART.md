@@ -194,7 +194,6 @@ cargo clippy   # Lint code
 | ------------------ | ----------------------------- | ---------------------------------------------------------------------- |
 | GitHub Issues      | Bug reports, feature requests | [Issues](https://github.com/reasonkit/reasonkit-core/issues)           |
 | GitHub Discussions | Questions, ideas, help        | [Discussions](https://github.com/reasonkit/reasonkit-core/discussions) |
-| Discord            | Real-time chat                | [Join Discord](https://discord.gg/reasonkit)                           |
 
 **Response times:** Issues within 48 hours, PRs within 1 week.
 

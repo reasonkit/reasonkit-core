@@ -443,7 +443,9 @@ fn chunk_markdown_aware(
     document_id: Uuid,
 ) -> Result<Vec<Chunk>, ChunkingError> {
     // Split on markdown headers (# ## ###)
-    let header_pattern = regex::Regex::new(r"(?m)^#{1,6}\s+.+$").unwrap();
+    // Use Lazy to compile regex once, or handle error if creating dynamically
+    // Since this is a static pattern, expect is acceptable for the compilation itself if we trust the pattern
+    let header_pattern = regex::Regex::new(r"(?m)^#{1,6}\s+.+$").expect("Invalid regex pattern");
     let mut chunks = Vec::new();
     let mut last_header_end = 0;
     let mut chunk_index = 0;
@@ -552,7 +554,7 @@ fn extract_section_header(paragraph: &str, _doc_type: &DocumentType) -> Option<S
         .ok()
         .and_then(|re| re.captures(paragraph.lines().next().unwrap_or("")))
     {
-        return Some(header_match.get(1).unwrap().as_str().trim().to_string());
+        return header_match.get(1).map(|m| m.as_str().trim().to_string());
     }
 
     // Look for all-caps lines (common in papers)
@@ -584,7 +586,7 @@ fn extract_function_name(code: &str) -> Option<String> {
             .ok()
             .and_then(|re| re.captures(code))
         {
-            return Some(captures.get(1).unwrap().as_str().to_string());
+            return captures.get(1).map(|m| m.as_str().to_string());
         }
     }
 

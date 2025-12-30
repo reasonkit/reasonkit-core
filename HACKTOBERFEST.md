@@ -273,7 +273,6 @@ All contributors are recognized:
 
 - **GitHub Contributors** - Listed on our [Contributors page](https://github.com/reasonkit/reasonkit-core/graphs/contributors)
 - **Release Notes** - Significant contributions mentioned in release notes
-- **Discord** - Shoutouts in our community Discord
 - **Hacktoberfest** - Valid PRs count toward your Hacktoberfest goals
 
 ---
@@ -284,14 +283,12 @@ All contributors are recognized:
 
 1. **Check existing issues** - Your question may already be answered
 2. **Ask in Discussions** - [GitHub Discussions](https://github.com/reasonkit/reasonkit-core/discussions)
-3. **Join Discord** - [Discord Community](https://discord.gg/reasonkit)
 4. **Open an issue** - Use the "Question" template
 
 ### Response Times
 
 - **Issues:** Within 48 hours
 - **PRs:** Within 1 week
-- **Discord:** Usually same day
 
 ---
 
@@ -388,7 +385,7 @@ reasonkit-core/
 4. **Submit** a PR
 5. **Celebrate** your contribution!
 
-**Questions?** Open a [Discussion](https://github.com/reasonkit/reasonkit-core/discussions) or join our [Discord](https://discord.gg/reasonkit).
+**Questions?** Open a [Discussion](https://github.com/reasonkit/reasonkit-core/discussions) or join our [GitHub Discussions](https://github.com/reasonkit/reasonkit-core/discussions).
 
 ---
 

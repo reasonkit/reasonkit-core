@@ -1,8 +1,5 @@
 blank_issues_enabled: false
 contact_links:
-  - name: Discord Community
-    url: https://discord.gg/reasonkit
-    about: Join our Discord for real-time help and discussions with the community
   - name: Documentation
     url: https://reasonkit.sh/docs
     about: Read the official ReasonKit documentation

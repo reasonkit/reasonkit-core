@@ -679,7 +679,6 @@ async fn main() -> anyhow::Result<()> {
 - **Website**: https://reasonkit.sh
 - **Repository**: https://github.com/reasonkit/reasonkit-core
 - **Documentation**: https://docs.rs/reasonkit-core
-- **Discord**: https://discord.gg/reasonkit
 
 ### Papers
 

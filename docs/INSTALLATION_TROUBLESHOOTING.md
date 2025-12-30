@@ -1093,14 +1093,12 @@ When opening an issue, include:
 | ------------------ | ---------------------------------------------------------------------------------------------------------- | ------------------------ |
 | GitHub Discussions | [github.com/reasonkit/reasonkit-core/discussions](https://github.com/reasonkit/reasonkit-core/discussions) | Q&A, feature requests    |
 | GitHub Issues      | [github.com/reasonkit/reasonkit-core/issues](https://github.com/reasonkit/reasonkit-core/issues)           | Bug reports              |
-| Discord            | [discord.gg/reasonkit](https://discord.gg/reasonkit)                                                       | Real-time community help |
 | Documentation      | [reasonkit.sh/docs](https://reasonkit.sh/docs)                                                             | Official docs            |
 
 ### Support Channels
 
 1. **Community Support** (free)
    - GitHub Discussions for Q&A
-   - Discord for real-time help
 
 2. **Enterprise Support** (reasonkit-pro license)
    - Priority email support

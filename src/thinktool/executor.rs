@@ -23,10 +23,10 @@ use tokio::sync::RwLock as TokioRwLock;
 
 /// Static regex for conditional blocks: {{#if ...}}...{{/if}}
 static CONDITIONAL_BLOCK_RE: Lazy<Regex> =
-    Lazy::new(|| Regex::new(r"\{\{#if \w+\}\}.*?\{\{/if\}\}").unwrap());
+    Lazy::new(|| Regex::new(r"\{\{#if \w+\}\}.*?\{\{/if\}\}").expect("Invalid static regex pattern"));
 
 /// Static regex for unfilled placeholders: {{...}}
-static UNFILLED_PLACEHOLDER_RE: Lazy<Regex> = Lazy::new(|| Regex::new(r"\{\{[^}]+\}\}").unwrap());
+static UNFILLED_PLACEHOLDER_RE: Lazy<Regex> = Lazy::new(|| Regex::new(r"\{\{[^}]+\}\}").expect("Invalid static regex pattern"));
 
 // Thread-local cache for dynamic nested regex patterns ({{step_id.field}})
 // This avoids recompiling the same patterns within a single execution
@@ -42,7 +42,7 @@ fn get_nested_regex(key: &str) -> Regex {
             return re.clone();
         }
         let pattern = format!(r"\{{\{{{}\\.(\w+)\}}\}}", regex::escape(key));
-        let re = Regex::new(&pattern).unwrap();
+        let re = Regex::new(&pattern).expect("Failed to compile nested regex pattern");
         cache.insert(key.to_string(), re.clone());
         re
     })
@@ -992,7 +992,7 @@ impl ProtocolExecutor {
     fn extract_confidence_static(content: &str) -> Option<f64> {
         use once_cell::sync::Lazy;
         static CONFIDENCE_RE: Lazy<Regex> =
-            Lazy::new(|| Regex::new(r"(?i)confidence[:\s]+(\d+\.?\d*)").unwrap());
+            Lazy::new(|| Regex::new(r"(?i)confidence[:\s]+(\d+\.?\d*)").expect("Invalid regex pattern"));
 
         if let Some(caps) = CONFIDENCE_RE.captures(content) {
             if let Some(m) = caps.get(1) {
@@ -1698,9 +1698,9 @@ impl ProtocolExecutor {
 
         // Compile regexes once (static lifetime)
         static NUMBERED_RE: Lazy<regex::Regex> =
-            Lazy::new(|| regex::Regex::new(r"^\d+[\.\)]\s*(.+)$").unwrap());
+            Lazy::new(|| regex::Regex::new(r"^\d+[\.\)]\s*(.+)$").expect("Invalid regex pattern"));
         static BOLD_RE: Lazy<regex::Regex> =
-            Lazy::new(|| regex::Regex::new(r"^\*\*([^*]+)\*\*[:\s-]*(.*)$").unwrap());
+            Lazy::new(|| regex::Regex::new(r"^\*\*([^*]+)\*\*[:\s-]*(.*)$").expect("Invalid regex pattern"));
 
         let mut items = Vec::new();
         let mut current_item: Option<String> = None;

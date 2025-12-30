@@ -512,7 +512,6 @@ Improve the visual formatting of CLI output for better readability.
 ## 🆘 Need Help?
 
 - **GitHub Discussions** - [Ask questions](https://github.com/reasonkit/reasonkit-core/discussions)
-- **Discord** - [Join our community](https://discord.gg/reasonkit)
 - **Open an issue** - Use the "Question" template
 
 ---

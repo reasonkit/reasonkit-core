@@ -20,7 +20,6 @@ Before submitting a question, please check these resources:
 
 For faster responses and interactive help, consider:
 
-- **Discord**: Join our community at [discord.gg/reasonkit](https://discord.gg/reasonkit) for real-time discussions
 - **Discussions**: Post in [GitHub Discussions](https://github.com/reasonkit/reasonkit-core/discussions) for community Q&A
 
 ---

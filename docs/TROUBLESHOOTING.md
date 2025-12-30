@@ -8,7 +8,7 @@ This guide helps you resolve common issues encountered while using ReasonKit Cor
 > - [Error UX Guide](design/ERROR_UX_GUIDE.md) - Understanding error messages
 > - [Contributing Guide](../CONTRIBUTING.md) - Development setup and quality gates
 > - [GitHub Issues](https://github.com/reasonkit/reasonkit-core/issues) - Report bugs
-> - [Discord](https://discord.gg/reasonkit) - Community support
+> - [GitHub Discussions](https://github.com/reasonkit/reasonkit-core/discussions) - Community support
 
 ## Configuration Issues
 
@@ -240,7 +240,6 @@ Before opening an issue, try:
 | ---------------------- | -------------------------------- | ---------------------------------------------------------------------- |
 | **GitHub Issues**      | Bug reports, feature requests    | [Issues](https://github.com/reasonkit/reasonkit-core/issues)           |
 | **GitHub Discussions** | Q&A, ideas, longer conversations | [Discussions](https://github.com/reasonkit/reasonkit-core/discussions) |
-| **Discord**            | Real-time community help         | [Discord](https://discord.gg/reasonkit)                                |
 | **Documentation**      | Comprehensive guides             | [docs.reasonkit.sh](https://docs.reasonkit.sh)                         |
 
 ### Reporting Issues

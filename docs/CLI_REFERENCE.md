@@ -10,11 +10,13 @@
 ## Status
 
 Implemented:
+
 - `mcp`
 - `serve-mcp`
 - `completions`
 
 Planned (scaffolded; returns "not implemented" in v1.0.0):
+
 - `ingest`, `query`, `think`, `index`, `stats`, `export`, `serve`, `web`, `verify`, `trace`, `rag`, `metrics`
 
 ---

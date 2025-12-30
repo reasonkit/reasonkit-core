@@ -43,7 +43,7 @@ struct Cli {
 
 #[derive(Subcommand)]
 enum Commands {
-    /// [CORE] Execute structured reasoning protocols (ThinkTools)
+    /// \[CORE\] Execute structured reasoning protocols (ThinkTools)
     #[command(alias = "t")]
     Think {
         /// The query or input to process (not required with --list)
@@ -99,7 +99,7 @@ enum Commands {
         list: bool,
     },
 
-    /// [CORE] Deep research with ThinkTools + Web + KB (reasonkit-web)
+    /// \[CORE\] Deep research with ThinkTools + Web + KB (reasonkit-web)
     #[command(alias = "dive", alias = "research", alias = "deep", alias = "d")]
     Web {
         /// Research question or topic
@@ -130,7 +130,7 @@ enum Commands {
         output: Option<PathBuf>,
     },
 
-    /// [CORE] Triangulate and verify claims with 3+ sources
+    /// \[CORE\] Triangulate and verify claims with 3+ sources
     #[command(alias = "v", alias = "triangulate")]
     Verify {
         /// Claim or statement to verify

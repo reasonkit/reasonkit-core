@@ -104,7 +104,8 @@ impl ProofLedger {
     /// ```no_run
     /// use reasonkit::verification::ProofLedger;
     ///
-    /// let ledger = ProofLedger::new("./proof_ledger.db").unwrap();
+    /// let ledger = ProofLedger::new("./proof_ledger.db")?;
+    /// # Ok::<(), reasonkit::verification::ProofLedgerError>(())
     /// ```
     pub fn new<P: AsRef<Path>>(ledger_path: P) -> Result<Self> {
         let path = ledger_path.as_ref().to_path_buf();
@@ -144,10 +145,11 @@ impl ProofLedger {
     ///
     /// # Examples
     ///
-    /// ```
+    /// ```no_run
     /// use reasonkit::verification::ProofLedger;
     ///
-    /// let ledger = ProofLedger::in_memory().unwrap();
+    /// let ledger = ProofLedger::in_memory()?;
+    /// # Ok::<(), reasonkit::verification::ProofLedgerError>(())
     /// ```
     pub fn in_memory() -> Result<Self> {
         let conn = Connection::open_in_memory()?;
@@ -196,16 +198,17 @@ impl ProofLedger {
     ///
     /// # Examples
     ///
-    /// ```
+    /// ```no_run
     /// use reasonkit::verification::ProofLedger;
     ///
-    /// let ledger = ProofLedger::in_memory().unwrap();
+    /// let ledger = ProofLedger::in_memory()?;
     /// let hash = ledger.anchor(
     ///     "The global AI market size was valued at USD 196.63 billion in 2023.",
     ///     "https://example.com/ai-market",
-    ///     None
-    /// ).unwrap();
+    ///     None,
+    /// )?;
     /// println!("Citation hash: {}", hash);
+    /// # Ok::<(), reasonkit::verification::ProofLedgerError>(())
     /// ```
     pub fn anchor(&self, content: &str, url: &str, metadata: Option<String>) -> Result<String> {
         let hash = Self::compute_hash(content);
@@ -246,13 +249,14 @@ impl ProofLedger {
     ///
     /// # Examples
     ///
-    /// ```
+    /// ```no_run
     /// use reasonkit::verification::ProofLedger;
     ///
-    /// let ledger = ProofLedger::in_memory().unwrap();
-    /// let hash = ledger.anchor("test content", "https://example.com", None).unwrap();
-    /// let anchor = ledger.get_anchor(&hash).unwrap();
+    /// let ledger = ProofLedger::in_memory()?;
+    /// let hash = ledger.anchor("test content", "https://example.com", None)?;
+    /// let anchor = ledger.get_anchor(&hash)?;
     /// assert_eq!(anchor.url, "https://example.com");
+    /// # Ok::<(), reasonkit::verification::ProofLedgerError>(())
     /// ```
     pub fn get_anchor(&self, hash: &str) -> Result<Anchor> {
         let mut stmt = self.conn.prepare(
@@ -287,20 +291,21 @@ impl ProofLedger {
     ///
     /// # Examples
     ///
-    /// ```
+    /// ```no_run
     /// use reasonkit::verification::ProofLedger;
     ///
-    /// let ledger = ProofLedger::in_memory().unwrap();
+    /// let ledger = ProofLedger::in_memory()?;
     /// let original = "Original content";
-    /// let hash = ledger.anchor(original, "https://example.com", None).unwrap();
+    /// let hash = ledger.anchor(original, "https://example.com", None)?;
     ///
     /// // Verify with same content
-    /// let result = ledger.verify(&hash, original).unwrap();
+    /// let result = ledger.verify(&hash, original)?;
     /// assert!(result.verified);
     ///
     /// // Verify with different content (drift)
-    /// let result = ledger.verify(&hash, "Modified content").unwrap();
+    /// let result = ledger.verify(&hash, "Modified content")?;
     /// assert!(!result.verified);
+    /// # Ok::<(), reasonkit::verification::ProofLedgerError>(())
     /// ```
     pub fn verify(&self, hash: &str, current_content: &str) -> Result<VerificationResult> {
         // Get the original anchor

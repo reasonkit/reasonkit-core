@@ -275,7 +275,6 @@ We provide templates for bugs and features. Please use them.
 
 | Channel                | Best For                         | Link                                                                   |
 | ---------------------- | -------------------------------- | ---------------------------------------------------------------------- |
-| **Discord**            | Quick questions, community chat  | [Join Discord](https://discord.gg/reasonkit)                           |
 | **GitHub Discussions** | Ideas, Q&A, longer conversations | [Discussions](https://github.com/reasonkit/reasonkit-core/discussions) |
 | **GitHub Issues**      | Bugs, feature requests           | [Issues](https://github.com/reasonkit/reasonkit-core/issues)           |
 
@@ -309,7 +308,7 @@ By contributing, you agree that your contributions will be licensed under the [A
 
 Every contribution makes ReasonKit better. Whether you're fixing a typo or implementing a major feature, your work matters.
 
-Questions? Open a [Discussion](https://github.com/reasonkit/reasonkit-core/discussions) or join our [Discord](https://discord.gg/reasonkit).
+Questions? Open a [Discussion](https://github.com/reasonkit/reasonkit-core/discussions).
 
 ---
 

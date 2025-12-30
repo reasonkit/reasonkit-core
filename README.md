@@ -384,6 +384,6 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for complete guidelines.
 
 _Designed, Not Dreamed_
 
-[Website](https://reasonkit.sh) | [Documentation](https://docs.reasonkit.sh) | [GitHub](https://github.com/reasonkit/reasonkit-core) | [Discord](https://discord.gg/reasonkit)
+[Website](https://reasonkit.sh) | [Documentation](https://docs.reasonkit.sh) | [GitHub](https://github.com/reasonkit/reasonkit-core)
 
 </div>

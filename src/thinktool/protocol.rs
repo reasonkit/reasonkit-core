@@ -440,10 +440,10 @@ mod tests {
             min_count: 5,
             max_count: 10,
         };
-        let json = serde_json::to_string(&action).unwrap();
+        let json = serde_json::to_string(&action).expect("Failed to serialize");
         assert!(json.contains("generate"));
 
-        let parsed: StepAction = serde_json::from_str(&json).unwrap();
+        let parsed: StepAction = serde_json::from_str(&json).expect("Failed to deserialize");
         match parsed {
             StepAction::Generate {
                 min_count,

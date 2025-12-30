@@ -8,7 +8,7 @@
 //! - SVAMP: +11.0% accuracy improvement
 //! - AQuA: +12.2% accuracy improvement
 //!
-//! Reference: https://arxiv.org/abs/2203.11171
+//! Reference: <https://arxiv.org/abs/2203.11171>
 
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
