@@ -38,7 +38,7 @@ We strive to avoid breaking changes. When they are necessary:
 
 ## Protocol Versioning
 
-ThinkTool protocols use their own versioning (`thinktools_v2.yaml`).
+ThinkTool protocols use their own versioning (`thinktools.yaml`).
 
 - The engine supports executing older protocol versions if the schema is compatible.
 - Breaking schema changes require a parser update and potentially a MAJOR engine update.

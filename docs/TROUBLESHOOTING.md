@@ -231,7 +231,7 @@ Before opening an issue, try:
 1. ✅ **Updated to latest version:** `cargo install reasonkit-core --force`
 2. ✅ **Checked logs:** `RUST_LOG=debug rk-core <command>`
 3. ✅ **Verified installation:** `rk-core --version`
-4. ✅ **Read relevant docs:** [Quickstart](QUICKSTART.md), [ThinkTool Guide](THINKTOOLS_V2_GUIDE.md)
+4. ✅ **Read relevant docs:** [Quickstart](QUICKSTART.md), [ThinkTool Guide](THINKTOOLS_GUIDE.md)
 5. ✅ **Searched existing issues:** [GitHub Issues](https://github.com/reasonkit/reasonkit-core/issues)
 
 ### Getting Help

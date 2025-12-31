@@ -1,9 +1,9 @@
-# ThinkTools V2 Protocol Guide
+# ThinkTools Protocol Guide
 
-> Production-Ready Reasoning Module Orchestration for AI Agents
+> Structured Reasoning Module Orchestration for AI Agents
 
-**Version:** 2.0.0
-**Status:** Production
+**Version:** 1.0.0-alpha
+**Status:** Alpha
 **License:** Apache 2.0 (Open Source)
 **Created:** 2025-12-22
 
@@ -25,7 +25,7 @@
 
 ## Overview
 
-ThinkTools V2 is a production-grade reasoning protocol that orchestrates 5 core cognitive modules with formal JSON schemas, automatic confidence scoring, and contradiction detection. It transforms ad-hoc prompting into structured, auditable reasoning chains.
+ThinkTools is a production-grade reasoning protocol that orchestrates 5 core cognitive modules with formal JSON schemas, automatic confidence scoring, and contradiction detection. It transforms ad-hoc prompting into structured, auditable reasoning chains.
 
 ### Key Capabilities
 
@@ -789,9 +789,9 @@ See full API documentation at:
 
 ## Changelog
 
-### v2.0.0 (2025-12-22)
+### v1.0.0-alpha (2025-12-22)
 
-- Initial ThinkTools V2 protocol
+- Initial ThinkTools protocol
 - 5 core modules with formal schemas
 - 4 reasoning profiles
 - Automatic confidence scoring
@@ -802,7 +802,7 @@ See full API documentation at:
 
 ## Contributing
 
-ThinkTools V2 is open source (Apache 2.0). Contributions welcome:
+ThinkTools is open source (Apache 2.0). Contributions welcome:
 
 1. Fork `reasonkit-core`
 2. Create feature branch
@@ -817,4 +817,4 @@ Apache 2.0 - See LICENSE file
 
 ---
 
-_ThinkTools V2 Protocol | ReasonKit Core | https://reasonkit.sh_
+_ThinkTools Protocol | ReasonKit Core | https://reasonkit.sh_

@@ -2,7 +2,7 @@
 // ReasonKit Brand Constants
 // ============================================================
 // CANONICAL SOURCE - Synchronized with reasonkit-site/main.css
-// Reference: /RK-PROJECT/BRAND_IDENTITY.md
+// Reference: BRAND_IDENTITY.md
 // Updated: 2025-12-30 (v1.0.0 - Launch)
 // ============================================================
 

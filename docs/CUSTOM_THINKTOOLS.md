@@ -10,11 +10,11 @@ ReasonKit allows you to define your own reasoning protocols (ThinkTools) using T
 
 ## Protocol Definition (TOML)
 
-ReasonKit protocols are defined using the `thinktool-v2` schema.
+ReasonKit protocols are defined using the `thinktool` schema.
 
 ```toml
 version = "2.0.0"
-schema = "thinktool-v2"
+schema = "thinktool"
 
 [thinktool_modules.devils_advocate]
 id = "devils_advocate"

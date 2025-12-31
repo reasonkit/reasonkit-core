@@ -53,7 +53,7 @@ Create `protocols/naming_tool.toml`:
 
 ```toml
 version = "2.0.0"
-schema = "thinktool-v2"
+schema = "thinktool"
 
 [thinktool_modules.naming_tool]
 id = "naming_tool"

@@ -10,8 +10,8 @@ We are proud to announce the first stable release of ReasonKit Core, marking the
 
 ReasonKit is no longer just a Rust binary; it's a configurable engine.
 
-- **YAML Protocols:** Define how the AI thinks in `protocols/thinktools_v2.yaml`.
-- **Custom Profiles:** create your own reasoning chains in `protocols/profiles_v2.yaml`.
+- **YAML Protocols:** Define how the AI thinks in `protocols/thinktools.yaml`.
+- **Custom Profiles:** create your own reasoning chains in `protocols/profiles.yaml`.
 - **Hot-Reload:** Change a protocol description, see it update instantly.
 
 ### 2. The 5 Core ThinkTools

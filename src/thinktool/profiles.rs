@@ -127,19 +127,19 @@ impl ProfileRegistry {
         let mut loaded_from_yaml = false;
 
         if let Ok(cwd) = std::env::current_dir() {
-            let yaml_path = cwd.join("protocols").join("profiles_v2.yaml");
+            let yaml_path = cwd.join("protocols").join("profiles.yaml");
             if yaml_path.exists() {
                 match yaml_loader::load_profiles_from_yaml_file(&yaml_path) {
                     Ok(profiles) => {
                         for profile in profiles {
                             self.register(profile);
                         }
-                        tracing::info!("Loaded profiles from profiles_v2.yaml");
+                        tracing::info!("Loaded profiles from profiles.yaml");
                         loaded_from_yaml = true;
                     }
                     Err(e) => {
                         tracing::warn!(
-                            "Failed to load profiles_v2.yaml: {}, falling back to built-ins",
+                            "Failed to load profiles.yaml: {}, falling back to built-ins",
                             e
                         );
                     }

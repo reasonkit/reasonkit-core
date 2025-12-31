@@ -161,7 +161,7 @@ impl ProtocolRegistry {
         Ok(protocol)
     }
 
-    /// Load protocols from the standard thinktools_v2.yaml file
+    /// Load protocols from the standard thinktools.yaml file
     pub fn load_from_yaml(&mut self, path: &Path) -> Result<usize> {
         let protocols = yaml_loader::load_from_yaml_file(path)?;
         let count = protocols.len();
@@ -234,17 +234,17 @@ impl ProtocolRegistry {
         // Try to load from YAML first
         let mut loaded_from_yaml = false;
         if let Ok(cwd) = std::env::current_dir() {
-            // Check protocols/thinktools_v2.yaml
-            let yaml_path = cwd.join("protocols").join("thinktools_v2.yaml");
+            // Check protocols/thinktools.yaml
+            let yaml_path = cwd.join("protocols").join("thinktools.yaml");
 
             if yaml_path.exists() {
                 match self.load_from_yaml(&yaml_path) {
                     Ok(count) => {
-                        tracing::info!("Loaded {} protocols from thinktools_v2.yaml", count);
+                        tracing::info!("Loaded {} protocols from thinktools.yaml", count);
                         loaded_from_yaml = true;
                     }
                     Err(e) => {
-                        tracing::warn!("Failed to load thinktools_v2.yaml: {}, falling back to hardcoded protocols", e);
+                        tracing::warn!("Failed to load thinktools.yaml: {}, falling back to hardcoded protocols", e);
                     }
                 }
             }

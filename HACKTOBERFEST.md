@@ -258,7 +258,7 @@ Before submitting your PR:
 
 - [Contributor Quick Start](docs/CONTRIBUTOR_QUICKSTART.md) - 30-minute guide
 - [Architecture Overview](ARCHITECTURE.md) - System design
-- [ThinkTools Guide](docs/THINKTOOLS_V2_GUIDE.md) - How ThinkTools work
+- [ThinkTools Guide](docs/THINKTOOLS_GUIDE.md) - How ThinkTools work
 
 ### New to Open Source?
 

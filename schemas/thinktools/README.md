@@ -1,6 +1,6 @@
-# ThinkTools V2 JSON Schemas
+# ThinkTools JSON Schemas
 
-This directory contains formal JSON Schema definitions for all ThinkTools V2 module outputs.
+This directory contains formal JSON Schema definitions for all ThinkTools module outputs.
 
 ## Schema Files
 
@@ -261,10 +261,10 @@ To add or modify schemas:
 
 ## Resources
 
-- **Full Protocol:** `protocols/thinktools_v2.yaml`
-- **User Guide:** `docs/THINKTOOLS_V2_GUIDE.md`
+- **Full Protocol:** `protocols/thinktools.yaml`
+- **User Guide:** `docs/THINKTOOLS_GUIDE.md`
 - **API Docs:** https://docs.rs/reasonkit-core
 
 ---
 
-_ThinkTools V2 Schemas | Apache 2.0 | https://reasonkit.sh_
+_ThinkTools Schemas | Apache 2.0 | https://reasonkit.sh_

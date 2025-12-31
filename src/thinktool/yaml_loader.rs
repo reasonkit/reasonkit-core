@@ -1,6 +1,6 @@
 //! YAML Protocol Loader
 //!
-//! Loads ThinkTool protocols from YAML files (thinktools_v2.yaml format).
+//! Loads ThinkTool protocols from YAML files (thinktools.yaml format).
 
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
@@ -50,7 +50,7 @@ struct YamlThinkingPattern {
     steps: Vec<String>,
 }
 
-/// Root YAML structure for thinktools_v2.yaml
+/// Root YAML structure for thinktools.yaml
 #[derive(Debug, Clone, Deserialize, Serialize)]
 struct YamlThinkToolsV2 {
     version: String,
@@ -59,7 +59,7 @@ struct YamlThinkToolsV2 {
     thinktool_modules: HashMap<String, YamlThinkToolModule>,
 }
 
-/// Load protocols from the thinktools_v2.yaml file
+/// Load protocols from the thinktools.yaml file
 pub fn load_from_yaml_file(path: &Path) -> Result<Vec<Protocol>> {
     let content = std::fs::read_to_string(path).map_err(|e| Error::IoMessage {
         message: format!("Failed to read YAML file {}: {}", path.display(), e),

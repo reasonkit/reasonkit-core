@@ -1,4 +1,4 @@
-# ThinkTools V2 Architecture Diagram
+# ThinkTools Architecture Diagram
 
 > Visual reference for system design and data flow
 
@@ -11,7 +11,7 @@
 
 ```
 ┌────────────────────────────────────────────────────────────────────┐
-│                      THINKTOOLS V2 ORCHESTRATOR                     │
+│                      THINKTOOLS ORCHESTRATOR                     │
 │                   Production Reasoning Framework                    │
 └────────────────────────────────────────────────────────────────────┘
                                    │
@@ -525,7 +525,7 @@ Input: Module Outputs
 reasonkit-core/
 │
 ├── protocols/
-│   └── thinktools_v2.yaml ────────────┐
+│   └── thinktools.yaml ────────────┐
 │       (31.6 KB)                       │
 │       • Module definitions            │ PROTOCOL
 │       • Profile specifications        │ LAYER
@@ -544,7 +544,7 @@ reasonkit-core/
 │           (6 schemas, ~65 KB)         │     │
 │                                       │     │
 ├── docs/                               │     │
-│   ├── THINKTOOLS_V2_GUIDE.md ────────┼─────┼───┐
+│   ├── THINKTOOLS_GUIDE.md ────────┼─────┼───┐
 │   │   (32.7 KB - comprehensive)      │     │   │
 │   ├── THINKTOOLS_QUICK_REFERENCE.md  │     │   │ DOCS
 │   │   (7.8 KB - cheat sheet)         │     │   │ LAYER
@@ -575,7 +575,7 @@ reasonkit-core/
 │  │                    reasonkit-core                            │    │
 │  │                                                               │    │
 │  │  ┌────────────┐  ┌────────────┐  ┌────────────────────┐    │    │
-│  │  │    RAG     │  │   Vector   │  │   ThinkTools V2    │    │    │
+│  │  │    RAG     │  │   Vector   │  │   ThinkTools    │    │    │
 │  │  │  Pipeline  │  │  Database  │  │   Orchestrator     │    │    │
 │  │  └─────┬──────┘  └─────┬──────┘  └─────────┬──────────┘    │    │
 │  │        │               │                    │                │    │
@@ -605,5 +605,5 @@ reasonkit-core/
 
 ---
 
-_ThinkTools V2 Architecture | reasonkit-core | 2025-12-22_
+_ThinkTools Architecture | reasonkit-core | 2025-12-22_
 *https://reasonkit.sh*

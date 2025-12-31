@@ -1,4 +1,4 @@
-# ThinkTools V2 Quick Reference Card
+# ThinkTools Quick Reference Card
 
 > One-page cheat sheet for AI agents and developers
 
@@ -352,8 +352,8 @@ attack_intensity = 0.8
 
 | Resource          | Location                       |
 | ----------------- | ------------------------------ |
-| **Full Protocol** | `protocols/thinktools_v2.yaml` |
-| **User Guide**    | `docs/THINKTOOLS_V2_GUIDE.md`  |
+| **Full Protocol** | `protocols/thinktools.yaml`    |
+| **User Guide**    | `docs/THINKTOOLS_GUIDE.md`     |
 | **JSON Schemas**  | `schemas/thinktools/*.json`    |
 | **API Docs**      | https://docs.rs/reasonkit-core |
 
@@ -419,5 +419,5 @@ Security/Safety critical? → Yes → --paranoid (95% conf, 600s)
 
 ---
 
-_ThinkTools V2 Quick Reference | reasonkit-core | Apache 2.0_
+_ThinkTools Quick Reference | reasonkit-core | Apache 2.0_
 *https://reasonkit.sh*

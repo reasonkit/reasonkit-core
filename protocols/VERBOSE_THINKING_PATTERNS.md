@@ -32,7 +32,7 @@
 | **Status**  | PRODUCTION READY                                                     |
 | **Purpose** | Define detailed step-by-step thinking patterns for 5 core ThinkTools |
 
-**Inherits From:** `thinktools_v2.yaml`, `proofguard-deep-research-protocol.yaml`
+**Inherits From:** `thinktools.yaml`, `proofguard-deep-research-protocol.yaml`
 
 **AI Consultations:**
 
@@ -2024,7 +2024,7 @@ print(f"Markdown trace:\n{result.markdown_trace}")
 
 ## RELATED DOCUMENTS
 
-- `thinktools_v2.yaml` - ThinkTools V2 protocol specification
+- `thinktools.yaml` - ThinkTools protocol specification
 - `proofguard-deep-research-protocol.yaml` - ProofGuard deep research workflow
 - `../ORCHESTRATOR.md` - Master orchestration (module definitions)
 - `../reasonkit-core/CLAUDE.md` - Project-specific context
