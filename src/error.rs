@@ -144,6 +144,42 @@ pub enum Error {
     /// Template not found
     #[error("Template not found: {0}")]
     TemplateNotFound(String),
+
+    /// Code intelligence error
+    #[error("Code intelligence error: {0}")]
+    CodeIntelligence(String),
+
+    /// M2 integration error
+    #[error("M2 integration error: {0}")]
+    M2IntegrationError(String),
+
+    /// Timeout error
+    #[error("Timeout error: {0}")]
+    Timeout(String),
+
+    /// Dependency not met error
+    #[error("Dependency not met: {0}")]
+    DependencyNotMet(String),
+
+    /// Protocol generation error
+    #[error("Protocol generation error: {0}")]
+    ProtocolGenerationError(String),
+
+    /// ThinkTool execution error
+    #[error("ThinkTool execution error: {0}")]
+    ThinkToolExecutionError(String),
+
+    /// Rate limit error
+    #[error("Rate limit error: {0}")]
+    RateLimit(String),
+
+    /// Authentication error
+    #[error("Authentication error: {0}")]
+    Authentication(String),
+
+    /// Authorization error
+    #[error("Authorization error: {0}")]
+    Authorization(String),
 }
 
 impl Error {

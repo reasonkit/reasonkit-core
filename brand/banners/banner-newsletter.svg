@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 300" width="800" height="300">
+  <defs>
+    <linearGradient id="rk-newsletter-bg" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#030508"/>
+      <stop offset="100%" stop-color="#0a0d14"/>
+    </linearGradient>
+    <linearGradient id="rk-newsletter-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#06b6d4"/>
+      <stop offset="50%" stop-color="#a855f7"/>
+      <stop offset="100%" stop-color="#ec4899"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="300" fill="url(#rk-newsletter-bg)"/>
+  <g transform="translate(150, 150)">
+    <g stroke="url(#rk-newsletter-grad)" stroke-width="5" stroke-linecap="round" fill="none" opacity="0.75">
+      <path d="M0 65V32"/>
+      <path d="M0 32L-52 -26"/>
+      <path d="M0 32L52 -26"/>
+    </g>
+    <g fill="url(#rk-newsletter-grad)" opacity="0.75">
+      <circle cx="0" cy="65" r="7"/>
+      <circle cx="0" cy="32" r="7"/>
+      <circle cx="-52" cy="-26" r="6"/>
+      <circle cx="52" cy="-26" r="6"/>
+    </g>
+  </g>
+  <text x="250" y="145" font-family="'Inter', Georgia, serif" font-size="46" font-weight="700" letter-spacing="-0.01em" fill="#f9fafb">ReasonKit Newsletter</text>
+  <text x="250" y="190" font-family="'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="20" font-weight="400" fill="#9ca3af">Stay updated with structured reasoning insights</text>
+  <text x="250" y="230" font-family="'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="18" font-weight="400" fill="#06b6d4">Subscribe at reasonkit.sh/newsletter</text>
+</svg>

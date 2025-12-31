@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100" fill="none">
+  <!-- Circuit Void Pattern - "The Grid" -->
+  <!-- Seamless background tile for Industrial texture -->
+  <rect width="100" height="100" fill="#030508"/>
+
+  <!-- Grid lines -->
+  <path d="M100 0 L0 0 L0 100" stroke="#1f2937" stroke-width="0.5" opacity="0.5"/>
+
+  <!-- Node dots -->
+  <rect x="0" y="0" width="2" height="2" fill="#06b6d4" opacity="0.2"/>
+  <rect x="50" y="50" width="2" height="2" fill="#a855f7" opacity="0.2"/>
+
+  <!-- Circuit traces -->
+  <path d="M10 0 L10 5" stroke="#06b6d4" stroke-width="0.5" opacity="0.2"/>
+  <path d="M0 10 L5 10" stroke="#06b6d4" stroke-width="0.5" opacity="0.2"/>
+</svg>

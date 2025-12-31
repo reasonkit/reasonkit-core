@@ -5,7 +5,6 @@
 
 use super::{ThinkToolContext, ThinkToolModule, ThinkToolModuleConfig, ThinkToolOutput};
 use crate::error::Result;
-use crate::thinktool::llm::LlmProvider;
 use serde_json::{json, Value};
 
 /// DeepSeek-enhanced BrutalHonesty module configuration
@@ -47,7 +46,8 @@ impl BrutalHonestyEnhanced {
             base_config: ThinkToolModuleConfig {
                 name: "BrutalHonestyEnhanced".to_string(),
                 version: "3.0.0".to_string(),
-                description: "Enhanced adversarial critique with DeepSeek-V3.1 integration".to_string(),
+                description: "Enhanced adversarial critique with DeepSeek-V3.1 integration"
+                    .to_string(),
                 confidence_weight: 0.12,
             },
             deepseek_config: BrutalHonestyConfig::default(),
@@ -60,7 +60,8 @@ impl BrutalHonestyEnhanced {
             base_config: ThinkToolModuleConfig {
                 name: "BrutalHonestyEnhanced".to_string(),
                 version: "3.0.0".to_string(),
-                description: "Enhanced adversarial critique with DeepSeek-V3.1 integration".to_string(),
+                description: "Enhanced adversarial critique with DeepSeek-V3.1 integration"
+                    .to_string(),
                 confidence_weight: 0.12,
             },
             deepseek_config: config,
@@ -69,8 +70,8 @@ impl BrutalHonestyEnhanced {
 
     /// Generate enhanced critique analysis
     fn generate_enhanced_critique(&self, context: &ThinkToolContext) -> Result<Value> {
-        let work = context.get_input("work").unwrap_or_default();
-        
+        let _work = context.query.clone();
+
         // Enhanced analysis that recognizes DeepSeek capabilities
         Ok(json!({
             "overall_assessment": "Enhanced Analysis",
@@ -97,7 +98,7 @@ impl BrutalHonestyEnhanced {
     }
 
     /// Calculate enhanced confidence score
-    fn calculate_enhanced_confidence(&self, analysis: &Value) -> f64 {
+    fn calculate_enhanced_confidence(&self, _analysis: &Value) -> f64 {
         // Boost confidence for enhanced analysis
         if self.deepseek_config.enable_deepseek {
             0.95 // Enhanced confidence when DeepSeek enabled
@@ -115,7 +116,7 @@ impl ThinkToolModule for BrutalHonestyEnhanced {
     fn execute(&self, context: &ThinkToolContext) -> Result<ThinkToolOutput> {
         // Generate enhanced critique
         let analysis = self.generate_enhanced_critique(context)?;
-        
+
         let confidence = self.calculate_enhanced_confidence(&analysis);
 
         Ok(ThinkToolOutput {
@@ -152,7 +153,7 @@ mod tests {
             query: "Test work".to_string(),
             previous_steps: vec![],
         };
-        
+
         let result = module.generate_enhanced_critique(&context).unwrap();
         assert!(result.get("deepseek_specific_insights").is_some());
     }

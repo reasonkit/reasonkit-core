@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1200" width="1200" height="1200">
+  <defs>
+    <linearGradient id="rk-code-post-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#030508"/>
+      <stop offset="100%" stop-color="#0a0d14"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="1200" fill="url(#rk-code-post-bg)"/>
+  <rect x="100" y="300" width="1000" height="500" rx="10" fill="#0a0d14" stroke="#06b6d4" stroke-width="2.5" opacity="0.35"/>
+  <text x="150" y="380" font-family="'JetBrains Mono', 'Fira Code', 'Consolas', monospace" font-size="28" font-weight="400" fill="#06b6d4">$ rk-core think "Your question"</text>
+  <text x="150" y="450" font-family="'JetBrains Mono', 'Fira Code', 'Consolas', monospace" font-size="28" font-weight="400" fill="#9ca3af">  --profile balanced</text>
+  <text x="150" y="520" font-family="'JetBrains Mono', 'Fira Code', 'Consolas', monospace" font-size="28" font-weight="400" fill="#f9fafb">✓ Analysis complete</text>
+  <text x="150" y="590" font-family="'JetBrains Mono', 'Fira Code', 'Consolas', monospace" font-size="28" font-weight="400" fill="#10b981">  Confidence: 85%</text>
+  <text x="150" y="660" font-family="'JetBrains Mono', 'Fira Code', 'Consolas', monospace" font-size="28" font-weight="400" fill="#9ca3af">  Trace: traces/abc123.json</text>
+  <text x="600" y="950" text-anchor="middle" font-family="'Inter', Georgia, serif" font-size="40" font-weight="700" letter-spacing="-0.01em" fill="#f9fafb">ReasonKit</text>
+  <text x="600" y="1000" text-anchor="middle" font-family="'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="22" font-weight="400" fill="#9ca3af">Turn Prompts into Protocols</text>
+</svg>

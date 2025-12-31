@@ -22,11 +22,13 @@ use tokio::sync::RwLock as TokioRwLock;
 // ═══════════════════════════════════════════════════════════════════════════
 
 /// Static regex for conditional blocks: {{#if ...}}...{{/if}}
-static CONDITIONAL_BLOCK_RE: Lazy<Regex> =
-    Lazy::new(|| Regex::new(r"\{\{#if \w+\}\}.*?\{\{/if\}\}").expect("Invalid static regex pattern"));
+static CONDITIONAL_BLOCK_RE: Lazy<Regex> = Lazy::new(|| {
+    Regex::new(r"\{\{#if \w+\}\}.*?\{\{/if\}\}").expect("Invalid static regex pattern")
+});
 
 /// Static regex for unfilled placeholders: {{...}}
-static UNFILLED_PLACEHOLDER_RE: Lazy<Regex> = Lazy::new(|| Regex::new(r"\{\{[^}]+\}\}").expect("Invalid static regex pattern"));
+static UNFILLED_PLACEHOLDER_RE: Lazy<Regex> =
+    Lazy::new(|| Regex::new(r"\{\{[^}]+\}\}").expect("Invalid static regex pattern"));
 
 // Thread-local cache for dynamic nested regex patterns ({{step_id.field}})
 // This avoids recompiling the same patterns within a single execution
@@ -104,9 +106,10 @@ impl CliToolConfig {
 
     /// Create config for OpenCode CLI (opencode "...")
     pub fn opencode() -> Self {
+        let command = std::env::var("RK_OPENCODE_CMD").unwrap_or_else(|_| "opencode".to_string());
         Self {
-            command: "opencode".to_string(),
-            pre_args: vec![],
+            command,
+            pre_args: vec!["--no-rk".to_string(), "run".to_string()],
             post_args: vec![],
             interactive: false,
         }
@@ -991,8 +994,9 @@ impl ProtocolExecutor {
     /// Static version of extract_confidence for use in parallel execution
     fn extract_confidence_static(content: &str) -> Option<f64> {
         use once_cell::sync::Lazy;
-        static CONFIDENCE_RE: Lazy<Regex> =
-            Lazy::new(|| Regex::new(r"(?i)confidence[:\s]+(\d+\.?\d*)").expect("Invalid regex pattern"));
+        static CONFIDENCE_RE: Lazy<Regex> = Lazy::new(|| {
+            Regex::new(r"(?i)confidence[:\s]+(\d+\.?\d*)").expect("Invalid regex pattern")
+        });
 
         if let Some(caps) = CONFIDENCE_RE.captures(content) {
             if let Some(m) = caps.get(1) {
@@ -1699,8 +1703,9 @@ impl ProtocolExecutor {
         // Compile regexes once (static lifetime)
         static NUMBERED_RE: Lazy<regex::Regex> =
             Lazy::new(|| regex::Regex::new(r"^\d+[\.\)]\s*(.+)$").expect("Invalid regex pattern"));
-        static BOLD_RE: Lazy<regex::Regex> =
-            Lazy::new(|| regex::Regex::new(r"^\*\*([^*]+)\*\*[:\s-]*(.*)$").expect("Invalid regex pattern"));
+        static BOLD_RE: Lazy<regex::Regex> = Lazy::new(|| {
+            regex::Regex::new(r"^\*\*([^*]+)\*\*[:\s-]*(.*)$").expect("Invalid regex pattern")
+        });
 
         let mut items = Vec::new();
         let mut current_item: Option<String> = None;

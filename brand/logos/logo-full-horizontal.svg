@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 64" width="280" height="64">
+  <defs>
+    <linearGradient id="rk-full-horiz-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#06b6d4"/>
+      <stop offset="50%" stop-color="#a855f7"/>
+      <stop offset="100%" stop-color="#ec4899"/>
+    </linearGradient>
+  </defs>
+  <g transform="translate(8, 8)">
+    <rect width="48" height="48" rx="12" fill="url(#rk-full-horiz-grad)"/>
+    <g stroke="#030508" stroke-width="3" stroke-linecap="round" fill="none">
+      <path d="M24 40V20"/>
+      <path d="M24 20L14 14"/>
+      <path d="M24 20L34 14"/>
+      <path d="M24 32L18 28"/>
+      <path d="M24 32L30 28"/>
+    </g>
+    <g fill="#030508">
+      <circle cx="24" cy="40" r="3.5"/>
+      <circle cx="24" cy="20" r="3.5"/>
+      <circle cx="14" cy="14" r="3"/>
+      <circle cx="34" cy="14" r="3"/>
+      <circle cx="18" cy="28" r="2.5"/>
+      <circle cx="30" cy="28" r="2.5"/>
+    </g>
+  </g>
+  <text x="72" y="44" font-family="'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="36" font-weight="700" letter-spacing="-0.02em" fill="#f9fafb">ReasonKit</text>
+</svg>
+

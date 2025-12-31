@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <defs>
+    <pattern id="rk-dots-hex" x="0" y="0" width="30" height="26" patternUnits="userSpaceOnUse">
+      <circle cx="15" cy="13" r="1.5" fill="#06b6d4" opacity="0.2"/>
+    </pattern>
+  </defs>
+  <rect width="200" height="200" fill="url(#rk-dots-hex)"/>
+</svg>
+

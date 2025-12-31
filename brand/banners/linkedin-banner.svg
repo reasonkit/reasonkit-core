@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1584 396" width="1584" height="396">
+  <defs>
+    <linearGradient id="rk-linkedin-bg" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#030508"/>
+      <stop offset="50%" stop-color="#0a0d14"/>
+      <stop offset="100%" stop-color="#030508"/>
+    </linearGradient>
+    <linearGradient id="rk-linkedin-accent" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#06b6d4" stop-opacity="0.2"/>
+      <stop offset="50%" stop-color="#a855f7" stop-opacity="0.12"/>
+      <stop offset="100%" stop-color="#ec4899" stop-opacity="0.2"/>
+    </linearGradient>
+  </defs>
+  <rect width="1584" height="396" fill="url(#rk-linkedin-bg)"/>
+  <rect width="1584" height="396" fill="url(#rk-linkedin-accent)"/>
+  <g transform="translate(120, 198)">
+    <g stroke="#06b6d4" stroke-width="4" stroke-linecap="round" fill="none" opacity="0.75">
+      <path d="M0 60V30"/>
+      <path d="M0 30L-50 -25"/>
+      <path d="M0 30L50 -25"/>
+      <path d="M0 50L-40 20"/>
+      <path d="M0 50L40 20"/>
+    </g>
+    <g fill="#06b6d4" opacity="0.75">
+      <circle cx="0" cy="60" r="6"/>
+      <circle cx="0" cy="30" r="6"/>
+      <circle cx="-50" cy="-25" r="5"/>
+      <circle cx="50" cy="-25" r="5"/>
+      <circle cx="-40" cy="20" r="4"/>
+      <circle cx="40" cy="20" r="4"/>
+    </g>
+  </g>
+  <text x="200" y="220" font-family="'Inter', Georgia, serif" font-size="46" font-weight="700" fill="#f9fafb">ReasonKit</text>
+  <text x="200" y="260" font-family="'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="20" font-weight="400" fill="#9ca3af">Structured Reasoning Infrastructure for AI</text>
+  <text x="200" y="290" font-family="'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="16" font-weight="400" fill="#06b6d4">reasonkit.sh</text>
+</svg>

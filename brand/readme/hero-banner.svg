@@ -1,0 +1,113 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 400" width="1200" height="400" fill="none">
+  <!-- ReasonKit Hero Banner - Auditable Reasoning Visualization -->
+  <defs>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M40 0 L0 0 L0 40" fill="none" stroke="#1f2937" stroke-width="0.5"/>
+    </pattern>
+    <linearGradient id="edgeGrad" x1="0%" y1="50%" x2="100%" y2="50%">
+      <stop offset="0%" stop-color="#06b6d4"/>
+      <stop offset="50%" stop-color="#a855f7"/>
+      <stop offset="100%" stop-color="#ec4899"/>
+    </linearGradient>
+    <linearGradient id="flowGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#06b6d4"/>
+      <stop offset="50%" stop-color="#a855f7"/>
+      <stop offset="100%" stop-color="#10b981"/>
+    </linearGradient>
+    <radialGradient id="coreGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#06b6d4" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#030508" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="400" fill="#030508"/>
+  <rect width="1200" height="400" fill="url(#grid)" opacity="0.15"/>
+  <ellipse cx="200" cy="200" rx="250" ry="200" fill="url(#coreGlow)"/>
+
+  <!-- Luminous Polyhedron Logo -->
+  <g transform="translate(180, 200)" filter="url(#glow)">
+    <path d="M0 0 L-50 -29 L0 -58 Z" fill="#06b6d4" fill-opacity="0.3"/>
+    <path d="M0 0 L0 -58 L50 -29 Z" fill="#a855f7" fill-opacity="0.3"/>
+    <path d="M0 0 L50 -29 L50 29 Z" fill="#ec4899" fill-opacity="0.5"/>
+    <path d="M0 0 L50 29 L0 58 Z" fill="#a855f7" fill-opacity="0.4"/>
+    <path d="M0 0 L0 58 L-50 29 Z" fill="#06b6d4" fill-opacity="0.4"/>
+    <path d="M0 0 L-50 29 L-50 -29 Z" fill="#06b6d4" fill-opacity="0.6"/>
+    <path d="M0 -58 L50 -29 L50 29 L0 58 L-50 29 L-50 -29 Z"
+          fill="none" stroke="url(#edgeGrad)" stroke-width="2.5" stroke-linejoin="round"/>
+    <circle cx="15" cy="-10" r="8" fill="white" opacity="0.3"/>
+  </g>
+
+  <!-- Pipeline Flow -->
+  <g transform="translate(350, 80)">
+    <!-- Flow line -->
+    <path d="M0 120 L700 120" stroke="url(#flowGrad)" stroke-width="2" stroke-dasharray="8 4"/>
+
+    <!-- ThinkTool nodes -->
+    <g transform="translate(50, 120)">
+      <circle r="20" fill="#0a0d14" stroke="#06b6d4" stroke-width="2"/>
+      <text y="5" fill="#06b6d4" font-family="JetBrains Mono, monospace" font-size="12" text-anchor="middle">GT</text>
+      <text y="50" fill="#9ca3af" font-family="Inter, sans-serif" font-size="10" text-anchor="middle">GigaThink</text>
+    </g>
+
+    <g transform="translate(200, 120)">
+      <circle r="20" fill="#0a0d14" stroke="#a855f7" stroke-width="2"/>
+      <text y="5" fill="#a855f7" font-family="JetBrains Mono, monospace" font-size="12" text-anchor="middle">LL</text>
+      <text y="50" fill="#9ca3af" font-family="Inter, sans-serif" font-size="10" text-anchor="middle">LaserLogic</text>
+    </g>
+
+    <g transform="translate(350, 120)">
+      <circle r="20" fill="#0a0d14" stroke="#fbbf24" stroke-width="2"/>
+      <text y="5" fill="#fbbf24" font-family="JetBrains Mono, monospace" font-size="12" text-anchor="middle">BR</text>
+      <text y="50" fill="#9ca3af" font-family="Inter, sans-serif" font-size="10" text-anchor="middle">BedRock</text>
+    </g>
+
+    <g transform="translate(500, 120)">
+      <circle r="20" fill="#0a0d14" stroke="#ec4899" stroke-width="2"/>
+      <text y="5" fill="#ec4899" font-family="JetBrains Mono, monospace" font-size="12" text-anchor="middle">PG</text>
+      <text y="50" fill="#9ca3af" font-family="Inter, sans-serif" font-size="10" text-anchor="middle">ProofGuard</text>
+    </g>
+
+    <g transform="translate(650, 120)" filter="url(#glow)">
+      <circle r="24" fill="#0a0d14" stroke="#10b981" stroke-width="3"/>
+      <path d="M-8 0 L-3 5 L8 -6" stroke="#10b981" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      <text y="55" fill="#10b981" font-family="Inter, sans-serif" font-size="10" text-anchor="middle">Output</text>
+    </g>
+  </g>
+
+  <!-- Variance Reduction Indicator -->
+  <g transform="translate(950, 280)">
+    <rect x="0" y="0" width="200" height="80" rx="6" fill="#0a0d14" stroke="#1f2937"/>
+    <rect x="0" y="0" width="200" height="5" rx="2" fill="#10b981"/>
+    <text x="20" y="30" fill="#9ca3af" font-family="Inter, sans-serif" font-size="10" letter-spacing="1">VARIANCE REDUCTION</text>
+    <text x="20" y="60" fill="#10b981" font-family="JetBrains Mono, monospace" font-size="28" font-weight="700">-50%</text>
+    <path d="M160 50 L170 35 L150 35 Z" fill="#10b981"/>
+  </g>
+
+  <!-- Title -->
+  <g transform="translate(350, 50)">
+    <text fill="#f9fafb" font-family="Inter, sans-serif" font-size="28" font-weight="700">
+      Auditable Reasoning Pipeline
+    </text>
+    <text y="30" fill="#9ca3af" font-family="JetBrains Mono, monospace" font-size="14" letter-spacing="1">
+      // TURN PROMPTS INTO PROTOCOLS
+    </text>
+  </g>
+
+  <!-- Technical Frame -->
+  <line x1="30" y1="30" x2="30" y2="80" stroke="#06b6d4" stroke-width="2"/>
+  <line x1="30" y1="30" x2="80" y2="30" stroke="#06b6d4" stroke-width="2"/>
+  <line x1="1170" y1="30" x2="1170" y2="80" stroke="#06b6d4" stroke-width="2"/>
+  <line x1="1170" y1="30" x2="1120" y2="30" stroke="#06b6d4" stroke-width="2"/>
+  <line x1="30" y1="370" x2="30" y2="320" stroke="#a855f7" stroke-width="2"/>
+  <line x1="30" y1="370" x2="80" y2="370" stroke="#a855f7" stroke-width="2"/>
+  <line x1="1170" y1="370" x2="1170" y2="320" stroke="#ec4899" stroke-width="2"/>
+  <line x1="1170" y1="370" x2="1120" y2="370" stroke="#ec4899" stroke-width="2"/>
+</svg>

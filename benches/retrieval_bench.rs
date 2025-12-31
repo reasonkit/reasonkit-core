@@ -83,7 +83,7 @@ fn bench_sparse_search(c: &mut Criterion) {
 
     let retriever = rt.block_on(async { setup_test_corpus(100, 2048).await });
 
-    let queries = vec![
+    let queries = [
         "machine learning",
         "deep learning neural networks",
         "chain of thought reasoning",
@@ -225,7 +225,7 @@ fn bench_concurrent_queries(c: &mut Criterion) {
 
     let retriever = rt.block_on(async { setup_test_corpus(100, 2048).await });
 
-    let queries = vec![
+    let queries = [
         "machine learning",
         "deep learning",
         "neural networks",

@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400">
+  <defs>
+    <linearGradient id="rk-twitter-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#06b6d4"/>
+      <stop offset="50%" stop-color="#a855f7"/>
+      <stop offset="100%" stop-color="#ec4899"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="400" rx="88" fill="#030508"/>
+  <g transform="translate(200, 200)">
+    <g stroke="url(#rk-twitter-grad)" stroke-width="9" stroke-linecap="round" fill="none">
+      <path d="M0 70V35"/>
+      <path d="M0 35L-50 -25"/>
+      <path d="M0 35L50 -25"/>
+      <path d="M0 55L-38 20"/>
+      <path d="M0 55L38 20"/>
+    </g>
+    <g fill="url(#rk-twitter-grad)">
+      <circle cx="0" cy="70" r="7"/>
+      <circle cx="0" cy="35" r="7"/>
+      <circle cx="-50" cy="-25" r="6"/>
+      <circle cx="50" cy="-25" r="6"/>
+      <circle cx="-38" cy="20" r="5"/>
+      <circle cx="38" cy="20" r="5"/>
+    </g>
+  </g>
+</svg>

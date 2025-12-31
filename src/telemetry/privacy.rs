@@ -5,6 +5,7 @@
 use crate::telemetry::{
     FeedbackEvent, PrivacyConfig, QueryEvent, TelemetryError, TelemetryResult, TraceEvent,
 };
+// use once_cell::sync::Lazy;
 use regex::Regex;
 use sha2::{Digest, Sha256};
 use std::collections::HashSet;
@@ -44,60 +45,84 @@ impl PrivacyFilter {
     }
 
     /// Build PII detection patterns
+    /// PERFORMANCE: Patterns are pre-compiled as static Lazy<Regex> for optimal performance
     fn build_pii_patterns() -> Vec<PiiPattern> {
+        use once_cell::sync::Lazy;
+
+        // Pre-compiled static regex patterns (compiled once at program start)
+        static EMAIL_RE: Lazy<Regex> =
+            Lazy::new(|| Regex::new(r"[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}").unwrap());
+        static PHONE_RE: Lazy<Regex> = Lazy::new(|| {
+            Regex::new(r"(\+?1?[-.\s]?)?\(?[0-9]{3}\)?[-.\s]?[0-9]{3}[-.\s]?[0-9]{4}").unwrap()
+        });
+        static SSN_RE: Lazy<Regex> =
+            Lazy::new(|| Regex::new(r"\b\d{3}[-.]?\d{2}[-.]?\d{4}\b").unwrap());
+        static CARD_RE: Lazy<Regex> =
+            Lazy::new(|| Regex::new(r"\b(?:\d{4}[-\s]?){3}\d{4}\b").unwrap());
+        static IP_RE: Lazy<Regex> =
+            Lazy::new(|| Regex::new(r"\b(?:\d{1,3}\.){3}\d{1,3}\b").unwrap());
+        static API_KEY_RE: Lazy<Regex> = Lazy::new(|| {
+            Regex::new(r#"(?i)(api[_-]?key|apikey|secret[_-]?key|auth[_-]?token|bearer)\s*[:=]\s*['"]?[\w-]{20,}['"]?"#).unwrap()
+        });
+        static AWS_KEY_RE: Lazy<Regex> = Lazy::new(|| Regex::new(r"(?i)AKIA[0-9A-Z]{16}").unwrap());
+        static AUTH_URL_RE: Lazy<Regex> =
+            Lazy::new(|| Regex::new(r#"https?://[^:]+:[^@]+@[^\s]+"#).unwrap());
+        static USER_PATH_RE: Lazy<Regex> =
+            Lazy::new(|| Regex::new(r"(?i)(/home/|/users/|C:\\Users\\)[a-zA-Z0-9._-]+").unwrap());
+
         vec![
             // Email addresses
             PiiPattern {
                 name: "email",
-                regex: Regex::new(r"[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}").unwrap(),
+                regex: EMAIL_RE.clone(),
                 replacement: "[EMAIL]",
             },
             // Phone numbers (various formats)
             PiiPattern {
                 name: "phone",
-                regex: Regex::new(r"(\+?1?[-.\s]?)?\(?[0-9]{3}\)?[-.\s]?[0-9]{3}[-.\s]?[0-9]{4}").unwrap(),
+                regex: PHONE_RE.clone(),
                 replacement: "[PHONE]",
             },
             // SSN
             PiiPattern {
                 name: "ssn",
-                regex: Regex::new(r"\b\d{3}[-.]?\d{2}[-.]?\d{4}\b").unwrap(),
+                regex: SSN_RE.clone(),
                 replacement: "[SSN]",
             },
             // Credit card numbers
             PiiPattern {
                 name: "credit_card",
-                regex: Regex::new(r"\b(?:\d{4}[-\s]?){3}\d{4}\b").unwrap(),
+                regex: CARD_RE.clone(),
                 replacement: "[CARD]",
             },
             // IP addresses
             PiiPattern {
                 name: "ip_address",
-                regex: Regex::new(r"\b(?:\d{1,3}\.){3}\d{1,3}\b").unwrap(),
+                regex: IP_RE.clone(),
                 replacement: "[IP]",
             },
             // API keys (common patterns)
             PiiPattern {
                 name: "api_key",
-                regex: Regex::new(r#"(?i)(api[_-]?key|apikey|secret[_-]?key|auth[_-]?token|bearer)\s*[:=]\s*['"]?[\w-]{20,}['"]?"#).unwrap(),
+                regex: API_KEY_RE.clone(),
                 replacement: "[API_KEY]",
             },
             // AWS access keys
             PiiPattern {
                 name: "aws_key",
-                regex: Regex::new(r"(?i)AKIA[0-9A-Z]{16}").unwrap(),
+                regex: AWS_KEY_RE.clone(),
                 replacement: "[AWS_KEY]",
             },
             // URLs with auth
             PiiPattern {
                 name: "auth_url",
-                regex: Regex::new(r#"https?://[^:]+:[^@]+@[^\s]+"#).unwrap(),
+                regex: AUTH_URL_RE.clone(),
                 replacement: "[AUTH_URL]",
             },
             // File paths with usernames
             PiiPattern {
                 name: "user_path",
-                regex: Regex::new(r"(?i)(/home/|/users/|C:\\Users\\)[a-zA-Z0-9._-]+").unwrap(),
+                regex: USER_PATH_RE.clone(),
                 replacement: "[USER_PATH]",
             },
         ]

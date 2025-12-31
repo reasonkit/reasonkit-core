@@ -336,6 +336,10 @@ pub enum LlmProvider {
     /// Cloudflare AI Gateway (unified endpoint)
     /// Base: <https://gateway.ai.cloudflare.com/v1/{account_id}/{gateway_id}/>
     CloudflareAI,
+
+    /// Opencode AI
+    /// Base: <https://api.opencode.ai/v1>
+    Opencode,
 }
 
 impl LlmProvider {
@@ -360,6 +364,7 @@ impl LlmProvider {
             LlmProvider::AlibabaQwen,
             LlmProvider::OpenRouter,
             LlmProvider::CloudflareAI,
+            LlmProvider::Opencode,
         ]
     }
 
@@ -384,6 +389,7 @@ impl LlmProvider {
             LlmProvider::AlibabaQwen => "DASHSCOPE_API_KEY",
             LlmProvider::OpenRouter => "OPENROUTER_API_KEY",
             LlmProvider::CloudflareAI => "CLOUDFLARE_API_KEY",
+            LlmProvider::Opencode => "OPENCODE_API_KEY",
         }
     }
 
@@ -408,6 +414,7 @@ impl LlmProvider {
             LlmProvider::AlibabaQwen => "https://dashscope-intl.aliyuncs.com/compatible-mode/v1",
             LlmProvider::OpenRouter => "https://openrouter.ai/api/v1",
             LlmProvider::CloudflareAI => "https://gateway.ai.cloudflare.com/v1", // Needs account/gateway
+            LlmProvider::Opencode => "https://api.opencode.ai/v1",
         }
     }
 
@@ -439,6 +446,7 @@ impl LlmProvider {
             // Tier 4: Aggregation (Latest via gateway)
             LlmProvider::OpenRouter => "anthropic/claude-opus-4-5", // Route to best
             LlmProvider::CloudflareAI => "@cf/meta/llama-4-scout-instruct-fp8-fast",
+            LlmProvider::Opencode => "default",
         }
     }
 
@@ -481,6 +489,7 @@ impl LlmProvider {
             LlmProvider::AlibabaQwen => "Alibaba Qwen",
             LlmProvider::OpenRouter => "OpenRouter",
             LlmProvider::CloudflareAI => "Cloudflare AI",
+            LlmProvider::Opencode => "Opencode AI",
         }
     }
 }
@@ -1214,7 +1223,7 @@ mod tests {
 
     #[test]
     fn test_provider_count() {
-        assert_eq!(LlmProvider::all().len(), 18);
+        assert_eq!(LlmProvider::all().len(), 19);
     }
 
     #[test]
@@ -1373,7 +1382,7 @@ mod tests {
     #[test]
     fn test_provider_info() {
         let info = get_provider_info();
-        assert_eq!(info.len(), 18);
+        assert_eq!(info.len(), 19);
 
         let anthropic = info
             .iter()

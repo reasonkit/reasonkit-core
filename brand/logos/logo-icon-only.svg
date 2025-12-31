@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="rk-icon-only-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#06b6d4"/>
+      <stop offset="50%" stop-color="#a855f7"/>
+      <stop offset="100%" stop-color="#ec4899"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="14" fill="url(#rk-icon-only-grad)"/>
+  <g stroke="#030508" stroke-width="2.8" stroke-linecap="round" fill="none">
+    <path d="M32 50V26"/>
+    <path d="M32 26L20 18"/>
+    <path d="M32 26L44 18"/>
+    <path d="M32 38L24 32"/>
+    <path d="M32 38L40 32"/>
+  </g>
+  <g fill="#030508">
+    <circle cx="32" cy="50" r="3"/>
+    <circle cx="32" cy="26" r="3"/>
+    <circle cx="20" cy="18" r="2.5"/>
+    <circle cx="44" cy="18" r="2.5"/>
+    <circle cx="24" cy="32" r="2"/>
+    <circle cx="40" cy="32" r="2"/>
+  </g>
+</svg>
+

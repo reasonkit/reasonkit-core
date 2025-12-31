@@ -1,0 +1,226 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 700" fill="none">
+  <defs>
+    <linearGradient id="heroGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#06b6d4"/>
+      <stop offset="50%" stop-color="#a855f7"/>
+      <stop offset="100%" stop-color="#ec4899"/>
+    </linearGradient>
+    <linearGradient id="barGreen" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#10b981"/>
+      <stop offset="100%" stop-color="#059669"/>
+    </linearGradient>
+    <linearGradient id="barCyan" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#06b6d4"/>
+      <stop offset="100%" stop-color="#0891b2"/>
+    </linearGradient>
+    <linearGradient id="barPurple" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#a855f7"/>
+      <stop offset="100%" stop-color="#9333ea"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="700" fill="#030508"/>
+  <ellipse cx="600" cy="350" rx="500" ry="250" fill="#06b6d4" opacity="0.03"/>
+
+  <!-- Title -->
+  <text x="600" y="50" text-anchor="middle" fill="url(#heroGrad)" font-family="Inter, sans-serif" font-size="36" font-weight="800">QUALITY METRICS DASHBOARD</text>
+  <text x="600" y="80" text-anchor="middle" fill="#9ca3af" font-family="Inter, sans-serif" font-size="16">Real-time Reasoning Quality Measurement</text>
+
+  <!-- Overall Grade Card -->
+  <g transform="translate(50, 120)">
+    <rect x="0" y="0" width="250" height="200" rx="20" fill="#0a0d14" stroke="#10b981" stroke-width="2"/>
+    <text x="125" y="35" text-anchor="middle" fill="#10b981" font-family="Inter, sans-serif" font-size="14" font-weight="600">OVERALL GRADE</text>
+
+    <!-- Large grade circle -->
+    <circle cx="125" cy="115" r="55" fill="none" stroke="#1f2937" stroke-width="8"/>
+    <circle cx="125" cy="115" r="55" fill="none" stroke="#10b981" stroke-width="8" stroke-dasharray="310" stroke-dashoffset="31" transform="rotate(-90, 125, 115)"/>
+    <text x="125" y="130" text-anchor="middle" fill="#10b981" font-family="Inter, sans-serif" font-size="48" font-weight="800">A</text>
+
+    <text x="125" y="188" text-anchor="middle" fill="#6b7280" font-family="Inter, sans-serif" font-size="12">Score: 90/100</text>
+  </g>
+
+  <!-- Confidence Meter -->
+  <g transform="translate(320, 120)">
+    <rect x="0" y="0" width="250" height="200" rx="20" fill="#0a0d14" stroke="#06b6d4" stroke-width="2"/>
+    <text x="125" y="35" text-anchor="middle" fill="#06b6d4" font-family="Inter, sans-serif" font-size="14" font-weight="600">CONFIDENCE</text>
+
+    <!-- Confidence bar -->
+    <rect x="30" y="70" width="190" height="20" rx="10" fill="#1f2937"/>
+    <rect x="30" y="70" width="161" height="20" rx="10" fill="url(#barCyan)"/>
+    <text x="125" y="85" text-anchor="middle" fill="#030508" font-family="Inter, sans-serif" font-size="11" font-weight="700">85%</text>
+
+    <!-- Breakdown -->
+    <text x="30" y="115" fill="#9ca3af" font-family="Inter, sans-serif" font-size="10">Source triangulation:</text>
+    <text x="200" y="115" text-anchor="end" fill="#10b981" font-family="JetBrains Mono, monospace" font-size="10">3/3 ✓</text>
+
+    <text x="30" y="135" fill="#9ca3af" font-family="Inter, sans-serif" font-size="10">Logic validation:</text>
+    <text x="200" y="135" text-anchor="end" fill="#10b981" font-family="JetBrains Mono, monospace" font-size="10">PASS</text>
+
+    <text x="30" y="155" fill="#9ca3af" font-family="Inter, sans-serif" font-size="10">First principles:</text>
+    <text x="200" y="155" text-anchor="end" fill="#10b981" font-family="JetBrains Mono, monospace" font-size="10">4/4</text>
+
+    <text x="30" y="175" fill="#9ca3af" font-family="Inter, sans-serif" font-size="10">Self-critique:</text>
+    <text x="200" y="175" text-anchor="end" fill="#10b981" font-family="JetBrains Mono, monospace" font-size="10">COMPLETE</text>
+  </g>
+
+  <!-- Rigor Score -->
+  <g transform="translate(590, 120)">
+    <rect x="0" y="0" width="250" height="200" rx="20" fill="#0a0d14" stroke="#a855f7" stroke-width="2"/>
+    <text x="125" y="35" text-anchor="middle" fill="#a855f7" font-family="Inter, sans-serif" font-size="14" font-weight="600">REASONING RIGOR</text>
+
+    <!-- Rigor bar -->
+    <rect x="30" y="70" width="190" height="20" rx="10" fill="#1f2937"/>
+    <rect x="30" y="70" width="171" height="20" rx="10" fill="url(#barPurple)"/>
+    <text x="125" y="85" text-anchor="middle" fill="#030508" font-family="Inter, sans-serif" font-size="11" font-weight="700">90%</text>
+
+    <!-- Components -->
+    <text x="30" y="115" fill="#9ca3af" font-family="Inter, sans-serif" font-size="10">Depth of analysis:</text>
+    <text x="200" y="115" text-anchor="end" fill="#a855f7" font-family="JetBrains Mono, monospace" font-size="10">DEEP</text>
+
+    <text x="30" y="135" fill="#9ca3af" font-family="Inter, sans-serif" font-size="10">Perspective count:</text>
+    <text x="200" y="135" text-anchor="end" fill="#a855f7" font-family="JetBrains Mono, monospace" font-size="10">12</text>
+
+    <text x="30" y="155" fill="#9ca3af" font-family="Inter, sans-serif" font-size="10">Fallacy detection:</text>
+    <text x="200" y="155" text-anchor="end" fill="#a855f7" font-family="JetBrains Mono, monospace" font-size="10">2 found</text>
+
+    <text x="30" y="175" fill="#9ca3af" font-family="Inter, sans-serif" font-size="10">Axioms identified:</text>
+    <text x="200" y="175" text-anchor="end" fill="#a855f7" font-family="JetBrains Mono, monospace" font-size="10">4</text>
+  </g>
+
+  <!-- Execution Time -->
+  <g transform="translate(860, 120)">
+    <rect x="0" y="0" width="290" height="200" rx="20" fill="#0a0d14" stroke="#fbbf24" stroke-width="2"/>
+    <text x="145" y="35" text-anchor="middle" fill="#fbbf24" font-family="Inter, sans-serif" font-size="14" font-weight="600">EXECUTION METRICS</text>
+
+    <text x="30" y="70" fill="#9ca3af" font-family="Inter, sans-serif" font-size="11">Total duration:</text>
+    <text x="260" y="70" text-anchor="end" fill="#fbbf24" font-family="JetBrains Mono, monospace" font-size="16" font-weight="700">2.34s</text>
+
+    <text x="30" y="100" fill="#9ca3af" font-family="Inter, sans-serif" font-size="10">GigaThink:</text>
+    <rect x="100" y="90" width="100" height="12" rx="3" fill="#1f2937"/>
+    <rect x="100" y="90" width="45" height="12" rx="3" fill="#06b6d4"/>
+    <text x="210" y="100" fill="#6b7280" font-family="JetBrains Mono, monospace" font-size="9">0.45s</text>
+
+    <text x="30" y="120" fill="#9ca3af" font-family="Inter, sans-serif" font-size="10">LaserLogic:</text>
+    <rect x="100" y="110" width="100" height="12" rx="3" fill="#1f2937"/>
+    <rect x="100" y="110" width="38" height="12" rx="3" fill="#a855f7"/>
+    <text x="210" y="120" fill="#6b7280" font-family="JetBrains Mono, monospace" font-size="9">0.38s</text>
+
+    <text x="30" y="140" fill="#9ca3af" font-family="Inter, sans-serif" font-size="10">BedRock:</text>
+    <rect x="100" y="130" width="100" height="12" rx="3" fill="#1f2937"/>
+    <rect x="100" y="130" width="52" height="12" rx="3" fill="#10b981"/>
+    <text x="210" y="140" fill="#6b7280" font-family="JetBrains Mono, monospace" font-size="9">0.52s</text>
+
+    <text x="30" y="160" fill="#9ca3af" font-family="Inter, sans-serif" font-size="10">ProofGuard:</text>
+    <rect x="100" y="150" width="100" height="12" rx="3" fill="#1f2937"/>
+    <rect x="100" y="150" width="67" height="12" rx="3" fill="#fbbf24"/>
+    <text x="210" y="160" fill="#6b7280" font-family="JetBrains Mono, monospace" font-size="9">0.67s</text>
+
+    <text x="30" y="180" fill="#9ca3af" font-family="Inter, sans-serif" font-size="10">BrutalHonesty:</text>
+    <rect x="100" y="170" width="100" height="12" rx="3" fill="#1f2937"/>
+    <rect x="100" y="170" width="32" height="12" rx="3" fill="#f97316"/>
+    <text x="210" y="180" fill="#6b7280" font-family="JetBrains Mono, monospace" font-size="9">0.32s</text>
+  </g>
+
+  <!-- Execution Trace -->
+  <g transform="translate(50, 350)">
+    <rect x="0" y="0" width="700" height="300" rx="20" fill="#0a0d14" stroke="rgba(156,163,175,0.3)" stroke-width="1"/>
+    <text x="350" y="30" text-anchor="middle" fill="#9ca3af" font-family="Inter, sans-serif" font-size="14" font-weight="600">EXECUTION TRACE</text>
+
+    <!-- Trace entries -->
+    <g transform="translate(20, 50)">
+      <rect x="0" y="0" width="660" height="35" rx="6" fill="rgba(6,182,212,0.1)"/>
+      <text x="15" y="22" fill="#6b7280" font-family="JetBrains Mono, monospace" font-size="10">[00:00.00]</text>
+      <text x="90" y="22" fill="#06b6d4" font-family="JetBrains Mono, monospace" font-size="10">START</text>
+      <text x="150" y="22" fill="#9ca3af" font-family="JetBrains Mono, monospace" font-size="10">Initializing reasoning chain with profile: deep</text>
+    </g>
+
+    <g transform="translate(20, 95)">
+      <rect x="0" y="0" width="660" height="35" rx="6" fill="rgba(6,182,212,0.05)"/>
+      <text x="15" y="22" fill="#6b7280" font-family="JetBrains Mono, monospace" font-size="10">[00:00.12]</text>
+      <text x="90" y="22" fill="#06b6d4" font-family="JetBrains Mono, monospace" font-size="10">GIGATHINK</text>
+      <text x="180" y="22" fill="#9ca3af" font-family="JetBrains Mono, monospace" font-size="10">Generated 12 perspectives in 450ms</text>
+      <text x="620" y="22" fill="#10b981" font-family="JetBrains Mono, monospace" font-size="10">✓</text>
+    </g>
+
+    <g transform="translate(20, 140)">
+      <rect x="0" y="0" width="660" height="35" rx="6" fill="rgba(168,85,247,0.05)"/>
+      <text x="15" y="22" fill="#6b7280" font-family="JetBrains Mono, monospace" font-size="10">[00:00.57]</text>
+      <text x="90" y="22" fill="#a855f7" font-family="JetBrains Mono, monospace" font-size="10">LASERLOGIC</text>
+      <text x="190" y="22" fill="#9ca3af" font-family="JetBrains Mono, monospace" font-size="10">Validated 10/12 perspectives, 2 fallacies detected</text>
+      <text x="620" y="22" fill="#10b981" font-family="JetBrains Mono, monospace" font-size="10">✓</text>
+    </g>
+
+    <g transform="translate(20, 185)">
+      <rect x="0" y="0" width="660" height="35" rx="6" fill="rgba(16,185,129,0.05)"/>
+      <text x="15" y="22" fill="#6b7280" font-family="JetBrains Mono, monospace" font-size="10">[00:00.95]</text>
+      <text x="90" y="22" fill="#10b981" font-family="JetBrains Mono, monospace" font-size="10">BEDROCK</text>
+      <text x="170" y="22" fill="#9ca3af" font-family="JetBrains Mono, monospace" font-size="10">Identified 4 axioms, grounded all claims</text>
+      <text x="620" y="22" fill="#10b981" font-family="JetBrains Mono, monospace" font-size="10">✓</text>
+    </g>
+
+    <g transform="translate(20, 230)">
+      <rect x="0" y="0" width="660" height="35" rx="6" fill="rgba(251,191,36,0.05)"/>
+      <text x="15" y="22" fill="#6b7280" font-family="JetBrains Mono, monospace" font-size="10">[00:01.47]</text>
+      <text x="90" y="22" fill="#fbbf24" font-family="JetBrains Mono, monospace" font-size="10">PROOFGUARD</text>
+      <text x="190" y="22" fill="#9ca3af" font-family="JetBrains Mono, monospace" font-size="10">Triangulated with 3 sources, confidence: 87%</text>
+      <text x="620" y="22" fill="#10b981" font-family="JetBrains Mono, monospace" font-size="10">✓</text>
+    </g>
+
+    <g transform="translate(20, 275)">
+      <rect x="0" y="0" width="660" height="22" rx="6" fill="rgba(249,115,22,0.05)"/>
+      <text x="15" y="15" fill="#6b7280" font-family="JetBrains Mono, monospace" font-size="10">[00:02.14]</text>
+      <text x="90" y="15" fill="#f97316" font-family="JetBrains Mono, monospace" font-size="10">BRUTALHONESTY</text>
+      <text x="210" y="15" fill="#9ca3af" font-family="JetBrains Mono, monospace" font-size="10">Critique complete, 3 weaknesses identified</text>
+      <text x="620" y="15" fill="#10b981" font-family="JetBrains Mono, monospace" font-size="10">✓</text>
+    </g>
+  </g>
+
+  <!-- Quality Comparison -->
+  <g transform="translate(770, 350)">
+    <rect x="0" y="0" width="380" height="300" rx="20" fill="#0a0d14" stroke="url(#heroGrad)" stroke-width="2"/>
+    <text x="190" y="30" text-anchor="middle" fill="url(#heroGrad)" font-family="Inter, sans-serif" font-size="14" font-weight="600">PROFILE COMPARISON</text>
+
+    <!-- Headers -->
+    <text x="30" y="65" fill="#9ca3af" font-family="Inter, sans-serif" font-size="10">Profile</text>
+    <text x="140" y="65" fill="#9ca3af" font-family="Inter, sans-serif" font-size="10">Confidence</text>
+    <text x="230" y="65" fill="#9ca3af" font-family="Inter, sans-serif" font-size="10">Time</text>
+    <text x="300" y="65" fill="#9ca3af" font-family="Inter, sans-serif" font-size="10">Grade</text>
+
+    <!-- Quick -->
+    <text x="30" y="100" fill="#06b6d4" font-family="Inter, sans-serif" font-size="11" font-weight="600">--quick</text>
+    <rect x="100" y="90" width="80" height="14" rx="3" fill="#1f2937"/>
+    <rect x="100" y="90" width="56" height="14" rx="3" fill="#06b6d4"/>
+    <text x="190" y="100" fill="#6b7280" font-family="JetBrains Mono, monospace" font-size="10">0.8s</text>
+    <text x="300" y="100" fill="#fbbf24" font-family="Inter, sans-serif" font-size="12" font-weight="700">B+</text>
+
+    <!-- Balanced -->
+    <text x="30" y="140" fill="#a855f7" font-family="Inter, sans-serif" font-size="11" font-weight="600">--balanced</text>
+    <rect x="100" y="130" width="80" height="14" rx="3" fill="#1f2937"/>
+    <rect x="100" y="130" width="64" height="14" rx="3" fill="#a855f7"/>
+    <text x="190" y="140" fill="#6b7280" font-family="JetBrains Mono, monospace" font-size="10">1.5s</text>
+    <text x="300" y="140" fill="#10b981" font-family="Inter, sans-serif" font-size="12" font-weight="700">A-</text>
+
+    <!-- Deep (current) -->
+    <rect x="20" y="155" width="340" height="30" rx="6" fill="rgba(16,185,129,0.1)" stroke="#10b981" stroke-width="1"/>
+    <text x="30" y="175" fill="#10b981" font-family="Inter, sans-serif" font-size="11" font-weight="600">--deep ◀</text>
+    <rect x="100" y="165" width="80" height="14" rx="3" fill="#1f2937"/>
+    <rect x="100" y="165" width="68" height="14" rx="3" fill="#10b981"/>
+    <text x="190" y="175" fill="#10b981" font-family="JetBrains Mono, monospace" font-size="10">2.3s</text>
+    <text x="300" y="175" fill="#10b981" font-family="Inter, sans-serif" font-size="12" font-weight="700">A</text>
+
+    <!-- Paranoid -->
+    <text x="30" y="220" fill="#f97316" font-family="Inter, sans-serif" font-size="11" font-weight="600">--paranoid</text>
+    <rect x="100" y="210" width="80" height="14" rx="3" fill="#1f2937"/>
+    <rect x="100" y="210" width="76" height="14" rx="3" fill="#f97316"/>
+    <text x="190" y="220" fill="#6b7280" font-family="JetBrains Mono, monospace" font-size="10">4.2s</text>
+    <text x="300" y="220" fill="#10b981" font-family="Inter, sans-serif" font-size="12" font-weight="700">A+</text>
+
+    <!-- Legend -->
+    <text x="30" y="260" fill="#6b7280" font-family="Inter, sans-serif" font-size="9">Confidence bars show % (70% min → 95% max)</text>
+    <text x="30" y="278" fill="#6b7280" font-family="Inter, sans-serif" font-size="9">Current profile highlighted</text>
+  </g>
+
+  <!-- Footer -->
+  <text x="600" y="680" text-anchor="middle" fill="#4b5563" font-family="Inter, sans-serif" font-size="12">ReasonKit Quality Metrics | Real-time execution tracing | reasonkit.sh</text>
+</svg>

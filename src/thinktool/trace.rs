@@ -13,7 +13,7 @@ use uuid::Uuid;
 use super::step::{StepOutput, TokenUsage};
 
 /// A complete execution trace
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct ExecutionTrace {
     /// Unique trace identifier
     pub id: Uuid,

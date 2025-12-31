@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="rk-counter-icon-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#06b6d4"/>
+      <stop offset="50%" stop-color="#a855f7"/>
+      <stop offset="100%" stop-color="#ec4899"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="14" fill="#030508"/>
+  <g stroke="url(#rk-counter-icon-grad)" stroke-width="2.8" fill="none">
+    <path d="M20 20 L44 20 L44 44 L20 44 Z"/>
+    <path d="M24 28 L40 28"/>
+    <path d="M24 36 L40 36"/>
+    <path d="M28 44 L36 44"/>
+  </g>
+  <path d="M32 20 L32 44" stroke="url(#rk-counter-icon-grad)" stroke-width="2.8"/>
+  <circle cx="28" cy="32" r="2" fill="url(#rk-counter-icon-grad)"/>
+  <circle cx="36" cy="32" r="2" fill="url(#rk-counter-icon-grad)"/>
+</svg>
+

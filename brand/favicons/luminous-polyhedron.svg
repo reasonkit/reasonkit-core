@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36">
+  <!-- ReasonKit Luminous Polyhedron - Favicon -->
+  <defs>
+    <linearGradient id="rk-edge" x1="0%" y1="50%" x2="100%" y2="50%">
+      <stop offset="0%" stop-color="#06b6d4"/>
+      <stop offset="50%" stop-color="#a855f7"/>
+      <stop offset="100%" stop-color="#ec4899"/>
+    </linearGradient>
+    <linearGradient id="rk-cyan" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#06b6d4" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#06b6d4" stop-opacity="0.1"/>
+    </linearGradient>
+    <linearGradient id="rk-pink" x1="100%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ec4899" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#a855f7" stop-opacity="0.2"/>
+    </linearGradient>
+  </defs>
+  <rect width="36" height="36" rx="6" fill="#030508"/>
+  <g transform="translate(18, 18)">
+    <path d="M0 0 L-10 -5.8 L0 -11.5 Z" fill="#06b6d4" fill-opacity="0.2"/>
+    <path d="M0 0 L0 -11.5 L10 -5.8 Z" fill="#a855f7" fill-opacity="0.2"/>
+    <path d="M0 0 L10 -5.8 L10 5.8 Z" fill="url(#rk-pink)"/>
+    <path d="M0 0 L10 5.8 L0 11.5 Z" fill="#a855f7" fill-opacity="0.3"/>
+    <path d="M0 0 L0 11.5 L-10 5.8 Z" fill="#06b6d4" fill-opacity="0.3"/>
+    <path d="M0 0 L-10 5.8 L-10 -5.8 Z" fill="url(#rk-cyan)"/>
+    <path d="M0 -11.5 L10 -5.8 L10 5.8 L0 11.5 L-10 5.8 L-10 -5.8 Z"
+          fill="none" stroke="url(#rk-edge)" stroke-width="1.5" stroke-linejoin="round"/>
+    <circle cx="3" cy="-2" r="2" fill="white" opacity="0.4"/>
+  </g>
+</svg>

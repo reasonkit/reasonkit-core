@@ -703,7 +703,7 @@ jobs:
               "url": "git+https://github.com/reasonkit/reasonkit-core.git"
             },
             "keywords": ["rag", "llm", "reasoning", "ai", "knowledge-base", "cli"],
-            "author": "ReasonKit Team <hello@reasonkit.sh>",
+            "author": "ReasonKit Team <for@ReasonKit.sh>",
             "license": "Apache-2.0",
             "homepage": "https://reasonkit.sh",
             "engines": {

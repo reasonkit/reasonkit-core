@@ -1,0 +1,114 @@
+    /// Create M2 Interleaved Thinking Protocol
+    fn create_interleaved_protocol(module_id: String) -> InterleavedProtocol {
+        use super::interleaved_thinking::{
+            ThinkingPattern, PatternType, PatternStep, PatternStepType, ValidationCriterion,
+            CheckType, OptimizationParameters, ProtocolOptimization
+        };
+
+        InterleavedProtocol {
+            protocol_id: format!("{}_protocol", module_id),
+            name: "Enhanced ProofGuard Protocol".to_string(),
+            version: "2.0.0-minimax".to_string(),
+            description: "M2-enhanced multi-source verification with triangulation".to_string(),
+            patterns: vec![ThinkingPattern {
+                pattern_id: "proofguard_verification_pattern".to_string(),
+                name: "ProofGuard Verification Process".to_string(),
+                description: "Multi-source verification with cross-validation and triangulation".to_string(),
+                pattern_type: PatternType::Parallel,
+                steps: vec![
+                    PatternStep {
+                        step_id: "source_identification".to_string(),
+                        step_type: PatternStepType::InputProcessing,
+                        description: "Identify potential verification sources".to_string(),
+                        prerequisites: vec![],
+                        outputs: vec![],
+                        validation_criteria: vec![
+                            ValidationCriterion {
+                                criterion_id: "min_sources".to_string(),
+                                check_type: CheckType::MinimumLength,
+                                threshold: 3.0,
+                                description: "Must identify at least 3 sources".to_string(),
+                            }
+                        ],
+                    },
+                    PatternStep {
+                        step_id: "source_assessment".to_string(),
+                        step_type: PatternStepType::Analysis,
+                        description: "Assess credibility and reliability of each source".to_string(),
+                        prerequisites: vec!["source_identification".to_string()],
+                        outputs: vec![],
+                        validation_criteria: vec![
+                            ValidationCriterion {
+                                criterion_id: "reliability_scoring".to_string(),
+                                check_type: CheckType::ConfidenceThreshold,
+                                threshold: 0.7,
+                                description: "Sources must be properly assessed for reliability".to_string(),
+                            }
+                        ],
+                    },
+                    PatternStep {
+                        step_id: "claim_extraction".to_string(),
+                        step_type: PatternStepType::Reasoning,
+                        description: "Extract specific claims from each source".to_string(),
+                        prerequisites: vec!["source_assessment".to_string()],
+                        outputs: vec![],
+                        validation_criteria: vec![
+                            ValidationCriterion {
+                                criterion_id: "claim_clarity".to_string(),
+                                check_type: CheckType::Completeness,
+                                threshold: 0.8,
+                                description: "Claims must be clearly extracted from sources".to_string(),
+                            }
+                        ],
+                    },
+                    PatternStep {
+                        step_id: "cross_validation".to_string(),
+                        step_type: PatternStepType::Validation,
+                        description: "Cross-validate claims across different sources".to_string(),
+                        prerequisites: vec!["claim_extraction".to_string()],
+                        outputs: vec![],
+                        validation_criteria: vec![
+                            ValidationCriterion {
+                                criterion_id: "validation_rigor".to_string(),
+                                check_type: CheckType::LogicalConsistency,
+                                threshold: 0.85,
+                                description: "Cross-validation must be thorough and rigorous".to_string(),
+                            }
+                        ],
+                    },
+                    PatternStep {
+                        step_id: "triangulation".to_string(),
+                        step_type: PatternStepType::Synthesis,
+                        description: "Apply triangulation to determine final verdict".to_string(),
+                        prerequisites: vec!["cross_validation".to_string()],
+                        outputs: vec![],
+                        validation_criteria: vec![
+                            ValidationCriterion {
+                                criterion_id: "triangulation_accuracy".to_string(),
+                                check_type: CheckType::ConfidenceThreshold,
+                                threshold: 0.85,
+                                description: "Triangulation must produce high-confidence verdict".to_string(),
+                            }
+                        ],
+                    },
+                ],
+                validation_rules: vec![],
+                optimization_params: OptimizationParameters {
+                    max_iterations: Some(2),
+                    confidence_threshold: 0.85,
+                    time_limit_ms: Some(5000),
+                    token_limit: Some(2200),
+                    parallelization_level: 3,
+                },
+            }],
+            default_pattern: "proofguard_verification_pattern".to_string(),
+            optimization_config: ProtocolOptimization {
+                auto_validation: true,
+                cross_validation_enabled: true,
+                parallel_processing: true,
+                adaptive_patterns: false,
+                performance_target: 0.92,
+                cost_optimization: true,
+            },
+        }
+    }

@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 640" width="1280" height="640">
+  <defs>
+    <linearGradient id="rk-github-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#030508"/>
+      <stop offset="100%" stop-color="#0a0d14"/>
+    </linearGradient>
+  </defs>
+  <rect width="1280" height="640" fill="url(#rk-github-bg)"/>
+  <g transform="translate(640, 320)">
+    <g stroke="#06b6d4" stroke-width="6" stroke-linecap="round" fill="none" opacity="0.8">
+      <path d="M0 100V50"/>
+      <path d="M0 50L-80 -40"/>
+      <path d="M0 50L80 -40"/>
+      <path d="M0 80L-60 30"/>
+      <path d="M0 80L60 30"/>
+    </g>
+    <g fill="#06b6d4" opacity="0.8">
+      <circle cx="0" cy="100" r="10"/>
+      <circle cx="0" cy="50" r="10"/>
+      <circle cx="-80" cy="-40" r="8"/>
+      <circle cx="80" cy="-40" r="8"/>
+      <circle cx="-60" cy="30" r="7"/>
+      <circle cx="60" cy="30" r="7"/>
+    </g>
+  </g>
+  <text x="640" y="360" text-anchor="middle" font-family="'Inter', Georgia, serif" font-size="60" font-weight="700" fill="#f9fafb">ReasonKit</text>
+  <text x="640" y="410" text-anchor="middle" font-family="'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="26" font-weight="400" fill="#9ca3af">Turn Prompts into Protocols</text>
+</svg>

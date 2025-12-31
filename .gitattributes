@@ -1,0 +1,33 @@
+# =============================================================================
+# ReasonKit Core Git Attributes
+# =============================================================================
+# Git LFS tracking for large binary assets in brand/
+# See: https://git-lfs.github.com/
+
+# Brand Assets - PNG Images (often large)
+brand/**/*.png filter=lfs diff=lfs merge=lfs -text
+
+# Brand Assets - JPEG Images
+brand/**/*.jpg filter=lfs diff=lfs merge=lfs -text
+brand/**/*.jpeg filter=lfs diff=lfs merge=lfs -text
+
+# README Assets - PNG Images
+brand/readme/**/*.png filter=lfs diff=lfs merge=lfs -text
+
+# Banners - PNG Images (typically large)
+brand/banners/**/*.png filter=lfs diff=lfs merge=lfs -text
+
+# Keep SVGs as text (small, diffable)
+brand/**/*.svg text
+
+# Ensure proper line endings for code
+*.rs text eol=lf
+*.toml text eol=lf
+*.md text eol=lf
+*.sh text eol=lf
+*.yaml text eol=lf
+*.yml text eol=lf
+*.json text eol=lf
+
+# Binary files that should not be diffed
+*.lock binary

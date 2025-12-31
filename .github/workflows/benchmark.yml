@@ -48,19 +48,51 @@ jobs:
       - name: Install gnuplot (for Criterion plots)
         run: sudo apt-get update && sudo apt-get install -y gnuplot
 
-      - name: Run benchmarks
+      - name: Run all benchmarks
         run: |
-          cargo bench --bench retrieval_bench -- --save-baseline current || echo "⚠️ Benchmarks incomplete (may need data setup)"
+          echo "Running benchmark suite..."
+          cargo bench --bench retrieval_bench -- --save-baseline current || echo "⚠️ retrieval_bench incomplete"
+          cargo bench --bench fusion_bench -- --save-baseline current || echo "⚠️ fusion_bench incomplete"
+          cargo bench --bench ingestion_bench -- --save-baseline current || echo "⚠️ ingestion_bench incomplete"
+          cargo bench --bench thinktool_bench -- --save-baseline current || echo "⚠️ thinktool_bench incomplete"
+          cargo bench --features memory --bench embedding_bench -- --save-baseline current || echo "⚠️ embedding_bench incomplete (requires memory feature)"
+          cargo bench --features memory --bench raptor_bench -- --save-baseline current || echo "⚠️ raptor_bench incomplete (requires memory feature)"
         continue-on-error: true
 
-      - name: Compare with baseline
+      - name: Compare with baseline (PR only)
         if: github.event_name == 'pull_request'
         run: |
+          echo "Comparing benchmarks against main branch baseline..."
           git fetch origin main
           git checkout origin/main
+
+          # Save baseline from main branch
           cargo bench --bench retrieval_bench -- --save-baseline main || true
+          cargo bench --bench fusion_bench -- --save-baseline main || true
+          cargo bench --bench ingestion_bench -- --save-baseline main || true
+          cargo bench --bench thinktool_bench -- --save-baseline main || true
+
+          # Switch back to PR branch
           git checkout -
+
+          # Compare current against baseline
           cargo bench --bench retrieval_bench -- --baseline main || true
+          cargo bench --bench fusion_bench -- --baseline main || true
+          cargo bench --bench ingestion_bench -- --baseline main || true
+          cargo bench --bench thinktool_bench -- --baseline main || true
+        continue-on-error: true
+
+      - name: Check for performance regressions
+        if: github.event_name == 'pull_request'
+        run: |
+          echo "Checking for performance regressions (> 5% threshold)..."
+          # Extract performance data from Criterion output
+          # This is a simplified check - in production, use a more robust parser
+          if cargo bench --bench retrieval_bench -- --baseline main 2>&1 | grep -q "Performance has regressed"; then
+            echo "⚠️ Performance regression detected in retrieval_bench"
+            exit 1
+          fi
+          echo "✅ No significant performance regressions detected"
         continue-on-error: true
 
       - name: Store benchmark results

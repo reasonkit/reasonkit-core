@@ -1,892 +1,522 @@
 //! # MiniMax M2 Integration Types
 //!
-//! Core type definitions for the Interleaved Thinking Protocol Engine integration
-//! with MiniMax M2's Agent-Native Architecture.
+//! This file contains a minimal set of public types needed for the (currently
+//! stubbed) `reasonkit::m2` API surface.
 
 use serde::{Deserialize, Serialize};
-use std::collections::HashMap;
-use std::time::Duration;
-use uuid::Uuid;
 
-/// MiniMax M2 API configuration
+/// Generic input payload for an M2 run.
+pub type ProtocolInput = serde_json::Value;
+
+/// M2 API configuration.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct M2Config {
-    /// API endpoint URL
     pub endpoint: String,
-    
-    /// API key for authentication
     pub api_key: String,
-    
-    /// Maximum context length (default: 200,000 tokens)
     pub max_context_length: usize,
-    
-    /// Maximum output length (default: 128,000 tokens)
     pub max_output_length: usize,
-    
-    /// Rate limiting configuration
     pub rate_limit: RateLimitConfig,
-    
-    /// Performance optimization settings
     pub performance: PerformanceConfig,
 }
 
-/// Rate limiting configuration
+impl Default for M2Config {
+    fn default() -> Self {
+        Self {
+            endpoint: "https://api.minimax.chat/v1/m2".to_string(),
+            api_key: "".to_string(),
+            max_context_length: 200_000,
+            max_output_length: 128_000,
+            rate_limit: RateLimitConfig::default(),
+            performance: PerformanceConfig::default(),
+        }
+    }
+}
+
+/// Rate limiting configuration.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct RateLimitConfig {
-    /// Requests per minute
     pub rpm: u32,
-    
-    /// Requests per second
     pub rps: u32,
-    
-    /// Burst capacity
     pub burst: u32,
 }
 
-/// Performance optimization settings
+impl Default for RateLimitConfig {
+    fn default() -> Self {
+        Self {
+            rpm: 60,
+            rps: 1,
+            burst: 5,
+        }
+    }
+}
+
+/// Performance tuning options.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PerformanceConfig {
-    /// Target cost reduction percentage (default: 92)
     pub cost_reduction_target: f64,
-    
-    /// Target latency in milliseconds
     pub latency_target_ms: u64,
-    
-    /// Quality threshold (0.0 - 1.0)
     pub quality_threshold: f64,
-    
-    /// Enable caching
     pub enable_caching: bool,
-    
-    /// Compression level for context
     pub compression_level: u8,
 }
 
-/// Composite instruction constraints for protocol adherence
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct CompositeConstraints {
-    /// System-level prompt constraints
-    pub system_prompt: SystemPrompt,
-    
-    /// User query constraints
-    pub user_query: UserQuery,
-    
-    /// Memory context constraints
-    pub memory_context: MemoryContext,
-    
-    /// Tool schema constraints
-    pub tool_schemas: Vec<ToolSchema>,
-    
-    /// Framework-specific constraints
-    pub framework_constraints: FrameworkConstraints,
+impl Default for PerformanceConfig {
+    fn default() -> Self {
+        Self {
+            cost_reduction_target: 92.0,
+            latency_target_ms: 2000,
+            quality_threshold: 0.90,
+            enable_caching: true,
+            compression_level: 5,
+        }
+    }
 }
 
-/// System prompt constraints
+/// High-level integration service configuration.
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct SystemPrompt {
-    /// Base system instruction
-    pub instruction: String,
-    
-    /// Reasoning style guidelines
-    pub reasoning_style: ReasoningStyle,
-    
-    /// Output format requirements
-    pub output_format: OutputFormat,
-    
-    /// Quality standards
-    pub quality_standards: QualityStandards,
+pub struct M2IntegrationConfig {
+    pub max_concurrent_executions: u32,
+    pub default_timeout_ms: u64,
+    pub enable_caching: bool,
+    pub enable_monitoring: bool,
+    pub default_optimization_goals: OptimizationGoals,
 }
 
-/// Output format requirements
-#[derive(Debug, Clone, Serialize, Deserialize)]
-#[serde(rename_all = "snake_case")]
-pub enum OutputFormat {
-    /// Structured JSON output
-    Structured,
-    /// Plain text output
-    PlainText,
-    /// Markdown formatted output
-    Markdown,
-    /// Code-formatted output
-    Code,
-    /// Custom format
-    Custom(String),
+impl Default for M2IntegrationConfig {
+    fn default() -> Self {
+        Self {
+            max_concurrent_executions: 10,
+            default_timeout_ms: 300_000,
+            enable_caching: true,
+            enable_monitoring: true,
+            default_optimization_goals: OptimizationGoals::default(),
+        }
+    }
 }
 
-/// Quality standards for protocol execution
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct QualityStandards {
-    /// Minimum confidence threshold (0.0 - 1.0)
-    pub min_confidence: f64,
-    
-    /// Require validation before output
-    pub require_validation: bool,
-    
-    /// Require evidence for claims
-    pub require_evidence: bool,
-}
-
-/// Reasoning style guidelines
-#[derive(Debug, Clone, Serialize, Deserialize)]
-#[serde(rename_all = "snake_case")]
-pub enum ReasoningStyle {
-    /// Systematic interleaved thinking
-    Interleaved,
-    /// Linear sequential reasoning
-    Linear,
-    /// Tree of thoughts exploration
-    TreeOfThoughts,
-    /// Chain of thought reasoning
-    ChainOfThought,
-    /// Multi-perspective analysis
-    MultiPerspective,
-}
-
-/// User query constraints
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct UserQuery {
-    /// Original user query
-    pub original: String,
-    
-    /// Clarified/expanded query
-    pub clarified: String,
-    
-    /// Context requirements
-    pub context_requirements: ContextRequirements,
-    
-    /// Expected output type
-    pub expected_output: ExpectedOutput,
-}
-
-/// Memory context constraints
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct MemoryContext {
-    /// Relevant historical context
-    pub historical_context: Vec<ContextItem>,
-    
-    /// Retrieved similar cases
-    pub similar_cases: Vec<SimilarCase>,
-    
-    /// Domain knowledge base
-    pub domain_knowledge: Vec<KnowledgeItem>,
-    
-    /// User preferences and constraints
-    pub user_preferences: UserPreferences,
-}
-
-/// Tool schema constraints
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct ToolSchema {
-    /// Tool name
-    pub name: String,
-    
-    /// Tool description
-    pub description: String,
-    
-    /// Input schema
-    pub input_schema: serde_json::Value,
-    
-    /// Output schema
-    pub output_schema: serde_json::Value,
-    
-    /// Usage constraints
-    pub constraints: Vec<UsageConstraint>,
-}
-
-/// Framework-specific constraints
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct FrameworkConstraints {
-    /// Target framework
-    pub framework: AgentFramework,
-    
-    /// Framework-specific optimizations
-    pub optimizations: Vec<FrameworkOptimization>,
-    
-    /// Compatibility requirements
-    pub compatibility: CompatibilityRequirements,
-}
-
-/// Agent framework types
-#[derive(Debug, Clone, Serialize, Deserialize)]
+/// Agent framework types.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub enum AgentFramework {
-    /// Claude Code
     ClaudeCode,
-    /// Cline
     Cline,
-    /// Kilo Code
     KiloCode,
-    /// Droid (Factory AI)
     Droid,
-    /// Roo Code
     RooCode,
-    /// BlackBox AI
-    BlackBoxAI,
-    /// Generic framework
-    Generic,
+    BlackBoxAi,
 }
 
-/// Interleaved thinking protocol definition
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct InterleavedProtocol {
-    /// Protocol identifier
-    pub id: String,
-    
-    /// Protocol name
-    pub name: String,
-    
-    /// Version
-    pub version: String,
-    
-    /// Description
-    pub description: String,
-    
-    /// Interleaved thinking phases
-    pub phases: Vec<InterleavedPhase>,
-    
-    /// M2-specific optimizations
-    pub m2_optimizations: M2Optimizations,
-    
-    /// Framework compatibility
-    pub framework_compatibility: Vec<AgentFramework>,
-    
-    /// Language support
-    pub language_support: Vec<ProgrammingLanguage>,
-}
-
-/// Interleaved thinking phase
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct InterleavedPhase {
-    /// Phase name
-    pub name: String,
-    
-    /// Phase description
-    pub description: String,
-    
-    /// Reasoning depth
-    pub depth: u32,
-    
-    /// Parallel execution branches
-    pub parallel_branches: u32,
-    
-    /// Validation methods
-    pub validation_methods: Vec<ValidationMethod>,
-    
-    /// Synthesis methods
-    pub synthesis_methods: Vec<SynthesisMethod>,
-    
-    /// Phase-specific constraints
-    pub constraints: PhaseConstraints,
-}
-
-/// M2-specific optimizations
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct M2Optimizations {
-    /// Target parameter activation count
-    pub target_parameters: u64,
-    
-    /// Context length optimization
-    pub context_optimization: ContextOptimization,
-    
-    /// Output length optimization
-    pub output_optimization: OutputOptimization,
-    
-    /// Cost optimization strategy
-    pub cost_optimization: CostOptimization,
-}
-
-/// Validation methods
-#[derive(Debug, Clone, Serialize, Deserialize)]
+/// Supported use cases.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
-pub enum ValidationMethod {
-    /// Cross-validation between phases
-    CrossValidation,
-    /// Peer review simulation
-    PeerReview,
-    /// Empirical testing
-    EmpiricalTest,
-    /// Consistency checking
-    ConsistencyCheck,
-    /// Adversarial challenge
-    AdversarialChallenge,
+pub enum UseCase {
+    CodeAnalysis,
+    BugFinding,
+    Documentation,
+    Architecture,
+    General,
 }
 
-/// Synthesis methods
-#[derive(Debug, Clone, Serialize, Deserialize)]
+/// Coarse task type.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
-pub enum SynthesisMethod {
-    /// Weighted merging
-    WeightedMerge,
-    /// Consensus building
-    Consensus,
-    /// Best-of selection
-    BestOf,
-    /// Ensemble combination
-    Ensemble,
-    /// Hierarchical synthesis
-    Hierarchical,
+pub enum TaskType {
+    CodeAnalysis,
+    BugFinding,
+    Documentation,
+    Architecture,
+    General,
 }
 
-/// Programming language support
-#[derive(Debug, Clone, Serialize, Deserialize)]
+impl std::fmt::Display for TaskType {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{:?}", self)
+    }
+}
+
+/// Task domain (small starter set).
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
-pub enum ProgrammingLanguage {
-    Rust,
-    Java,
-    Golang,
-    Cpp,
-    Kotlin,
-    ObjectiveC,
-    TypeScript,
-    JavaScript,
-    Python,
-    Swift,
-    Csharp,
-    Scala,
+pub enum TaskDomain {
+    SystemProgramming,
+    Web,
+    Data,
+    General,
 }
 
-/// M2 API request
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct M2Request {
-    /// Model identifier
-    pub model: String,
-    
-    /// Input prompt with constraints
-    pub prompt: ConstrainedPrompt,
-    
-    /// Interleaved thinking plan
-    pub thinking_plan: InterleavedThinkingPlan,
-    
-    /// Maximum tokens to generate
-    pub max_tokens: usize,
-    
-    /// Temperature for randomness
-    pub temperature: f64,
-    
-    /// Stop sequences
-    pub stop_sequences: Vec<String>,
+/// Complexity level.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum ComplexityLevel {
+    Simple,
+    Moderate,
+    Complex,
 }
 
-/// Constrained prompt after applying composite constraints
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct ConstrainedPrompt {
-    /// Final prompt string
-    pub prompt_text: String,
-    
-    /// Applied constraints summary
-    pub applied_constraints: Vec<AppliedConstraint>,
-    
-    /// Token count
-    pub token_count: usize,
-    
-    /// Optimization notes
-    pub optimization_notes: Vec<String>,
+/// Quality level.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum QualityLevel {
+    Draft,
+    Standard,
+    High,
 }
 
-/// M2 API response
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct M2Response {
-    /// Generated text
-    pub text: String,
-    
-    /// Token usage
-    pub usage: TokenUsage,
-    
-    /// Reasoning trace
-    pub reasoning_trace: ReasoningTrace,
-    
-    /// Confidence scores
-    pub confidence_scores: ConfidenceScores,
-    
-    /// Performance metrics
-    pub performance_metrics: PerformanceMetrics,
+/// Output size hint.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, Default)]
+#[serde(rename_all = "snake_case")]
+pub enum OutputSize {
+    Small,
+    #[default]
+    Medium,
+    Large,
 }
 
-/// Token usage information
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct TokenUsage {
-    /// Input tokens
-    pub input_tokens: u32,
-    
-    /// Output tokens
-    pub output_tokens: u32,
-    
-    /// Total tokens
-    pub total_tokens: u32,
-    
-    /// Cost estimate
-    pub cost_estimate: f64,
+/// A light time constraint model.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+pub struct TimeConstraints {
+    pub max_duration_ms: Option<u64>,
 }
 
-/// Reasoning trace for auditability
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct ReasoningTrace {
-    /// Interleaved phases executed
-    pub phases_executed: Vec<PhaseExecution>,
-    
-    /// Decision points
-    pub decision_points: Vec<DecisionPoint>,
-    
-    /// Validation results
-    pub validation_results: Vec<ValidationResult>,
-    
-    /// Synthesis steps
-    pub synthesis_steps: Vec<SynthesisStep>,
+impl Default for TimeConstraints {
+    fn default() -> Self {
+        Self {
+            max_duration_ms: Some(300_000),
+        }
+    }
 }
 
-/// Phase execution record
+/// Quality requirements.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+pub struct QualityRequirements {
+    pub quality_level: QualityLevel,
+}
+
+impl Default for QualityRequirements {
+    fn default() -> Self {
+        Self {
+            quality_level: QualityLevel::Standard,
+        }
+    }
+}
+
+/// Optimization goal.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum OptimizationGoal {
+    Cost,
+    Latency,
+    Quality,
+    BalanceAll,
+}
+
+/// Optimization constraints.
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
+pub struct OptimizationConstraints {
+    pub max_cost: Option<f64>,
+    pub max_latency_ms: Option<u64>,
+    pub min_quality: Option<f64>,
+}
+
+/// Performance targets.
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct PhaseExecution {
-    /// Phase name
-    pub phase_name: String,
-    
-    /// Execution start time
-    pub start_time: chrono::DateTime<chrono::Utc>,
-    
-    /// Execution duration
-    pub duration: Duration,
-    
-    /// Input data
-    pub input_data: serde_json::Value,
-    
-    /// Output data
-    pub output_data: serde_json::Value,
-    
-    /// Confidence score
+pub struct PerformanceTargets {
+    pub cost_reduction_target: f64,
+    pub latency_reduction_target: f64,
+    pub quality_threshold: f64,
+}
+
+impl Default for PerformanceTargets {
+    fn default() -> Self {
+        Self {
+            cost_reduction_target: 92.0,
+            latency_reduction_target: 0.20,
+            quality_threshold: 0.90,
+        }
+    }
+}
+
+/// Optimization goals bundle.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct OptimizationGoals {
+    pub primary_goal: OptimizationGoal,
+    pub secondary_goals: Vec<OptimizationGoal>,
+    pub constraints: OptimizationConstraints,
+    pub performance_targets: PerformanceTargets,
+}
+
+impl Default for OptimizationGoals {
+    fn default() -> Self {
+        Self {
+            primary_goal: OptimizationGoal::BalanceAll,
+            secondary_goals: vec![],
+            constraints: OptimizationConstraints::default(),
+            performance_targets: PerformanceTargets::default(),
+        }
+    }
+}
+
+/// Task classification for protocol selection.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct TaskClassification {
+    pub task_type: TaskType,
+    pub complexity_level: ComplexityLevel,
+    pub domain: TaskDomain,
+    pub expected_output_size: OutputSize,
+    pub time_constraints: TimeConstraints,
+    pub quality_requirements: QualityRequirements,
+}
+
+impl From<UseCase> for TaskClassification {
+    fn from(use_case: UseCase) -> Self {
+        match use_case {
+            UseCase::CodeAnalysis => Self {
+                task_type: TaskType::CodeAnalysis,
+                complexity_level: ComplexityLevel::Complex,
+                domain: TaskDomain::SystemProgramming,
+                expected_output_size: OutputSize::Large,
+                time_constraints: TimeConstraints::default(),
+                quality_requirements: QualityRequirements::default(),
+            },
+            UseCase::BugFinding => Self {
+                task_type: TaskType::BugFinding,
+                complexity_level: ComplexityLevel::Moderate,
+                domain: TaskDomain::SystemProgramming,
+                expected_output_size: OutputSize::Medium,
+                time_constraints: TimeConstraints::default(),
+                quality_requirements: QualityRequirements::default(),
+            },
+            UseCase::Documentation => Self {
+                task_type: TaskType::Documentation,
+                complexity_level: ComplexityLevel::Moderate,
+                domain: TaskDomain::General,
+                expected_output_size: OutputSize::Medium,
+                time_constraints: TimeConstraints::default(),
+                quality_requirements: QualityRequirements::default(),
+            },
+            UseCase::Architecture => Self {
+                task_type: TaskType::Architecture,
+                complexity_level: ComplexityLevel::Complex,
+                domain: TaskDomain::General,
+                expected_output_size: OutputSize::Large,
+                time_constraints: TimeConstraints::default(),
+                quality_requirements: QualityRequirements::default(),
+            },
+            UseCase::General => Self {
+                task_type: TaskType::General,
+                complexity_level: ComplexityLevel::Moderate,
+                domain: TaskDomain::General,
+                expected_output_size: OutputSize::Medium,
+                time_constraints: TimeConstraints::default(),
+                quality_requirements: QualityRequirements::default(),
+            },
+        }
+    }
+}
+
+/// Result placeholder produced by the stubbed service.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct InterleavedResult {
+    pub summary: String,
+}
+
+// --- Added for Engine Compatibility ---
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
+pub struct ProtocolOutput {
+    pub result: String,
     pub confidence: f64,
+    pub evidence: Vec<Evidence>,
 }
 
-/// Decision point in reasoning
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct DecisionPoint {
-    /// Decision ID
-    pub id: String,
-    
-    /// Decision description
-    pub description: String,
-    
-    /// Options considered
-    pub options: Vec<String>,
-    
-    /// Selected option
-    pub selected: String,
-    
-    /// Reasoning for selection
-    pub reasoning: String,
-    
-    /// Confidence in decision
-    pub confidence: f64,
-}
-
-/// Confidence scores across dimensions
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct ConfidenceScores {
-    /// Overall confidence
     pub overall: f64,
-    
-    /// Accuracy confidence
-    pub accuracy: f64,
-    
-    /// Completeness confidence
-    pub completeness: f64,
-    
-    /// Consistency confidence
-    pub consistency: f64,
-    
-    /// Coherence confidence
-    pub coherence: f64,
+    pub reasoning: f64,
+    pub evidence: f64,
 }
 
-/// Performance metrics
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct PerformanceMetrics {
-    /// Latency in milliseconds
-    pub latency_ms: u64,
-    
-    /// Cost per token
-    pub cost_per_token: f64,
-    
-    /// Total cost
-    pub total_cost: f64,
-    
-    /// Cost reduction percentage
-    pub cost_reduction_percent: f64,
-    
-    /// Quality score
-    pub quality_score: f64,
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
+pub struct Evidence {
+    pub content: String,
+    pub source: String,
+    pub confidence: f64,
 }
 
-/// Interleaved thinking plan
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct InterleavedThinkingPlan {
-    /// Planning strategy
-    pub strategy: PlanningStrategy,
-    
-    /// Execution phases
-    pub phases: Vec<PlanningPhase>,
-    
-    /// Resource allocation
-    pub resource_allocation: ResourceAllocation,
-    
-    /// Validation checkpoints
-    pub validation_checkpoints: Vec<ValidationCheckpoint>,
+pub struct ValidationResult {
+    pub passed: bool,
+    pub details: String,
+    pub score: f64,
 }
 
-/// Planning strategy
-#[derive(Debug, Clone, Serialize, Deserialize)]
-#[serde(rename_all = "snake_case")]
-pub enum PlanningStrategy {
-    /// Breadth-first exploration
-    BreadthFirst,
-    /// Depth-first exploration
-    DepthFirst,
-    /// Bidirectional search
-    Bidirectional,
-    /// Monte Carlo tree search
-    MonteCarloTreeSearch,
-    /// Beam search
-    BeamSearch,
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+pub enum SynthesisMethod {
+    Ensemble,
+    WeightedAverage,
+    BestOfN,
 }
 
-/// Planning phase
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct PlanningPhase {
-    /// Phase ID
-    pub id: String,
-    
-    /// Phase name
-    pub name: String,
-    
-    /// Objectives
-    pub objectives: Vec<String>,
-    
-    /// Resource requirements
-    pub resource_requirements: ResourceRequirements,
-    
-    /// Expected outputs
-    pub expected_outputs: Vec<String>,
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+pub enum SynthesisStrategy {
+    Standard,
+    Aggressive,
+    Conservative,
 }
 
-/// Resource allocation
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct ResourceAllocation {
-    /// Token budget allocation
-    pub token_budget: TokenBudget,
-    
-    /// Time allocation per phase
-    pub time_allocation: HashMap<String, Duration>,
-    
-    /// Parallel execution capacity
-    pub parallel_capacity: u32,
-    
-    /// Quality targets
-    pub quality_targets: QualityTargets,
-}
-
-/// Token budget allocation
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct TokenBudget {
-    /// Total token budget
-    pub total: usize,
-    
-    /// Context allocation
-    pub context: usize,
-    
-    /// Output allocation
-    pub output: usize,
-    
-    /// Reserved for validation
-    pub validation: usize,
-}
-
-/// Validation checkpoint
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct ValidationCheckpoint {
-    /// Checkpoint ID
-    pub id: String,
-    
-    /// Phase to validate
-    pub phase_id: String,
-    
-    /// Validation criteria
-    pub criteria: Vec<ValidationCriterion>,
-    
-    /// Minimum confidence threshold
-    pub min_confidence: f64,
-    
-    /// Fallback action if validation fails
-    pub fallback_action: FallbackAction,
-}
-
-/// Protocol execution result
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct ProtocolResult {
-    /// Result identifier
-    pub id: String,
-    
-    /// Protocol used
-    pub protocol_id: String,
-    
-    /// Execution status
-    pub status: ExecutionStatus,
-    
-    /// Final output
-    pub output: ProtocolOutput,
-    
-    /// Execution metrics
-    pub metrics: ExecutionMetrics,
-    
-    /// Audit trail
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
+pub struct ExecutionMetrics {
+    pub duration_ms: u64,
+    pub token_usage: TokenUsage,
+    pub cost_metrics: CostMetrics,
+    pub quality_metrics: QualityMetrics,
+    pub performance_metrics: PerformanceMetrics,
     pub audit_trail: AuditTrail,
 }
 
-/// Execution status
-#[derive(Debug, Clone, Serialize, Deserialize)]
-#[serde(rename_all = "snake_case")]
-pub enum ExecutionStatus {
-    /// Successfully completed
-    Completed,
-    /// Failed with error
-    Failed,
-    /// Partially completed
-    Partial,
-    /// Timeout occurred
-    Timeout,
-    /// Cancelled by user
-    Cancelled,
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
+pub struct TokenUsage {
+    pub total: u64,
+    pub context: u64,
+    pub output: u64,
+    pub validation: u64,
 }
 
-/// Protocol output
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct ProtocolOutput {
-    /// Main result
-    pub result: serde_json::Value,
-    
-    /// Supporting evidence
-    pub evidence: Vec<Evidence>,
-    
-    /// Confidence assessment
-    pub confidence: f64,
-    
-    /// Recommendations
-    pub recommendations: Vec<String>,
-    
-    /// Next steps
-    pub next_steps: Vec<String>,
-}
-
-/// Evidence supporting the result
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct Evidence {
-    /// Evidence type
-    pub evidence_type: EvidenceType,
-    
-    /// Evidence content
-    pub content: String,
-    
-    /// Confidence in evidence
-    pub confidence: f64,
-    
-    /// Source information
-    pub source: String,
-}
-
-/// Evidence types
-#[derive(Debug, Clone, Serialize, Deserialize)]
-#[serde(rename_all = "snake_case")]
-pub enum EvidenceType {
-    /// Empirical data
-    Empirical,
-    /// Logical derivation
-    Logical,
-    /// Expert consensus
-    ExpertConsensus,
-    /// Historical precedent
-    Historical,
-    /// Theoretical foundation
-    Theoretical,
-}
-
-/// Execution metrics
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct ExecutionMetrics {
-    /// Total execution time
-    pub execution_time: Duration,
-    
-    /// Token usage
-    pub token_usage: TokenUsage,
-    
-    /// Cost metrics
-    pub cost_metrics: CostMetrics,
-    
-    /// Quality metrics
-    pub quality_metrics: QualityMetrics,
-    
-    /// Performance metrics
-    pub performance_metrics: PerformanceMetrics,
-}
-
-/// Cost metrics
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct CostMetrics {
-    /// Total cost
     pub total_cost: f64,
-    
-    /// Cost per reasoning step
-    pub cost_per_step: f64,
-    
-    /// Cost reduction vs baseline
-    pub cost_reduction_percent: f64,
-    
-    /// Cost efficiency score
-    pub cost_efficiency: f64,
+    pub savings: f64,
 }
 
-/// Quality metrics
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct QualityMetrics {
-    /// Overall quality score
-    pub overall_quality: f64,
-    
-    /// Accuracy score
+    pub reliability: f64,
     pub accuracy: f64,
-    
-    /// Completeness score
-    pub completeness: f64,
-    
-    /// Consistency score
-    pub consistency: f64,
-    
-    /// Coherence score
-    pub coherence: f64,
 }
 
-/// Audit trail for compliance
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
+pub struct PerformanceMetrics {
+    pub latency_ms: u64,
+    pub throughput: f64,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct AuditTrail {
-    /// Execution ID
-    pub execution_id: Uuid,
-    
-    /// Timestamp
-    pub timestamp: chrono::DateTime<chrono::Utc>,
-    
-    /// User ID (if applicable)
-    pub user_id: Option<String>,
-    
-    /// Protocol version
-    pub protocol_version: String,
-    
-    /// Input hash for integrity
-    pub input_hash: String,
-    
-    /// Output hash for integrity
-    pub output_hash: String,
-    
-    /// Compliance flags
+    pub steps: Vec<String>,
+    pub timestamp: u64,
     pub compliance_flags: Vec<ComplianceFlag>,
 }
 
-/// Compliance flag
-#[derive(Debug, Clone, Serialize, Deserialize)]
-#[serde(rename_all = "snake_case")]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 pub enum ComplianceFlag {
-    /// GDPR compliant
     GDPRCompliant,
-    /// SOC2 compliant
-    SOC2Compliant,
-    /// ISO27001 compliant
-    ISO27001Compliant,
-    /// HIPAA compliant
     HIPAACompliant,
-    /// Custom compliance
-    Custom(String),
-}
-
-// Additional supporting types (abbreviated for space)
-#[derive(Debug, Clone, Serialize, Deserialize, Default)]
-pub struct ContextRequirements {
-    /// Required context types
-    pub required_types: Vec<String>,
-    /// Optional context types
-    pub optional_types: Vec<String>,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize, Default)]
-pub struct ExpectedOutput {
-    /// Output format
-    pub format: OutputFormat,
-    /// Required fields
-    pub required_fields: Vec<String>,
-    /// Optional fields
-    pub optional_fields: Vec<String>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct ContextItem { /* ... */ }
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct SimilarCase { /* ... */ }
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct KnowledgeItem { /* ... */ }
-
-#[derive(Debug, Clone, Serialize, Deserialize, Default)]
-pub struct UserPreferences {
-    /// Preferred reasoning style
-    pub preferred_reasoning_style: Option<ReasoningStyle>,
-    /// Preferred output format
-    pub preferred_output_format: Option<OutputFormat>,
-    /// Quality requirements
-    pub quality_requirements: Option<QualityStandards>,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct UsageConstraint { /* ... */ }
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct FrameworkOptimization { /* ... */ }
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct CompatibilityRequirements { /* ... */ }
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct PhaseConstraints { /* ... */ }
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct ContextOptimization { /* ... */ }
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct OutputOptimization { /* ... */ }
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct CostOptimization { /* ... */ }
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct AppliedConstraint {
-    /// Type of constraint applied
-    pub constraint_type: String,
-    
-    /// Description of the constraint
+pub struct InterleavedProtocol {
+    pub phases: Vec<InterleavedPhase>,
+    pub constraints: CompositeConstraints,
+    pub m2_optimizations: M2Optimizations,
+    pub name: String,
+    pub id: String,
+    pub version: String,
     pub description: String,
-    
-    /// Impact of the constraint
-    pub impact: String,
+    pub framework_compatibility: Vec<String>,
+    pub language_support: Vec<String>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct ValidationResult { /* ... */ }
+pub struct InterleavedPhase {
+    pub name: String,
+    pub parallel_branches: u32,
+    pub required_confidence: f64,
+    pub validation_methods: Vec<ValidationMethod>,
+    pub synthesis_methods: Vec<SynthesisMethod>,
+    pub constraints: CompositeConstraints,
+}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct SynthesisStep { /* ... */ }
+pub struct CompositeConstraints {
+    pub time_budget_ms: u64,
+    pub token_budget: u64,
+    pub dependencies: Vec<String>,
+}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct ResourceRequirements { /* ... */ }
+pub struct ResourceAllocation {
+    pub token_budget: TokenBudget,
+    pub time_allocation_ms: u64,
+    pub priority: u32,
+    pub quality_targets: QualityTargets,
+    pub parallel_capacity: u32,
+}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct QualityTargets { /* ... */ }
+pub struct TokenBudget {
+    pub total: u64,
+    pub context: u64,
+    pub output: u64,
+    pub validation: u64,
+}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct ValidationCriterion { /* ... */ }
+pub struct QualityTargets {
+    pub min_confidence: f64,
+    pub required_depth: u32,
+}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct FallbackAction { /* ... */ }
+pub struct M2Optimizations {
+    pub context_optimization: ContextOptimization,
+    pub output_optimization: OutputOptimization,
+    pub cost_optimization: CostOptimization,
+    pub target_parameters: u64,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct ContextOptimization {
+    pub method: String, // e.g., "none"
+    pub compression_ratio: f64,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct OutputOptimization {
+    pub format: String, // e.g., "text"
+    pub template: String,
+    pub max_output_length: u32,
+    pub streaming_enabled: bool,
+    pub compression_enabled: bool,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct CostOptimization {
+    pub strategy: String, // e.g., "balanced"
+    pub max_budget: f64,
+    pub target_cost_reduction: f64,
+    pub target_latency_reduction: f64,
+    pub parallel_processing_enabled: bool,
+    pub caching_enabled: bool,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+pub enum ValidationMethod {
+    SelfCheck,
+    PeerReview,
+    FormalVerification,
+}
+
+// Placeholder for PhaseResult used in engine
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct PhaseResult {
+    pub output: String,
+    pub confidence: f64,
+}
+
+// Placeholder for ReasoningStepResult
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct ReasoningStepResult {
+    pub content: String,
+}
+
+pub struct FallbackAction {/* ... */}

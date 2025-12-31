@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720">
+  <defs>
+    <linearGradient id="rk-yt-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#030508"/>
+      <stop offset="100%" stop-color="#0a0d14"/>
+    </linearGradient>
+    <linearGradient id="rk-yt-accent" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#06b6d4" stop-opacity="0.4"/>
+      <stop offset="50%" stop-color="#a855f7" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#ec4899" stop-opacity="0.4"/>
+    </linearGradient>
+    <radialGradient id="rk-yt-glow" cx="50%" cy="40%">
+      <stop offset="0%" stop-color="#06b6d4" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#06b6d4" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1280" height="720" fill="url(#rk-yt-bg)"/>
+  <rect width="1280" height="720" fill="url(#rk-yt-accent)"/>
+  <ellipse cx="640" cy="288" rx="500" ry="300" fill="url(#rk-yt-glow)"/>
+  <g transform="translate(640, 300)">
+    <g stroke="#06b6d4" stroke-width="9" stroke-linecap="round" fill="none" opacity="0.85">
+      <path d="M0 140V70"/>
+      <path d="M0 70L-120 -60"/>
+      <path d="M0 70L120 -60"/>
+      <path d="M0 115L-90 45"/>
+      <path d="M0 115L90 45"/>
+    </g>
+    <g fill="#06b6d4" opacity="0.85">
+      <circle cx="0" cy="140" r="14"/>
+      <circle cx="0" cy="70" r="14"/>
+      <circle cx="-120" cy="-60" r="12"/>
+      <circle cx="120" cy="-60" r="12"/>
+      <circle cx="-90" cy="45" r="10"/>
+      <circle cx="90" cy="45" r="10"/>
+    </g>
+  </g>
+  <text x="640" y="500" text-anchor="middle" font-family="'Inter', Georgia, serif" font-size="68" font-weight="700" fill="#f9fafb">Video Title Here</text>
+  <text x="640" y="560" text-anchor="middle" font-family="'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="30" font-weight="400" fill="#9ca3af">Subtitle or description</text>
+  <text x="640" y="650" text-anchor="middle" font-family="'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="22" font-weight="400" fill="#06b6d4">reasonkit.sh</text>
+</svg>

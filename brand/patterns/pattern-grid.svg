@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <defs>
+    <pattern id="rk-grid" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
+      <circle cx="10" cy="10" r="1.8" fill="#06b6d4" opacity="0.18"/>
+    </pattern>
+  </defs>
+  <rect width="200" height="200" fill="url(#rk-grid)"/>
+</svg>

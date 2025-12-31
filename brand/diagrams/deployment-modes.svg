@@ -1,0 +1,138 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600" fill="none">
+  <defs>
+    <linearGradient id="heroGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#06b6d4"/>
+      <stop offset="50%" stop-color="#a855f7"/>
+      <stop offset="100%" stop-color="#ec4899"/>
+    </linearGradient>
+    <filter id="glowCyan" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="4" result="blur"/>
+      <feFlood flood-color="#06b6d4" flood-opacity="0.4"/>
+      <feComposite in2="blur" operator="in"/>
+      <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="glowPurple" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="4" result="blur"/>
+      <feFlood flood-color="#a855f7" flood-opacity="0.4"/>
+      <feComposite in2="blur" operator="in"/>
+      <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="600" fill="#030508"/>
+
+  <!-- Title -->
+  <text x="600" y="50" text-anchor="middle" fill="url(#heroGrad)" font-family="Inter, sans-serif" font-size="36" font-weight="800">DEPLOYMENT OPTIONS</text>
+  <text x="600" y="80" text-anchor="middle" fill="#9ca3af" font-family="Inter, sans-serif" font-size="16">Choose the Right Mode for Your Use Case</text>
+
+  <!-- Mode 1: CLI (Recommended for Core) -->
+  <g transform="translate(50, 120)">
+    <rect x="0" y="0" width="350" height="420" rx="20" fill="#0a0d14" stroke="#06b6d4" stroke-width="3" filter="url(#glowCyan)"/>
+
+    <!-- Recommended badge -->
+    <rect x="100" y="-15" width="150" height="30" rx="15" fill="#10b981"/>
+    <text x="175" y="5" text-anchor="middle" fill="#030508" font-family="Inter, sans-serif" font-size="12" font-weight="700">RECOMMENDED</text>
+
+    <!-- Header -->
+    <text x="175" y="50" text-anchor="middle" fill="#06b6d4" font-family="Inter, sans-serif" font-size="24" font-weight="800">CLI MODE</text>
+    <text x="175" y="75" text-anchor="middle" fill="#9ca3af" font-family="Inter, sans-serif" font-size="12">reasonkit-core</text>
+
+    <!-- Icon -->
+    <rect x="130" y="95" width="90" height="60" rx="10" fill="#1a1a2e" stroke="#06b6d4" stroke-width="1"/>
+    <text x="175" y="125" text-anchor="middle" fill="#06b6d4" font-family="JetBrains Mono, monospace" font-size="10">$ _</text>
+    <text x="175" y="140" text-anchor="middle" fill="#6b7280" font-family="JetBrains Mono, monospace" font-size="8">terminal</text>
+
+    <!-- Install command -->
+    <rect x="20" y="175" width="310" height="35" rx="8" fill="#1a1a2e"/>
+    <text x="175" y="198" text-anchor="middle" fill="#f9fafb" font-family="JetBrains Mono, monospace" font-size="11">cargo install reasonkit</text>
+
+    <!-- Features -->
+    <text x="30" y="240" fill="#10b981" font-family="Inter, sans-serif" font-size="11">+ Developer-friendly</text>
+    <text x="30" y="262" fill="#10b981" font-family="Inter, sans-serif" font-size="11">+ Zero configuration</text>
+    <text x="30" y="284" fill="#10b981" font-family="Inter, sans-serif" font-size="11">+ Pipe-able output</text>
+    <text x="30" y="306" fill="#10b981" font-family="Inter, sans-serif" font-size="11">+ Shell integration</text>
+    <text x="30" y="328" fill="#10b981" font-family="Inter, sans-serif" font-size="11">+ Single binary</text>
+
+    <!-- Use cases -->
+    <line x1="30" y1="350" x2="320" y2="350" stroke="#06b6d4" stroke-width="1" opacity="0.3"/>
+    <text x="30" y="375" fill="#9ca3af" font-family="Inter, sans-serif" font-size="10">Best for:</text>
+    <text x="30" y="395" fill="#6b7280" font-family="Inter, sans-serif" font-size="10">• Development workflows</text>
+    <text x="30" y="412" fill="#6b7280" font-family="Inter, sans-serif" font-size="10">• CI/CD pipelines</text>
+    <text x="180" y="395" fill="#6b7280" font-family="Inter, sans-serif" font-size="10">• Script automation</text>
+    <text x="180" y="412" fill="#6b7280" font-family="Inter, sans-serif" font-size="10">• Quick analysis</text>
+  </g>
+
+  <!-- Mode 2: MCP Server -->
+  <g transform="translate(430, 120)">
+    <rect x="0" y="0" width="350" height="420" rx="20" fill="#0a0d14" stroke="#a855f7" stroke-width="3"/>
+
+    <!-- Header -->
+    <text x="175" y="50" text-anchor="middle" fill="#a855f7" font-family="Inter, sans-serif" font-size="24" font-weight="800">MCP SERVER</text>
+    <text x="175" y="75" text-anchor="middle" fill="#9ca3af" font-family="Inter, sans-serif" font-size="12">All crates</text>
+
+    <!-- Icon -->
+    <rect x="110" y="95" width="130" height="60" rx="10" fill="#1a1a2e" stroke="#a855f7" stroke-width="1"/>
+    <text x="175" y="120" text-anchor="middle" fill="#a855f7" font-family="Inter, sans-serif" font-size="12" font-weight="600">MCP</text>
+    <text x="175" y="140" text-anchor="middle" fill="#6b7280" font-family="JetBrains Mono, monospace" font-size="8">JSON-RPC / stdio</text>
+
+    <!-- Install command -->
+    <rect x="20" y="175" width="310" height="35" rx="8" fill="#1a1a2e"/>
+    <text x="175" y="198" text-anchor="middle" fill="#f9fafb" font-family="JetBrains Mono, monospace" font-size="11">rk-core mcp serve</text>
+
+    <!-- Features -->
+    <text x="30" y="240" fill="#10b981" font-family="Inter, sans-serif" font-size="11">+ AI agent integration</text>
+    <text x="30" y="262" fill="#10b981" font-family="Inter, sans-serif" font-size="11">+ Claude/GPT compatible</text>
+    <text x="30" y="284" fill="#10b981" font-family="Inter, sans-serif" font-size="11">+ Tool discovery</text>
+    <text x="30" y="306" fill="#10b981" font-family="Inter, sans-serif" font-size="11">+ Session management</text>
+    <text x="30" y="328" fill="#10b981" font-family="Inter, sans-serif" font-size="11">+ Resource sharing</text>
+
+    <!-- Use cases -->
+    <line x1="30" y1="350" x2="320" y2="350" stroke="#a855f7" stroke-width="1" opacity="0.3"/>
+    <text x="30" y="375" fill="#9ca3af" font-family="Inter, sans-serif" font-size="10">Best for:</text>
+    <text x="30" y="395" fill="#6b7280" font-family="Inter, sans-serif" font-size="10">• AI assistants</text>
+    <text x="30" y="412" fill="#6b7280" font-family="Inter, sans-serif" font-size="10">• Chat interfaces</text>
+    <text x="180" y="395" fill="#6b7280" font-family="Inter, sans-serif" font-size="10">• Agent workflows</text>
+    <text x="180" y="412" fill="#6b7280" font-family="Inter, sans-serif" font-size="10">• Tool augmentation</text>
+  </g>
+
+  <!-- Mode 3: Library/SDK -->
+  <g transform="translate(810, 120)">
+    <rect x="0" y="0" width="350" height="420" rx="20" fill="#0a0d14" stroke="#10b981" stroke-width="3"/>
+
+    <!-- Enterprise badge -->
+    <rect x="115" y="-15" width="120" height="30" rx="15" fill="#ec4899" opacity="0.8"/>
+    <text x="175" y="5" text-anchor="middle" fill="#f9fafb" font-family="Inter, sans-serif" font-size="12" font-weight="700">ENTERPRISE</text>
+
+    <!-- Header -->
+    <text x="175" y="50" text-anchor="middle" fill="#10b981" font-family="Inter, sans-serif" font-size="24" font-weight="800">SIDECAR</text>
+    <text x="175" y="75" text-anchor="middle" fill="#9ca3af" font-family="Inter, sans-serif" font-size="12">reasonkit-pro</text>
+
+    <!-- Icon -->
+    <rect x="110" y="95" width="130" height="60" rx="10" fill="#1a1a2e" stroke="#10b981" stroke-width="1"/>
+    <text x="175" y="118" text-anchor="middle" fill="#10b981" font-family="Inter, sans-serif" font-size="10" font-weight="600">Container</text>
+    <text x="175" y="140" text-anchor="middle" fill="#6b7280" font-family="JetBrains Mono, monospace" font-size="8">Kubernetes / Docker</text>
+
+    <!-- Install command -->
+    <rect x="20" y="175" width="310" height="35" rx="8" fill="#1a1a2e"/>
+    <text x="175" y="198" text-anchor="middle" fill="#f9fafb" font-family="JetBrains Mono, monospace" font-size="11">docker run reasonkit/pro</text>
+
+    <!-- Features -->
+    <text x="30" y="240" fill="#10b981" font-family="Inter, sans-serif" font-size="11">+ Horizontal scaling</text>
+    <text x="30" y="262" fill="#10b981" font-family="Inter, sans-serif" font-size="11">+ High availability</text>
+    <text x="30" y="284" fill="#10b981" font-family="Inter, sans-serif" font-size="11">+ API gateway</text>
+    <text x="30" y="306" fill="#10b981" font-family="Inter, sans-serif" font-size="11">+ Metrics + monitoring</text>
+    <text x="30" y="328" fill="#10b981" font-family="Inter, sans-serif" font-size="11">+ Multi-tenant</text>
+
+    <!-- Use cases -->
+    <line x1="30" y1="350" x2="320" y2="350" stroke="#10b981" stroke-width="1" opacity="0.3"/>
+    <text x="30" y="375" fill="#9ca3af" font-family="Inter, sans-serif" font-size="10">Best for:</text>
+    <text x="30" y="395" fill="#6b7280" font-family="Inter, sans-serif" font-size="10">• Production workloads</text>
+    <text x="30" y="412" fill="#6b7280" font-family="Inter, sans-serif" font-size="10">• High throughput</text>
+    <text x="180" y="395" fill="#6b7280" font-family="Inter, sans-serif" font-size="10">• Enterprise scale</text>
+    <text x="180" y="412" fill="#6b7280" font-family="Inter, sans-serif" font-size="10">• SLA requirements</text>
+  </g>
+
+  <!-- Footer -->
+  <text x="600" y="570" text-anchor="middle" fill="#4b5563" font-family="Inter, sans-serif" font-size="12">ReasonKit | Choose CLI for development, MCP for AI agents, Sidecar for enterprise | reasonkit.sh</text>
+</svg>

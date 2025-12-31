@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1200" width="1200" height="1200">
+  <defs>
+    <linearGradient id="rk-post1-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#030508"/>
+      <stop offset="100%" stop-color="#0a0d14"/>
+    </linearGradient>
+    <linearGradient id="rk-post1-accent" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#06b6d4" stop-opacity="0.25"/>
+      <stop offset="50%" stop-color="#a855f7" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#ec4899" stop-opacity="0.25"/>
+    </linearGradient>
+    <radialGradient id="rk-post1-glow" cx="50%" cy="30%">
+      <stop offset="0%" stop-color="#06b6d4" stop-opacity="0.2"/>
+      <stop offset="100%" stop-color="#06b6d4" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1200" height="1200" fill="url(#rk-post1-bg)"/>
+  <rect width="1200" height="1200" fill="url(#rk-post1-accent)"/>
+  <ellipse cx="600" cy="360" rx="500" ry="400" fill="url(#rk-post1-glow)"/>
+  <g transform="translate(600, 300)">
+    <g stroke="#06b6d4" stroke-width="7" stroke-linecap="round" fill="none" opacity="0.7">
+      <path d="M0 120V60"/>
+      <path d="M0 60L-100 -50"/>
+      <path d="M0 60L100 -50"/>
+      <path d="M0 100L-75 40"/>
+      <path d="M0 100L75 40"/>
+    </g>
+    <g fill="#06b6d4" opacity="0.7">
+      <circle cx="0" cy="120" r="11"/>
+      <circle cx="0" cy="60" r="11"/>
+      <circle cx="-100" cy="-50" r="9"/>
+      <circle cx="100" cy="-50" r="9"/>
+      <circle cx="-75" cy="40" r="8"/>
+      <circle cx="75" cy="40" r="8"/>
+    </g>
+  </g>
+  <text x="600" y="550" text-anchor="middle" font-family="'Inter', Georgia, serif" font-size="68" font-weight="700" letter-spacing="-0.02em" fill="#f9fafb">Headline Text</text>
+  <text x="600" y="650" text-anchor="middle" font-family="'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="34" font-weight="400" fill="#9ca3af">Supporting text goes here</text>
+  <text x="600" y="750" text-anchor="middle" font-family="'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="26" font-weight="400" fill="#06b6d4">reasonkit.sh</text>
+  <text x="600" y="1100" text-anchor="middle" font-family="'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="20" font-weight="400" fill="#9ca3af" opacity="0.65">Turn Prompts into Protocols</text>
+</svg>

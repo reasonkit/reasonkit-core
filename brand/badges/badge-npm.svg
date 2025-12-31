@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130 32" width="130" height="32">
+  <defs>
+    <linearGradient id="rk-npm-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#06b6d4"/>
+      <stop offset="50%" stop-color="#a855f7"/>
+      <stop offset="100%" stop-color="#ec4899"/>
+    </linearGradient>
+  </defs>
+  <rect width="130" height="32" rx="5" fill="#030508"/>
+  <rect x="1.5" y="1.5" width="127" height="29" rx="3.5" fill="none" stroke="url(#rk-npm-grad)" stroke-width="1.5"/>
+  <text x="65" y="22" text-anchor="middle" font-family="'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="12" font-weight="700" fill="url(#rk-npm-grad)">npm</text>
+</svg>

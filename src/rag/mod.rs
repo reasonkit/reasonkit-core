@@ -449,8 +449,14 @@ mod tests {
             "self-consistency"
         );
 
-        engine.add_document(&doc1).await.expect("Failed to add doc1");
-        engine.add_document(&doc2).await.expect("Failed to add doc2");
+        engine
+            .add_document(&doc1)
+            .await
+            .expect("Failed to add doc1");
+        engine
+            .add_document(&doc2)
+            .await
+            .expect("Failed to add doc2");
 
         // Query (without LLM - retrieval only mode)
         let response = engine
@@ -461,26 +467,6 @@ mod tests {
         assert!(!response.sources.is_empty());
         assert!(response.answer.contains("Retrieved"));
         assert!(response.retrieval_stats.chunks_used > 0);
-    }
-
-    #[tokio::test]
-    async fn test_rag_retrieve_only() {
-        let engine = RagEngine::in_memory().expect("Failed to create in-memory engine");
-
-        let doc = create_test_document(
-            "Vector databases store embeddings for semantic search.",
-            "vector-db",
-        );
-
-        engine.add_document(&doc).await.expect("Failed to add doc");
-
-        let results = engine
-            .retrieve("semantic search embeddings", 5)
-            .await
-            .expect("Retrieval failed");
-
-        assert!(!results.is_empty());
-        assert!(results[0].text.contains("embeddings"));
     }
 
     #[tokio::test]

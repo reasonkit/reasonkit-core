@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
+  <defs>
+    <linearGradient id="favGrad" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#06b6d4"/>
+      <stop offset="100%" stop-color="#a855f7"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="32" height="32" rx="6" fill="#030508"/>
+
+  <!-- Simplified Tree -->
+  <circle cx="16" cy="24" r="3" fill="#06b6d4"/>
+  <line x1="16" y1="21" x2="10" y2="14" stroke="url(#favGrad)" stroke-width="2"/>
+  <line x1="16" y1="21" x2="16" y2="12" stroke="url(#favGrad)" stroke-width="2"/>
+  <line x1="16" y1="21" x2="22" y2="14" stroke="url(#favGrad)" stroke-width="2"/>
+  <circle cx="10" cy="14" r="2.5" fill="#a855f7"/>
+  <circle cx="16" cy="12" r="2.5" fill="#a855f7"/>
+  <circle cx="22" cy="14" r="2.5" fill="#a855f7"/>
+  <circle cx="7" cy="8" r="2" fill="#10b981"/>
+  <circle cx="13" cy="6" r="2" fill="#10b981"/>
+  <circle cx="19" cy="6" r="2" fill="#10b981"/>
+  <circle cx="25" cy="8" r="2" fill="#10b981"/>
+  <line x1="10" y1="11.5" x2="8" y2="9" stroke="#10b981" stroke-width="1.5"/>
+  <line x1="10" y1="11.5" x2="12" y2="7.5" stroke="#10b981" stroke-width="1.5"/>
+  <line x1="22" y1="11.5" x2="20" y2="7.5" stroke="#10b981" stroke-width="1.5"/>
+  <line x1="22" y1="11.5" x2="24" y2="9" stroke="#10b981" stroke-width="1.5"/>
+</svg>

@@ -1,9 +1,9 @@
 [package]
 name = "reasonkit-core"
-version = "1.0.1"
+version = "0.1.0"
 edition = "2021"
 rust-version = "1.74"
-authors = ["ReasonKit Team <hello@reasonkit.sh>"]
+authors = ["ReasonKit Team <for@ReasonKit.sh>"]
 description = "Rust-first knowledge base and RAG system for AI reasoning enhancement"
 license = "Apache-2.0"
 repository = "https://github.com/reasonkit/reasonkit-core"
@@ -33,6 +33,8 @@ include = [
 name = "reasonkit"
 path = "src/lib.rs"
 crate-type = ["cdylib", "rlib"]
+# Disable doctests to avoid compile-only example drift across feature sets
+doctest = false
 
 [[bin]]
 name = "rk-core"
@@ -46,6 +48,16 @@ path = "src/bin/compare.rs"
 name = "rk-bench"
 path = "src/bin/bench.rs"
 
+[[example]]
+name = "vibe_quick_start"
+path = "examples/vibe_quick_start.rs"
+required-features = ["vibe"]
+
+[[example]]
+name = "aesthetic_demo"
+path = "examples/aesthetic_demo.rs"
+required-features = ["aesthetic"]
+
 [dependencies]
 # Python Integration (0.22+ supports Python 3.13)
 pyo3 = { version = "0.22", features = ["extension-module"] }
@@ -54,6 +66,7 @@ pyo3 = { version = "0.22", features = ["extension-module"] }
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 serde_yaml = "0.9"
+base64 = "0.22"
 
 # PDF Processing
 # pdf_oxide = "0.1"  # TODO: Evaluate availability
@@ -71,16 +84,19 @@ qdrant-client = { version = "1.10", optional = true }
 tantivy = { version = "0.22", optional = true }
 
 # Memory Infrastructure (optional - provides storage, retrieval, embeddings)
-# NOTE: Using local path dependency during migration. Will switch to crates.io version after publication.
-reasonkit-mem = { path = "../reasonkit-mem", optional = true }
-# TODO: After reasonkit-mem is published to crates.io, switch to:
-# reasonkit-mem = { version = "1.0", optional = true }
+# NOTE: Path dependency required for local development.
+# For crates.io publication, remove `path = "../reasonkit-mem"` and ensure version matches.
+# reasonkit-mem = { version = "0.1.0", optional = true }
+reasonkit-mem = { version = "0.1.0", optional = true }
 
 # HNSW Index (for local embeddings if not using Qdrant)
 # hnsw_rs = "0.3"  # TODO: Add when needed
 
 # Async Runtime
 tokio = { version = "1", features = ["full"] }
+
+# Additional VIBE dependencies
+futures-util = { version = "0.3", features = ["std"] }
 
 # HTTP Client
 reqwest = { version = "0.12", features = ["json", "stream"] }
@@ -98,6 +114,14 @@ async-trait = "0.1"
 # Logging
 tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = ["env-filter", "json"] }
+
+# OpenTelemetry (optional - for distributed tracing)
+# NOTE: Currently a stub implementation - full integration requires API compatibility research
+# See: src/telemetry/opentelemetry.rs for details
+# opentelemetry = { version = "0.31", optional = true }
+# opentelemetry_sdk = { version = "0.31", optional = true }
+# opentelemetry-otlp = { version = "0.31", optional = true, features = ["trace", "tonic"] }
+# tracing-opentelemetry = { version = "0.32", optional = true }
 
 # UUID
 uuid = { version = "1", features = ["v4", "serde"] }
@@ -153,6 +177,7 @@ sysinfo = { version = "0.30", optional = true }
 petgraph = { version = "0.6", optional = true, features = ["serde-1"] }
 rust-bert = { version = "0.22", optional = true, features = ["download-libtorch"] }
 parking_lot = { version = "0.12", optional = true }
+md5 = { version = "0.7", optional = true }  # For aesthetic engine config hashing
 clap_complete = "4.5.62"
 toml = "0.9.6"
 futures = { version = "0.3", default-features = false, features = ["std"] }
@@ -206,11 +231,15 @@ required-features = ["memory"]
 [features]
 default = ["cli"]
 cli = []
+vibe = [] # EXPERIMENTAL: VIBE Protocol Validation System (incomplete - do not use)
 embedded-qdrant = []  # For embedded mode without external server
 local-embeddings = ["ort", "tokenizers", "ndarray"]  # BGE-M3 ONNX local inference
 arf = ["sled", "wasmtime", "sysinfo", "petgraph", "rust-bert", "parking_lot"]  # Optional ARF module
 memory = ["dep:reasonkit-mem", "dep:qdrant-client", "dep:tantivy"]  # Optional memory infrastructure via reasonkit-mem
 code-intelligence = []  # EXPERIMENTAL: Multi-language code intelligence (incomplete - do not use)
+minimax = []  # EXPERIMENTAL: MiniMax M2 enhanced ThinkTools (incomplete - do not use)
+aesthetic = ["md5"]  # Aesthetic Expression Mastery System - M2-enhanced UI/UX assessment
+# opentelemetry = ["dep:opentelemetry", "dep:opentelemetry_sdk", "dep:opentelemetry-otlp", "dep:tracing-opentelemetry"]  # OpenTelemetry distributed tracing (stub - requires API compatibility research)
 
 # Package metadata for crates.io
 [package.metadata.docs.rs]

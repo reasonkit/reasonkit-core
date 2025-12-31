@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1200" width="1200" height="1200">
+  <defs>
+    <linearGradient id="rk-feature-post-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#030508"/>
+      <stop offset="100%" stop-color="#0a0d14"/>
+    </linearGradient>
+    <linearGradient id="rk-feature-post-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#06b6d4"/>
+      <stop offset="50%" stop-color="#a855f7"/>
+      <stop offset="100%" stop-color="#ec4899"/>
+    </linearGradient>
+    <radialGradient id="rk-feature-glow" cx="50%" cy="35%">
+      <stop offset="0%" stop-color="#06b6d4" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#06b6d4" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1200" height="1200" fill="url(#rk-feature-post-bg)"/>
+  <ellipse cx="600" cy="420" rx="550" ry="450" fill="url(#rk-feature-glow)"/>
+  <g transform="translate(600, 400)">
+    <g stroke="url(#rk-feature-post-grad)" stroke-width="9" stroke-linecap="round" fill="none" opacity="0.85">
+      <path d="M0 150V75"/>
+      <path d="M0 75L-120 -60"/>
+      <path d="M0 75L120 -60"/>
+      <path d="M0 125L-90 50"/>
+      <path d="M0 125L90 50"/>
+    </g>
+    <g fill="url(#rk-feature-post-grad)" opacity="0.85">
+      <circle cx="0" cy="150" r="13"/>
+      <circle cx="0" cy="75" r="13"/>
+      <circle cx="-120" cy="-60" r="11"/>
+      <circle cx="120" cy="-60" r="11"/>
+      <circle cx="-90" cy="50" r="9"/>
+      <circle cx="90" cy="50" r="9"/>
+    </g>
+  </g>
+  <text x="600" y="700" text-anchor="middle" font-family="'Inter', Georgia, serif" font-size="60" font-weight="700" letter-spacing="-0.02em" fill="#f9fafb">New Feature</text>
+  <text x="600" y="780" text-anchor="middle" font-family="'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="30" font-weight="400" fill="#9ca3af">Feature description and benefits</text>
+  <text x="600" y="850" text-anchor="middle" font-family="'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="22" font-weight="500" fill="#06b6d4">Learn more →</text>
+  <text x="600" y="1100" text-anchor="middle" font-family="'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="20" font-weight="400" fill="#9ca3af" opacity="0.65">reasonkit.sh</text>
+</svg>

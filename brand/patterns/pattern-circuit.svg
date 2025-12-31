@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <defs>
+    <pattern id="rk-circuit" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
+      <g stroke="#06b6d4" stroke-width="0.6" fill="none" opacity="0.25">
+        <path d="M0 20 L40 20"/>
+        <path d="M20 0 L20 40"/>
+        <circle cx="20" cy="20" r="2.5" fill="#06b6d4" opacity="0.35"/>
+      </g>
+    </pattern>
+  </defs>
+  <rect width="200" height="200" fill="url(#rk-circuit)"/>
+</svg>

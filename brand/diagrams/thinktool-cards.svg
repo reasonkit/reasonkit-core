@@ -1,0 +1,296 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 900" fill="none">
+  <defs>
+    <linearGradient id="heroGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#06b6d4"/>
+      <stop offset="50%" stop-color="#a855f7"/>
+      <stop offset="100%" stop-color="#ec4899"/>
+    </linearGradient>
+    <filter id="glowCyan" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="4" result="blur"/>
+      <feFlood flood-color="#06b6d4" flood-opacity="0.5"/>
+      <feComposite in2="blur" operator="in"/>
+      <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="glowPurple" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="4" result="blur"/>
+      <feFlood flood-color="#a855f7" flood-opacity="0.5"/>
+      <feComposite in2="blur" operator="in"/>
+      <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="glowGreen" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="4" result="blur"/>
+      <feFlood flood-color="#10b981" flood-opacity="0.5"/>
+      <feComposite in2="blur" operator="in"/>
+      <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="glowYellow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="4" result="blur"/>
+      <feFlood flood-color="#fbbf24" flood-opacity="0.5"/>
+      <feComposite in2="blur" operator="in"/>
+      <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="glowOrange" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="4" result="blur"/>
+      <feFlood flood-color="#f97316" flood-opacity="0.5"/>
+      <feComposite in2="blur" operator="in"/>
+      <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1400" height="900" fill="#030508"/>
+
+  <!-- Title -->
+  <text x="700" y="50" text-anchor="middle" fill="url(#heroGrad)" font-family="Inter, sans-serif" font-size="36" font-weight="800">THINKTOOL REFERENCE</text>
+  <text x="700" y="80" text-anchor="middle" fill="#9ca3af" font-family="Inter, sans-serif" font-size="16">Cognitive Modules for Structured AI Reasoning</text>
+
+  <!-- Card 1: GigaThink -->
+  <g transform="translate(50, 120)">
+    <rect x="0" y="0" width="250" height="380" rx="20" fill="#0a0d14" stroke="#06b6d4" stroke-width="3" filter="url(#glowCyan)"/>
+
+    <!-- Icon -->
+    <circle cx="125" cy="60" r="40" fill="rgba(6,182,212,0.15)" stroke="#06b6d4" stroke-width="2"/>
+    <text x="125" y="72" text-anchor="middle" font-size="36">💡</text>
+
+    <!-- Title -->
+    <text x="125" y="125" text-anchor="middle" fill="#06b6d4" font-family="Inter, sans-serif" font-size="24" font-weight="800">GigaThink</text>
+    <text x="125" y="148" text-anchor="middle" fill="#f9fafb" font-family="Inter, sans-serif" font-size="14" font-weight="600">DIVERGENT THINKING</text>
+
+    <!-- Shortcut -->
+    <rect x="85" y="160" width="80" height="25" rx="6" fill="rgba(6,182,212,0.2)"/>
+    <text x="125" y="178" text-anchor="middle" fill="#06b6d4" font-family="JetBrains Mono, monospace" font-size="12">--gt</text>
+
+    <!-- Description -->
+    <text x="125" y="210" text-anchor="middle" fill="#9ca3af" font-family="Inter, sans-serif" font-size="11">Generate 10+ perspectives</text>
+    <text x="125" y="228" text-anchor="middle" fill="#9ca3af" font-family="Inter, sans-serif" font-size="11">on any problem</text>
+
+    <!-- Features -->
+    <line x1="30" y1="250" x2="220" y2="250" stroke="#06b6d4" stroke-width="1" opacity="0.3"/>
+    <text x="30" y="275" fill="#10b981" font-family="Inter, sans-serif" font-size="10">+ Multi-angle exploration</text>
+    <text x="30" y="295" fill="#10b981" font-family="Inter, sans-serif" font-size="10">+ Creative ideation</text>
+    <text x="30" y="315" fill="#10b981" font-family="Inter, sans-serif" font-size="10">+ No constraints thinking</text>
+    <text x="30" y="335" fill="#10b981" font-family="Inter, sans-serif" font-size="10">+ Devil's advocate views</text>
+
+    <!-- Use case -->
+    <rect x="20" y="350" width="210" height="20" rx="4" fill="rgba(6,182,212,0.1)"/>
+    <text x="125" y="364" text-anchor="middle" fill="#6b7280" font-family="Inter, sans-serif" font-size="9">Best for: Brainstorming, exploration</text>
+  </g>
+
+  <!-- Card 2: LaserLogic -->
+  <g transform="translate(320, 120)">
+    <rect x="0" y="0" width="250" height="380" rx="20" fill="#0a0d14" stroke="#a855f7" stroke-width="3" filter="url(#glowPurple)"/>
+
+    <!-- Icon -->
+    <circle cx="125" cy="60" r="40" fill="rgba(168,85,247,0.15)" stroke="#a855f7" stroke-width="2"/>
+    <text x="125" y="72" text-anchor="middle" font-size="36">⚡</text>
+
+    <!-- Title -->
+    <text x="125" y="125" text-anchor="middle" fill="#a855f7" font-family="Inter, sans-serif" font-size="24" font-weight="800">LaserLogic</text>
+    <text x="125" y="148" text-anchor="middle" fill="#f9fafb" font-family="Inter, sans-serif" font-size="14" font-weight="600">CONVERGENT ANALYSIS</text>
+
+    <!-- Shortcut -->
+    <rect x="85" y="160" width="80" height="25" rx="6" fill="rgba(168,85,247,0.2)"/>
+    <text x="125" y="178" text-anchor="middle" fill="#a855f7" font-family="JetBrains Mono, monospace" font-size="12">--ll</text>
+
+    <!-- Description -->
+    <text x="125" y="210" text-anchor="middle" fill="#9ca3af" font-family="Inter, sans-serif" font-size="11">Validate logic chains</text>
+    <text x="125" y="228" text-anchor="middle" fill="#9ca3af" font-family="Inter, sans-serif" font-size="11">and detect fallacies</text>
+
+    <!-- Features -->
+    <line x1="30" y1="250" x2="220" y2="250" stroke="#a855f7" stroke-width="1" opacity="0.3"/>
+    <text x="30" y="275" fill="#10b981" font-family="Inter, sans-serif" font-size="10">+ Fallacy detection</text>
+    <text x="30" y="295" fill="#10b981" font-family="Inter, sans-serif" font-size="10">+ Logical validation</text>
+    <text x="30" y="315" fill="#10b981" font-family="Inter, sans-serif" font-size="10">+ Prioritization</text>
+    <text x="30" y="335" fill="#10b981" font-family="Inter, sans-serif" font-size="10">+ Ruthless focusing</text>
+
+    <!-- Use case -->
+    <rect x="20" y="350" width="210" height="20" rx="4" fill="rgba(168,85,247,0.1)"/>
+    <text x="125" y="364" text-anchor="middle" fill="#6b7280" font-family="Inter, sans-serif" font-size="9">Best for: Decision making, analysis</text>
+  </g>
+
+  <!-- Card 3: BedRock -->
+  <g transform="translate(590, 120)">
+    <rect x="0" y="0" width="250" height="380" rx="20" fill="#0a0d14" stroke="#10b981" stroke-width="3" filter="url(#glowGreen)"/>
+
+    <!-- Icon -->
+    <circle cx="125" cy="60" r="40" fill="rgba(16,185,129,0.15)" stroke="#10b981" stroke-width="2"/>
+    <text x="125" y="72" text-anchor="middle" font-size="36">🪨</text>
+
+    <!-- Title -->
+    <text x="125" y="125" text-anchor="middle" fill="#10b981" font-family="Inter, sans-serif" font-size="24" font-weight="800">BedRock</text>
+    <text x="125" y="148" text-anchor="middle" fill="#f9fafb" font-family="Inter, sans-serif" font-size="14" font-weight="600">FIRST PRINCIPLES</text>
+
+    <!-- Shortcut -->
+    <rect x="85" y="160" width="80" height="25" rx="6" fill="rgba(16,185,129,0.2)"/>
+    <text x="125" y="178" text-anchor="middle" fill="#10b981" font-family="JetBrains Mono, monospace" font-size="12">--br</text>
+
+    <!-- Description -->
+    <text x="125" y="210" text-anchor="middle" fill="#9ca3af" font-family="Inter, sans-serif" font-size="11">Decompose to axioms</text>
+    <text x="125" y="228" text-anchor="middle" fill="#9ca3af" font-family="Inter, sans-serif" font-size="11">and rebuild from ground</text>
+
+    <!-- Features -->
+    <line x1="30" y1="250" x2="220" y2="250" stroke="#10b981" stroke-width="1" opacity="0.3"/>
+    <text x="30" y="275" fill="#10b981" font-family="Inter, sans-serif" font-size="10">+ Axiom identification</text>
+    <text x="30" y="295" fill="#10b981" font-family="Inter, sans-serif" font-size="10">+ Deep decomposition</text>
+    <text x="30" y="315" fill="#10b981" font-family="Inter, sans-serif" font-size="10">+ Foundation building</text>
+    <text x="30" y="335" fill="#10b981" font-family="Inter, sans-serif" font-size="10">+ Elon Musk method</text>
+
+    <!-- Use case -->
+    <rect x="20" y="350" width="210" height="20" rx="4" fill="rgba(16,185,129,0.1)"/>
+    <text x="125" y="364" text-anchor="middle" fill="#6b7280" font-family="Inter, sans-serif" font-size="9">Best for: Complex problems, strategy</text>
+  </g>
+
+  <!-- Card 4: ProofGuard -->
+  <g transform="translate(860, 120)">
+    <rect x="0" y="0" width="250" height="380" rx="20" fill="#0a0d14" stroke="#fbbf24" stroke-width="3" filter="url(#glowYellow)"/>
+
+    <!-- Icon -->
+    <circle cx="125" cy="60" r="40" fill="rgba(251,191,36,0.15)" stroke="#fbbf24" stroke-width="2"/>
+    <text x="125" y="72" text-anchor="middle" font-size="36">🛡️</text>
+
+    <!-- Title -->
+    <text x="125" y="125" text-anchor="middle" fill="#fbbf24" font-family="Inter, sans-serif" font-size="24" font-weight="800">ProofGuard</text>
+    <text x="125" y="148" text-anchor="middle" fill="#f9fafb" font-family="Inter, sans-serif" font-size="14" font-weight="600">VERIFICATION</text>
+
+    <!-- Shortcut -->
+    <rect x="85" y="160" width="80" height="25" rx="6" fill="rgba(251,191,36,0.2)"/>
+    <text x="125" y="178" text-anchor="middle" fill="#fbbf24" font-family="JetBrains Mono, monospace" font-size="12">--pg</text>
+
+    <!-- Description -->
+    <text x="125" y="210" text-anchor="middle" fill="#9ca3af" font-family="Inter, sans-serif" font-size="11">Verify claims with</text>
+    <text x="125" y="228" text-anchor="middle" fill="#9ca3af" font-family="Inter, sans-serif" font-size="11">3-source triangulation</text>
+
+    <!-- Features -->
+    <line x1="30" y1="250" x2="220" y2="250" stroke="#fbbf24" stroke-width="1" opacity="0.3"/>
+    <text x="30" y="275" fill="#10b981" font-family="Inter, sans-serif" font-size="10">+ Source triangulation</text>
+    <text x="30" y="295" fill="#10b981" font-family="Inter, sans-serif" font-size="10">+ Contradiction detection</text>
+    <text x="30" y="315" fill="#10b981" font-family="Inter, sans-serif" font-size="10">+ Evidence grading</text>
+    <text x="30" y="335" fill="#10b981" font-family="Inter, sans-serif" font-size="10">+ Confidence scoring</text>
+
+    <!-- Use case -->
+    <rect x="20" y="350" width="210" height="20" rx="4" fill="rgba(251,191,36,0.1)"/>
+    <text x="125" y="364" text-anchor="middle" fill="#6b7280" font-family="Inter, sans-serif" font-size="9">Best for: Research, fact-checking</text>
+  </g>
+
+  <!-- Card 5: BrutalHonesty -->
+  <g transform="translate(1130, 120)">
+    <rect x="0" y="0" width="250" height="380" rx="20" fill="#0a0d14" stroke="#f97316" stroke-width="3" filter="url(#glowOrange)"/>
+
+    <!-- Icon -->
+    <circle cx="125" cy="60" r="40" fill="rgba(249,115,22,0.15)" stroke="#f97316" stroke-width="2"/>
+    <text x="125" y="72" text-anchor="middle" font-size="36">🔥</text>
+
+    <!-- Title -->
+    <text x="125" y="125" text-anchor="middle" fill="#f97316" font-family="Inter, sans-serif" font-size="24" font-weight="800">BrutalHonesty</text>
+    <text x="125" y="148" text-anchor="middle" fill="#f9fafb" font-family="Inter, sans-serif" font-size="14" font-weight="600">RUTHLESS CRITIQUE</text>
+
+    <!-- Shortcut -->
+    <rect x="85" y="160" width="80" height="25" rx="6" fill="rgba(249,115,22,0.2)"/>
+    <text x="125" y="178" text-anchor="middle" fill="#f97316" font-family="JetBrains Mono, monospace" font-size="12">--bh</text>
+
+    <!-- Description -->
+    <text x="125" y="210" text-anchor="middle" fill="#9ca3af" font-family="Inter, sans-serif" font-size="11">Attack your own work</text>
+    <text x="125" y="228" text-anchor="middle" fill="#9ca3af" font-family="Inter, sans-serif" font-size="11">before others do</text>
+
+    <!-- Features -->
+    <line x1="30" y1="250" x2="220" y2="250" stroke="#f97316" stroke-width="1" opacity="0.3"/>
+    <text x="30" y="275" fill="#10b981" font-family="Inter, sans-serif" font-size="10">+ Adversarial review</text>
+    <text x="30" y="295" fill="#10b981" font-family="Inter, sans-serif" font-size="10">+ Flaw detection</text>
+    <text x="30" y="315" fill="#10b981" font-family="Inter, sans-serif" font-size="10">+ Ego removal</text>
+    <text x="30" y="335" fill="#10b981" font-family="Inter, sans-serif" font-size="10">+ Cut the fluff</text>
+
+    <!-- Use case -->
+    <rect x="20" y="350" width="210" height="20" rx="4" fill="rgba(249,115,22,0.1)"/>
+    <text x="125" y="364" text-anchor="middle" fill="#6b7280" font-family="Inter, sans-serif" font-size="9">Best for: Quality control, review</text>
+  </g>
+
+  <!-- PowerCombo Section -->
+  <g transform="translate(50, 530)">
+    <rect x="0" y="0" width="1300" height="180" rx="20" fill="#0a0d14" stroke="url(#heroGrad)" stroke-width="3"/>
+
+    <!-- Header -->
+    <rect x="0" y="0" width="1300" height="50" rx="20" fill="url(#heroGrad)" opacity="0.1"/>
+    <text x="650" y="22" text-anchor="middle" font-size="28">🌈</text>
+    <text x="650" y="45" text-anchor="middle" fill="url(#heroGrad)" font-family="Inter, sans-serif" font-size="16" font-weight="800">POWERCOMBO: THE COMPLETE 5-STEP PROCESS</text>
+
+    <!-- Process flow -->
+    <g transform="translate(50, 70)">
+      <rect x="0" y="0" width="200" height="45" rx="10" fill="rgba(6,182,212,0.1)" stroke="#06b6d4" stroke-width="1"/>
+      <text x="100" y="18" text-anchor="middle" fill="#06b6d4" font-family="Inter, sans-serif" font-size="12" font-weight="600">1. GigaThink</text>
+      <text x="100" y="35" text-anchor="middle" fill="#6b7280" font-family="Inter, sans-serif" font-size="10">Explore widely</text>
+    </g>
+
+    <path d="M260 92 L290 92" stroke="#4b5563" stroke-width="2"/>
+    <polygon points="300,92 290,87 290,97" fill="#4b5563"/>
+
+    <g transform="translate(310, 70)">
+      <rect x="0" y="0" width="200" height="45" rx="10" fill="rgba(168,85,247,0.1)" stroke="#a855f7" stroke-width="1"/>
+      <text x="100" y="18" text-anchor="middle" fill="#a855f7" font-family="Inter, sans-serif" font-size="12" font-weight="600">2. LaserLogic</text>
+      <text x="100" y="35" text-anchor="middle" fill="#6b7280" font-family="Inter, sans-serif" font-size="10">Focus ruthlessly</text>
+    </g>
+
+    <path d="M520 92 L550 92" stroke="#4b5563" stroke-width="2"/>
+    <polygon points="560,92 550,87 550,97" fill="#4b5563"/>
+
+    <g transform="translate(570, 70)">
+      <rect x="0" y="0" width="200" height="45" rx="10" fill="rgba(16,185,129,0.1)" stroke="#10b981" stroke-width="1"/>
+      <text x="100" y="18" text-anchor="middle" fill="#10b981" font-family="Inter, sans-serif" font-size="12" font-weight="600">3. BedRock</text>
+      <text x="100" y="35" text-anchor="middle" fill="#6b7280" font-family="Inter, sans-serif" font-size="10">Ground in axioms</text>
+    </g>
+
+    <path d="M780 92 L810 92" stroke="#4b5563" stroke-width="2"/>
+    <polygon points="820,92 810,87 810,97" fill="#4b5563"/>
+
+    <g transform="translate(830, 70)">
+      <rect x="0" y="0" width="200" height="45" rx="10" fill="rgba(251,191,36,0.1)" stroke="#fbbf24" stroke-width="1"/>
+      <text x="100" y="18" text-anchor="middle" fill="#fbbf24" font-family="Inter, sans-serif" font-size="12" font-weight="600">4. ProofGuard</text>
+      <text x="100" y="35" text-anchor="middle" fill="#6b7280" font-family="Inter, sans-serif" font-size="10">Verify evidence</text>
+    </g>
+
+    <path d="M1040 92 L1070 92" stroke="#4b5563" stroke-width="2"/>
+    <polygon points="1080,92 1070,87 1070,97" fill="#4b5563"/>
+
+    <g transform="translate(1090, 70)">
+      <rect x="0" y="0" width="160" height="45" rx="10" fill="rgba(249,115,22,0.1)" stroke="#f97316" stroke-width="1"/>
+      <text x="80" y="18" text-anchor="middle" fill="#f97316" font-family="Inter, sans-serif" font-size="12" font-weight="600">5. BrutalHonesty</text>
+      <text x="80" y="35" text-anchor="middle" fill="#6b7280" font-family="Inter, sans-serif" font-size="10">Attack flaws</text>
+    </g>
+
+    <!-- Confidence target -->
+    <rect x="450" y="130" width="400" height="35" rx="8" fill="rgba(16,185,129,0.15)" stroke="#10b981" stroke-width="1"/>
+    <text x="650" y="153" text-anchor="middle" fill="#10b981" font-family="Inter, sans-serif" font-size="14" font-weight="600">Target Confidence: 95% | Maximum Rigor</text>
+  </g>
+
+  <!-- Profiles Quick Reference -->
+  <g transform="translate(50, 740)">
+    <rect x="0" y="0" width="1300" height="120" rx="16" fill="#0a0d14" stroke="rgba(156,163,175,0.3)" stroke-width="1"/>
+    <text x="650" y="25" text-anchor="middle" fill="#9ca3af" font-family="Inter, sans-serif" font-size="14" font-weight="600">PROFILE PRESETS</text>
+
+    <g transform="translate(50, 45)">
+      <rect x="0" y="0" width="280" height="55" rx="10" fill="rgba(6,182,212,0.1)" stroke="#06b6d4" stroke-width="1"/>
+      <text x="140" y="22" text-anchor="middle" fill="#06b6d4" font-family="Inter, sans-serif" font-size="12" font-weight="600">--quick</text>
+      <text x="140" y="42" text-anchor="middle" fill="#6b7280" font-family="JetBrains Mono, monospace" font-size="10">gt → ll | 70% confidence</text>
+    </g>
+
+    <g transform="translate(360, 45)">
+      <rect x="0" y="0" width="280" height="55" rx="10" fill="rgba(168,85,247,0.1)" stroke="#a855f7" stroke-width="1"/>
+      <text x="140" y="22" text-anchor="middle" fill="#a855f7" font-family="Inter, sans-serif" font-size="12" font-weight="600">--balanced</text>
+      <text x="140" y="42" text-anchor="middle" fill="#6b7280" font-family="JetBrains Mono, monospace" font-size="10">gt → ll → br → pg | 80%</text>
+    </g>
+
+    <g transform="translate(670, 45)">
+      <rect x="0" y="0" width="280" height="55" rx="10" fill="rgba(16,185,129,0.1)" stroke="#10b981" stroke-width="1"/>
+      <text x="140" y="22" text-anchor="middle" fill="#10b981" font-family="Inter, sans-serif" font-size="12" font-weight="600">--deep</text>
+      <text x="140" y="42" text-anchor="middle" fill="#6b7280" font-family="JetBrains Mono, monospace" font-size="10">All 5 modules | 85%</text>
+    </g>
+
+    <g transform="translate(980, 45)">
+      <rect x="0" y="0" width="280" height="55" rx="10" fill="rgba(249,115,22,0.1)" stroke="#f97316" stroke-width="1"/>
+      <text x="140" y="22" text-anchor="middle" fill="#f97316" font-family="Inter, sans-serif" font-size="12" font-weight="600">--paranoid</text>
+      <text x="140" y="42" text-anchor="middle" fill="#6b7280" font-family="JetBrains Mono, monospace" font-size="10">All 5 + validation | 95%</text>
+    </g>
+  </g>
+
+  <!-- Footer -->
+  <text x="700" y="885" text-anchor="middle" fill="#4b5563" font-family="Inter, sans-serif" font-size="12">reasonkit-core | ThinkTool Reference v1.0 | reasonkit.sh</text>
+</svg>

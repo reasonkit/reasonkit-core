@@ -8,7 +8,8 @@ use std::path::{Path, PathBuf};
 use tracing::{info, Level};
 use tracing_subscriber::FmtSubscriber;
 
-use reasonkit::thinktool::LlmProvider;
+use reasonkit::thinktool::llm::LlmProvider;
+use reasonkit::thinktool::{ExecutorConfig, ProtocolExecutor, ProtocolInput};
 
 // Import MCP CLI module
 #[path = "bin/mcp_cli.rs"]
@@ -17,7 +18,7 @@ use mcp_cli::{run_mcp_command, McpCli};
 
 #[derive(Parser)]
 #[command(name = "rk-core")]
-#[command(author = "ReasonKit Team <hello@reasonkit.sh>")]
+#[command(author = "ReasonKit Team <for@ReasonKit.sh>")]
 #[command(version)]
 #[command(about = "AI Thinking Enhancement System - Turn Prompts into Protocols")]
 struct Cli {
@@ -448,7 +449,7 @@ impl From<ProviderArg> for LlmProvider {
             ProviderArg::ClaudeCli => LlmProvider::Anthropic,
             ProviderArg::CodexCli => LlmProvider::OpenAI,
             ProviderArg::GeminiCli => LlmProvider::GoogleGemini,
-            ProviderArg::OpencodeCli => LlmProvider::OpenAI,
+            ProviderArg::OpencodeCli => LlmProvider::Opencode,
             ProviderArg::CopilotCli => LlmProvider::OpenAI,
         }
     }
@@ -569,8 +570,73 @@ async fn main() -> anyhow::Result<()> {
             return unimplemented_command("serve");
         }
 
-        Commands::Think { .. } => {
-            return unimplemented_command("think");
+        Commands::Think {
+            query,
+            protocol,
+            profile,
+            provider,
+            model,
+            temperature,
+            max_tokens,
+            budget: _, // TODO: Implement budget parsing
+            mock,
+            save_trace,
+            trace_dir,
+            format,
+            list,
+        } => {
+            let executor = if mock {
+                ProtocolExecutor::mock()?
+            } else {
+                let mut config = ExecutorConfig::default();
+                config.llm.provider = provider.into();
+                if let Some(m) = model {
+                    config.llm.model = m;
+                }
+                config.llm.temperature = temperature;
+                config.llm.max_tokens = max_tokens;
+                config.save_traces = save_trace;
+                config.trace_dir = trace_dir;
+                config.verbose = cli.verbose > 0;
+
+                ProtocolExecutor::with_config(config)?
+            };
+
+            if list {
+                println!("Available Protocols:");
+                for p in executor.list_protocols() {
+                    println!("  - {}", p);
+                }
+                println!("\nAvailable Profiles:");
+                for p in executor.list_profiles() {
+                    println!("  - {}", p);
+                }
+                return Ok(());
+            }
+
+            let q =
+                query.ok_or_else(|| anyhow::anyhow!("Query is required unless --list is used"))?;
+            let input = ProtocolInput::query(q);
+
+            let output = if let Some(proto) = protocol {
+                executor.execute(&proto, input).await?
+            } else {
+                let prof = profile.unwrap_or_else(|| "balanced".to_string());
+                executor.execute_profile(&prof, input).await?
+            };
+
+            match format {
+                OutputFormat::Text => {
+                    println!("Thinking Process:");
+                    for step in &output.steps {
+                        println!("\n[{}] {}", step.step_id, step.as_text().unwrap_or(""));
+                    }
+                    println!("\nConfidence: {:.2}", output.confidence);
+                }
+                OutputFormat::Json => {
+                    println!("{}", serde_json::to_string_pretty(&output)?);
+                }
+            }
         }
 
         Commands::Web { .. } => {

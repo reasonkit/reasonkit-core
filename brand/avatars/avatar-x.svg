@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
+  <defs>
+    <linearGradient id="bg-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#06b6d4"/>
+      <stop offset="50%" stop-color="#a855f7"/>
+      <stop offset="100%" stop-color="#ec4899"/>
+    </linearGradient>
+  </defs>
+  <!-- Solid gradient background - rounded for X.com -->
+  <rect width="400" height="400" rx="80" fill="url(#bg-grad)"/>
+  <!-- Large "RK" text - highly visible -->
+  <text x="200" y="280" font-family="Inter, system-ui, sans-serif" font-size="220" font-weight="900" fill="#030508" text-anchor="middle">RK</text>
+</svg>

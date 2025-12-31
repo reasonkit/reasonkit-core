@@ -6,17 +6,12 @@
 use crate::error::Result;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
-use std::time::{Duration, Instant};
+use std::time::Instant;
 
 use super::{
     executor::{ProtocolInput, ProtocolOutput},
-    validation::{
-        DeepSeekValidationConfig, DeepSeekValidationEngine, DeepSeekValidationResult,
-        ValidationVerdict,
-    },
-    validation_executor::{
-        ValidationExecutorConfig, ValidationLevel, ValidatingProtocolExecutor,
-    },
+    validation::{DeepSeekValidationResult, ValidationVerdict},
+    validation_executor::{ValidatingProtocolExecutor, ValidationExecutorConfig, ValidationLevel},
 };
 
 /// Benchmark configuration
@@ -131,6 +126,7 @@ pub struct BenchmarkSummary {
 }
 
 /// DeepSeek Validation Benchmark Runner
+#[derive(Default)]
 pub struct DeepSeekBenchmarkRunner {
     config: BenchmarkConfig,
 }
@@ -139,30 +135,26 @@ impl DeepSeekBenchmarkRunner {
     pub fn new(config: BenchmarkConfig) -> Self {
         Self { config }
     }
-    
-    pub fn default() -> Self {
-        Self::new(BenchmarkConfig::default())
-    }
-    
+
     /// Run complete benchmark suite
     pub async fn run_benchmark(&self) -> Result<BenchmarkResults> {
         let start_time = Instant::now();
         let mut scenario_results = HashMap::new();
         let mut total_iterations = 0;
-        
+
         for scenario in &self.config.scenarios {
             for validation_level in &self.config.validation_levels {
                 let result = self.run_scenario(*scenario, *validation_level).await?;
+                total_iterations += result.iterations;
                 let key = format!("{:?}_{:?}", scenario, validation_level);
                 scenario_results.insert(key, result);
-                total_iterations += result.iterations;
             }
         }
-        
+
         let total_duration = start_time.elapsed().as_secs_f64();
-        
+
         let summary = self.calculate_summary(&scenario_results, total_duration, total_iterations);
-        
+
         Ok(BenchmarkResults {
             config: self.config.clone(),
             scenario_results,
@@ -171,7 +163,7 @@ impl DeepSeekBenchmarkRunner {
             version: env!("CARGO_PKG_VERSION").to_string(),
         })
     }
-    
+
     /// Run a single scenario with specific validation level
     async fn run_scenario(
         &self,
@@ -185,32 +177,34 @@ impl DeepSeekBenchmarkRunner {
         let mut validation_success_count = 0;
         let mut token_metrics = Vec::new();
         let mut findings_stats = HashMap::new();
-        
+
         for i in 0..self.config.iterations {
             let input = self.generate_scenario_input(scenario, i);
-            
+
             let start_time = Instant::now();
-            let result = self.execute_validation_run(&input, validation_level).await?;
+            let result = self
+                .execute_validation_run(&input, validation_level)
+                .await?;
             let duration = start_time.elapsed().as_millis() as f64;
-            
+
             durations.push(duration);
             confidences.push(result.confidence);
-            
+
             if result.success {
                 success_count += 1;
             }
-            
+
             // Extract validation results if available
             if let Some(validation_data) = result.data.get("deepseek_validation") {
-                if let Ok(validation_result) = serde_json::from_value::<DeepSeekValidationResult>(
-                    validation_data.clone(),
-                ) {
+                if let Ok(validation_result) =
+                    serde_json::from_value::<DeepSeekValidationResult>(validation_data.clone())
+                {
                     validation_confidences.push(validation_result.validation_confidence);
-                    
+
                     if validation_result.verdict == ValidationVerdict::Validated {
                         validation_success_count += 1;
                     }
-                    
+
                     // Track token usage
                     token_metrics.push(TokenUsageMetrics {
                         average_input_tokens: validation_result.tokens_used.input_tokens as f64,
@@ -219,13 +213,13 @@ impl DeepSeekBenchmarkRunner {
                         average_cost_usd: validation_result.tokens_used.cost_usd,
                         token_per_second: validation_result.performance.tokens_per_second,
                     });
-                    
+
                     // Track validation findings
                     self.analyze_findings(&validation_result, &mut findings_stats);
                 }
             }
         }
-        
+
         // Calculate averages
         let average_duration = durations.iter().sum::<f64>() / durations.len() as f64;
         let average_confidence = confidences.iter().sum::<f64>() / confidences.len() as f64;
@@ -234,10 +228,11 @@ impl DeepSeekBenchmarkRunner {
         } else {
             validation_confidences.iter().sum::<f64>() / validation_confidences.len() as f64
         };
-        
+
         let success_rate = success_count as f64 / self.config.iterations as f64;
-        let validation_success_rate = validation_success_count as f64 / self.config.iterations as f64;
-        
+        let validation_success_rate =
+            validation_success_count as f64 / self.config.iterations as f64;
+
         // Calculate token usage averages
         let token_usage = if token_metrics.is_empty() {
             TokenUsageMetrics::default()
@@ -270,7 +265,7 @@ impl DeepSeekBenchmarkRunner {
                     / token_metrics.len() as f64,
             }
         };
-        
+
         // Convert findings stats to vector
         let validation_findings = findings_stats
             .into_iter()
@@ -281,7 +276,7 @@ impl DeepSeekBenchmarkRunner {
                 average_confidence_impact: stats.total_confidence_impact / stats.count as f64,
             })
             .collect();
-        
+
         Ok(ScenarioResult {
             scenario,
             validation_level,
@@ -295,7 +290,7 @@ impl DeepSeekBenchmarkRunner {
             validation_findings,
         })
     }
-    
+
     /// Execute a single validation run
     async fn execute_validation_run(
         &self,
@@ -306,15 +301,21 @@ impl DeepSeekBenchmarkRunner {
             validation_level,
             ..Default::default()
         };
-        
+
         let executor = ValidatingProtocolExecutor::with_configs(Default::default(), config)?;
-        
+
         // Use balanced profile for consistent benchmarking
-        executor.execute_profile_with_validation("balanced", input.clone()).await
+        executor
+            .execute_profile_with_validation("balanced", input.clone())
+            .await
     }
-    
+
     /// Generate scenario-specific input
-    fn generate_scenario_input(&self, scenario: BenchmarkScenario, iteration: usize) -> ProtocolInput {
+    fn generate_scenario_input(
+        &self,
+        scenario: BenchmarkScenario,
+        iteration: usize,
+    ) -> ProtocolInput {
         match scenario {
             BenchmarkScenario::BusinessDecision => {
                 ProtocolInput::query(format!(
@@ -354,7 +355,7 @@ impl DeepSeekBenchmarkRunner {
             }
         }
     }
-    
+
     /// Analyze validation findings and update statistics
     fn analyze_findings(
         &self,
@@ -363,8 +364,8 @@ impl DeepSeekBenchmarkRunner {
     ) {
         for finding in &validation_result.findings {
             let category = format!("{:?}", finding.category);
-            let stats = findings_stats.entry(category).or_insert(FindingStatsAccumulator::default());
-            
+            let stats = findings_stats.entry(category).or_default();
+
             stats.count += 1;
             stats.average_severity += match finding.severity {
                 super::validation::Severity::Critical => 5.0,
@@ -373,12 +374,12 @@ impl DeepSeekBenchmarkRunner {
                 super::validation::Severity::Low => 2.0,
                 super::validation::Severity::Info => 1.0,
             };
-            
+
             // Estimate confidence impact based on validation result
             stats.total_confidence_impact += validation_result.validation_confidence;
         }
     }
-    
+
     /// Calculate benchmark summary
     fn calculate_summary(
         &self,
@@ -389,35 +390,36 @@ impl DeepSeekBenchmarkRunner {
         let mut total_success = 0;
         let mut total_confidence_gain = 0.0;
         let mut total_cost = 0.0;
-        
+
         for result in scenario_results.values() {
             total_success += (result.success_rate * result.iterations as f64) as usize;
-            total_confidence_gain += result.average_validation_confidence - result.average_confidence;
+            total_confidence_gain +=
+                result.average_validation_confidence - result.average_confidence;
             total_cost += result.token_usage.average_cost_usd * result.iterations as f64;
         }
-        
+
         let overall_success_rate = total_success as f64 / total_iterations as f64;
         let average_confidence_gain = total_confidence_gain / scenario_results.len() as f64;
         let cost_per_validation = total_cost / total_iterations as f64;
-        
+
         // Generate recommendations
         let mut performance_improvements = Vec::new();
         let mut recommendations = Vec::new();
-        
+
         if average_confidence_gain > 0.0 {
             performance_improvements.push(format!(
                 "Average confidence improvement: +{:.1}%",
                 average_confidence_gain * 100.0
             ));
         }
-        
+
         if cost_per_validation < 0.05 {
             performance_improvements.push(format!(
                 "Cost-effective validation: ${:.3} per analysis",
                 cost_per_validation
             ));
         }
-        
+
         if overall_success_rate > 0.85 {
             recommendations.push("Ready for production deployment".to_string());
         } else if overall_success_rate > 0.70 {
@@ -425,7 +427,7 @@ impl DeepSeekBenchmarkRunner {
         } else {
             recommendations.push("Further optimization recommended".to_string());
         }
-        
+
         BenchmarkSummary {
             total_duration_seconds: total_duration,
             total_iterations,
@@ -461,22 +463,22 @@ impl Default for TokenUsageMetrics {
 #[cfg(test)]
 mod tests {
     use super::*;
-    
+
     #[test]
     fn test_benchmark_config() {
         let config = BenchmarkConfig::default();
         assert_eq!(config.iterations, 10);
         assert!(config.enable_statistics);
     }
-    
+
     #[test]
     fn test_scenario_input_generation() {
         let runner = DeepSeekBenchmarkRunner::default();
         let input = runner.generate_scenario_input(BenchmarkScenario::BusinessDecision, 1);
-        
+
         assert!(input.get_str("query").unwrap().contains("European market"));
     }
-    
+
     // Note: Full benchmark tests would require async execution and real API calls
     // These are tested in integration tests with mock responses
 }

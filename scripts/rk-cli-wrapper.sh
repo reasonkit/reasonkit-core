@@ -9,6 +9,19 @@ if [[ -z "$tool" || -z "$real_bin" ]]; then
   exit 1
 fi
 
+if [[ ! -x "$real_bin" ]]; then
+  # Try to find it in PATH if it's not an absolute path
+  if [[ "$real_bin" != /* ]]; then
+    if ! command -v "$real_bin" >/dev/null 2>&1; then
+      echo "ReasonKit wrapper error: Real binary '$real_bin' not found in PATH" >&2
+      exit 1
+    fi
+  else
+    echo "ReasonKit wrapper error: Real binary not found or not executable: $real_bin" >&2
+    exit 1
+  fi
+fi
+
 config_file="${RK_CONFIG:-}"
 if [[ -z "$config_file" ]]; then
   if [[ -f "$HOME/.config/reasonkit/cli_defaults.toml" ]]; then
@@ -226,6 +239,12 @@ rk_codex() {
 
 rk_opencode() {
   local first="${1:-}"
+  
+  # Pass through if it's a file or directory (opening editor)
+  if [[ -e "$first" ]]; then
+    exec "$real_bin" "${args[@]}"
+  fi
+
   case "$first" in
     acp|attach|auth|agent|upgrade|uninstall|serve|web|models|stats|export|import|github|pr|session|help)
       exec "$real_bin" "${args[@]}"
@@ -277,7 +296,14 @@ rk_opencode() {
   if [[ -n "$subcmd" ]]; then
     exec "$real_bin" "$subcmd" "${new_args[@]}" "$wrapped"
   fi
-  exec "$real_bin" "${new_args[@]}" -p "$wrapped"
+
+  # Check if we are wrapping rk-core
+  if [[ "$real_bin" == *"rk-core"* ]]; then
+      exec "$real_bin" think --profile "$profile" --query "$prompt" "${new_args[@]}"
+  else
+      # opencode run takes message as argument, not -p
+      exec "$real_bin" run "${new_args[@]}" "$wrapped"
+  fi
 }
 
 rk_cursor_agent() {

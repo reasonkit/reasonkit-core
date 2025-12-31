@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 32" width="140" height="32">
+  <defs>
+    <linearGradient id="rk-status-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#06b6d4"/>
+      <stop offset="50%" stop-color="#a855f7"/>
+      <stop offset="100%" stop-color="#ec4899"/>
+    </linearGradient>
+  </defs>
+  <rect width="140" height="32" rx="5" fill="#030508"/>
+  <rect x="1.5" y="1.5" width="137" height="29" rx="3.5" fill="none" stroke="url(#rk-status-grad)" stroke-width="1.5"/>
+  <circle cx="12" cy="16" r="5" fill="#10b981"/>
+  <text x="26" y="22" font-family="'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="12" font-weight="700" fill="url(#rk-status-grad)">Active</text>
+</svg>

@@ -27,6 +27,17 @@ Cargo.lock
 /secrets/
 
 # ============================================================
+# AI AGENT CONTEXT FILES - INTERNAL ONLY
+# ============================================================
+CLAUDE.md
+AGENTS.md
+GEMINI.md
+GROK.md
+.cursorrules
+.github/copilot-instructions.md
+.windsurfrules
+
+# ============================================================
 # SENSITIVE DOCUMENTS
 # ============================================================
 *LAUNCH*
@@ -47,6 +58,11 @@ Cargo.lock
 *CONFIDENTIAL*
 *PROPRIETARY*
 *ORCHESTRATOR*
+*AUDIT_REPORT*
+*VALIDATION_REPORT*
+*READINESS_REPORT*
+*COMPILATION_STATUS*
+*BENCHMARK_SUMMARY*
 
 # ============================================================
 # ENVIRONMENT & SECRETS

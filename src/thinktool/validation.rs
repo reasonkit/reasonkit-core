@@ -19,16 +19,13 @@
 //! - **Statistical Rigor**: Confidence significance testing and error bounds
 //! - **Production Auditable**: Complete validation trace for compliance
 
-use crate::error::{Error, Result};
+use crate::error::Result;
 use regex::Regex;
 use serde::{Deserialize, Serialize};
-use std::collections::HashMap;
 
 use super::{
     executor::{ProtocolInput, ProtocolOutput},
     llm::{LlmClient, LlmRequest, UnifiedLlmClient},
-    protocol::{Protocol, ProtocolStep},
-    step::StepResult,
     trace::ExecutionTrace,
 };
 
@@ -38,35 +35,35 @@ pub struct DeepSeekValidationConfig {
     /// DeepSeek model to use (default: deepseek-chat)
     #[serde(default = "default_deepseek_model")]
     pub model: String,
-    
+
     /// Temperature for validation (lower = more deterministic)
     #[serde(default = "default_validation_temperature")]
     pub temperature: f32,
-    
+
     /// Maximum validation tokens per chain
     #[serde(default = "default_max_tokens")]
     pub max_tokens: u32,
-    
+
     /// Enable statistical significance testing
     #[serde(default)]
     pub enable_statistical_testing: bool,
-    
+
     /// Statistical significance threshold (alpha)
     #[serde(default = "default_alpha")]
     pub alpha: f64,
-    
+
     /// Enable compliance validation (GDPR, bias detection)
     #[serde(default)]
     pub enable_compliance_validation: bool,
-    
+
     /// Enable meta-cognitive assessment
     #[serde(default)]
     pub enable_meta_cognition: bool,
-    
+
     /// Minimum confidence threshold for chain validation
     #[serde(default = "default_min_confidence")]
     pub min_confidence: f64,
-    
+
     /// Maximum chain length for validation (memory optimization)
     #[serde(default = "default_max_chain_length")]
     pub max_chain_length: usize,
@@ -105,7 +102,7 @@ impl Default for DeepSeekValidationConfig {
             enable_statistical_testing: false, // Default off for performance
             alpha: default_alpha(),
             enable_compliance_validation: true, // Default on for safety
-            enable_meta_cognition: false, // Default off for performance
+            enable_meta_cognition: false,       // Default off for performance
             min_confidence: default_min_confidence(),
             max_chain_length: default_max_chain_length(),
         }
@@ -119,12 +116,12 @@ impl DeepSeekValidationConfig {
             enable_statistical_testing: true,
             enable_compliance_validation: true,
             enable_meta_cognition: true,
-            temperature: 0.05, // Very deterministic
+            temperature: 0.05,    // Very deterministic
             min_confidence: 0.85, // High threshold
             ..Default::default()
         }
     }
-    
+
     /// Create configuration for performance-optimized validation
     pub fn performance() -> Self {
         Self {
@@ -203,6 +200,8 @@ pub struct DeepSeekValidationResult {
     pub performance: ValidationPerformance,
 }
 
+use std::ops::{Add, Mul, Sub};
+
 /// Chain integrity validation result
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ChainIntegrityResult {
@@ -217,6 +216,41 @@ pub struct ChainIntegrityResult {
     /// Continuity score (0-1)
     pub continuity_score: f64,
 }
+
+impl Add<f32> for ChainIntegrityResult {
+    type Output = f32;
+
+    fn add(self, rhs: f32) -> Self::Output {
+        self.continuity_score as f32 + rhs
+    }
+}
+
+impl Sub<&f32> for ChainIntegrityResult {
+    type Output = f32;
+
+    fn sub(self, rhs: &f32) -> Self::Output {
+        self.continuity_score as f32 - *rhs
+    }
+}
+
+impl Mul<f64> for ChainIntegrityResult {
+    type Output = f64;
+
+    fn mul(self, rhs: f64) -> Self::Output {
+        self.continuity_score * rhs
+    }
+}
+
+impl Mul<f32> for ChainIntegrityResult {
+    type Output = f32;
+
+    fn mul(self, rhs: f32) -> Self::Output {
+        self.continuity_score as f32 * rhs
+    }
+}
+
+// Support Copy for f32 operations if needed, but the struct has Vec so it can't be Copy.
+// We implement operations that consume self or take reference.
 
 /// Validation performance metrics
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -237,15 +271,11 @@ impl ValidationPerformance {
             memory_usage_mb,
         }
     }
-    
-    pub fn default() -> Self {
-        Self::new(0, 0.0, 0.0)
-    }
 }
 
 impl Default for ValidationPerformance {
     fn default() -> Self {
-        Self::default()
+        Self::new(0, 0.0, 0.0)
     }
 }
 
@@ -429,7 +459,7 @@ impl TokenUsage {
         self.total_tokens += other.total_tokens;
         self.cost_usd += other.cost_usd;
     }
-    
+
     pub fn new(input: u32, output: u32, cost: f64) -> Self {
         Self {
             input_tokens: input,
@@ -451,24 +481,23 @@ impl DeepSeekValidationEngine {
     pub fn new() -> Result<Self> {
         Self::with_config(DeepSeekValidationConfig::default())
     }
-    
+
     /// Create validation engine with custom configuration
     pub fn with_config(config: DeepSeekValidationConfig) -> Result<Self> {
         // Configure LLM client for DeepSeek
-        let mut llm_config = super::llm::LlmConfig::default();
-        llm_config.provider = super::llm::LlmProvider::DeepSeek;
-        llm_config.model = config.model.clone();
-        llm_config.temperature = config.temperature;
-        llm_config.max_tokens = config.max_tokens;
-        
+        let llm_config = super::llm::LlmConfig {
+            provider: super::llm::LlmProvider::DeepSeek,
+            model: config.model.clone(),
+            temperature: config.temperature as f64,
+            max_tokens: config.max_tokens,
+            ..Default::default()
+        };
+
         let llm_client = UnifiedLlmClient::new(llm_config)?;
-        
-        Ok(Self {
-            config,
-            llm_client,
-        })
+
+        Ok(Self { config, llm_client })
     }
-    
+
     /// Validate a complete reasoning chain using DeepSeek V3
     ///
     /// This performs comprehensive validation including:
@@ -483,33 +512,35 @@ impl DeepSeekValidationEngine {
         trace: &ExecutionTrace,
     ) -> Result<DeepSeekValidationResult> {
         let start = std::time::Instant::now();
-        
+
         // Build validation prompt with chain details
-        let validation_prompt = self.build_validation_prompt(protocol_output, original_input, trace);
-        
+        let validation_prompt =
+            self.build_validation_prompt(protocol_output, original_input, trace);
+
         // Execute DeepSeek validation
         let (validation_response, tokens) = self.execute_validation(&validation_prompt).await?;
-        
+
         // Parse validation results
-        let validation_result = self.parse_validation_response(&validation_response, protocol_output)?;
-        
+        let validation_result =
+            self.parse_validation_response(&validation_response, protocol_output)?;
+
         let duration_ms = start.elapsed().as_millis() as u64;
-        
+
         // Calculate performance metrics
         let performance = ValidationPerformance {
             duration_ms,
             tokens_per_second: (tokens.total_tokens as f64) / (duration_ms as f64 / 1000.0),
             memory_usage_mb: self.estimate_memory_usage(protocol_output, trace),
         };
-        
+
         // Combine results
         let mut result = validation_result;
         result.tokens_used = tokens;
         result.performance = performance;
-        
+
         Ok(result)
     }
-    
+
     /// Validate a reasoning chain with statistical significance testing
     ///
     /// This performs bootstrap resampling and statistical tests to validate
@@ -521,18 +552,22 @@ impl DeepSeekValidationEngine {
         trace: &ExecutionTrace,
     ) -> Result<DeepSeekValidationResult> {
         if !self.config.enable_statistical_testing {
-            return self.validate_chain(protocol_output, original_input, trace).await;
+            return self
+                .validate_chain(protocol_output, original_input, trace)
+                .await;
         }
-        
-        let mut result = self.validate_chain(protocol_output, original_input, trace).await?;
-        
+
+        let mut result = self
+            .validate_chain(protocol_output, original_input, trace)
+            .await?;
+
         // Add statistical significance testing
         let statistical_results = self.perform_statistical_tests(protocol_output).await?;
         result.statistical_results = Some(statistical_results);
-        
+
         Ok(result)
     }
-    
+
     /// Quick validation - performance optimized for high-throughput
     pub async fn validate_quick(
         &self,
@@ -541,10 +576,12 @@ impl DeepSeekValidationEngine {
     ) -> Result<DeepSeekValidationResult> {
         let config = DeepSeekValidationConfig::performance();
         let quick_engine = Self::with_config(config)?;
-        
-        quick_engine.validate_chain(protocol_output, original_input, &ExecutionTrace::default()).await
+
+        quick_engine
+            .validate_chain(protocol_output, original_input, &ExecutionTrace::default())
+            .await
     }
-    
+
     /// Rigorous validation - maximum scrutiny
     pub async fn validate_rigorous(
         &self,
@@ -554,83 +591,90 @@ impl DeepSeekValidationEngine {
     ) -> Result<DeepSeekValidationResult> {
         let config = DeepSeekValidationConfig::rigorous();
         let rigorous_engine = Self::with_config(config)?;
-        
-        let result = rigorous_engine.validate_chain(protocol_output, original_input, trace).await?;
-        
+
+        let result = rigorous_engine
+            .validate_chain(protocol_output, original_input, trace)
+            .await?;
+
         // Add additional rigorous checks
-        let enhanced_result = self.enhance_rigorous_validation(result, protocol_output).await?;
-        
+        let enhanced_result = self
+            .enhance_rigorous_validation(result, protocol_output)
+            .await?;
+
         Ok(enhanced_result)
     }
-    
+
     /// Build comprehensive validation prompt
     fn build_validation_prompt(
         &self,
         protocol_output: &ProtocolOutput,
         original_input: &ProtocolInput,
-        trace: &ExecutionTrace,
+        _trace: &ExecutionTrace,
     ) -> String {
         let mut prompt = String::new();
-        
-        prompt.push_str(&format!("# REASONING CHAIN VALIDATION ANALYSIS\n\n"));
-        
-        prompt.push_str(&format!("**Protocol**: {}\n"
-            "**Input**: {}\n"
-            "**Chain Length**: {} steps\n"
-            "**Overall Confidence**: {:.1}%\n\n",
+
+        prompt.push_str("# REASONING CHAIN VALIDATION ANALYSIS\n\n");
+
+        prompt.push_str(&format!(
+            concat!(
+                "**Protocol**: {}\n",
+                "**Input**: {}\n",
+                "**Chain Length**: {} steps\n",
+                "**Overall Confidence**: {:.1}%\n\n",
+            ),
             protocol_output.protocol_id,
             self.summarize_input(original_input),
             protocol_output.steps.len(),
             protocol_output.confidence * 100.0
         ));
-        
+
         prompt.push_str(&format!(
             "## STEP-BY-STEP ANALYSIS\n\n{}",
             self.format_step_analysis(protocol_output)
         ));
-        
+
         if self.config.enable_compliance_validation {
             prompt.push_str(&format!(
                 "\n\n## COMPLIANCE VALIDATION\n\n{}",
                 self.build_compliance_section(protocol_output)
             ));
         }
-        
+
         if self.config.enable_meta_cognition {
             prompt.push_str(&format!(
                 "\n\n## META-COGNITIVE ASSESSMENT\n\n{}",
                 self.build_meta_cognitive_section(protocol_output)
             ));
         }
-        
+
         prompt.push_str(&format!(
             "\n\n## VALIDATION INSTRUCTIONS\n\n{}",
             self.build_validation_instructions()
         ));
-        
+
         prompt
     }
-    
+
     /// Execute validation using DeepSeek LLM
     async fn execute_validation(&self, prompt: &str) -> Result<(String, TokenUsage)> {
         let system_prompt = self.build_validation_system_prompt();
-        
+
         let request = LlmRequest::new(prompt)
             .with_system(&system_prompt)
-            .with_temperature(self.config.temperature)
+            .with_temperature(self.config.temperature.into())
             .with_max_tokens(self.config.max_tokens);
-        
+
         let response = self.llm_client.complete(request).await?;
-        
+
         let tokens = TokenUsage::new(
             response.usage.input_tokens,
             response.usage.output_tokens,
             response.usage.cost_usd(&self.config.model),
         );
-        
+
         Ok((response.content, tokens))
     }
-    
+
     /// Parse DeepSeek validation response
     fn parse_validation_response(
         &self,
@@ -641,7 +685,7 @@ impl DeepSeekValidationEngine {
         let (verdict, validation_confidence) = self.extract_verdict_and_confidence(response);
         let chain_integrity = self.extract_chain_integrity(response, protocol_output);
         let findings = self.extract_findings(response);
-        
+
         let mut result = DeepSeekValidationResult {
             verdict,
             chain_integrity,
@@ -653,19 +697,19 @@ impl DeepSeekValidationEngine {
             tokens_used: TokenUsage::default(),
             performance: ValidationPerformance::default(),
         };
-        
+
         // Extract additional validation sections if enabled
         if self.config.enable_compliance_validation {
             result.compliance_results = self.extract_compliance_results(response);
         }
-        
+
         if self.config.enable_meta_cognition {
             result.meta_cognitive_results = self.extract_meta_cognitive_results(response);
         }
-        
+
         Ok(result)
     }
-    
+
     // Helper methods for parsing validation responses
     fn extract_verdict_and_confidence(&self, response: &str) -> (ValidationVerdict, f64) {
         // Sample parsing logic - in production, this would use more sophisticated parsing
@@ -678,12 +722,12 @@ impl DeepSeekValidationEngine {
         } else {
             ValidationVerdict::NeedsImprovement
         };
-        
+
         let confidence = self.extract_confidence_score(response).unwrap_or(0.7);
-        
+
         (verdict, confidence)
     }
-    
+
     fn extract_confidence_score(&self, text: &str) -> Option<f64> {
         let re = Regex::new(r"[Cc]onfidence:?\s*(\d+\.?\d*)").ok()?;
         re.captures(text)
@@ -691,8 +735,12 @@ impl DeepSeekValidationEngine {
             .and_then(|m| m.as_str().parse::<f64>().ok())
             .map(|v| v.min(1.0))
     }
-    
-    fn extract_chain_integrity(&self, _response: &str, _output: &ProtocolOutput) -> ChainIntegrityResult {
+
+    fn extract_chain_integrity(
+        &self,
+        _response: &str,
+        _output: &ProtocolOutput,
+    ) -> ChainIntegrityResult {
         // Simplified extraction - production would use more sophisticated parsing
         ChainIntegrityResult {
             logical_flow: LogicalFlowStatus::Good,
@@ -702,22 +750,22 @@ impl DeepSeekValidationEngine {
             continuity_score: 0.85,
         }
     }
-    
+
     fn extract_findings(&self, _response: &str) -> Vec<ValidationFinding> {
         // Placeholder - production would parse findings from response
         vec![]
     }
-    
+
     fn extract_compliance_results(&self, _response: &str) -> Option<ComplianceResult> {
         // Placeholder - production would parse compliance results
         None
     }
-    
+
     fn extract_meta_cognitive_results(&self, _response: &str) -> Option<MetaCognitiveResult> {
         // Placeholder - production would parse meta-cognitive results
         None
     }
-    
+
     fn summarize_input(&self, input: &ProtocolInput) -> String {
         if let Some(query) = input.get_str("query") {
             if query.len() > 100 {
@@ -729,16 +777,18 @@ impl DeepSeekValidationEngine {
             "Complex multi-field input".to_string()
         }
     }
-    
+
     fn format_step_analysis(&self, output: &ProtocolOutput) -> String {
         let mut analysis = String::new();
-        
+
         for (i, step) in output.steps.iter().enumerate() {
             analysis.push_str(&format!(
-                "### Step {}: {}\n"
-                "- **Confidence**: {:.1}%\n"
-                "- **Status**: {}\n"
-                "- **Duration**: {}ms\n\n",
+                concat!(
+                    "### Step {}: {}\n",
+                    "- **Confidence**: {:.1}%\n",
+                    "- **Status**: {}\n",
+                    "- **Duration**: {}ms\n\n",
+                ),
                 i + 1,
                 step.step_id,
                 step.confidence * 100.0,
@@ -746,61 +796,77 @@ impl DeepSeekValidationEngine {
                 step.duration_ms
             ));
         }
-        
+
         analysis
     }
-    
+
     fn build_compliance_section(&self, _output: &ProtocolOutput) -> String {
         "Evaluate GDPR compliance, bias detection, and regulatory alignment.".to_string()
     }
-    
+
     fn build_meta_cognitive_section(&self, _output: &ProtocolOutput) -> String {
-        "Assess reasoning methodology, cognitive biases, and improvement recommendations.".to_string()
+        "Assess reasoning methodology, cognitive biases, and improvement recommendations."
+            .to_string()
     }
-    
+
     fn build_validation_instructions(&self) -> String {
         let mut instructions = String::new();
-        
+
         instructions.push_str(&format!(
-            "**Validation Criteria**:\n"
-            "1. Logical Flow Analysis - Check step sequencing and dependency satisfaction\n"
-            "2. Confidence Progression - Analyze confidence trends across steps\n"
-            "3. Gap Detection - Identify missing reasoning steps or assumptions\n"
-            "4. Statistical Significance - {}\n"
-            "5. Compliance Assessment - {}\n"
-            "6. Meta-Cognitive Evaluation - {}\n\n",
-            if self.config.enable_statistical_testing { "Enabled" } else { "Disabled" },
-            if self.config.enable_compliance_validation { "Enabled" } else { "Disabled" },
-            if self.config.enable_meta_cognition { "Enabled" } else { "Disabled" }
+            concat!(
+                "**Validation Criteria**:\n",
+                "1. Logical Flow Analysis - Check step sequencing and dependency satisfaction\n",
+                "2. Confidence Progression - Analyze confidence trends across steps\n",
+                "3. Gap Detection - Identify missing reasoning steps or assumptions\n",
+                "4. Statistical Significance - {}\n",
+                "5. Compliance Assessment - {}\n",
+                "6. Meta-Cognitive Evaluation - {}\n\n",
+            ),
+            if self.config.enable_statistical_testing {
+                "Enabled"
+            } else {
+                "Disabled"
+            },
+            if self.config.enable_compliance_validation {
+                "Enabled"
+            } else {
+                "Disabled"
+            },
+            if self.config.enable_meta_cognition {
+                "Enabled"
+            } else {
+                "Disabled"
+            }
         ));
-        
+
         instructions
     }
-    
+
     fn build_validation_system_prompt(&self) -> String {
-        format!(
-            "You are DeepSeek V3 (671B parameters), a reasoning chain validation expert. \n"
-            "Your task is to validate AI reasoning chains for logical integrity, statistical significance, compliance, and reasoning quality.\n"
-            "\n"
-            "**Validation Guidelines**:\n"
-            "1. BE BRUTALLY HONEST in your assessment\n"
-            "2. Use DeepSeek's 671B parameter scale to detect subtle reasoning flaws\n"
-            "3. Apply cross-cultural intelligence to detect biases\n"
-            "4. Provide statistical rigor in confidence assessment\n"
-            "5. Assess compliance with GDPR and other regulations\n"
-            "6. Evaluate reasoning methodology and cognitive processes\n"
-            "\n"
-            "**Output Format**:\n"
-            "- Overall verdict (Validated/PartiallyValidated/Invalid/CriticalIssues)\n"
-            "- Chain integrity analysis\n"
-            "- Statistical significance (if applicable)\n"
-            "- Compliance assessment\n"
-            "- Meta-cognitive evaluation\n"
-            "- Detailed findings with severity levels\n"
-            "- Confidence score for validation (0.0-1.0)\n"
+        concat!(
+            "You are DeepSeek V3 (671B parameters), a reasoning chain validation expert.\n",
+            "Your task is to validate AI reasoning chains for logical integrity, statistical significance, compliance, and reasoning quality.\n",
+            "\n",
+            "**Validation Guidelines**:\n",
+            "1. BE BRUTALLY HONEST in your assessment\n",
+            "2. Use DeepSeek's 671B parameter scale to detect subtle reasoning flaws\n",
+            "3. Apply cross-cultural intelligence to detect biases\n",
+            "4. Provide statistical rigor in confidence assessment\n",
+            "5. Assess compliance with GDPR and other regulations\n",
+            "6. Evaluate reasoning methodology and cognitive processes\n",
+            "\n",
+            "**Output Format**:\n",
+            "- Overall verdict (Validated/PartiallyValidated/Invalid/CriticalIssues)\n",
+            "- Chain integrity analysis\n",
+            "- Statistical significance (if applicable)\n",
+            "- Compliance assessment\n",
+            "- Meta-cognitive evaluation\n",
+            "- Detailed findings with severity levels\n",
+            "- Confidence score for validation (0.0-1.0)\n",
         )
+        .to_string()
     }
-    
+
     async fn perform_statistical_tests(
         &self,
         _output: &ProtocolOutput,
@@ -814,12 +880,12 @@ impl DeepSeekValidationEngine {
             sample_size: Some(1000),
         })
     }
-    
+
     fn estimate_memory_usage(&self, _output: &ProtocolOutput, _trace: &ExecutionTrace) -> f64 {
         // Estimate memory usage based on chain complexity
         50.0 // Conservative estimate in MB
     }
-    
+
     async fn enhance_rigorous_validation(
         &self,
         mut result: DeepSeekValidationResult,
@@ -841,22 +907,21 @@ impl Default for DeepSeekValidationEngine {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::thinktool::executor::ProtocolOutput;
-    
+
     #[tokio::test]
     async fn test_validation_engine_creation() {
         // Mock test - in production would use proper mocking
         let engine = DeepSeekValidationEngine::new().unwrap();
         assert_eq!(engine.config.model, "deepseek-chat");
     }
-    
+
     #[test]
     fn test_configuration_options() {
         let config = DeepSeekValidationConfig::rigorous();
         assert!(config.enable_statistical_testing);
         assert!(config.enable_compliance_validation);
         assert!(config.enable_meta_cognition);
-        
+
         let perf_config = DeepSeekValidationConfig::performance();
         assert!(!perf_config.enable_statistical_testing);
         assert!(perf_config.enable_compliance_validation);

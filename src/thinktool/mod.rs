@@ -96,11 +96,14 @@ pub mod calibration;
 pub mod consistency;
 pub mod debate;
 pub mod deep_logic;
+pub mod deepseek_benchmark;
 pub mod executor;
 pub mod fol;
 pub mod llm;
 pub mod llm_cli;
 pub mod metrics;
+#[cfg(feature = "minimax")]
+pub mod minimax;
 pub mod modules;
 pub mod oscillation;
 pub mod prm;
@@ -118,14 +121,12 @@ pub mod trace;
 pub mod triangulation;
 pub mod validation;
 pub mod validation_executor;
+pub mod yaml_loader;
+
+// Compatibility exports (legacy API used by examples and internal modules)
+pub mod thinktool_executor;
 
 // Re-exports
-pub use validation::{
-    ComplianceResult, ComplianceStatus, ComplianceViolation, DeepSeekValidationConfig,
-    DeepSeekValidationEngine, DeepSeekValidationResult, DetectedBias, MethodologyStatus,
-    RegulatoryStatus, StatisticalResult, ValidationCategory, ValidationFinding, ValidationPerformance,
-    ValidationVerdict,
-};
 pub use benchmark::{
     Answer, BenchmarkProblem, BenchmarkResults, BenchmarkRunner, CalibrationMetrics,
     ComparisonReport, ConfidenceBin, EvaluationResult,
@@ -190,11 +191,15 @@ pub use self_refine::{
     DimensionFeedback, FeedbackDimension, IterationFeedback, RefineConfig, RefineIteration,
     RefinePrompts, RefineResult, StopReason,
 };
+
+// Legacy aliases
+pub use crate::evaluation::Profile;
 pub use socratic::{
     AnswerType, Aporia, QuestionCategory, SocraticConfig, SocraticPrompts, SocraticQuestion,
     SocraticResult,
 };
 pub use step::{OutputFormat, StepResult};
+pub use thinktool_executor::ThinkToolExecutor;
 pub use tot::{
     parse_thoughts, SearchStrategy, ThoughtNode, ThoughtPrompts, ThoughtState, ToTConfig,
     ToTResult, ToTStats, TreeOfThoughts,
@@ -211,4 +216,12 @@ pub use triangulation::{
     TriangulationIssueType, TriangulationPrompts, TriangulationResult, Triangulator,
     VerificationConfidence, VerificationRecommendation,
 };
-pub use validation_executor::{ValidationExecutorConfig, ValidationLevel, ValidatingProtocolExecutor};
+pub use validation::{
+    ComplianceResult, ComplianceStatus, ComplianceViolation, DeepSeekValidationConfig,
+    DeepSeekValidationEngine, DeepSeekValidationResult, DetectedBias, MethodologyStatus,
+    RegulatoryStatus, StatisticalResult, ValidationCategory, ValidationFinding,
+    ValidationPerformance, ValidationVerdict,
+};
+pub use validation_executor::{
+    ValidatingProtocolExecutor, ValidationExecutorConfig, ValidationLevel,
+};

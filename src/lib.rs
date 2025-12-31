@@ -41,6 +41,7 @@
 
 // ============================================================================
 // CORE MODULES (always available)
+// Core modules always available
 pub mod bindings;
 pub mod constants;
 pub mod error;
@@ -48,13 +49,25 @@ pub mod evaluation;
 pub mod ingestion;
 pub mod m2;
 pub mod mcp;
+pub mod orchestration;
 pub mod processing;
 pub mod telemetry;
 pub mod thinktool;
 pub mod verification;
 pub mod web;
 
+// Aesthetic Expression Mastery System - M2-Enhanced UI/UX Assessment
+// Leverages VIBE Benchmark Excellence (91.5% Web, 89.7% Android, 88.0% iOS)
+#[cfg(feature = "aesthetic")]
+pub mod aesthetic;
+
+// VIBE Protocol Validation System - Revolutionary "Agent-as-a-Verifier" paradigm
+// NOTE: Feature-gated due to incomplete implementation (113 compile errors)
+#[cfg(feature = "vibe")]
+pub mod vibe;
+
 // Multi-Language Code Intelligence Enhancement
+#[cfg(feature = "code-intelligence")]
 pub mod code_intelligence;
 
 // ============================================================================
@@ -86,6 +99,13 @@ pub use error::{Error, Result};
 
 /// Crate version string for runtime logging.
 pub const VERSION: &str = env!("CARGO_PKG_VERSION");
+
+// Re-export orchestration system
+pub use orchestration::{
+    ComponentCoordinator, ErrorRecovery, LongHorizonConfig, LongHorizonOrchestrator,
+    LongHorizonResult, PerformanceTracker, StateManager, TaskGraph, TaskNode, TaskPriority,
+    TaskStatus,
+};
 
 use chrono::{DateTime, Utc};
 use pyo3::prelude::*;

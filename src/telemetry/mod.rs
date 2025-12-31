@@ -35,11 +35,19 @@ mod privacy;
 mod schema;
 mod storage;
 
+// OpenTelemetry module (stub - feature currently commented out in Cargo.toml)
+// TODO: Uncomment when ready to implement full OpenTelemetry integration
+// #[cfg(feature = "opentelemetry")]
+// mod opentelemetry;
+
 pub use config::*;
 pub use events::*;
 pub use privacy::*;
 pub use schema::*;
 pub use storage::*;
+
+// #[cfg(feature = "opentelemetry")]
+// pub use opentelemetry::*;
 
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};

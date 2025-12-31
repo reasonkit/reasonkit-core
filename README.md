@@ -2,13 +2,17 @@
 
 # ReasonKit
 
-### **Turn Prompts into Protocols**
+### **The Reasoning Engine**
 
-> _"Designed, Not Dreamed."_ — Structure beats intelligence. Engineering over hope.
+> _"From Prompt to Cognitive Engineering."_ -- Turn Prompts into Protocols.
 
 **Auditable Reasoning for Production AI | Rust-Native | SSR/SSG Compatible**
 
-<img src="./assets/img/hero_reasoning_engine.png" alt="ReasonKit Core - Industrial Reasoning Engine" width="100%" />
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="./brand/readme/reasonkit-core_hero.png">
+  <source media="(prefers-color-scheme: light)" srcset="./brand/readme/reasonkit-core_hero.png">
+  <img src="./brand/readme/reasonkit-core_hero.png" alt="ReasonKit - Auditable Reasoning for Production AI" width="100%">
+</picture>
 
 [![CI](https://img.shields.io/github/actions/workflow/status/reasonkit/reasonkit-core/ci.yml?branch=main&style=flat-square&logo=github&label=CI&color=06b6d4&logoColor=06b6d4)](https://github.com/reasonkit/reasonkit-core/actions)
 [![Crates.io](https://img.shields.io/crates/v/reasonkit-core?style=flat-square&logo=rust&color=10b981&logoColor=f9fafb)](https://crates.io/crates/reasonkit-core)
@@ -24,11 +28,11 @@
 
 ## The Problem We Solve
 
-**Most AI is a slot machine.** Insert prompt → pull lever → hope for coherence.
+**Most AI is a slot machine.** Insert prompt -> pull lever -> hope for coherence.
 
-**ReasonKit is a factory.** Input data → execute protocol → get deterministic, auditable output.
+**ReasonKit is a factory.** Input data -> execute protocol -> get deterministic, auditable output.
 
-LLMs are fundamentally **probabilistic**. Same prompt → different outputs. This creates critical failures:
+LLMs are fundamentally **probabilistic**. Same prompt -> different outputs. This creates critical failures:
 
 | Failure           | Impact                    | Our Solution                                      |
 | ----------------- | ------------------------- | ------------------------------------------------- |
@@ -53,7 +57,7 @@ cargo install reasonkit-core
 rk-core think --profile balanced "Should we migrate to microservices?"
 ```
 
-> **Note:** In v1.0.0, CLI commands other than `mcp`, `serve-mcp`, and `completions` are scaffolded. The examples below describe the planned interface.
+> **Note:** Some CLI commands are scaffolded in v0.1.0. Core functionality (`mcp`, `serve-mcp`, `completions`) is fully implemented.
 
 **30 seconds to structured reasoning.**
 
@@ -64,7 +68,15 @@ rk-core think --profile balanced "Should we migrate to microservices?"
 Each ThinkTool acts as a **variance reduction filter**, transforming probabilistic outputs into increasingly deterministic reasoning paths.
 
 <div align="center">
-<img src="./assets/img/powercombo_process.png" alt="PowerCombo Process - 5-Step Structured Reasoning Chain" width="100%" />
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="./brand/readme/powercombo_process.png">
+  <source media="(prefers-color-scheme: light)" srcset="./brand/readme/powercombo_process.png">
+  <img src="./brand/readme/powercombo_process.png" alt="PowerCombo Process: GigaThink (Diverge) -> LaserLogic (Converge) -> BedRock (Ground) -> ProofGuard (Verify) -> BrutalHonesty (Critique)" width="900">
+</picture>
+
+<sub><b>The PowerCombo Process:</b> Five cognitive operations that systematically reduce variance from raw LLM output (~85%) to protocol-constrained reasoning (~28%)</sub>
+
 </div>
 
 | ThinkTool         | Operation    | What It Does                                    |
@@ -78,18 +90,26 @@ Each ThinkTool acts as a **variance reduction filter**, transforming probabilist
 ### Variance Reduction: The Chain Effect
 
 <div align="center">
-<img src="./assets/img/chart_variance_reduction.png" alt="Variance Reduction Through ThinkTool Chain" width="100%" />
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="./brand/readme/chart_variance_reduction.png">
+  <source media="(prefers-color-scheme: light)" srcset="./brand/readme/chart_variance_reduction.png">
+  <img src="./brand/readme/chart_variance_reduction.png" alt="Variance Reduction Chart: Raw LLM 85% -> GigaThink 72% -> LaserLogic 58% -> BedRock 42% -> ProofGuard 28%" width="800">
+</picture>
+
+<sub><b>Quantified Uncertainty Reduction:</b> Each ThinkTool stage measurably constrains probabilistic variance</sub>
+
 </div>
 
 | Stage          | Variance | Reduction |
 | -------------- | -------- | --------- |
-| Raw LLM Output | 85%      | —         |
+| Raw LLM Output | 85%      | --        |
 | + GigaThink    | 72%      | -13%      |
 | + LaserLogic   | 58%      | -14%      |
 | + BedRock      | 42%      | -16%      |
 | + ProofGuard   | 28%      | -14%      |
 
-**Result:** Raw LLM variance ~85% → Protocol-constrained variance ~28%
+**Result:** Raw LLM variance ~85% -> Protocol-constrained variance ~28%
 
 ---
 
@@ -113,7 +133,7 @@ rk-core think --profile paranoid "Validate cryptographic implementation"
 
 | Profile      | Chain                   | Confidence | Use Case           |
 | ------------ | ----------------------- | ---------- | ------------------ |
-| `--quick`    | GigaThink → LaserLogic  | 70%        | Fast sanity checks |
+| `--quick`    | GigaThink -> LaserLogic | 70%        | Fast sanity checks |
 | `--balanced` | All 5 ThinkTools        | 80%        | Standard decisions |
 | `--deep`     | All 5 + meta-cognition  | 85%        | Complex problems   |
 | `--paranoid` | All 5 + validation pass | 95%        | Critical decisions |
@@ -123,52 +143,56 @@ rk-core think --profile paranoid "Validate cryptographic implementation"
 ## See It In Action
 
 <div align="center">
-<img src="./assets/img/terminal_mockup.png" alt="ReasonKit Terminal - Execution Trace" width="100%" />
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="./brand/readme/terminal_mockup.png">
+  <source media="(prefers-color-scheme: light)" srcset="./brand/readme/terminal_mockup.png">
+  <img src="./brand/readme/terminal_mockup.png" alt="ReasonKit Terminal showing execution trace with variance reduction at each ThinkTool stage" width="850">
+</picture>
+
+<sub><b>Live Execution Trace:</b> Every reasoning step logged with confidence scores and variance metrics</sub>
+
 </div>
 
 ```
 $ rk-core think --profile balanced "Should we migrate to microservices?"
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-ThinkTool Chain: GigaThink → LaserLogic → BedRock → ProofGuard
-Variance:        85% → 72% → 58% → 42% → 28%
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ThinkTool Chain: GigaThink -> LaserLogic -> BedRock -> ProofGuard
+Variance:        85% -> 72% -> 58% -> 42% -> 28%
 
 [GigaThink] 10 PERSPECTIVES GENERATED                         Variance: 85%
   1. OPERATIONAL: Maintenance overhead +40% initially
   2. TEAM TOPOLOGY: Conway's Law - do we have the teams?
   3. COST ANALYSIS: Infrastructure scales non-linearly
   ...
-  → Variance after exploration: 72% (-13%)
+  -> Variance after exploration: 72% (-13%)
 
 [LaserLogic] HIDDEN ASSUMPTIONS DETECTED                      Variance: 72%
-  ⚠ Assuming network latency is negligible
-  ⚠ Assuming team has distributed tracing expertise
-  ⚠ Logical gap: No evidence microservices solve stated problem
-  → Variance after validation: 58% (-14%)
+  ! Assuming network latency is negligible
+  ! Assuming team has distributed tracing expertise
+  ! Logical gap: No evidence microservices solve stated problem
+  -> Variance after validation: 58% (-14%)
 
 [BedRock] FIRST PRINCIPLES DECOMPOSITION                      Variance: 58%
-  • Axiom: Monoliths are simpler to reason about (empirical)
-  • Axiom: Distributed systems introduce partitions (CAP theorem)
-  • Gap: Cannot prove maintainability improvement without data
-  → Variance after grounding: 42% (-16%)
+  * Axiom: Monoliths are simpler to reason about (empirical)
+  * Axiom: Distributed systems introduce partitions (CAP theorem)
+  * Gap: Cannot prove maintainability improvement without data
+  -> Variance after grounding: 42% (-16%)
 
 [ProofGuard] TRIANGULATION RESULT                             Variance: 42%
-  • 3/5 sources: Microservices increase complexity initially
-  • 2/5 sources: Some teams report success
-  • Confidence: 0.72 (MEDIUM) - Mixed evidence
-  → Variance after verification: 28% (-14%)
+  * 3/5 sources: Microservices increase complexity initially
+  * 2/5 sources: Some teams report success
+  * Confidence: 0.72 (MEDIUM) - Mixed evidence
+  -> Variance after verification: 28% (-14%)
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 VERDICT: conditional_yes | Confidence: 87% | Duration: 2.3s
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 
 **What This Shows:**
 
 - **Transparency:** See exactly where confidence comes from
 - **Auditability:** Every step logged and verifiable
-- **Deterministic Path:** Same protocol → same execution flow
+- **Deterministic Path:** Same protocol -> same execution flow
 - **Variance Reduction:** Quantified uncertainty reduction at each stage
 
 ---
@@ -176,14 +200,22 @@ VERDICT: conditional_yes | Confidence: 87% | Duration: 2.3s
 ## Architecture
 
 <div align="center">
-<img src="./assets/img/architecture_diagram.png" alt="ReasonKit Architecture - Structured Prompt Engineering Framework" width="100%" />
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="./brand/readme/architecture_diagram.png">
+  <source media="(prefers-color-scheme: light)" srcset="./brand/readme/architecture_diagram.png">
+  <img src="./brand/readme/architecture_diagram.png" alt="ReasonKit Architecture: CLI -> Protocol Engine -> ThinkTools -> LLM Layer with SQLite trace storage" width="900">
+</picture>
+
+<sub><b>Three-Layer Architecture:</b> Deterministic protocol engine wrapping probabilistic LLM layer with full execution tracing</sub>
+
 </div>
 
 **Three-Layer Architecture:**
 
 1. **Probabilistic LLM** (Unavoidable)
    - LLMs generate tokens probabilistically
-   - Same prompt → different outputs
+   - Same prompt -> different outputs
    - We **cannot eliminate** this
 
 2. **Deterministic Protocol Engine** (Our Innovation)
@@ -224,7 +256,7 @@ flowchart LR
       C2[Claude / GPT / Gemini / ...]
     end
 
-    subgraph TOOLS["ThinkTools · Variance Reduction"]
+    subgraph TOOLS["ThinkTools - Variance Reduction"]
       G["GigaThink<br/>Diverge()"]
       LZ["LaserLogic<br/>Converge()"]
       BR["BedRock<br/>Ground()"]
@@ -252,23 +284,28 @@ flowchart LR
 
 ReasonKit is written in Rust because reasoning infrastructure demands reliability.
 
-<div align="center">
-<img src="./assets/img/chart_speed_comparison.png" alt="Execution Latency - Python 2500ms vs Rust 24ms" width="80%" />
-</div>
-
 | Capability               | What It Means For You                               |
 | ------------------------ | --------------------------------------------------- |
-| **Predictable Latency**  | <5ms response time, no garbage collection pauses    |
+| **Predictable Latency**  | <5ms orchestration overhead, no GC pauses           |
 | **Memory Safety**        | Zero crashes from null pointers or buffer overflows |
 | **Single Binary**        | Deploy anywhere, no Python environment required     |
 | **Fearless Concurrency** | Run 100+ reasoning chains in parallel safely        |
 | **Type Safety**          | Errors caught at compile time, not runtime          |
 
+**Benchmarked Performance** ([view full report](./docs/PERFORMANCE_BASELINE.md)):
+
+| Operation                          | Time  | Target |
+| ---------------------------------- | ----- | ------ |
+| Protocol orchestration             | 4.4ms | <10ms  |
+| RRF Fusion (100 elements)          | 33us  | <5ms   |
+| Document chunking (10KB)           | 27us  | <5ms   |
+| RAPTOR tree traversal (1000 nodes) | 33us  | <5ms   |
+
 **Why This Matters:**
 
 Your AI reasoning shouldn't crash in production. It shouldn't pause for garbage collection during critical decisions. It shouldn't require complex environment management to deploy.
 
-ReasonKit's Rust foundation ensures deterministic, auditable execution every time—the same engineering choice trusted by Linux, Cloudflare, Discord, and AWS for their most critical infrastructure.
+ReasonKit's Rust foundation ensures deterministic, auditable execution every time--the same engineering choice trusted by Linux, Cloudflare, Discord, and AWS for their most critical infrastructure.
 
 ---
 
@@ -280,7 +317,7 @@ Enable the `memory` feature to use these modules:
 
 ```toml
 [dependencies]
-reasonkit-core = { version = "1.0", features = ["memory"] }
+reasonkit-core = { version = "0.1", features = ["memory"] }
 ```
 
 **Features:**
@@ -401,9 +438,11 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for complete guidelines.
 
 <div align="center">
 
-**ReasonKit** — Turn Prompts into Protocols
-
-_Designed, Not Dreamed_
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="./brand/readme/designed_not_dreamed.png">
+  <source media="(prefers-color-scheme: light)" srcset="./brand/readme/designed_not_dreamed.png">
+  <img src="./brand/readme/designed_not_dreamed.png" alt="ReasonKit -- Turn Prompts into Protocols | Designed, Not Dreamed" width="100%">
+</picture>
 
 [Website](https://reasonkit.sh) | [Documentation](https://docs.reasonkit.sh) | [GitHub](https://github.com/reasonkit/reasonkit-core)
 

@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 50" fill="none">
+  <defs>
+    <linearGradient id="wordGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#06b6d4"/>
+      <stop offset="50%" stop-color="#a855f7"/>
+      <stop offset="100%" stop-color="#ec4899"/>
+    </linearGradient>
+  </defs>
+  <text x="150" y="35" text-anchor="middle" fill="url(#wordGrad)" font-family="Inter, sans-serif" font-size="36" font-weight="800" letter-spacing="-1">ReasonKit</text>
+</svg>

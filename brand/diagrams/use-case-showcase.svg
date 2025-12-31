@@ -1,0 +1,309 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 900" fill="none">
+  <defs>
+    <linearGradient id="heroGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#06b6d4"/>
+      <stop offset="50%" stop-color="#a855f7"/>
+      <stop offset="100%" stop-color="#ec4899"/>
+    </linearGradient>
+    <linearGradient id="cyanGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#06b6d4"/>
+      <stop offset="100%" stop-color="#0891b2"/>
+    </linearGradient>
+    <linearGradient id="purpleGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#a855f7"/>
+      <stop offset="100%" stop-color="#7c3aed"/>
+    </linearGradient>
+    <linearGradient id="pinkGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ec4899"/>
+      <stop offset="100%" stop-color="#db2777"/>
+    </linearGradient>
+    <linearGradient id="greenGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#10b981"/>
+      <stop offset="100%" stop-color="#059669"/>
+    </linearGradient>
+    <linearGradient id="orangeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f97316"/>
+      <stop offset="100%" stop-color="#ea580c"/>
+    </linearGradient>
+    <linearGradient id="yellowGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fbbf24"/>
+      <stop offset="100%" stop-color="#f59e0b"/>
+    </linearGradient>
+    <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feFlood flood-color="#06b6d4" flood-opacity="0.3"/>
+      <feComposite in2="blur" operator="in"/>
+      <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="cardShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#000" flood-opacity="0.4"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1400" height="900" fill="#030508"/>
+
+  <!-- Ambient grid pattern -->
+  <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+    <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#1a1a2e" stroke-width="0.5" opacity="0.5"/>
+  </pattern>
+  <rect width="1400" height="900" fill="url(#grid)"/>
+
+  <!-- Title Section -->
+  <text x="700" y="55" text-anchor="middle" fill="url(#heroGrad)" font-family="Inter, sans-serif" font-size="40" font-weight="800">REAL-WORLD USE CASES</text>
+  <text x="700" y="85" text-anchor="middle" fill="#9ca3af" font-family="Inter, sans-serif" font-size="16">Where Structured Reasoning Makes the Difference</text>
+
+  <!-- Use Case 1: Code Review -->
+  <g transform="translate(50, 120)" filter="url(#cardShadow)">
+    <rect x="0" y="0" width="420" height="230" rx="16" fill="#0a0d14" stroke="#06b6d4" stroke-width="2"/>
+
+    <!-- Icon area -->
+    <rect x="20" y="20" width="60" height="60" rx="12" fill="url(#cyanGrad)" opacity="0.2"/>
+    <text x="50" y="60" text-anchor="middle" font-size="28">🔍</text>
+
+    <!-- Title -->
+    <text x="95" y="45" fill="#06b6d4" font-family="Inter, sans-serif" font-size="20" font-weight="700">Code Review &amp; Security Audit</text>
+    <text x="95" y="68" fill="#6b7280" font-family="Inter, sans-serif" font-size="12">LaserLogic + BrutalHonesty + ProofGuard</text>
+
+    <!-- Description -->
+    <text x="20" y="105" fill="#9ca3af" font-family="Inter, sans-serif" font-size="13">Systematic vulnerability detection with adversarial</text>
+    <text x="20" y="122" fill="#9ca3af" font-family="Inter, sans-serif" font-size="13">self-critique. Find SQL injection, XSS, memory</text>
+    <text x="20" y="139" fill="#9ca3af" font-family="Inter, sans-serif" font-size="13">leaks, and logic flaws before they ship.</text>
+
+    <!-- Metrics -->
+    <line x1="20" y1="155" x2="400" y2="155" stroke="#06b6d4" stroke-width="1" opacity="0.2"/>
+    <text x="20" y="180" fill="#10b981" font-family="JetBrains Mono, monospace" font-size="11">95% vulnerability detection rate</text>
+    <text x="20" y="198" fill="#6b7280" font-family="JetBrains Mono, monospace" font-size="10">Profile: --paranoid | Depth: Extreme</text>
+
+    <!-- Visual element: code blocks -->
+    <rect x="280" y="165" width="120" height="50" rx="6" fill="#1a1a2e"/>
+    <text x="295" y="183" fill="#06b6d4" font-family="JetBrains Mono, monospace" font-size="8">fn validate() {</text>
+    <text x="295" y="195" fill="#f97316" font-family="JetBrains Mono, monospace" font-size="8">  // VULN: SQLi</text>
+    <text x="295" y="207" fill="#06b6d4" font-family="JetBrains Mono, monospace" font-size="8">}</text>
+  </g>
+
+  <!-- Use Case 2: Research Synthesis -->
+  <g transform="translate(490, 120)" filter="url(#cardShadow)">
+    <rect x="0" y="0" width="420" height="230" rx="16" fill="#0a0d14" stroke="#a855f7" stroke-width="2"/>
+
+    <!-- Icon area -->
+    <rect x="20" y="20" width="60" height="60" rx="12" fill="url(#purpleGrad)" opacity="0.2"/>
+    <text x="50" y="60" text-anchor="middle" font-size="28">📚</text>
+
+    <!-- Title -->
+    <text x="95" y="45" fill="#a855f7" font-family="Inter, sans-serif" font-size="20" font-weight="700">Research &amp; Literature Review</text>
+    <text x="95" y="68" fill="#6b7280" font-family="Inter, sans-serif" font-size="12">GigaThink + ProofGuard + BedRock</text>
+
+    <!-- Description -->
+    <text x="20" y="105" fill="#9ca3af" font-family="Inter, sans-serif" font-size="13">Multi-source triangulation across 100+ papers.</text>
+    <text x="20" y="122" fill="#9ca3af" font-family="Inter, sans-serif" font-size="13">Identify consensus, contradictions, and gaps.</text>
+    <text x="20" y="139" fill="#9ca3af" font-family="Inter, sans-serif" font-size="13">Build knowledge graphs from first principles.</text>
+
+    <!-- Metrics -->
+    <line x1="20" y1="155" x2="400" y2="155" stroke="#a855f7" stroke-width="1" opacity="0.2"/>
+    <text x="20" y="180" fill="#10b981" font-family="JetBrains Mono, monospace" font-size="11">3-source verification on all claims</text>
+    <text x="20" y="198" fill="#6b7280" font-family="JetBrains Mono, monospace" font-size="10">Profile: --scientific | Depth: DeepDive</text>
+
+    <!-- Visual element: connected nodes -->
+    <g transform="translate(290, 165)">
+      <circle cx="20" cy="25" r="8" fill="#a855f7" opacity="0.6"/>
+      <circle cx="60" cy="15" r="8" fill="#a855f7" opacity="0.6"/>
+      <circle cx="100" cy="25" r="8" fill="#a855f7" opacity="0.6"/>
+      <circle cx="40" cy="45" r="8" fill="#a855f7" opacity="0.6"/>
+      <circle cx="80" cy="45" r="8" fill="#a855f7" opacity="0.6"/>
+      <line x1="20" y1="25" x2="60" y2="15" stroke="#a855f7" stroke-width="1" opacity="0.4"/>
+      <line x1="60" y1="15" x2="100" y2="25" stroke="#a855f7" stroke-width="1" opacity="0.4"/>
+      <line x1="20" y1="25" x2="40" y2="45" stroke="#a855f7" stroke-width="1" opacity="0.4"/>
+      <line x1="100" y1="25" x2="80" y2="45" stroke="#a855f7" stroke-width="1" opacity="0.4"/>
+      <line x1="40" y1="45" x2="80" y2="45" stroke="#a855f7" stroke-width="1" opacity="0.4"/>
+    </g>
+  </g>
+
+  <!-- Use Case 3: Decision Making -->
+  <g transform="translate(930, 120)" filter="url(#cardShadow)">
+    <rect x="0" y="0" width="420" height="230" rx="16" fill="#0a0d14" stroke="#10b981" stroke-width="2"/>
+
+    <!-- Icon area -->
+    <rect x="20" y="20" width="60" height="60" rx="12" fill="url(#greenGrad)" opacity="0.2"/>
+    <text x="50" y="60" text-anchor="middle" font-size="28">⚖️</text>
+
+    <!-- Title -->
+    <text x="95" y="45" fill="#10b981" font-family="Inter, sans-serif" font-size="20" font-weight="700">Strategic Decision Making</text>
+    <text x="95" y="68" fill="#6b7280" font-family="Inter, sans-serif" font-size="12">DeciDomatic + RiskRadar + HighReflect</text>
+
+    <!-- Description -->
+    <text x="20" y="105" fill="#9ca3af" font-family="Inter, sans-serif" font-size="13">Multi-criteria analysis with quantified trade-offs.</text>
+    <text x="20" y="122" fill="#9ca3af" font-family="Inter, sans-serif" font-size="13">Risk assessment with probability estimation.</text>
+    <text x="20" y="139" fill="#9ca3af" font-family="Inter, sans-serif" font-size="13">Devil's advocate perspective on every option.</text>
+
+    <!-- Metrics -->
+    <line x1="20" y1="155" x2="400" y2="155" stroke="#10b981" stroke-width="1" opacity="0.2"/>
+    <text x="20" y="180" fill="#10b981" font-family="JetBrains Mono, monospace" font-size="11">Decision confidence: 85%+ with audit trail</text>
+    <text x="20" y="198" fill="#6b7280" font-family="JetBrains Mono, monospace" font-size="10">Profile: --decide | Depth: Extreme</text>
+
+    <!-- Visual element: decision matrix -->
+    <g transform="translate(280, 162)">
+      <rect x="0" y="0" width="120" height="55" rx="4" fill="#1a1a2e"/>
+      <line x1="40" y1="0" x2="40" y2="55" stroke="#10b981" stroke-width="0.5" opacity="0.3"/>
+      <line x1="80" y1="0" x2="80" y2="55" stroke="#10b981" stroke-width="0.5" opacity="0.3"/>
+      <line x1="0" y1="18" x2="120" y2="18" stroke="#10b981" stroke-width="0.5" opacity="0.3"/>
+      <text x="60" y="12" text-anchor="middle" fill="#10b981" font-family="JetBrains Mono, monospace" font-size="7">A   B   C</text>
+      <text x="10" y="32" fill="#6b7280" font-family="JetBrains Mono, monospace" font-size="7">Risk</text>
+      <text x="50" y="32" fill="#10b981" font-family="JetBrains Mono, monospace" font-size="7">●</text>
+      <text x="90" y="32" fill="#f97316" font-family="JetBrains Mono, monospace" font-size="7">●</text>
+      <text x="10" y="48" fill="#6b7280" font-family="JetBrains Mono, monospace" font-size="7">ROI</text>
+      <text x="50" y="48" fill="#10b981" font-family="JetBrains Mono, monospace" font-size="7">●●</text>
+      <text x="90" y="48" fill="#10b981" font-family="JetBrains Mono, monospace" font-size="7">●</text>
+    </g>
+  </g>
+
+  <!-- Use Case 4: Compliance Audit -->
+  <g transform="translate(50, 370)" filter="url(#cardShadow)">
+    <rect x="0" y="0" width="420" height="230" rx="16" fill="#0a0d14" stroke="#f97316" stroke-width="2"/>
+
+    <!-- Icon area -->
+    <rect x="20" y="20" width="60" height="60" rx="12" fill="url(#orangeGrad)" opacity="0.2"/>
+    <text x="50" y="60" text-anchor="middle" font-size="28">📋</text>
+
+    <!-- Title -->
+    <text x="95" y="45" fill="#f97316" font-family="Inter, sans-serif" font-size="20" font-weight="700">Compliance &amp; Legal Review</text>
+    <text x="95" y="68" fill="#6b7280" font-family="Inter, sans-serif" font-size="12">ProofGuard + LaserLogic + BedRock</text>
+
+    <!-- Description -->
+    <text x="20" y="105" fill="#9ca3af" font-family="Inter, sans-serif" font-size="13">Regulatory requirement verification with source</text>
+    <text x="20" y="122" fill="#9ca3af" font-family="Inter, sans-serif" font-size="13">citations. GDPR, SOC2, HIPAA checklist audit.</text>
+    <text x="20" y="139" fill="#9ca3af" font-family="Inter, sans-serif" font-size="13">Policy gap analysis with remediation steps.</text>
+
+    <!-- Metrics -->
+    <line x1="20" y1="155" x2="400" y2="155" stroke="#f97316" stroke-width="1" opacity="0.2"/>
+    <text x="20" y="180" fill="#10b981" font-family="JetBrains Mono, monospace" font-size="11">100% requirement traceability</text>
+    <text x="20" y="198" fill="#6b7280" font-family="JetBrains Mono, monospace" font-size="10">Profile: --paranoid | Depth: Ultimate</text>
+
+    <!-- Visual element: checklist -->
+    <g transform="translate(290, 165)">
+      <rect x="0" y="0" width="110" height="50" rx="4" fill="#1a1a2e"/>
+      <text x="10" y="15" fill="#10b981" font-family="JetBrains Mono, monospace" font-size="9">✓ GDPR Art.17</text>
+      <text x="10" y="28" fill="#10b981" font-family="JetBrains Mono, monospace" font-size="9">✓ SOC2 CC6.1</text>
+      <text x="10" y="41" fill="#f97316" font-family="JetBrains Mono, monospace" font-size="9">⚠ HIPAA §164</text>
+    </g>
+  </g>
+
+  <!-- Use Case 5: Investment Analysis -->
+  <g transform="translate(490, 370)" filter="url(#cardShadow)">
+    <rect x="0" y="0" width="420" height="230" rx="16" fill="#0a0d14" stroke="#ec4899" stroke-width="2"/>
+
+    <!-- Icon area -->
+    <rect x="20" y="20" width="60" height="60" rx="12" fill="url(#pinkGrad)" opacity="0.2"/>
+    <text x="50" y="60" text-anchor="middle" font-size="28">📈</text>
+
+    <!-- Title -->
+    <text x="95" y="45" fill="#ec4899" font-family="Inter, sans-serif" font-size="20" font-weight="700">Investment &amp; Due Diligence</text>
+    <text x="95" y="68" fill="#6b7280" font-family="Inter, sans-serif" font-size="12">RiskRadar + DeciDomatic + BrutalHonesty</text>
+
+    <!-- Description -->
+    <text x="20" y="105" fill="#9ca3af" font-family="Inter, sans-serif" font-size="13">Startup evaluation with 10-perspective analysis.</text>
+    <text x="20" y="122" fill="#9ca3af" font-family="Inter, sans-serif" font-size="13">Market sizing validation against multiple sources.</text>
+    <text x="20" y="139" fill="#9ca3af" font-family="Inter, sans-serif" font-size="13">Red flag detection with adversarial critique.</text>
+
+    <!-- Metrics -->
+    <line x1="20" y1="155" x2="400" y2="155" stroke="#ec4899" stroke-width="1" opacity="0.2"/>
+    <text x="20" y="180" fill="#10b981" font-family="JetBrains Mono, monospace" font-size="11">Reduced bias in 40% of decisions</text>
+    <text x="20" y="198" fill="#6b7280" font-family="JetBrains Mono, monospace" font-size="10">Profile: --deep | Depth: DeepDive</text>
+
+    <!-- Visual element: chart -->
+    <g transform="translate(290, 162)">
+      <rect x="0" y="0" width="110" height="55" rx="4" fill="#1a1a2e"/>
+      <polyline points="10,45 30,35 50,40 70,25 90,15 100,20" stroke="#ec4899" stroke-width="2" fill="none"/>
+      <circle cx="90" cy="15" r="3" fill="#ec4899"/>
+      <text x="55" y="52" text-anchor="middle" fill="#6b7280" font-family="JetBrains Mono, monospace" font-size="7">Growth Projection</text>
+    </g>
+  </g>
+
+  <!-- Use Case 6: Technical Architecture -->
+  <g transform="translate(930, 370)" filter="url(#cardShadow)">
+    <rect x="0" y="0" width="420" height="230" rx="16" fill="#0a0d14" stroke="#fbbf24" stroke-width="2"/>
+
+    <!-- Icon area -->
+    <rect x="20" y="20" width="60" height="60" rx="12" fill="url(#yellowGrad)" opacity="0.2"/>
+    <text x="50" y="60" text-anchor="middle" font-size="28">🏗️</text>
+
+    <!-- Title -->
+    <text x="95" y="45" fill="#fbbf24" font-family="Inter, sans-serif" font-size="20" font-weight="700">Technical Architecture Design</text>
+    <text x="95" y="68" fill="#6b7280" font-family="Inter, sans-serif" font-size="12">BedRock + GigaThink + LaserLogic</text>
+
+    <!-- Description -->
+    <text x="20" y="105" fill="#9ca3af" font-family="Inter, sans-serif" font-size="13">First-principles system design with trade-off</text>
+    <text x="20" y="122" fill="#9ca3af" font-family="Inter, sans-serif" font-size="13">quantification. Scalability analysis, failure mode</text>
+    <text x="20" y="139" fill="#9ca3af" font-family="Inter, sans-serif" font-size="13">enumeration, and technology selection rationale.</text>
+
+    <!-- Metrics -->
+    <line x1="20" y1="155" x2="400" y2="155" stroke="#fbbf24" stroke-width="1" opacity="0.2"/>
+    <text x="20" y="180" fill="#10b981" font-family="JetBrains Mono, monospace" font-size="11">10+ architecture perspectives evaluated</text>
+    <text x="20" y="198" fill="#6b7280" font-family="JetBrains Mono, monospace" font-size="10">Profile: --balanced | Depth: DeepDive</text>
+
+    <!-- Visual element: architecture boxes -->
+    <g transform="translate(285, 162)">
+      <rect x="0" y="0" width="115" height="55" rx="4" fill="#1a1a2e"/>
+      <rect x="10" y="8" width="30" height="15" rx="2" fill="#fbbf24" opacity="0.3"/>
+      <rect x="45" y="8" width="30" height="15" rx="2" fill="#fbbf24" opacity="0.3"/>
+      <rect x="80" y="8" width="25" height="15" rx="2" fill="#fbbf24" opacity="0.3"/>
+      <rect x="25" y="32" width="65" height="15" rx="2" fill="#fbbf24" opacity="0.5"/>
+      <line x1="25" y1="23" x2="25" y2="32" stroke="#fbbf24" stroke-width="1" opacity="0.5"/>
+      <line x1="60" y1="23" x2="60" y2="32" stroke="#fbbf24" stroke-width="1" opacity="0.5"/>
+      <line x1="92" y1="23" x2="90" y2="32" stroke="#fbbf24" stroke-width="1" opacity="0.5"/>
+    </g>
+  </g>
+
+  <!-- Bottom Section: PowerCombo Highlight -->
+  <g transform="translate(50, 620)">
+    <rect x="0" y="0" width="1300" height="120" rx="16" fill="#0a0d14" stroke="url(#heroGrad)" stroke-width="2" filter="url(#cardShadow)"/>
+
+    <!-- Rainbow indicator -->
+    <rect x="20" y="20" width="80" height="80" rx="12" fill="url(#heroGrad)" opacity="0.2"/>
+    <text x="60" y="68" text-anchor="middle" font-size="36">🌈</text>
+
+    <!-- Content -->
+    <text x="120" y="45" fill="url(#heroGrad)" font-family="Inter, sans-serif" font-size="24" font-weight="800">PowerCombo: Chain Any Use Case</text>
+    <text x="120" y="72" fill="#9ca3af" font-family="Inter, sans-serif" font-size="14">Combine multiple ThinkTools in custom sequences for complex workflows. Security audit → Compliance check → Decision matrix → Documentation.</text>
+    <text x="120" y="95" fill="#6b7280" font-family="Inter, sans-serif" font-size="12">rk-core --powercombo="LaserLogic→ProofGuard→DeciDomatic→BedRock" --depth=Extreme "Evaluate acquisition target"</text>
+
+    <!-- Example output preview -->
+    <g transform="translate(950, 20)">
+      <rect x="0" y="0" width="320" height="80" rx="8" fill="#1a1a2e"/>
+      <text x="15" y="20" fill="#06b6d4" font-family="JetBrains Mono, monospace" font-size="10">[LaserLogic] → 12 logical deductions</text>
+      <text x="15" y="36" fill="#a855f7" font-family="JetBrains Mono, monospace" font-size="10">[ProofGuard] → 3 sources verified</text>
+      <text x="15" y="52" fill="#10b981" font-family="JetBrains Mono, monospace" font-size="10">[DeciDomatic] → Score: 8.2/10</text>
+      <text x="15" y="68" fill="#ec4899" font-family="JetBrains Mono, monospace" font-size="10">[BedRock] → 5 first principles</text>
+    </g>
+  </g>
+
+  <!-- Footer Stats -->
+  <g transform="translate(0, 760)">
+    <rect x="50" y="0" width="200" height="60" rx="10" fill="#0a0d14"/>
+    <text x="150" y="25" text-anchor="middle" fill="#06b6d4" font-family="Inter, sans-serif" font-size="24" font-weight="700">95%</text>
+    <text x="150" y="45" text-anchor="middle" fill="#6b7280" font-family="Inter, sans-serif" font-size="11">Confidence Threshold</text>
+
+    <rect x="280" y="0" width="200" height="60" rx="10" fill="#0a0d14"/>
+    <text x="380" y="25" text-anchor="middle" fill="#a855f7" font-family="Inter, sans-serif" font-size="24" font-weight="700">5+</text>
+    <text x="380" y="45" text-anchor="middle" fill="#6b7280" font-family="Inter, sans-serif" font-size="11">ThinkTools Per Chain</text>
+
+    <rect x="510" y="0" width="200" height="60" rx="10" fill="#0a0d14"/>
+    <text x="610" y="25" text-anchor="middle" fill="#10b981" font-family="Inter, sans-serif" font-size="24" font-weight="700">3x</text>
+    <text x="610" y="45" text-anchor="middle" fill="#6b7280" font-family="Inter, sans-serif" font-size="11">Source Triangulation</text>
+
+    <rect x="740" y="0" width="200" height="60" rx="10" fill="#0a0d14"/>
+    <text x="840" y="25" text-anchor="middle" fill="#ec4899" font-family="Inter, sans-serif" font-size="24" font-weight="700">&lt;5ms</text>
+    <text x="840" y="45" text-anchor="middle" fill="#6b7280" font-family="Inter, sans-serif" font-size="11">Per-Module Latency</text>
+
+    <rect x="970" y="0" width="200" height="60" rx="10" fill="#0a0d14"/>
+    <text x="1070" y="25" text-anchor="middle" fill="#fbbf24" font-family="Inter, sans-serif" font-size="24" font-weight="700">100%</text>
+    <text x="1070" y="45" text-anchor="middle" fill="#6b7280" font-family="Inter, sans-serif" font-size="11">Audit Trail Coverage</text>
+
+    <rect x="1200" y="0" width="150" height="60" rx="10" fill="#0a0d14"/>
+    <text x="1275" y="25" text-anchor="middle" fill="#f97316" font-family="Inter, sans-serif" font-size="24" font-weight="700">Rust</text>
+    <text x="1275" y="45" text-anchor="middle" fill="#6b7280" font-family="Inter, sans-serif" font-size="11">Native Performance</text>
+  </g>
+
+  <!-- Footer -->
+  <text x="700" y="865" text-anchor="middle" fill="#4b5563" font-family="Inter, sans-serif" font-size="12">ReasonKit | Turn Prompts into Protocols | reasonkit.sh</text>
+</svg>
