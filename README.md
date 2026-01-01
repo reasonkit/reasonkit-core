@@ -9,9 +9,9 @@
 **Auditable Reasoning for Production AI | Rust-Native | SSR/SSG Compatible**
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="./brand/readme/reasonkit-core_hero.png">
-  <source media="(prefers-color-scheme: light)" srcset="./brand/readme/reasonkit-core_hero.png">
-  <img src="./brand/readme/reasonkit-core_hero.png" alt="ReasonKit - Auditable Reasoning for Production AI" width="100%">
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/reasonkit/reasonkit-core/main/brand/readme/reasonkit-core_hero.png">
+  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/reasonkit/reasonkit-core/main/brand/readme/reasonkit-core_hero.png">
+  <img src="https://raw.githubusercontent.com/reasonkit/reasonkit-core/main/brand/readme/reasonkit-core_hero.png" alt="ReasonKit - Auditable Reasoning for Production AI" width="100%">
 </picture>
 
 [![CI](https://img.shields.io/github/actions/workflow/status/reasonkit/reasonkit-core/ci.yml?branch=main&style=flat-square&logo=github&label=CI&color=06b6d4&logoColor=06b6d4)](https://github.com/reasonkit/reasonkit-core/actions)
@@ -57,7 +57,7 @@ cargo install reasonkit-core
 rk-core think --profile balanced "Should we migrate to microservices?"
 ```
 
-> **Note:** Some CLI commands are scaffolded in v0.1.0. Core functionality (`mcp`, `serve-mcp`, `completions`) is fully implemented.
+> **Note (v0.1.0):** The `think` command with profiles is fully functional. Commands like `trace`, `web`, `verify`, `stats`, and `metrics` are scaffolded and will return "not yet implemented" - these are planned for v0.2.0. Core MCP functionality (`mcp`, `serve-mcp`, `completions`) is fully implemented.
 
 **30 seconds to structured reasoning.**
 
@@ -70,9 +70,9 @@ Each ThinkTool acts as a **variance reduction filter**, transforming probabilist
 <div align="center">
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="./brand/readme/powercombo_process.png">
-  <source media="(prefers-color-scheme: light)" srcset="./brand/readme/powercombo_process.png">
-  <img src="./brand/readme/powercombo_process.png" alt="PowerCombo Process: GigaThink (Diverge) -> LaserLogic (Converge) -> BedRock (Ground) -> ProofGuard (Verify) -> BrutalHonesty (Critique)" width="900">
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/reasonkit/reasonkit-core/main/brand/readme/powercombo_process.png">
+  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/reasonkit/reasonkit-core/main/brand/readme/powercombo_process.png">
+  <img src="https://raw.githubusercontent.com/reasonkit/reasonkit-core/main/brand/readme/powercombo_process.png" alt="PowerCombo Process: GigaThink (Diverge) -> LaserLogic (Converge) -> BedRock (Ground) -> ProofGuard (Verify) -> BrutalHonesty (Critique)" width="900">
 </picture>
 
 <sub><b>The PowerCombo Process:</b> Five cognitive operations that systematically reduce variance from raw LLM output (~85%) to protocol-constrained reasoning (~28%)</sub>
@@ -92,26 +92,27 @@ Each ThinkTool acts as a **variance reduction filter**, transforming probabilist
 <div align="center">
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="./brand/readme/chart_variance_reduction.png">
-  <source media="(prefers-color-scheme: light)" srcset="./brand/readme/chart_variance_reduction.png">
-  <img src="./brand/readme/chart_variance_reduction.png" alt="Variance Reduction Concept: Each stage constrains output variance" width="800">
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/reasonkit/reasonkit-core/main/brand/readme/chart_variance_reduction.png">
+  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/reasonkit/reasonkit-core/main/brand/readme/chart_variance_reduction.png">
+  <img src="https://raw.githubusercontent.com/reasonkit/reasonkit-core/main/brand/readme/chart_variance_reduction.png" alt="Variance Reduction Concept: Each stage constrains output variance" width="800">
 </picture>
 
 <sub><b>Conceptual Model:</b> Each ThinkTool stage applies constraints that reduce output variability</sub>
 
 </div>
 
-The core insight: **structured protocols reduce variance**. By forcing LLM outputs through multiple validation stages, we constrain the space of possible outputs:
+The core insight: **structured protocols reduce variance**. By forcing LLM outputs through multiple validation stages, we constrain the space of possible outputs.
 
-| Stage          | Effect                              |
-| -------------- | ----------------------------------- |
-| Raw LLM Output | High variance (unconstrained)       |
-| + GigaThink    | Explores solution space explicitly  |
-| + LaserLogic   | Filters logically invalid paths     |
-| + BedRock      | Grounds claims in first principles  |
-| + ProofGuard   | Requires multi-source verification  |
+**Measured Results** ([benchmark reports](./benchmarks/results/)):
 
-**Result:** Each stage narrows the output distribution toward higher-quality reasoning
+| Metric | Raw Prompts | Structured | Improvement |
+| ------ | ----------- | ---------- | ----------- |
+| Inconsistency Rate | 4.0% | 2.0% | **-50%** |
+| Complex Task Agreement | 80% | 100% | **+20 pp** |
+
+> Benchmark: Claude CLI, 5 runs per question, 10 questions across factual/math/logic/decision/complex categories.
+
+**Result:** Structured prompting demonstrably reduces output variance on real tasks
 
 ---
 
@@ -147,9 +148,9 @@ rk-core think --profile paranoid "Validate cryptographic implementation"
 <div align="center">
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="./brand/readme/terminal_mockup.png">
-  <source media="(prefers-color-scheme: light)" srcset="./brand/readme/terminal_mockup.png">
-  <img src="./brand/readme/terminal_mockup.png" alt="ReasonKit Terminal showing execution trace" width="850">
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/reasonkit/reasonkit-core/main/brand/readme/terminal_mockup.png">
+  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/reasonkit/reasonkit-core/main/brand/readme/terminal_mockup.png">
+  <img src="https://raw.githubusercontent.com/reasonkit/reasonkit-core/main/brand/readme/terminal_mockup.png" alt="ReasonKit Terminal showing execution trace" width="850">
 </picture>
 
 <sub><b>Execution Trace:</b> Every reasoning step logged with confidence scores</sub>
@@ -199,9 +200,9 @@ VERDICT: conditional_yes | Confidence: 87% | Duration: 2.3s
 <div align="center">
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="./brand/readme/architecture_diagram.png">
-  <source media="(prefers-color-scheme: light)" srcset="./brand/readme/architecture_diagram.png">
-  <img src="./brand/readme/architecture_diagram.png" alt="ReasonKit Architecture: CLI -> Protocol Engine -> ThinkTools -> LLM Layer with SQLite trace storage" width="900">
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/reasonkit/reasonkit-core/main/brand/readme/architecture_diagram.png">
+  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/reasonkit/reasonkit-core/main/brand/readme/architecture_diagram.png">
+  <img src="https://raw.githubusercontent.com/reasonkit/reasonkit-core/main/brand/readme/architecture_diagram.png" alt="ReasonKit Architecture: CLI -> Protocol Engine -> ThinkTools -> LLM Layer with SQLite trace storage" width="900">
 </picture>
 
 <sub><b>Three-Layer Architecture:</b> Deterministic protocol engine wrapping probabilistic LLM layer with full execution tracing</sub>
@@ -291,10 +292,10 @@ ReasonKit is written in Rust because reasoning infrastructure demands reliabilit
 
 **Benchmarked Performance:**
 
-| Operation                          | Time  | Target |
-| ---------------------------------- | ----- | ------ |
-| Protocol orchestration             | ~7ms  | <10ms  |
-| Concurrent chains (8 parallel)     | ~7ms  | <10ms  |
+| Operation                      | Time | Target |
+| ------------------------------ | ---- | ------ |
+| Protocol orchestration         | ~7ms | <10ms  |
+| Concurrent chains (8 parallel) | ~7ms | <10ms  |
 
 > Run `cargo bench` to reproduce these measurements on your hardware.
 
@@ -431,9 +432,9 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for complete guidelines.
 <div align="center">
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="./brand/readme/designed_not_dreamed.png">
-  <source media="(prefers-color-scheme: light)" srcset="./brand/readme/designed_not_dreamed.png">
-  <img src="./brand/readme/designed_not_dreamed.png" alt="ReasonKit -- Turn Prompts into Protocols | Designed, Not Dreamed" width="100%">
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/reasonkit/reasonkit-core/main/brand/readme/designed_not_dreamed.png">
+  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/reasonkit/reasonkit-core/main/brand/readme/designed_not_dreamed.png">
+  <img src="https://raw.githubusercontent.com/reasonkit/reasonkit-core/main/brand/readme/designed_not_dreamed.png" alt="ReasonKit -- Turn Prompts into Protocols | Designed, Not Dreamed" width="100%">
 </picture>
 
 [Website](https://reasonkit.sh) | [Docs](https://docs.rs/reasonkit-core) | [GitHub](https://github.com/reasonkit/reasonkit-core)

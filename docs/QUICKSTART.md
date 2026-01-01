@@ -1,336 +1,213 @@
-# ReasonKit Developer Quickstart
+# ReasonKit in 5 Minutes
 
-> Get structured AI reasoning in 2 minutes
+> **Goal:** Working AI reasoning in your terminal. Right now.
 
 ---
 
-## 30-Second Install
+## What is ReasonKit?
 
-Choose your method:
+**One sentence:** ReasonKit turns messy LLM prompts into structured, auditable reasoning chains.
+
+**Before ReasonKit:**
+```
+You: "Should I use microservices?"
+LLM: [2000 words of maybe-correct rambling]
+```
+
+**After ReasonKit:**
+```
+You: rk-core think "Should I use microservices?" --profile balanced
+Output: 10 perspectives analyzed, 3 hidden assumptions found, verdict with 82% confidence
+```
+
+**Time to understand: 30 seconds.**
+
+---
+
+## Install (60 seconds)
+
+### Option A: One-liner (Recommended)
 
 ```bash
-# Option A: Universal installer (recommended)
 curl -fsSL https://reasonkit.sh/install | bash
+```
 
-# Option B: Cargo (Rust developers)
+### Option B: Cargo (Rust developers)
+
+```bash
 cargo install reasonkit-core
+```
 
-# Option C: Build from source
+### Option C: Build from source
+
+```bash
 git clone https://github.com/reasonkit/reasonkit-core && cd reasonkit-core && cargo build --release
 ```
 
-Verify installation:
+**Verify it worked:**
 
 ```bash
 rk-core --version
+# Expected: reasonkit-core 0.1.0
 ```
 
-> Note: In v1.0.0, CLI commands other than `mcp`, `serve-mcp`, and `completions` are scaffolded and will return "not implemented". Examples below reflect the planned interface.
+**Problem?** Jump to [Troubleshooting](#troubleshooting-30-seconds) below.
 
 ---
 
-## First Query (Copy-Paste Ready)
+## First Command (90 seconds)
+
+### Step 1: Set your API key
 
 ```bash
-# Set your API key (Anthropic, OpenAI, or any of 18+ providers)
+# Anthropic Claude (recommended)
 export ANTHROPIC_API_KEY="sk-ant-..."
 
-# Run your first structured reasoning query
-rk-core think "Should I use microservices or a monolith?" --profile balanced
+# Or OpenAI
+export OPENAI_API_KEY="sk-..."
+
+# Or any of 18+ providers (see docs/integrations/)
 ```
 
-**Expected output:**
+### Step 2: Run your first analysis
 
-```
-Protocol: balanced (GigaThink -> LaserLogic -> BedRock -> ProofGuard)
-Model: claude-sonnet-4
-
-Step 1/4: Expansive Analysis...     [2.1s]
-Step 2/4: Logical Validation...     [1.8s]
-Step 3/4: First Principles...       [2.4s]
-Step 4/4: Verification...           [1.9s]
-
-RESULT (Confidence: 82%)
-
-10 PERSPECTIVES ANALYZED:
-1. Scale: Microservices for >50 engineers, monolith for <20
-2. Complexity: Monolith 3x faster to iterate initially
-3. Deployment: Microservices need DevOps maturity
-...
-
-FIRST PRINCIPLES:
-- Core need: Ship features fast
-- Hidden assumption: "Scale" isn't your bottleneck yet
-- Axiom: Premature distribution is premature optimization
-
-VERDICT: Start monolith, extract services when pain is real.
-
-Tokens: 2,847 | Cost: $0.032 | Time: 8.2s
-```
-
----
-
-## Understanding the Output
-
-| Section              | What It Means                                             |
-| -------------------- | --------------------------------------------------------- |
-| **Protocol**         | Which ThinkTools ran (e.g., `balanced` = 4 modules)       |
-| **Confidence**       | How certain the analysis is (70-95% depending on profile) |
-| **Perspectives**     | Different angles you might have missed (from GigaThink)   |
-| **First Principles** | Core axioms and hidden assumptions (from BedRock)         |
-| **Verdict**          | Synthesized recommendation after all analysis             |
-| **Tokens/Cost**      | LLM usage for transparency                                |
-
----
-
-## Profile Selection Guide
-
-| Profile      | When to Use                             | Time   | Confidence |
-| ------------ | --------------------------------------- | ------ | ---------- |
-| `--quick`    | Daily decisions, sanity checks          | ~30s   | 70%        |
-| `--balanced` | Important choices, need multiple angles | ~2min  | 80%        |
-| `--deep`     | Major decisions, thorough analysis      | ~5min  | 85%        |
-| `--paranoid` | High-stakes, cannot afford mistakes     | ~10min | 95%        |
-
-### Quick Reference
+Copy-paste this exact command:
 
 ```bash
-# Fast sanity check
-rk-core think "Is this approach reasonable?" --profile quick
+rk-core think "Should a startup use microservices or a monolith?" --profile quick
+```
 
-# Standard analysis (default)
-rk-core think "Evaluate this technical decision" --profile balanced
+### Step 3: See the output
 
-# Thorough deep-dive
-rk-core think "Should we pivot our product strategy?" --profile deep
+```
+Protocol: quick (GigaThink -> LaserLogic)
+Model: claude-sonnet-4
 
-# Maximum rigor (adversarial critique included)
-rk-core think "Is this production-ready?" --profile paranoid
+[GigaThink] 10 PERSPECTIVES GENERATED
+  1. TEAM SIZE: Microservices need 20+ engineers to maintain
+  2. DEPLOYMENT: Monolith = 1 deploy, Microservices = N deploys
+  3. DEBUGGING: Distributed tracing is hard
+  4. ITERATION SPEED: Monolith 3x faster initially
+  ...
+
+[LaserLogic] HIDDEN ASSUMPTIONS DETECTED
+  ! You're assuming scale is your problem (it isn't)
+  ! You're assuming team has DevOps maturity
+  ! Logical gap: No evidence microservices solves stated problem
+
+VERDICT: Start with monolith | Confidence: 78% | Time: 1.8s
+```
+
+**You now have structured AI reasoning.**
+
+---
+
+## Make It Useful (120 seconds remaining)
+
+### Profile Selection
+
+| Use Case | Command | Time |
+|----------|---------|------|
+| Quick sanity check | `--profile quick` | ~30s |
+| Important decision | `--profile balanced` | ~2min |
+| Major architecture | `--profile deep` | ~5min |
+| Production release | `--profile paranoid` | ~10min |
+
+### Real Examples (Copy-Paste Ready)
+
+**Code review:**
+```bash
+rk-core think "Review this PR: https://github.com/org/repo/pull/123" --profile balanced
+```
+
+**Architecture decision:**
+```bash
+rk-core think "GraphQL vs REST for a mobile banking app" --profile deep
+```
+
+**Risk assessment:**
+```bash
+rk-core think "What could go wrong with this deployment plan?" --profile paranoid
+```
+
+**Debug assistance:**
+```bash
+rk-core think "Why might a React component re-render infinitely?" --profile quick
 ```
 
 ---
 
-## ThinkTools Explained
+## Bonus: Individual ThinkTools
 
 Each ThinkTool catches a specific blind spot:
 
-| Tool              | Icon | What It Catches                      | Shortcut             |
-| ----------------- | ---- | ------------------------------------ | -------------------- |
-| **GigaThink**     | `gt` | Angles you missed (10+ perspectives) | Divergent thinking   |
-| **LaserLogic**    | `ll` | Flawed reasoning, fallacies          | Convergent analysis  |
-| **BedRock**       | `br` | Overcomplicated answers              | First principles     |
-| **ProofGuard**    | `pg` | Unverified claims                    | Source triangulation |
-| **BrutalHonesty** | `bh` | Your blind spots                     | Adversarial critique |
-
-### Run Individual Tools
-
 ```bash
-# Just want perspectives?
-rk-core think "Evaluate X" --protocol gigathink
+# Generate 10+ perspectives you missed
+rk-core think "Evaluate AI safety" --protocol gigathink
 
-# Check logic only?
-rk-core think "Is this argument valid?" --protocol laserlogic
+# Find logical fallacies in an argument
+rk-core think "Is this reasoning valid: X therefore Y" --protocol laserlogic
 
-# First principles?
-rk-core think "What really matters here?" --protocol bedrock
+# First principles decomposition
+rk-core think "What really matters for user growth?" --protocol bedrock
+
+# Verify claims with sources
+rk-core think "Is Rust really faster than Go?" --protocol proofguard
+
+# Adversarial self-critique
+rk-core think "Critique my startup idea: X" --protocol brutalhonesty
 ```
 
 ---
 
-## Integration Examples
+## Troubleshooting (30 seconds)
 
-### Python
-
-```python
-import subprocess
-import json
-
-def reason(query: str, profile: str = "balanced") -> dict:
-    """Execute structured reasoning via CLI."""
-    result = subprocess.run(
-        ["rk-core", "think", query, "--profile", profile, "--format", "json"],
-        capture_output=True,
-        text=True
-    )
-    return json.loads(result.stdout)
-
-# Usage
-analysis = reason("Should we adopt GraphQL?")
-print(f"Confidence: {analysis['confidence']}")
-print(f"Verdict: {analysis['verdict']}")
-```
-
-### Node.js
-
-```javascript
-const { execSync } = require("child_process");
-
-function reason(query, profile = "balanced") {
-  const result = execSync(
-    `rk-core think "${query}" --profile ${profile} --format json`,
-    { encoding: "utf-8" },
-  );
-  return JSON.parse(result);
-}
-
-// Usage
-const analysis = reason("Is this API design correct?");
-console.log(`Confidence: ${analysis.confidence}`);
-console.log(`Verdict: ${analysis.verdict}`);
-```
-
-### Shell Script
+### "command not found: rk-core"
 
 ```bash
-#!/bin/bash
-# analyze.sh - Quick analysis wrapper
-
-QUERY="$1"
-PROFILE="${2:-balanced}"
-
-rk-core think "$QUERY" --profile "$PROFILE" --save-trace
-
-# Check exit code
-if [ $? -eq 0 ]; then
-    echo "Analysis complete. Trace saved to ./traces/"
-else
-    echo "Analysis failed."
-    exit 1
-fi
-```
-
-### HTTP API
-
-Start the server:
-
-```bash
-rk-core serve --host 0.0.0.0 --port 8080
-```
-
-Query via curl:
-
-```bash
-curl -X POST http://localhost:8080/think \
-  -H "Content-Type: application/json" \
-  -d '{
-    "query": "Evaluate this architecture",
-    "profile": "balanced"
-  }'
-```
-
----
-
-## LLM Provider Configuration
-
-ReasonKit supports 18+ providers. Set your preferred provider:
-
-### Major Providers
-
-```bash
-# Anthropic Claude (default)
-export ANTHROPIC_API_KEY="sk-ant-..."
-rk-core think "query" --provider anthropic
-
-# OpenAI GPT-4
-export OPENAI_API_KEY="sk-..."
-rk-core think "query" --provider openai --model gpt-4-turbo
-
-# Google Gemini
-export GEMINI_API_KEY="..."
-rk-core think "query" --provider gemini
-
-# Groq (ultra-fast, 10x speed)
-export GROQ_API_KEY="gsk_..."
-rk-core think "query" --provider groq
-```
-
-### OpenRouter (300+ Models)
-
-Access any model through one API:
-
-```bash
-export OPENROUTER_API_KEY="sk-or-..."
-
-# Use Claude via OpenRouter
-rk-core think "query" --provider openrouter --model anthropic/claude-opus-4
-
-# Use Llama 3
-rk-core think "query" --provider openrouter --model meta-llama/llama-3-70b
-```
-
----
-
-## Troubleshooting
-
-### "Command not found: rk-core"
-
-```bash
-# Check if installed
-which rk-core
-
-# If using cargo install, ensure ~/.cargo/bin is in PATH
+# Add cargo bin to PATH
 export PATH="$HOME/.cargo/bin:$PATH"
 
-# Add to shell profile
-echo 'export PATH="$HOME/.cargo/bin:$PATH"' >> ~/.zshrc
+# Make it permanent
+echo 'export PATH="$HOME/.cargo/bin:$PATH"' >> ~/.zshrc  # or ~/.bashrc
+source ~/.zshrc
 ```
 
 ### "API key not found"
 
 ```bash
-# Verify key is set
+# Check if set
 echo $ANTHROPIC_API_KEY
 
-# Set temporarily
+# Set it
 export ANTHROPIC_API_KEY="sk-ant-..."
-
-# Or use config file
-mkdir -p ~/.reasonkit
-cat > ~/.reasonkit/config.toml << 'EOF'
-[thinktool]
-default_provider = "anthropic"
-EOF
 ```
 
 ### "Rate limit exceeded"
 
 ```bash
-# Use budget limits to control usage
-rk-core think "query" --profile balanced --budget "30s"
-rk-core think "query" --profile balanced --budget "$0.25"
-
-# Switch to cheaper/faster provider
+# Use a faster/cheaper provider
 rk-core think "query" --provider groq
+
+# Or set budget limits
+rk-core think "query" --budget "$0.10"
 ```
 
-### "Timeout during analysis"
+### Build errors?
 
-```bash
-# Increase timeout
-rk-core think "complex query" --profile deep --budget "5m"
-
-# Use faster profile
-rk-core think "complex query" --profile quick
-```
-
-### Output Not JSON-Parseable
-
-```bash
-# Use explicit JSON format flag
-rk-core think "query" --profile balanced --format json
-```
+See [INSTALLATION_TROUBLESHOOTING.md](INSTALLATION_TROUBLESHOOTING.md) for platform-specific fixes.
 
 ---
 
-## Next Steps
+## What's Next?
 
-| Goal                  | Resource                                                                                                          |
-| --------------------- | ----------------------------------------------------------------------------------------------------------------- |
-| Full CLI options      | [`docs/CLI_REFERENCE.md`](/home/zyxsys/RK-PROJECT/reasonkit-core/docs/CLI_REFERENCE.md)                           |
-| API documentation     | [`docs/API_REFERENCE.md`](/home/zyxsys/RK-PROJECT/reasonkit-core/docs/API_REFERENCE.md)                           |
-| ThinkTool deep dive   | [`docs/THINKTOOLS_QUICK_REFERENCE.md`](/home/zyxsys/RK-PROJECT/reasonkit-core/docs/THINKTOOLS_QUICK_REFERENCE.md) |
-| Architecture overview | [`ARCHITECTURE.md`](/home/zyxsys/RK-PROJECT/reasonkit-core/ARCHITECTURE.md)                                       |
-| Real-world examples   | [`docs/USE_CASES.md`](/home/zyxsys/RK-PROJECT/reasonkit-core/docs/USE_CASES.md)                                   |
+| Goal | Resource |
+|------|----------|
+| Full CLI options | [CLI_REFERENCE.md](CLI_REFERENCE.md) |
+| ThinkTool deep dive | [THINKTOOLS_GUIDE.md](THINKTOOLS_GUIDE.md) |
+| Provider setup | [integrations/](integrations/) |
+| Real-world use cases | [USE_CASES.md](USE_CASES.md) |
+| Rust API | [API_REFERENCE.md](API_REFERENCE.md) |
 
 ---
 
@@ -342,12 +219,12 @@ VERIFY:      rk-core --version
 API KEY:     export ANTHROPIC_API_KEY="sk-ant-..."
 
 PROFILES:
-  --quick     Fast (30s, 70% confidence)
-  --balanced  Standard (2min, 80% confidence)
-  --deep      Thorough (5min, 85% confidence)
-  --paranoid  Maximum (10min, 95% confidence)
+  --profile quick      Fast (30s, 70% confidence)
+  --profile balanced   Standard (2min, 80% confidence)
+  --profile deep       Thorough (5min, 85% confidence)  
+  --profile paranoid   Maximum (10min, 95% confidence)
 
-TOOLS:
+THINKTOOLS:
   --protocol gigathink      10+ perspectives
   --protocol laserlogic     Logic validation
   --protocol bedrock        First principles
@@ -363,14 +240,10 @@ PROVIDERS:
 OUTPUT:
   --format text             Human-readable (default)
   --format json             Machine-parseable
-  --save-trace              Save execution trace
-
-BUDGET:
-  --budget "30s"            Time limit
-  --budget "$0.50"          Cost limit
-  --budget "1000t"          Token limit
 ```
 
 ---
 
-**Version:** 1.0.0 | **License:** Apache 2.0 | **Website:** [reasonkit.sh](https://reasonkit.sh)
+**Total time: Under 5 minutes.**
+
+**Website:** [reasonkit.sh](https://reasonkit.sh) | **Docs:** [docs.rs/reasonkit-core](https://docs.rs/reasonkit-core)

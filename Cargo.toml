@@ -3,7 +3,7 @@ name = "reasonkit-core"
 version = "0.1.0"
 edition = "2021"
 rust-version = "1.74"
-authors = ["ReasonKit Team <for@ReasonKit.sh>"]
+authors = ["ReasonKit Team <team@reasonkit.sh>"]
 description = "Rust-first knowledge base and RAG system for AI reasoning enhancement"
 license = "Apache-2.0"
 repository = "https://github.com/reasonkit/reasonkit-core"
@@ -11,7 +11,7 @@ homepage = "https://reasonkit.sh"
 documentation = "https://docs.rs/reasonkit-core"
 readme = "README.md"
 keywords = ["rag", "vector-database", "llm", "reasoning", "knowledge-base"]
-categories = ["science", "text-processing", "database"]
+categories = ["command-line-utilities", "science", "text-processing", "database"]
 
 # Include only essential files for crates.io package
 # This approach is more explicit and prevents accidentally including large data directories
@@ -21,7 +21,6 @@ include = [
     "config/default.toml",
     "config/cli_defaults.toml",
     "protocols/**/*",
-    "assets/*.svg",
     ".cargo/config.toml",
     "Cargo.toml",
     "Cargo.lock",

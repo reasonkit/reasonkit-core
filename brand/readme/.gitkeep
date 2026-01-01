@@ -1,0 +1,8 @@
+# This directory contains README images for crates.io display
+# Required images (PNG format):
+# - reasonkit-core_hero.png (hero banner)
+# - powercombo_process.png (ThinkTool chain visualization)
+# - chart_variance_reduction.png (variance reduction chart)
+# - terminal_mockup.png (CLI execution example)
+# - architecture_diagram.png (3-layer architecture)
+# - designed_not_dreamed.png (footer banner)
