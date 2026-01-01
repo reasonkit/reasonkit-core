@@ -9,7 +9,7 @@ assignees: ""
 ## Pre-Submission Checklist
 
 - [ ] I have searched existing issues and discussions to ensure this feature has not already been requested
-- [ ] I have considered whether this fits within the scope of reasonkit-core
+- [ ] I have considered whether this fits within the scope of ReasonKit-core
 
 ---
 

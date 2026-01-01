@@ -768,4 +768,4 @@ wsop:
 
 ---
 
-_WSOP Implementation Specs v1.1 | Derived from 4 academic papers | 30+ testable assertions_
+*WSOP Implementation Specs v1.1 | Derived from 4 academic papers | 30+ testable assertions*

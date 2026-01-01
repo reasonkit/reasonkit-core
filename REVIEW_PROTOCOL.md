@@ -373,5 +373,5 @@ Date: 2025-12-11
 
 ---
 
-_"What gets measured gets managed." - Peter Drucker_
-_"Designed, Not Dreamed." - ReasonKit_
+*"What gets measured gets managed." - Peter Drucker*
+*"Designed, Not Dreamed." - ReasonKit*

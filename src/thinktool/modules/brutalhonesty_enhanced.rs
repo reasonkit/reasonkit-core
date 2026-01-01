@@ -42,21 +42,16 @@ use serde::{Deserialize, Serialize};
 use serde_json::json;
 
 /// Depth of cognitive bias analysis.
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub enum CognitiveBiasDepth {
     /// Basic bias detection (5 most common biases)
     Basic,
     /// Standard bias detection (15 common biases)
+    #[default]
     Standard,
     /// Deep bias detection (30+ biases with sub-categories)
     Deep,
-}
-
-impl Default for CognitiveBiasDepth {
-    fn default() -> Self {
-        Self::Standard
-    }
 }
 
 /// A detected cognitive bias.
@@ -691,7 +686,7 @@ impl BrutalHonestyEnhanced {
                     || lower.contains("is the")
                     || lower.contains("are the")
             })
-            .unwrap_or(&sentences.first().unwrap_or(&""))
+            .unwrap_or(sentences.first().unwrap_or(&""))
             .trim()
             .to_string();
 

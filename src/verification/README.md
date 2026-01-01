@@ -235,7 +235,7 @@ When the Python `visual_fetch.py` component is integrated, it will:
 
 ## License
 
-Apache 2.0 (same as reasonkit-core)
+Apache 2.0 (same as ReasonKit-core)
 
 ---
 
@@ -247,5 +247,5 @@ Apache 2.0 (same as reasonkit-core)
 
 ---
 
-_Part of Protocol Delta - The Anchor_
-_ReasonKit Core v1.0.0_
+*Part of Protocol Delta - The Anchor*
+*ReasonKit Core v1.0.0*

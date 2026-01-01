@@ -77,6 +77,7 @@
 - 24x compression with asymmetric quantization
 
 **Alternatives Considered:**
+
 | Option | Verdict | Reason |
 |--------|---------|--------|
 | Milvus | DEFER | Better for billion-scale, overkill for our needs |
@@ -308,28 +309,28 @@ data/
 
 | Tool                | Source                                              | Status  |
 | ------------------- | --------------------------------------------------- | ------- |
-| Claude Code         | https://github.com/anthropics/claude-code           | PENDING |
-| Gemini CLI          | https://github.com/google-gemini/gemini-cli         | PENDING |
-| OpenAI Codex        | https://github.com/openai/codex                     | PENDING |
-| MCP Servers         | https://github.com/modelcontextprotocol/servers     | PENDING |
+| Claude Code         | <https://github.com/anthropics/claude-code>           | PENDING |
+| Gemini CLI          | <https://github.com/google-gemini/gemini-cli>         | PENDING |
+| OpenAI Codex        | <https://github.com/openai/codex>                     | PENDING |
+| MCP Servers         | <https://github.com/modelcontextprotocol/servers>     | PENDING |
 | Sequential Thinking | modelcontextprotocol/servers/src/sequentialthinking | PENDING |
 
 ### 5.2 APIs & SDKs (Priority 2)
 
 | API           | Source                           | Status  |
 | ------------- | -------------------------------- | ------- |
-| Anthropic API | https://docs.anthropic.com       | PENDING |
-| OpenAI API    | https://platform.openai.com/docs | PENDING |
-| Google AI     | https://ai.google.dev/docs       | PENDING |
-| OpenRouter    | https://openrouter.ai/docs       | PENDING |
+| Anthropic API | <https://docs.anthropic.com>       | PENDING |
+| OpenAI API    | <https://platform.openai.com/docs> | PENDING |
+| Google AI     | <https://ai.google.dev/docs>       | PENDING |
+| OpenRouter    | <https://openrouter.ai/docs>       | PENDING |
 
 ### 5.3 Frameworks (Priority 3)
 
 | Framework  | Source                            | Status  |
 | ---------- | --------------------------------- | ------- |
-| LangChain  | https://python.langchain.com/docs | PENDING |
-| LlamaIndex | https://docs.llamaindex.ai        | PENDING |
-| DSPy       | https://dspy-docs.vercel.app      | PENDING |
+| LangChain  | <https://python.langchain.com/docs> | PENDING |
+| LlamaIndex | <https://docs.llamaindex.ai>        | PENDING |
+| DSPy       | <https://dspy-docs.vercel.app>      | PENDING |
 
 ---
 
@@ -374,7 +375,7 @@ data/
 
 ---
 
-## 7. RUST DEPENDENCIES (Cargo.toml)
+## 7. Rust DEPENDENCIES (Cargo.toml)
 
 ```toml
 [package]

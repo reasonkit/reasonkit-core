@@ -1470,4 +1470,4 @@ wsop:
 
 ---
 
-_WSOP v1.2 | GigaThink Integration | "Designed, Not Dreamed"_
+*WSOP v1.2 | GigaThink Integration | "Designed, Not Dreamed"*

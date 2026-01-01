@@ -1,18 +1,34 @@
-# cargo-deny configuration
+# cargo-deny configuration for reasonkit-core
 # Security, license, and dependency validation
 # Reference: https://embarkstudios.github.io/cargo-deny/
+# Compatible with cargo-deny 0.18.x
+
+[graph]
+targets = [
+    "x86_64-unknown-linux-gnu",
+    "x86_64-apple-darwin",
+    "aarch64-apple-darwin",
+    "x86_64-pc-windows-msvc",
+]
+all-features = true
+
+[output]
+feature-depth = 1
 
 [advisories]
-# Security vulnerability detection
-vulnerability = "deny"
-unmaintained = "warn"
-yanked = "deny"
-notice = "warn"
-ignore = []
+# Path where advisory database is cloned
+db-path = "~/.cargo/advisory-dbs"
+# Ignore specific advisories if assessed as non-applicable
+ignore = [
+    # Unmaintained crates - tracking migration in backlog
+    { id = "RUSTSEC-2024-0384", reason = "instant crate - used by parking_lot, tracking migration to web-time" },
+    { id = "RUSTSEC-2025-0119", reason = "number_prefix - low risk, used by indicatif, tracking migration" },
+    { id = "RUSTSEC-2024-0436", reason = "paste - used by tokenizers, tracking migration to pastey" },
+    { id = "RUSTSEC-2025-0134", reason = "rustls-pemfile - used by tonic, tracking migration to rustls-pki-types" },
+]
 
 [licenses]
 # Apache 2.0 compatible licenses
-unlicensed = "deny"
 allow = [
     "MIT",
     "Apache-2.0",
@@ -21,33 +37,67 @@ allow = [
     "BSD-3-Clause",
     "ISC",
     "Unicode-DFS-2016",
+    "Unicode-3.0",
     "Zlib",
     "CC0-1.0",
+    "0BSD",
+    "BSL-1.0",
+    "MPL-2.0",
+    "Unlicense",
+    "OpenSSL",  # Used by ring crate - permissive license
 ]
-deny = [
-    "GPL-3.0",
-    "AGPL-3.0",
-]
-copyleft = "warn"
-allow-osi-fsf-free = "both"
-default = "deny"
 confidence-threshold = 0.8
+
+# Exceptions for specific crates
+exceptions = [
+    # ring uses a complex license expression
+    { allow = ["ISC", "MIT", "OpenSSL"], crate = "ring" },
+]
+
+[licenses.private]
+# Ignore unpublished workspace crates
+ignore = true
+registries = []
+
+# License clarifications for crates with non-standard license files
+[[licenses.clarify]]
+crate = "ring"
+expression = "ISC AND MIT AND OpenSSL"
+license-files = [{ path = "LICENSE", hash = 0xbd0eed23 }]
+
+[[licenses.clarify]]
+crate = "webpki"
+expression = "ISC"
+license-files = [{ path = "LICENSE", hash = 0x001c7e6c }]
+
+[[licenses.clarify]]
+crate = "rustls-webpki"
+expression = "ISC"
+license-files = [{ path = "LICENSE", hash = 0x001c7e6c }]
 
 [bans]
 # Dependency banning and duplicate detection
 multiple-versions = "warn"
-wildcards = "allow"
+wildcards = "deny"
 highlight = "all"
 workspace-default-features = "allow"
 external-default-features = "allow"
 
 # Ban certain crates we want to avoid
+# NOTE: native-tls/openssl currently allowed as transitive deps from rust-bert/cached-path
+# TODO: Work with upstream to provide rustls-only feature flags
 deny = [
-    # Prefer rustls over OpenSSL
-    # { name = "openssl", wrappers = [] },
+    # Deprecated crates
+    { crate = "rustc-serialize", reason = "Use serde instead" },
+    { crate = "quickersort", reason = "Use standard library sort" },
+    { crate = "failure", reason = "Use thiserror or anyhow" },
+    { crate = "error-chain", reason = "Use thiserror or anyhow" },
+    { crate = "tempdir", reason = "Use tempfile instead" },
+    { crate = "term", reason = "Use termcolor or crossterm" },
+    { crate = "gcc", reason = "Use cc instead" },
 ]
 
-# Skip checking these crates
+# Skip checking these crates for duplicates
 skip = []
 
 # Skip trees rooted at these crates
@@ -63,3 +113,5 @@ allow-git = []
 [sources.allow-org]
 # Allow GitHub organizations
 github = []
+gitlab = []
+bitbucket = []

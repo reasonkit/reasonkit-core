@@ -216,7 +216,7 @@ impl LlmManager {
 | Ollama       | Stable  | Local models via OpenAI-compatible API  |
 | Groq         | Stable  | Fast inference for open models          |
 | Together AI  | Planned | Open model hosting                      |
-| Bedrock      | Planned | AWS-hosted models                       |
+| BedRock      | Planned | AWS-hosted models                       |
 
 ## Related Documents
 

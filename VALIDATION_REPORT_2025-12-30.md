@@ -188,7 +188,7 @@ test result: ok. 258 passed; 0 failed; 0 ignored; 0 measured
 - [x] License (Apache 2.0) included
 - [x] README comprehensive
 - [ ] **crates.io credentials configured** (BLOCKER)
-- [ ] **reasonkit-mem published first** (PREREQUISITE)
+- [ ] **ReasonKit-mem published first** (PREREQUISITE)
 
 ### Post-Publication Verification
 
@@ -204,7 +204,7 @@ test result: ok. 258 passed; 0 failed; 0 ignored; 0 measured
 ### Immediate Actions (P0)
 
 1. **Configure crates.io credentials** - Required for publication
-2. **Publish reasonkit-mem first** - Dependency requirement
+2. **Publish ReasonKit-mem first** - Dependency requirement
 3. **Final git commit** - Clean state for publication
 
 ### Post-Launch (P1)
@@ -233,7 +233,7 @@ test result: ok. 258 passed; 0 failed; 0 ignored; 0 measured
 The only remaining blockers are:
 
 1. crates.io authentication (external dependency)
-2. reasonkit-mem publication (prerequisite)
+2. ReasonKit-mem publication (prerequisite)
 
 Once these are resolved, the package is ready for immediate publication.
 

@@ -465,6 +465,7 @@ Improve the visual formatting of CLI output for better readability.
    Add tests for uncovered code.
 
 3. **Search for TODOs:**
+
    ```bash
    grep -r "TODO\|FIXME\|XXX" src/
    ```
@@ -475,27 +476,35 @@ Improve the visual formatting of CLI output for better readability.
 
 1. **Fork the repository** on GitHub
 2. **Clone your fork:**
+
    ```bash
    git clone https://github.com/YOUR_USERNAME/reasonkit-core.git
    cd reasonkit-core
    ```
+
 3. **Pick an issue** from this list or GitHub
 4. **Create a branch:**
+
    ```bash
    git checkout -b fix/issue-description
    ```
+
 5. **Make your changes**
 6. **Test:**
+
    ```bash
    cargo test
    cargo clippy -- -D warnings
    cargo fmt --check
    ```
+
 7. **Commit and push:**
+
    ```bash
    git commit -m "fix: [description]"
    git push origin fix/issue-description
    ```
+
 8. **Open a PR** on GitHub
 
 ---
@@ -518,4 +527,4 @@ Improve the visual formatting of CLI output for better readability.
 
 **Happy Contributing! 🎉**
 
-_Turn Prompts into Protocols. Make AI reasoning structured, auditable, and reliable._
+*Turn Prompts into Protocols. Make AI reasoning structured, auditable, and reliable.*

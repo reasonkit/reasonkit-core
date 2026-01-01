@@ -54,7 +54,7 @@ rk-core providers show openai
 
 ## Full Configuration Options
 
-### ~/.reasonkit/config.toml
+### ~/.ReasonKit/config.toml
 
 ```toml
 [providers.openai]
@@ -532,13 +532,13 @@ rk-core think "Analysis" \
 
 ## Resources
 
-- **OpenAI Platform:** https://platform.openai.com/
-- **API Documentation:** https://platform.openai.com/docs/
-- **Pricing:** https://openai.com/pricing
-- **Rate Limits:** https://platform.openai.com/account/limits
-- **Azure OpenAI:** https://azure.microsoft.com/en-us/products/ai-services/openai-service
+- **OpenAI Platform:** <https://platform.openai.com/>
+- **API Documentation:** <https://platform.openai.com/docs/>
+- **Pricing:** <https://openai.com/pricing>
+- **Rate Limits:** <https://platform.openai.com/account/limits>
+- **Azure OpenAI:** <https://azure.microsoft.com/en-us/products/ai-services/openai-service>
 
 ---
 
-_ReasonKit + OpenAI Integration Guide | v1.0.0 | Apache 2.0_
-_"See How Your AI Thinks"_
+*ReasonKit + OpenAI Integration Guide | v1.0.0 | Apache 2.0*
+*"See How Your AI Thinks"*

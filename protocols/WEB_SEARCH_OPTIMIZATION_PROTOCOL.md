@@ -65,7 +65,7 @@ This document synthesizes research findings on web search optimization for RAG a
 **Conference:** ACL 2023
 **Authors:** Gao, Ma, Lin, Callan (CMU)
 
-#### Benchmark Results (VERIFIED):
+#### Benchmark Results (VERIFIED)
 
 | Dataset                | Metric  | HyDE     | Contriever | ContrieverFT | Improvement              |
 | ---------------------- | ------- | -------- | ---------- | ------------ | ------------------------ |
@@ -79,13 +79,13 @@ This document synthesizes research findings on web search optimization for RAG a
 - [Zilliz HyDE Guide](https://zilliz.com/learn/improve-rag-and-information-retrieval-with-hyde-hypothetical-document-embeddings)
 - [Haystack Documentation](https://docs.haystack.deepset.ai/docs/hypothetical-document-embeddings-hyde)
 
-#### Triangulation Assessment:
+#### Triangulation Assessment
 
 - **Claim:** HyDE improves zero-shot retrieval by ~74% on web search
 - **Verification:** 3 independent sources confirm benchmark numbers
 - **Confidence:** **HIGH (95%)**
 
-#### Trade-offs:
+#### Trade-offs
 
 - **PRO:** Zero-shot capability, no training data needed
 - **CON:** Requires LLM call per query (latency, cost)
@@ -96,7 +96,7 @@ This document synthesizes research findings on web search optimization for RAG a
 **arXiv:** [2305.14283](https://arxiv.org/abs/2305.14283)
 **Conference:** EMNLP 2023
 
-#### Key Results:
+#### Key Results
 
 | Dataset | Hit Rate (Standard) | Hit Rate (Rewriter) | Improvement |
 | ------- | ------------------- | ------------------- | ----------- |
@@ -134,7 +134,7 @@ This document synthesizes research findings on web search optimization for RAG a
 **arXiv:** [2310.11511](https://arxiv.org/abs/2310.11511)
 **Authors:** Asai et al. (UW, IBM, AI2)
 
-#### Benchmark Results (13B Model):
+#### Benchmark Results (13B Model)
 
 | Benchmark     | Self-RAG  | Llama2-13B | Alpaca-13B | Improvement         |
 | ------------- | --------- | ---------- | ---------- | ------------------- |
@@ -155,7 +155,7 @@ This document synthesizes research findings on web search optimization for RAG a
 
 **arXiv:** [2401.15884](https://arxiv.org/abs/2401.15884)
 
-#### Performance Improvements (vs Standard RAG):
+#### Performance Improvements (vs Standard RAG)
 
 | Configuration            | PopQA Improvement | ARC-Challenge Improvement |
 | ------------------------ | ----------------- | ------------------------- |
@@ -176,7 +176,7 @@ This document synthesizes research findings on web search optimization for RAG a
 **arXiv:** [2210.03629](https://arxiv.org/abs/2210.03629)
 **Conference:** ICLR 2023
 
-#### Key Results:
+#### Key Results
 
 | Benchmark | Improvement vs Chain-of-Thought | Improvement vs Act-Only |
 | --------- | ------------------------------- | ----------------------- |
@@ -217,7 +217,7 @@ This document synthesizes research findings on web search optimization for RAG a
 
 **Scale:** 824 multi-hop questions requiring 2-15 Wikipedia articles each.
 
-#### Baseline Results:
+#### Baseline Results
 
 | Method                  | Accuracy  |
 | ----------------------- | --------- |
@@ -443,6 +443,7 @@ TOTAL:                ~$7,500/month
 ```
 
 **Optimization Results:**
+
 | Metric | Before | After | Reduction |
 |--------|--------|-------|-----------|
 | Monthly costs | $500K-$1M+ | $50K-$150K | 80-90% |
@@ -496,6 +497,7 @@ Query → Generate Search Queries → Retrieve Top-K → Add to Context → Repe
 ```
 
 **Results:**
+
 | Iterations | Accuracy | Notes |
 |------------|----------|-------|
 | 1 (single-step) | 40.8% | Baseline |
@@ -639,7 +641,7 @@ caching:
 | Source credibility  | 65%        | Fragmented research landscape    |
 | Cost optimization   | 60%        | Need more production data        |
 
-### Required for ITERATION 2:
+### Required for ITERATION 2
 
 1. Validate query routing claims with additional sources
 2. Find production deployment case studies
@@ -657,5 +659,5 @@ caching:
 
 ---
 
-_Protocol generated following ProofGuard Deep Research Protocol (PROT-PG-DEEP-001)_
-_Profile: --paranoid | Minimum 3 sources per claim | BRUTALLY HONEST assessment_
+*Protocol generated following ProofGuard Deep Research Protocol (PROT-PG-DEEP-001)*
+*Profile: --paranoid | Minimum 3 sources per claim | BRUTALLY HONEST assessment*

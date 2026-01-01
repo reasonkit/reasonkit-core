@@ -57,7 +57,7 @@ rk-core providers show gemini
 
 ## Full Configuration Options
 
-### ~/.reasonkit/config.toml
+### ~/.ReasonKit/config.toml
 
 ```toml
 [providers.gemini]
@@ -617,13 +617,13 @@ rk-core metrics cost --provider gemini --period month
 
 ## Resources
 
-- **Google AI Studio:** https://aistudio.google.com/
-- **Vertex AI:** https://cloud.google.com/vertex-ai
-- **API Documentation:** https://ai.google.dev/docs
-- **Pricing:** https://ai.google.dev/pricing
-- **Gemini CLI:** https://github.com/google-gemini/gemini-cli (check official)
+- **Google AI Studio:** <https://aistudio.google.com/>
+- **Vertex AI:** <https://cloud.google.com/vertex-ai>
+- **API Documentation:** <https://ai.google.dev/docs>
+- **Pricing:** <https://ai.google.dev/pricing>
+- **Gemini CLI:** <https://github.com/google-gemini/gemini-cli> (check official)
 
 ---
 
-_ReasonKit + Google Gemini Integration Guide | v1.0.0 | Apache 2.0_
-_"See How Your AI Thinks"_
+*ReasonKit + Google Gemini Integration Guide | v1.0.0 | Apache 2.0*
+*"See How Your AI Thinks"*

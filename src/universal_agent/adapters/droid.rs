@@ -1,5 +1,5 @@
 //! # Droid Adapter (Factory AI)
-//! 
+//!
 //! Adapter for Droid framework (Android Development Focus)
 //! Focus: Android development with mobile-specific optimizations
 

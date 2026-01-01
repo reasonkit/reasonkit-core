@@ -202,4 +202,4 @@ Query → LLM generates hypothetical doc → Encode doc → Search
 
 ---
 
-_WSOP v1.2 | ReasonKit | "Turn Prompts into Protocols" | GigaThink Enhanced_
+*WSOP v1.2 | ReasonKit | "Turn Prompts into Protocols" | GigaThink Enhanced*

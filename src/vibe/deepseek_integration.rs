@@ -21,28 +21,28 @@ use std::collections::HashMap;
 pub struct DeepSeekVIBEConfig {
     /// Base VIBE configuration
     pub vibe_config: ValidationConfig,
-    
+
     /// DeepSeek validation configuration
     pub deepseek_config: DeepSeekValidationConfig,
-    
+
     /// Multi-model configuration
     pub multi_model_config: MultiModelConfig,
-    
+
     /// Statistical testing configuration
     pub statistical_config: StatisticalConfig,
-    
+
     /// Cultural validation configuration
     pub cultural_config: CulturalConfig,
-    
+
     /// Enable DeepSeek validation
     pub enable_deepseek: bool,
-    
+
     /// Enable multi-model triangulation
     pub enable_triangulation: bool,
-    
+
     /// Enable statistical significance testing
     pub enable_statistical: bool,
-    
+
     /// Enable cross-cultural validation
     pub enable_cultural: bool,
 }
@@ -100,25 +100,25 @@ impl DeepSeekVIBEConfig {
 pub struct DeepSeekVIBEResult {
     /// Base VIBE validation result
     pub vibe_result: ValidationResult,
-    
+
     /// DeepSeek validation result
     pub deepseek_result: Option<DeepSeekValidationResult>,
-    
+
     /// Multi-model triangulation result
     pub multi_model_result: Option<MultiModelValidationResult>,
-    
+
     /// Statistical testing result
     pub statistical_result: Option<StatisticalResult>,
-    
+
     /// Cross-cultural validation result
     pub cultural_result: Option<CulturalValidationResult>,
-    
+
     /// Final aggregated score
     pub final_score: f32,
-    
+
     /// Overall confidence level
     pub overall_confidence: f32,
-    
+
     /// Validation verdict
     pub verdict: ValidationVerdict,
 }
@@ -127,19 +127,19 @@ pub struct DeepSeekVIBEResult {
 pub struct DeepSeekVIBEEngine {
     /// Base VIBE engine
     vibe_engine: VIBEEngine,
-    
+
     /// DeepSeek validation engine
     deepseek_engine: DeepSeekValidationEngine,
-    
+
     /// Multi-model validator
     multi_model_validator: MultiModelValidator,
-    
+
     /// Statistical engine
     statistical_engine: StatisticalEngine,
-    
+
     /// Cultural validation engine
     cultural_engine: CulturalValidationEngine,
-    
+
     /// Configuration
     config: DeepSeekVIBEConfig,
 }

@@ -54,6 +54,7 @@ The `WebBrowserAdapter` trait provides a unified abstraction layer for reasonkit
 Initialize and connect to the web browser service.
 
 **Responsibilities:**
+
 - Validate service availability
 - Initialize connection pools
 - Verify API compatibility
@@ -61,9 +62,11 @@ Initialize and connect to the web browser service.
 - May connect to MCP server
 
 **Errors:**
+
 - `WebAdapterError::NotConnected` - Service unavailable
 
 **Example Implementation:**
+
 ```rust
 async fn connect(&mut self) -> WebAdapterResult<()> {
     // Start browser process or connect to MCP server
@@ -78,12 +81,14 @@ async fn connect(&mut self) -> WebAdapterResult<()> {
 Disconnect and cleanup resources.
 
 **Responsibilities:**
+
 - Close browser processes gracefully
 - Save session state if applicable
 - Clear connection pools
 - Idempotent (safe to call multiple times)
 
 **Example Implementation:**
+
 ```rust
 async fn disconnect(&mut self) -> WebAdapterResult<()> {
     self.client.disconnect().await?;
@@ -103,6 +108,7 @@ Check if adapter is currently connected (synchronous).
 Navigate to a URL and return a page handle.
 
 **Parameters:**
+
 - `url`: Target URL (must be valid HTTP/HTTPS)
 - `options`:
   - `timeout_ms`: Max wait time (default: 30s)
@@ -114,14 +120,17 @@ Navigate to a URL and return a page handle.
   - `follow_redirects`: Follow HTTP redirects
 
 **Returns:**
+
 - `PageHandle` with unique ID, URL, title, and activity status
 
 **Errors:**
+
 - `WebAdapterError::InvalidUrl` - Malformed URL
 - `WebAdapterError::NavigationTimeout` - Exceeded timeout
 - `WebAdapterError::NavigationFailed` - Network/SSL/HTTP errors
 
 **Implementation Notes:**
+
 - MUST validate URL format
 - MUST respect timeout_ms
 - SHOULD handle redirects
@@ -129,6 +138,7 @@ Navigate to a URL and return a page handle.
 - MUST return handle with unique ID
 
 **Example Usage:**
+
 ```rust
 let page = adapter.navigate(
     "https://example.com",
@@ -162,6 +172,7 @@ Reload current page.
 Extract content from a page.
 
 **Parameters:**
+
 - `page`: Page handle to extract from
 - `options`:
   - `content_selector`: CSS selector for main content (optional, auto-detect)
@@ -174,6 +185,7 @@ Extract content from a page.
   - `custom_js`: Custom extraction JavaScript
 
 **Returns:**
+
 - `ExtractedContent`:
   - `text`: Main body text (normalized)
   - `html`: Extracted HTML (optional)
@@ -185,11 +197,13 @@ Extract content from a page.
   - `confidence`: Extraction confidence (0.0-1.0)
 
 **Errors:**
+
 - `WebAdapterError::ExtractionFailed` - Extraction failed
 - `WebAdapterError::InvalidSelector` - Bad CSS selector
 - `WebAdapterError::JavaScriptError` - Custom JS failed
 
 **Implementation Notes:**
+
 - MUST extract main text content
 - SHOULD auto-detect main content area
 - SHOULD normalize whitespace
@@ -197,6 +211,7 @@ Extract content from a page.
 - MUST handle special HTML elements (tables, code blocks)
 
 **Example Usage:**
+
 ```rust
 let content = adapter.extract_content(
     &page,
@@ -218,22 +233,27 @@ println!("Confidence: {:.2}", content.confidence);
 Execute custom JavaScript on page.
 
 **Parameters:**
+
 - `page`: Page to execute on
 - `script`: JavaScript code
 
 **Returns:**
+
 - Serialized result as JSON value
 
 **Errors:**
+
 - `WebAdapterError::JavaScriptError` - Execution failed
 
 **Implementation Notes:**
+
 - MUST timeout execution (>30s)
 - MUST return JSON-serializable result
 - SHOULD return last expression value
 - MUST handle errors gracefully
 
 **Example Usage:**
+
 ```rust
 let result = adapter.execute_js(
     &page,
@@ -248,13 +268,16 @@ println!("Link count: {}", result);
 Get text content from CSS selector.
 
 **Parameters:**
+
 - `page`: Page to query
 - `selector`: CSS selector
 
 **Returns:**
+
 - Text content of matched element
 
 **Errors:**
+
 - `WebAdapterError::InvalidSelector` - Bad selector
 - `WebAdapterError::ExtractionFailed` - Element not found
 
@@ -265,6 +288,7 @@ Get text content from CSS selector.
 Capture page as screenshot or document.
 
 **Parameters:**
+
 - `page`: Page to capture
 - `options`:
   - `format`: Capture format (PNG, JPEG, PDF, MHTML, HTML, WebP)
@@ -277,6 +301,7 @@ Capture page as screenshot or document.
   - `execute_js`: JavaScript to run before capture
 
 **Returns:**
+
 - `CapturedPage`:
   - `format`: Captured format
   - `data`: Raw binary data (PNG bytes, PDF bytes, etc.)
@@ -285,10 +310,12 @@ Capture page as screenshot or document.
   - `metadata`: Viewport, scale factor, etc.
 
 **Errors:**
+
 - `WebAdapterError::CaptureFailed` - Capture failed
 - `WebAdapterError::UnsupportedFormat` - Format not supported
 
 **Implementation Notes:**
+
 - MUST support PNG, JPEG, PDF at minimum
 - MAY support MHTML, WebP, HTML if available
 - MUST respect quality setting for lossy formats
@@ -297,6 +324,7 @@ Capture page as screenshot or document.
 - MUST include capture metadata
 
 **Example Usage:**
+
 ```rust
 // PNG screenshot
 let png = adapter.capture_screenshot(
@@ -329,6 +357,7 @@ let jpeg = adapter.capture_screenshot(
 Get connection status and diagnostics.
 
 **Returns:**
+
 - JSON object with:
   - `connected`: Connection status
   - `uptime`: Session duration
@@ -546,6 +575,7 @@ async fn test_full_workflow() {
 ### From reasonkit-web directly to WebBrowserAdapter
 
 **Before:**
+
 ```rust
 use reasonkit_web::browser::BrowserController;
 
@@ -554,6 +584,7 @@ let page = browser.navigate("https://example.com").await?;
 ```
 
 **After:**
+
 ```rust
 use reasonkit::web_interface::{WebBrowserAdapter, NavigateOptions};
 

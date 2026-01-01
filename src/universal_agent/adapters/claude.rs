@@ -1,5 +1,5 @@
 //! # Claude Code Adapter
-//! 
+//!
 //! Adapter for Claude Code framework
 //! Focus: JSON-formatted outputs with confidence scoring
 
@@ -202,11 +202,11 @@ impl ClaudeCodeAdapter {
         // Simple clarity assessment based on length and structure
         let words = conclusion.split_whitespace().count();
         let has_structure = conclusion.contains('.') || conclusion.contains(':');
-        
+
         let mut clarity = 0.7;
         if words > 10 && words < 100 { clarity += 0.2; }
         if has_structure { clarity += 0.1; }
-        
+
         clarity.min(1.0)
     }
 
@@ -416,16 +416,16 @@ impl JsonParser {
 pub struct ConfidenceScorer;
 impl ConfidenceScorer {
     pub fn new() -> Self { Self }
-    
+
     pub async fn calculate(&self, reasoning: &StructuredReasoning, protocol: &Protocol) -> Result<f64> {
         let mut confidence = 0.8;
-        
+
         // Boost confidence based on evidence quality
         confidence += reasoning.strength * 0.1;
-        
+
         // Boost confidence based on number of evidence points
         confidence += (reasoning.evidence.len() as f64 * 0.02).min(0.1);
-        
+
         Ok(confidence.min(1.0))
     }
 }
@@ -433,7 +433,7 @@ impl ConfidenceScorer {
 pub struct StructuredReasoningEngine;
 impl StructuredReasoningEngine {
     pub fn new() -> Self { Self }
-    
+
     pub async fn process(&self, reasoning: &str) -> Result<StructuredReasoning> {
         // Simple structured reasoning extraction
         Ok(StructuredReasoning {
@@ -461,14 +461,14 @@ mod tests {
     #[test]
     fn test_claude_json_format_creation() {
         let adapter = ClaudeCodeAdapter::new();
-        
+
         let reasoning = StructuredReasoning {
             conclusion: "Test conclusion".to_string(),
             evidence: vec!["evidence1".to_string()],
             strength: 0.9,
             confidence_factors: vec!["clear".to_string()],
         };
-        
+
         let json = adapter.create_claude_json_format(&reasoning, 0.95).unwrap();
         assert_eq!(json.confidence_score, 0.95);
         assert!(json.priority_processing);

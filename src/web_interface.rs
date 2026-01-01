@@ -6,11 +6,11 @@
 //! # Architecture
 //!
 //! ```text
-//! ReasonKit Core ──▶ WebBrowserAdapter ──▶ ReasonKit Web
+//! ReasonKit Core --> WebBrowserAdapter --> ReasonKit Web
 //!                   (trait interface)
-//!        ├─ navigate()
-//!        ├─ extract_content()
-//!        └─ capture_screenshot()
+//!        |- navigate()
+//!        |- extract_content()
+//!        `- capture_screenshot()
 //! ```
 //!
 //! # Design Principles
@@ -59,9 +59,9 @@ use std::collections::HashMap;
 use std::fmt;
 use thiserror::Error;
 
-// ═══════════════════════════════════════════════════════════════════════════
+// =============================================================================
 // ERROR TYPES
-// ═══════════════════════════════════════════════════════════════════════════
+// =============================================================================
 
 /// Web browser adapter error types
 #[derive(Error, Debug)]
@@ -129,12 +129,12 @@ pub enum WebAdapterError {
 /// Result type alias for web adapter operations
 pub type WebAdapterResult<T> = std::result::Result<T, WebAdapterError>;
 
-// ═══════════════════════════════════════════════════════════════════════════
+// =============================================================================
 // DATA TYPES
-// ═══════════════════════════════════════════════════════════════════════════
+// =============================================================================
 
 /// Represents a page/tab in the browser
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Default, Serialize, Deserialize)]
 pub struct PageHandle {
     /// Unique page identifier
     pub id: String,
@@ -195,10 +195,11 @@ impl Default for NavigateOptions {
 }
 
 /// Page load wait event
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default, Serialize, Deserialize)]
 #[serde(rename_all = "lowercase")]
 pub enum NavigateWaitEvent {
     /// Wait for page load event
+    #[default]
     Load,
     /// Wait for DOM content loaded event
     DomContentLoaded,
@@ -217,7 +218,7 @@ impl fmt::Display for NavigateWaitEvent {
 }
 
 /// Extracted content from a page
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Default, Serialize, Deserialize)]
 pub struct ExtractedContent {
     /// Main body text
     pub text: String,
@@ -245,7 +246,7 @@ pub struct ExtractedContent {
 }
 
 /// Extracted link from content
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Default, Serialize, Deserialize)]
 pub struct ExtractedLink {
     /// Link text
     pub text: String,
@@ -256,7 +257,7 @@ pub struct ExtractedLink {
 }
 
 /// Extracted image from content
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Default, Serialize, Deserialize)]
 pub struct ExtractedImage {
     /// Image URL
     pub src: String,
@@ -267,7 +268,7 @@ pub struct ExtractedImage {
 }
 
 /// Content metadata
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Default, Serialize, Deserialize)]
 pub struct ContentMetadata {
     /// Page title
     pub title: Option<String>,
@@ -287,22 +288,6 @@ pub struct ContentMetadata {
     pub publish_date: Option<String>,
     /// Custom meta tags
     pub custom_meta: HashMap<String, String>,
-}
-
-impl Default for ContentMetadata {
-    fn default() -> Self {
-        Self {
-            title: None,
-            description: None,
-            og_image: None,
-            og_title: None,
-            content_type: None,
-            charset: None,
-            author: None,
-            publish_date: None,
-            custom_meta: HashMap::new(),
-        }
-    }
 }
 
 /// Options for content extraction
@@ -349,10 +334,11 @@ impl Default for ExtractOptions {
 }
 
 /// Screenshot/capture format
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, Hash)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default, Serialize, Deserialize, Hash)]
 #[serde(rename_all = "lowercase")]
 pub enum CaptureFormat {
     /// PNG image (lossless, recommended)
+    #[default]
     Png,
     /// JPEG image (compressed, smaller file size)
     Jpeg,
@@ -380,7 +366,7 @@ impl fmt::Display for CaptureFormat {
 }
 
 /// Captured page content/screenshot
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Default, Serialize, Deserialize)]
 pub struct CapturedPage {
     /// Format of captured content
     pub format: CaptureFormat,
@@ -407,7 +393,7 @@ impl CapturedPage {
 }
 
 /// Capture metadata
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Default, Serialize, Deserialize)]
 pub struct CaptureMetadata {
     /// Page URL that was captured
     pub url: String,
@@ -497,9 +483,9 @@ impl CaptureOptions {
     }
 }
 
-// ═══════════════════════════════════════════════════════════════════════════
+// =============================================================================
 // TRAIT DEFINITION
-// ═══════════════════════════════════════════════════════════════════════════
+// =============================================================================
 
 /// Web browser adapter trait for reasonkit-core
 ///
@@ -523,9 +509,9 @@ impl CaptureOptions {
 /// Implementations MUST handle reconnection automatically on transient failures.
 #[async_trait]
 pub trait WebBrowserAdapter: Send + Sync {
-    // ─────────────────────────────────────────────────────────────────────
+    // -------------------------------------------------------------------------
     // LIFECYCLE
-    // ─────────────────────────────────────────────────────────────────────
+    // -------------------------------------------------------------------------
 
     /// Initialize and connect to the web browser service
     ///
@@ -553,9 +539,9 @@ pub trait WebBrowserAdapter: Send + Sync {
     /// Check if adapter is currently connected
     fn is_connected(&self) -> bool;
 
-    // ─────────────────────────────────────────────────────────────────────
+    // -------------------------------------------------------------------------
     // NAVIGATION
-    // ─────────────────────────────────────────────────────────────────────
+    // -------------------------------------------------------------------------
 
     /// Navigate to a URL and return a page handle
     ///
@@ -607,9 +593,9 @@ pub trait WebBrowserAdapter: Send + Sync {
     /// Returns `WebAdapterError::NavigationFailed` if unable to reload.
     async fn reload(&mut self) -> WebAdapterResult<PageHandle>;
 
-    // ─────────────────────────────────────────────────────────────────────
+    // -------------------------------------------------------------------------
     // CONTENT EXTRACTION
-    // ─────────────────────────────────────────────────────────────────────
+    // -------------------------------------------------------------------------
 
     /// Extract content from a page
     ///
@@ -681,9 +667,9 @@ pub trait WebBrowserAdapter: Send + Sync {
     /// - `WebAdapterError::ExtractionFailed` if element not found
     async fn get_text(&mut self, page: &PageHandle, selector: &str) -> WebAdapterResult<String>;
 
-    // ─────────────────────────────────────────────────────────────────────
+    // -------------------------------------------------------------------------
     // SCREENSHOTS & CAPTURE
-    // ─────────────────────────────────────────────────────────────────────
+    // -------------------------------------------------------------------------
 
     /// Capture page as screenshot or document
     ///
@@ -713,9 +699,9 @@ pub trait WebBrowserAdapter: Send + Sync {
         options: CaptureOptions,
     ) -> WebAdapterResult<CapturedPage>;
 
-    // ─────────────────────────────────────────────────────────────────────
+    // -------------------------------------------------------------------------
     // DIAGNOSTICS
-    // ─────────────────────────────────────────────────────────────────────
+    // -------------------------------------------------------------------------
 
     /// Get connection status and diagnostics
     ///
@@ -740,7 +726,7 @@ mod tests {
         let opts = NavigateOptions::default();
         assert_eq!(opts.timeout_ms, 30000);
         assert_eq!(opts.wait_until, NavigateWaitEvent::Load);
-        assert!(!opts.follow_redirects == false);
+        assert!(opts.follow_redirects);
     }
 
     #[test]

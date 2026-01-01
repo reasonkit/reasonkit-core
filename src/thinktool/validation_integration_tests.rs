@@ -1,6 +1,6 @@
 //! Integration Tests for DeepSeek Protocol Validation Engine
 //!
-//! Comprehensive test suite validating the DeepSeek Validation Engine's 
+//! Comprehensive test suite validating the DeepSeek Validation Engine's
 //! functionality, accuracy, and enterprise compliance features.
 
 use crate::error::Result;
@@ -93,37 +93,37 @@ impl ValidationIntegrationTester {
     pub fn new(config: IntegrationTestConfig) -> Self {
         Self { config }
     }
-    
+
     pub fn default() -> Self {
         Self::new(IntegrationTestConfig::default())
     }
-    
+
     /// Run complete integration test suite
     pub async fn run_integration_tests(&self) -> Result<IntegrationTestResults> {
         let start_time = std::time::Instant::now();
         let mut scenario_results = Vec::new();
         let mut success_count = 0;
         let mut total_confidence = 0.0;
-        
+
         for scenario in &self.config.test_scenarios {
             let result = self.run_test_scenario(*scenario).await?;
-            
+
             if result.success {
                 success_count += 1;
             }
             total_confidence += result.confidence;
-            
+
             scenario_results.push(result);
         }
-        
+
         let total_duration = start_time.elapsed().as_millis() as u64;
         let success_rate = success_count as f64 / self.config.test_scenarios.len() as f64;
         let average_confidence = total_confidence / self.config.test_scenarios.len() as f64;
-        
+
         let overall_success = success_rate >= self.config.success_threshold;
-        
+
         let recommendations = self.generate_recommendations(&scenario_results, success_rate);
-        
+
         Ok(IntegrationTestResults {
             config: self.config.clone(),
             scenario_results,
@@ -134,16 +134,16 @@ impl ValidationIntegrationTester {
             recommendations,
         })
     }
-    
+
     /// Run a single test scenario
     async fn run_test_scenario(&self, scenario: TestScenario) -> Result<TestScenarioResult> {
         let start_time = std::time::Instant::now();
-        
+
         let input = self.generate_test_input(scenario);
         let result = self.execute_validation_test(&input).await;
-        
+
         let duration_ms = start_time.elapsed().as_millis() as u64;
-        
+
         match result {
             Ok(output) => {
                 self.analyze_successful_result(scenario, output, duration_ms)
@@ -162,7 +162,7 @@ impl ValidationIntegrationTester {
             }
         }
     }
-    
+
     /// Execute validation test
     async fn execute_validation_test(&self, input: &ProtocolInput) -> Result<ProtocolOutput> {
         if self.config.use_mock {
@@ -175,12 +175,12 @@ impl ValidationIntegrationTester {
                 validation_level: ValidationLevel::Standard,
                 ..Default::default()
             };
-            
+
             let executor = ValidatingProtocolExecutor::with_configs(Default::default(), config)?;
             executor.execute_profile_with_validation("balanced", input.clone()).await
         }
     }
-    
+
     /// Generate test input for scenario
     fn generate_test_input(&self, scenario: TestScenario) -> ProtocolInput {
         match scenario {
@@ -204,7 +204,7 @@ impl ValidationIntegrationTester {
             }
         }
     }
-    
+
     /// Analyze successful test result
     fn analyze_successful_result(
         &self,
@@ -213,11 +213,11 @@ impl ValidationIntegrationTester {
         duration_ms: u64,
     ) -> Result<TestScenarioResult> {
         let success = output.success && output.confidence >= 0.70;
-        
+
         // Extract validation results
         let validation_result = output.data.get("deepseek_validation")
             .map(|v| v.to_string());
-        
+
         let validation_findings_count = if let Some(validation_data) = output.data.get("deepseek_validation") {
             if let Ok(validation_result) = serde_json::from_value::<super::validation::DeepSeekValidationResult>(
                 validation_data.clone(),
@@ -229,7 +229,7 @@ impl ValidationIntegrationTester {
         } else {
             0
         };
-        
+
         // Extract compliance status
         let compliance_status = if let Some(validation_data) = output.data.get("deepseek_validation") {
             if let Ok(validation_result) = serde_json::from_value::<super::validation::DeepSeekValidationResult>(
@@ -248,7 +248,7 @@ impl ValidationIntegrationTester {
         } else {
             None
         };
-        
+
         Ok(TestScenarioResult {
             scenario,
             success,
@@ -260,7 +260,7 @@ impl ValidationIntegrationTester {
             compliance_status,
         })
     }
-    
+
     /// Generate recommendations based on test results
     fn generate_recommendations(
         &self,
@@ -268,7 +268,7 @@ impl ValidationIntegrationTester {
         success_rate: f64,
     ) -> Vec<String> {
         let mut recommendations = Vec::new();
-        
+
         if success_rate >= 0.90 {
             recommendations.push("Validation engine ready for production deployment".to_string());
         } else if success_rate >= 0.80 {
@@ -276,12 +276,12 @@ impl ValidationIntegrationTester {
         } else {
             recommendations.push("Validation engine needs additional optimization".to_string());
         }
-        
+
         // Check for specific performance characteristics
         let avg_duration: f64 = results.iter()
             .map(|r| r.duration_ms as f64)
             .sum::<f64>() / results.len() as f64;
-        
+
         if avg_duration < 5000.0 {
             recommendations.push("Excellent performance: sub-5 second response times".to_string());
         } else if avg_duration < 10000.0 {
@@ -289,16 +289,16 @@ impl ValidationIntegrationTester {
         } else {
             recommendations.push("Performance optimization recommended".to_string());
         }
-        
+
         // Check validation findings
         let avg_findings: f64 = results.iter()
             .map(|r| r.validation_findings_count as f64)
             .sum::<f64>() / results.len() as f64;
-        
+
         if avg_findings > 2.0 {
             recommendations.push("Strong validation coverage: multiple findings per analysis".to_string());
         }
-        
+
         recommendations
     }
 }
@@ -306,25 +306,25 @@ impl ValidationIntegrationTester {
 #[cfg(test)]
 mod tests {
     use super::*;
-    
+
     #[test]
     fn test_integration_test_config() {
         let config = IntegrationTestConfig::default();
         assert!(config.use_mock);
         assert_eq!(config.success_threshold, 0.80);
     }
-    
+
     #[test]
     fn test_test_scenario_inputs() {
         let tester = ValidationIntegrationTester::default();
-        
+
         let query_input = tester.generate_test_input(TestScenario::BasicQuery);
         assert!(query_input.get_str("query").unwrap().contains("product launches"));
-        
+
         let compliance_input = tester.generate_test_input(TestScenario::ComplianceCheck);
         assert!(compliance_input.get_str("query").unwrap().contains("GDPR"));
     }
-    
+
     #[tokio::test]
     async fn test_mock_integration_test() {
         let config = IntegrationTestConfig {
@@ -332,10 +332,10 @@ mod tests {
             test_scenarios: vec![TestScenario::BasicQuery],
             ..Default::default()
         };
-        
+
         let tester = ValidationIntegrationTester::new(config);
         let results = tester.run_integration_tests().await.unwrap();
-        
+
         assert!(!results.scenario_results.is_empty());
         assert!(results.success_rate > 0.0);
     }
@@ -345,31 +345,31 @@ mod tests {
 #[cfg(test)]
 mod deepseek_validation_tests {
     use super::*;
-    
+
     #[tokio::test]
     async fn test_validation_engine_creation() {
         let engine = DeepSeekValidationEngine::new().unwrap();
         // Engine should be created successfully
         assert!(true); // Placeholder - actual validation would test engine properties
     }
-    
+
     #[test]
     fn test_validation_config_options() {
         let rigorous_config = DeepSeekValidationConfig::rigorous();
         assert!(rigorous_config.enable_statistical_testing);
         assert!(rigorous_config.enable_compliance_validation);
-        
+
         let perf_config = DeepSeekValidationConfig::performance();
         assert!(!perf_config.enable_statistical_testing);
         assert!(perf_config.enable_compliance_validation);
     }
-    
+
     #[test]
     fn test_validation_executor_configs() {
         let enterprise_config = ValidationExecutorConfig::enterprise();
         assert_eq!(enterprise_config.validation_level, ValidationLevel::Rigorous);
         assert!(enterprise_config.validate_protocols.contains(&"proofguard".to_string()));
-        
+
         let research_config = ValidationExecutorConfig::research();
         assert_eq!(research_config.validation_level, ValidationLevel::Paranoid);
         assert!(research_config.validate_protocols.contains(&"gigathink".to_string()));

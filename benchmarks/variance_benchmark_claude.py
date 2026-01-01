@@ -11,17 +11,17 @@ Usage:
   python3 variance_benchmark_claude.py --quick  # 5 runs, 3 questions
 """
 
-import subprocess
-import json
-import time
-import statistics
 import argparse
+import json
+import re
+import statistics
+import subprocess
+import time
+from collections import Counter
+from dataclasses import asdict, dataclass
 from datetime import datetime, timezone
 from pathlib import Path
-from dataclasses import dataclass, asdict
-from collections import Counter
 from typing import Optional
-import re
 
 # ============================================================================
 # TEST QUESTIONS
@@ -33,71 +33,71 @@ VARIANCE_TEST_QUESTIONS = [
         "category": "math",
         "question": "If a train travels at 60 mph for 2.5 hours, how many miles does it travel?",
         "expected_answer": "150",
-        "answer_type": "numeric"
+        "answer_type": "numeric",
     },
     {
         "id": "math_002",
         "category": "math",
         "question": "A store sells apples for $0.75 each. If you buy 8 apples and pay with a $10 bill, how much change do you receive?",
         "expected_answer": "4",
-        "answer_type": "numeric"
+        "answer_type": "numeric",
     },
     {
         "id": "math_003",
         "category": "math",
         "question": "What is 15% of 240?",
         "expected_answer": "36",
-        "answer_type": "numeric"
+        "answer_type": "numeric",
     },
     {
         "id": "logic_001",
         "category": "logic",
         "question": "All roses are flowers. Some flowers fade quickly. Can we conclude that some roses fade quickly? Answer yes, no, or unknown.",
         "expected_answer": "no",
-        "answer_type": "boolean"
+        "answer_type": "boolean",
     },
     {
         "id": "logic_002",
         "category": "logic",
         "question": "If it rains, the ground gets wet. The ground is wet. Did it rain? Answer yes, no, or unknown.",
         "expected_answer": "unknown",
-        "answer_type": "categorical"
+        "answer_type": "categorical",
     },
     {
         "id": "fact_001",
         "category": "factual",
         "question": "What is the chemical symbol for gold?",
         "expected_answer": "Au",
-        "answer_type": "text"
+        "answer_type": "text",
     },
     {
         "id": "fact_002",
         "category": "factual",
         "question": "How many planets are in our solar system?",
         "expected_answer": "8",
-        "answer_type": "numeric"
+        "answer_type": "numeric",
     },
     {
         "id": "decision_001",
         "category": "decision",
         "question": "A company has $100,000 to invest. Option A offers 5% guaranteed return. Option B offers 50% chance of 15% return, 50% chance of -5% return. Which is the safer choice? Answer A or B.",
         "expected_answer": "A",
-        "answer_type": "categorical"
+        "answer_type": "categorical",
     },
     {
         "id": "decision_002",
         "category": "decision",
         "question": "For a critical medical diagnosis system, should you prioritize minimizing false negatives or false positives?",
         "expected_answer": "false negatives",
-        "answer_type": "categorical"
+        "answer_type": "categorical",
     },
     {
         "id": "complex_001",
         "category": "complex",
         "question": "In a room of 23 people, what is the approximate probability that at least two share a birthday? Answer: above 50%, below 50%, or exactly 50%?",
         "expected_answer": "above 50%",
-        "answer_type": "categorical"
-    }
+        "answer_type": "categorical",
+    },
 ]
 
 # ============================================================================
@@ -143,6 +143,7 @@ Begin your structured analysis:"""
 # DATA STRUCTURES
 # ============================================================================
 
+
 @dataclass
 class QuestionVarianceResult:
     question_id: str
@@ -185,6 +186,7 @@ class BenchmarkSummary:
 # CLAUDE CLI INTERFACE
 # ============================================================================
 
+
 def query_claude(prompt: str, timeout: int = 120) -> tuple[str, float]:
     """
     Query Claude using the claude CLI.
@@ -197,7 +199,7 @@ def query_claude(prompt: str, timeout: int = 120) -> tuple[str, float]:
             ["claude", "-p", prompt, "--output-format", "text"],
             capture_output=True,
             text=True,
-            timeout=timeout
+            timeout=timeout,
         )
         latency_ms = (time.perf_counter() - start) * 1000
 
@@ -219,6 +221,7 @@ def query_claude(prompt: str, timeout: int = 120) -> tuple[str, float]:
 # PARSING AND METRICS
 # ============================================================================
 
+
 def parse_answer(raw_output: str, answer_type: str) -> str:
     output = raw_output.strip()
 
@@ -228,7 +231,7 @@ def parse_answer(raw_output: str, answer_type: str) -> str:
             output = parts[1].strip()
 
     if answer_type == "numeric":
-        numbers = re.findall(r'-?\d+\.?\d*', output)
+        numbers = re.findall(r"-?\d+\.?\d*", output)
         if numbers:
             num = float(numbers[0])
             if num == int(num):
@@ -247,7 +250,7 @@ def parse_answer(raw_output: str, answer_type: str) -> str:
         return output_lower.strip()[:50]
 
     elif answer_type == "categorical":
-        first_line = output.split('\n')[0]
+        first_line = output.split("\n")[0]
         return first_line.lower().strip()[:100]
 
     else:
@@ -279,12 +282,10 @@ def check_correct(parsed_answer: str, expected: str, answer_type: str) -> bool:
 # BENCHMARK EXECUTION
 # ============================================================================
 
-def run_variance_test(
-    question_data: dict,
-    n_runs: int = 10,
-    verbose: bool = True
-) -> QuestionVarianceResult:
 
+def run_variance_test(
+    question_data: dict, n_runs: int = 10, verbose: bool = True
+) -> QuestionVarianceResult:
     question = question_data["question"]
     question_id = question_data["id"]
     category = question_data["category"]
@@ -325,8 +326,17 @@ def run_variance_test(
     raw_most_common = raw_counter.most_common(1)[0] if raw_results else ("", 0)
     structured_most_common = structured_counter.most_common(1)[0] if structured_results else ("", 0)
 
-    raw_correct = sum(1 for a in raw_results if check_correct(a, expected, answer_type)) / len(raw_results) if raw_results else 0
-    structured_correct = sum(1 for a in structured_results if check_correct(a, expected, answer_type)) / len(structured_results) if structured_results else 0
+    raw_correct = (
+        sum(1 for a in raw_results if check_correct(a, expected, answer_type)) / len(raw_results)
+        if raw_results
+        else 0
+    )
+    structured_correct = (
+        sum(1 for a in structured_results if check_correct(a, expected, answer_type))
+        / len(structured_results)
+        if structured_results
+        else 0
+    )
 
     raw_unique = len(set(raw_results))
     structured_unique = len(set(structured_results))
@@ -357,16 +367,13 @@ def run_variance_test(
         structured_most_common_count=structured_most_common[1],
         structured_correct_rate=structured_correct,
         agreement_improvement=agreement_improvement,
-        variance_reduction_pct=variance_reduction
+        variance_reduction_pct=variance_reduction,
     )
 
 
 def run_full_benchmark(
-    n_runs: int = 10,
-    questions: Optional[list] = None,
-    verbose: bool = True
+    n_runs: int = 10, questions: Optional[list] = None, verbose: bool = True
 ) -> BenchmarkSummary:
-
     if questions is None:
         questions = VARIANCE_TEST_QUESTIONS
 
@@ -398,9 +405,13 @@ def run_full_benchmark(
         by_category[cat] = {
             "n_questions": len(cat_results),
             "mean_raw_agreement": statistics.mean(r.raw_agreement_rate for r in cat_results),
-            "mean_structured_agreement": statistics.mean(r.structured_agreement_rate for r in cat_results),
+            "mean_structured_agreement": statistics.mean(
+                r.structured_agreement_rate for r in cat_results
+            ),
             "mean_improvement": statistics.mean(r.agreement_improvement for r in cat_results),
-            "mean_variance_reduction": statistics.mean(r.variance_reduction_pct for r in cat_results)
+            "mean_variance_reduction": statistics.mean(
+                r.variance_reduction_pct for r in cat_results
+            ),
         }
 
     return BenchmarkSummary(
@@ -414,7 +425,7 @@ def run_full_benchmark(
         mean_agreement_improvement=mean_improvement,
         mean_variance_reduction_pct=mean_variance_reduction,
         by_category=by_category,
-        question_results=[asdict(r) for r in results]
+        question_results=[asdict(r) for r in results],
     )
 
 
@@ -435,7 +446,7 @@ def print_summary(summary: BenchmarkSummary):
     struct_pct = summary.mean_structured_agreement_rate * 100
     improvement = summary.mean_agreement_improvement * 100
 
-    print(f"\nMean Agreement Rate (TARa):")
+    print("\nMean Agreement Rate (TARa):")
     print(f"  Raw prompts:        {raw_pct:.1f}%")
     print(f"  Structured prompts: {struct_pct:.1f}%")
     print(f"  Improvement:        +{improvement:.1f} percentage points")
@@ -445,12 +456,14 @@ def print_summary(summary: BenchmarkSummary):
     raw_inconsistency = (1 - summary.mean_raw_agreement_rate) * 100
     structured_inconsistency = (1 - summary.mean_structured_agreement_rate) * 100
 
-    print(f"\nInconsistency Rate:")
+    print("\nInconsistency Rate:")
     print(f"  Raw prompts:        {raw_inconsistency:.1f}% inconsistent")
     print(f"  Structured prompts: {structured_inconsistency:.1f}% inconsistent")
 
     if raw_inconsistency > 0:
-        relative_reduction = ((raw_inconsistency - structured_inconsistency) / raw_inconsistency) * 100
+        relative_reduction = (
+            (raw_inconsistency - structured_inconsistency) / raw_inconsistency
+        ) * 100
         print(f"  Relative reduction: {relative_reduction:.1f}%")
 
     print("\n" + "-" * 70)
@@ -550,27 +563,22 @@ Structured prompting reduced output inconsistency from **{raw_inconsistency:.1f}
 # MAIN
 # ============================================================================
 
+
 def main():
     parser = argparse.ArgumentParser(description="ReasonKit Variance Benchmark (Claude CLI)")
-    parser.add_argument("--runs", "-n", type=int, default=10,
-                       help="Runs per question (default: 10)")
-    parser.add_argument("--output-dir", "-o", type=str, default="results",
-                       help="Output directory")
-    parser.add_argument("--quick", action="store_true",
-                       help="Quick test (5 runs, 3 questions)")
-    parser.add_argument("--quiet", "-q", action="store_true",
-                       help="Suppress verbose output")
+    parser.add_argument(
+        "--runs", "-n", type=int, default=10, help="Runs per question (default: 10)"
+    )
+    parser.add_argument("--output-dir", "-o", type=str, default="results", help="Output directory")
+    parser.add_argument("--quick", action="store_true", help="Quick test (5 runs, 3 questions)")
+    parser.add_argument("--quiet", "-q", action="store_true", help="Suppress verbose output")
 
     args = parser.parse_args()
 
     n_runs = 5 if args.quick else args.runs
     questions = VARIANCE_TEST_QUESTIONS[:3] if args.quick else VARIANCE_TEST_QUESTIONS
 
-    summary = run_full_benchmark(
-        n_runs=n_runs,
-        questions=questions,
-        verbose=not args.quiet
-    )
+    summary = run_full_benchmark(n_runs=n_runs, questions=questions, verbose=not args.quiet)
 
     print_summary(summary)
     save_results(summary, Path(args.output_dir))

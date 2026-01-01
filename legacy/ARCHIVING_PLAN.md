@@ -20,7 +20,7 @@ The `legacy/` directory contains archived code from earlier development iteratio
 
 **Status:** ✅ ARCHIVED  
 **Date Archived:** Pre-2025  
-**Reason:** Replaced by current reasonkit-core architecture
+**Reason:** Replaced by current ReasonKit-core architecture
 
 **Contents:**
 
@@ -34,7 +34,7 @@ The `legacy/` directory contains archived code from earlier development iteratio
 
 **Status:** ✅ ARCHIVED  
 **Date Archived:** Pre-2025  
-**Reason:** Replaced by current reasonkit-core implementation
+**Reason:** Replaced by current ReasonKit-core implementation
 
 **Contents:**
 
@@ -58,6 +58,7 @@ The `legacy/` directory contains archived code from earlier development iteratio
 1. **Do NOT modify** files in `legacy/` directory
 2. **Do NOT reference** legacy code in new implementations
 3. **Use git history** to access archived code if needed:
+
    ```bash
    git log --all --full-history -- legacy/
    git show <commit>:reasonkit-core/legacy/arf-platform/arf-core/src/lib.rs

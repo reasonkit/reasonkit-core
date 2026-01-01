@@ -1,11 +1,11 @@
 //! # Universal Agent Integration Framework
-//! 
+//!
 //! Makes ReasonKit universally compatible with all major AI agent frameworks
 //! by leveraging MiniMax M2's cross-platform capabilities.
 //!
 //! ## Supported Frameworks
 //! - **Claude Code**: JSON-formatted outputs with confidence scoring
-//! - **Cline**: Structured logical analysis with fallacy detection  
+//! - **Cline**: Structured logical analysis with fallacy detection
 //! - **Kilo Code**: Comprehensive critique with flaw categorization
 //! - **Droid**: Android development with mobile-specific optimizations
 //! - **Roo Code**: Multi-agent collaboration with protocol delegation
@@ -127,7 +127,7 @@ impl UniversalAgentFramework {
         let mut protocol_engine = self.protocol_engine.write().await;
 
         let mut results = Vec::new();
-        
+
         for framework in FrameworkType::all() {
             if let Some(adapter) = registry.get_adapter(framework).await? {
                 let benchmark_result = adapter.benchmark_performance().await?;
@@ -147,7 +147,7 @@ mod tests {
     #[tokio::test]
     async fn test_universal_framework_initialization() {
         let framework = UniversalAgentFramework::new().await.unwrap();
-        
+
         // Test that all core components are initialized
         assert!(framework.registry.read().await.is_initialized());
         assert!(framework.protocol_engine.read().await.is_initialized());
@@ -157,14 +157,14 @@ mod tests {
     #[tokio::test]
     async fn test_protocol_processing() {
         let framework = UniversalAgentFramework::new().await.unwrap();
-        
+
         // Create a test protocol
         let executor = ThinkToolExecutor::new();
         let protocol = executor.create_test_protocol("Test query").await.unwrap();
-        
+
         // Process through universal framework
         let result = framework.process_protocol(&protocol, None).await.unwrap();
-        
+
         assert!(result.confidence_score > 0.8);
         assert!(result.processing_time_ms < 100);
     }

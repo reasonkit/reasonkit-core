@@ -73,4 +73,4 @@ Structured prompting reduced output inconsistency from **4.0%** to **2.0%** (a *
 
 ---
 
-_ReasonKit Variance Benchmark v1.0 - Claude CLI_
+*ReasonKit Variance Benchmark v1.0 - Claude CLI*

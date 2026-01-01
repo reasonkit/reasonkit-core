@@ -1,0 +1,59 @@
+{
+  "schema": "rk-agent-manifest-v1",
+  "agents": [
+    {
+      "id": "architect",
+      "name": "System Architect",
+      "description": "High-level design, governance, and decision making.",
+      "file": "roles/architect.md"
+    },
+    {
+      "id": "rust-engineer",
+      "name": "Rust Engineer",
+      "description": "High-performance Rust development, safety, and quality gates.",
+      "file": "roles/rust-engineer.md"
+    },
+    {
+      "id": "researcher",
+      "name": "Deep Researcher",
+      "description": "Triangulated research, source verification, and analysis.",
+      "file": "roles/researcher.md"
+    },
+    {
+      "id": "task-master",
+      "name": "Task Master",
+      "description": "Taskwarrior management, time tracking, and project organization.",
+      "file": "roles/task-master.md"
+    },
+    {
+      "id": "python-specialist",
+      "name": "Python Specialist",
+      "description": "Python integration, UV usage, and MCP server development.",
+      "file": "roles/python-specialist.md"
+    },
+    {
+      "id": "qa-engineer",
+      "name": "QA Engineer",
+      "description": "Enforces quality gates, testing, and benchmarking.",
+      "file": "roles/qa-engineer.md"
+    },
+    {
+      "id": "security-guardian",
+      "name": "Security Guardian",
+      "description": "SecOps, auditing, and supply chain security.",
+      "file": "roles/security-guardian.md"
+    },
+    {
+      "id": "devops-sre",
+      "name": "DevOps SRE",
+      "description": "CI/CD, deployment, and infrastructure automation.",
+      "file": "roles/devops-sre.md"
+    },
+    {
+      "id": "technical-writer",
+      "name": "Technical Writer",
+      "description": "Documentation, protocols, and knowledge management.",
+      "file": "roles/technical-writer.md"
+    }
+  ]
+}

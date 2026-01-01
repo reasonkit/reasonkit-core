@@ -252,7 +252,7 @@ mod tests {
 
 To add or modify schemas:
 
-1. Fork reasonkit-core
+1. Fork ReasonKit-core
 2. Edit schema in `schemas/thinktools/`
 3. Update version if breaking change
 4. Add validation tests
@@ -263,8 +263,8 @@ To add or modify schemas:
 
 - **Full Protocol:** `protocols/thinktools.yaml`
 - **User Guide:** `docs/THINKTOOLS_GUIDE.md`
-- **API Docs:** https://docs.rs/reasonkit-core
+- **API Docs:** <https://docs.rs/reasonkit-core>
 
 ---
 
-_ThinkTools Schemas | Apache 2.0 | https://reasonkit.sh_
+*ThinkTools Schemas | Apache 2.0 | <https://reasonkit.sh>*

@@ -12,19 +12,19 @@ use std::collections::HashMap;
 pub struct CulturalConfig {
     /// Target languages for validation
     pub target_languages: Vec<String>,
-    
+
     /// Target regions for cultural adaptation
     pub target_regions: Vec<String>,
-    
+
     /// Cultural sensitivity threshold
     pub sensitivity_threshold: f32,
-    
+
     /// Enable language translation validation
     pub enable_translation_validation: bool,
-    
+
     /// Enable cultural bias detection
     pub enable_bias_detection: bool,
-    
+
     /// Enable regional adaptation
     pub enable_regional_adaptation: bool,
 }
@@ -47,19 +47,19 @@ impl Default for CulturalConfig {
 pub struct CulturalValidationResult {
     /// Overall cultural appropriateness score
     pub cultural_score: f32,
-    
+
     /// Language-specific scores
     pub language_scores: HashMap<String, f32>,
-    
+
     /// Region-specific scores
     pub region_scores: HashMap<String, f32>,
-    
+
     /// Detected cultural issues
     pub cultural_issues: Vec<CulturalIssue>,
-    
+
     /// Cultural adaptation recommendations
     pub adaptation_recommendations: Vec<String>,
-    
+
     /// Bias detection results
     pub bias_detection: Option<BiasAnalysis>,
 }
@@ -69,16 +69,16 @@ pub struct CulturalValidationResult {
 pub struct CulturalIssue {
     /// Type of cultural issue
     pub issue_type: CulturalIssueType,
-    
+
     /// Severity level
     pub severity: CulturalSeverity,
-    
+
     /// Description of the issue
     pub description: String,
-    
+
     /// Affected language/region
     pub affected_context: String,
-    
+
     /// Suggested fix
     pub suggested_fix: String,
 }
@@ -108,13 +108,13 @@ pub enum CulturalSeverity {
 pub struct BiasAnalysis {
     /// Overall bias score (lower is better)
     pub overall_bias_score: f32,
-    
+
     /// Detected bias types
     pub bias_types: Vec<BiasType>,
-    
+
     /// Bias mitigation strategies
     pub mitigation_strategies: Vec<String>,
-    
+
     /// Bias impact assessment
     pub impact_assessment: BiasImpact,
 }
@@ -218,7 +218,7 @@ impl CulturalValidationEngine {
 
         // Initialize language databases
         engine.initialize_language_databases()?;
-        
+
         // Initialize cultural databases
         engine.initialize_cultural_databases()?;
 
@@ -301,7 +301,7 @@ impl CulturalValidationEngine {
             }
         }
 
-        let overall_score = language_scores.values().sum::<f32>() 
+        let overall_score = language_scores.values().sum::<f32>()
             / language_scores.len() as f32;
 
         Ok(LanguageAnalysis {
@@ -407,7 +407,7 @@ impl CulturalValidationEngine {
             }
         }
 
-        let overall_score = region_scores.values().sum::<f32>() 
+        let overall_score = region_scores.values().sum::<f32>()
             / region_scores.len() as f32;
 
         Ok(RegionalAnalysis {

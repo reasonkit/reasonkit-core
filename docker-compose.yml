@@ -127,8 +127,8 @@ services:
     restart: unless-stopped
 
     ports:
-      - "6333:6333"  # REST API
-      - "6334:6334"  # gRPC API
+      - "6333:6333" # REST API
+      - "6334:6334" # gRPC API
 
     networks:
       - reasonkit

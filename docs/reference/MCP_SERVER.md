@@ -137,44 +137,44 @@ echo '{"jsonrpc":"2.0","id":1,"method":"ping"}' | rk-core mcp-server
 
 ### Core Reasoning Tools (via `rk_reason`)
 
-| Tool | Description | Profile |
-|------|-------------|---------|
-| `rk_reason` | Execute structured reasoning chain | All profiles |
-| `rk_retrieve` | Semantic search across knowledge base | N/A |
-| `rk_verify` | Verify claims using Triangulation Protocol | N/A |
+| Tool          | Description                                | Profile      |
+| ------------- | ------------------------------------------ | ------------ |
+| `rk_reason`   | Execute structured reasoning chain         | All profiles |
+| `rk_retrieve` | Semantic search across knowledge base      | N/A          |
+| `rk_verify`   | Verify claims using Triangulation Protocol | N/A          |
 
 ### ThinkTool Modules
 
 The following cognitive modules can be activated via the `rk_reason` tool:
 
-| Module | Purpose | Best For |
-|--------|---------|----------|
-| **GigaThink** | Expansive creative thinking, 10+ perspectives | Brainstorming, creative problem-solving |
-| **LaserLogic** | Precision deductive reasoning, fallacy detection | Logical analysis, debugging |
-| **BedRock** | First principles decomposition | Architecture decisions, root cause analysis |
-| **ProofGuard** | Multi-source verification | Fact-checking, research validation |
-| **BrutalHonesty** | Adversarial self-critique | Code review, decision validation |
+| Module            | Purpose                                          | Best For                                    |
+| ----------------- | ------------------------------------------------ | ------------------------------------------- |
+| **GigaThink**     | Expansive creative thinking, 10+ perspectives    | Brainstorming, creative problem-solving     |
+| **LaserLogic**    | Precision deductive reasoning, fallacy detection | Logical analysis, debugging                 |
+| **BedRock**       | First principles decomposition                   | Architecture decisions, root cause analysis |
+| **ProofGuard**    | Multi-source verification                        | Fact-checking, research validation          |
+| **BrutalHonesty** | Adversarial self-critique                        | Code review, decision validation            |
 
 ### Protocol Delta Tools
 
 For source verification and citation management:
 
-| Tool | Description |
-|------|-------------|
-| `delta_anchor` | Anchor content to immutable citation ledger |
-| `delta_verify` | Verify content against anchored hash |
-| `delta_lookup` | Look up anchor by hash |
-| `delta_list_by_url` | List all anchors for a URL |
-| `delta_stats` | Get ledger statistics |
+| Tool                | Description                                 |
+| ------------------- | ------------------------------------------- |
+| `delta_anchor`      | Anchor content to immutable citation ledger |
+| `delta_verify`      | Verify content against anchored hash        |
+| `delta_lookup`      | Look up anchor by hash                      |
+| `delta_list_by_url` | List all anchors for a URL                  |
+| `delta_stats`       | Get ledger statistics                       |
 
 ### Reasoning Profiles
 
-| Profile | Modules Used | Confidence Target | Use Case |
-|---------|-------------|-------------------|----------|
-| `--quick` | GigaThink, LaserLogic | 70% | Fast answers, simple queries |
-| `--balanced` | GT, LL, BedRock, ProofGuard | 80% | General reasoning |
-| `--deep` | All 5 modules | 85% | Complex analysis |
-| `--paranoid` | All 5 + validation | 95% | High-stakes decisions |
+| Profile      | Modules Used                | Confidence Target | Use Case                     |
+| ------------ | --------------------------- | ----------------- | ---------------------------- |
+| `--quick`    | GigaThink, LaserLogic       | 70%               | Fast answers, simple queries |
+| `--balanced` | GT, LL, BedRock, ProofGuard | 80%               | General reasoning            |
+| `--deep`     | All 5 modules               | 85%               | Complex analysis             |
+| `--paranoid` | All 5 + validation          | 95%               | High-stakes decisions        |
 
 ---
 
@@ -214,11 +214,11 @@ let config = McpClientConfig {
 
 ### Environment Variables
 
-| Variable | Description | Default |
-|----------|-------------|---------|
-| `REASONKIT_LOG` | Log level (trace, debug, info, warn, error) | `info` |
-| `REASONKIT_DATA_DIR` | Data directory path | `~/.reasonkit` |
-| `REASONKIT_LEDGER_PATH` | Protocol Delta ledger path | `~/.reasonkit/proof_ledger.db` |
+| Variable                | Description                                 | Default                        |
+| ----------------------- | ------------------------------------------- | ------------------------------ |
+| `REASONKIT_LOG`         | Log level (trace, debug, info, warn, error) | `info`                         |
+| `REASONKIT_DATA_DIR`    | Data directory path                         | `~/.reasonkit`                 |
+| `REASONKIT_LEDGER_PATH` | Protocol Delta ledger path                  | `~/.reasonkit/proof_ledger.db` |
 
 ---
 
@@ -521,6 +521,7 @@ echo '{
 **Symptom**: No output when running `rk-core mcp-server`
 
 **Solutions**:
+
 1. Check if the binary exists: `which rk-core`
 2. Run with verbose logging: `REASONKIT_LOG=debug rk-core mcp-server`
 3. Verify permissions: `chmod +x $(which rk-core)`
@@ -530,6 +531,7 @@ echo '{
 **Symptom**: Client times out during connection
 
 **Solutions**:
+
 1. Increase timeout: `timeout_secs: 60`
 2. Check if server is running: `ps aux | grep rk-core`
 3. Verify stdio is not blocked by other processes
@@ -539,6 +541,7 @@ echo '{
 **Symptom**: Parse errors when communicating with server
 
 **Solutions**:
+
 1. Ensure single-line JSON (no newlines within the JSON object)
 2. Check JSON syntax: `echo '{"jsonrpc":"2.0","id":1,"method":"ping"}' | jq .`
 3. Verify server is sending newline-delimited JSON
@@ -548,6 +551,7 @@ echo '{
 **Symptom**: Error `Tool not found: <name>`
 
 **Solutions**:
+
 1. List available tools: `{"method":"tools/list"}`
 2. Check tool name spelling (case-sensitive)
 3. Verify tool is registered with server
@@ -557,6 +561,7 @@ echo '{
 **Symptom**: Server marked as unhealthy
 
 **Solutions**:
+
 1. Check server logs for errors
 2. Verify network connectivity (for HTTP transport)
 3. Increase health check timeout if needed
@@ -587,16 +592,16 @@ rk-core mcp ping
 
 ### Error Codes
 
-| Code | Name | Description |
-|------|------|-------------|
-| -32700 | Parse Error | Invalid JSON |
-| -32600 | Invalid Request | Not a valid JSON-RPC request |
-| -32601 | Method Not Found | Method does not exist |
-| -32602 | Invalid Params | Invalid method parameters |
-| -32603 | Internal Error | Server internal error |
-| -32800 | Request Cancelled | Request was cancelled |
-| -32801 | Resource Not Found | Resource does not exist |
-| -32802 | Tool Not Found | Tool does not exist |
+| Code   | Name               | Description                  |
+| ------ | ------------------ | ---------------------------- |
+| -32700 | Parse Error        | Invalid JSON                 |
+| -32600 | Invalid Request    | Not a valid JSON-RPC request |
+| -32601 | Method Not Found   | Method does not exist        |
+| -32602 | Invalid Params     | Invalid method parameters    |
+| -32603 | Internal Error     | Server internal error        |
+| -32800 | Request Cancelled  | Request was cancelled        |
+| -32801 | Resource Not Found | Resource does not exist      |
+| -32802 | Tool Not Found     | Tool does not exist          |
 | -32803 | Invalid Tool Input | Tool input validation failed |
 
 ### Getting Help

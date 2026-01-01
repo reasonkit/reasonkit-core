@@ -3,13 +3,14 @@
 **Date**: 2026-01-01
 **Status**: Complete and Tested
 **Files**:
+
 - Implementation: `src/web_interface.rs` (1,000+ lines)
 - Examples: `examples/web_adapter_integration.rs` (400+ lines)
 - Documentation: `docs/WEB_INTERFACE_TRAIT.md`
 
 ## Overview
 
-A production-ready Rust trait design that enables reasonkit-core to interface with reasonkit-web through a clean, type-safe abstraction layer.
+A production-ready Rust trait design that enables ReasonKit-core to interface with ReasonKit-web through a clean, type-safe abstraction layer.
 
 ### What Was Delivered
 
@@ -82,29 +83,34 @@ A production-ready Rust trait design that enables reasonkit-core to interface wi
 ### Method Structure
 
 #### Core Navigation (`navigate()`)
+
 - **Purpose**: Navigate to URL and return page handle
 - **Async**: Yes
 - **Returns**: PageHandle (id, url, title, is_active)
 - **Options**: timeout, wait_until, viewport, headers, user_agent, inject_js, follow_redirects
 
 #### Core Extraction (`extract_content()`)
+
 - **Purpose**: Extract structured content from page
 - **Async**: Yes
 - **Returns**: ExtractedContent (text, html, links, images, metadata, confidence)
 - **Options**: selector, extract_links, extract_images, extract_structured_data, custom_js
 
 #### Core Capture (`capture_screenshot()`)
+
 - **Purpose**: Capture page as image/PDF/document
 - **Async**: Yes
 - **Returns**: CapturedPage (format, data, mime_type, metadata)
 - **Options**: format, full_page, quality, delay_ms, execute_js, device_scale_factor
 
 #### Helper Navigation
+
 - `go_back()` - Navigate to previous page
 - `go_forward()` - Navigate to next page
 - `reload()` - Reload current page
 
 #### Helper Extraction
+
 - `execute_js()` - Run custom JavaScript, get JSON result
 - `get_text()` - Get text from CSS selector
 
@@ -206,22 +212,24 @@ All tests pass with 100% coverage of type builders and defaults.
 
 ## Performance Characteristics
 
-| Operation | Typical Time | Notes |
-|-----------|-------------|-------|
-| Navigation | 1-3s | Network dependent |
-| Content Extraction | 200-500ms | Includes DOM parsing |
-| PNG Screenshot | 300-800ms | Full page slower |
-| PDF Generation | 1-2s | Quality dependent |
-| JavaScript Execution | 50-200ms | Simple operations |
+| Operation            | Typical Time | Notes                |
+| -------------------- | ------------ | -------------------- |
+| Navigation           | 1-3s         | Network dependent    |
+| Content Extraction   | 200-500ms    | Includes DOM parsing |
+| PNG Screenshot       | 300-800ms    | Full page slower     |
+| PDF Generation       | 1-2s         | Quality dependent    |
+| JavaScript Execution | 50-200ms     | Simple operations    |
 
 ## Compatibility
 
 ### Rust Version
+
 - Minimum: 1.74 (from Cargo.toml)
 - Edition: 2021
 - Features: async-trait, thiserror, serde
 
 ### Dependencies
+
 ```
 async-trait = "0.1"        # Async trait support
 serde = "1.0"              # Serialization
@@ -229,18 +237,20 @@ serde_json = "1.0"         # JSON support
 thiserror = "1.0"          # Error handling
 ```
 
-All dependencies are already in reasonkit-core Cargo.toml.
+All dependencies are already in ReasonKit-core Cargo.toml.
 
 ## Integration Points
 
-### With reasonkit-core
+### With ReasonKit-core
 
 The trait is exported from `lib.rs`:
+
 ```rust
 pub mod web_interface;
 ```
 
 Available to all core modules:
+
 ```rust
 use reasonkit::web_interface::{
     WebBrowserAdapter, NavigateOptions, ExtractOptions,
@@ -248,9 +258,10 @@ use reasonkit::web_interface::{
 };
 ```
 
-### With reasonkit-web
+### With ReasonKit-web
 
-Implementations would be added in reasonkit-web:
+Implementations would be added in ReasonKit-web:
+
 ```rust
 // reasonkit-web/src/adapters/mcp.rs
 pub struct McpWebAdapter { ... }
@@ -327,6 +338,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 ## Next Steps for Implementation
 
 ### 1. MCP Adapter Implementation
+
 ```rust
 // reasonkit-web/src/adapters/mcp_adapter.rs
 pub struct McpWebAdapter {
@@ -341,6 +353,7 @@ impl WebBrowserAdapter for McpWebAdapter {
 ```
 
 ### 2. HTTP Adapter Implementation
+
 ```rust
 // reasonkit-web/src/adapters/http_adapter.rs
 pub struct HttpWebAdapter {
@@ -354,7 +367,8 @@ impl WebBrowserAdapter for HttpWebAdapter {
 }
 ```
 
-### 3. Integration with reasonkit-web Services
+### 3. Integration with ReasonKit-web Services
+
 ```rust
 // reasonkit-web/src/mcp/server.rs - Add tools
 impl McpServer {
@@ -366,7 +380,8 @@ impl McpServer {
 }
 ```
 
-### 4. Tests in reasonkit-core
+### 4. Tests in ReasonKit-core
+
 ```rust
 // reasonkit-core/tests/web_interface_integration.rs
 #[tokio::test]
@@ -379,36 +394,46 @@ async fn test_http_adapter_integration() { ... }
 ## Design Decisions
 
 ### 1. Async-Trait Pattern
+
 **Decision**: Use `async-trait` for all methods
 **Rationale**:
+
 - Future compatibility with async trait in std
 - Flexible for HTTP/MCP/FFI implementations
-- Consistent with reasonkit ecosystem (tokio-based)
+- Consistent with ReasonKit ecosystem (tokio-based)
 
 ### 2. Options Structs
+
 **Decision**: Use builder-pattern options instead of long parameter lists
 **Rationale**:
+
 - Extensible without breaking changes
 - Readable at call site
 - Default values work for 90% of cases
 
 ### 3. Rich Error Types
+
 **Decision**: 13 specific error variants in enum
 **Rationale**:
+
 - Type-safe error handling
 - Pattern matching in calling code
 - Clear error semantics
 
 ### 4. Separate Navigate Event Types
+
 **Decision**: NavigateWaitEvent enum instead of strings
 **Rationale**:
+
 - Compile-time correctness
 - IDE autocomplete support
 - Self-documenting
 
 ### 5. JSON for JavaScript Results
+
 **Decision**: execute_js() returns serde_json::Value
 **Rationale**:
+
 - Flexible for any JavaScript result
 - Standard JSON serialization
 - Works across all binding types (MCP, HTTP, FFI)
@@ -425,7 +450,7 @@ async fn test_http_adapter_integration() { ... }
 
 ## Conclusion
 
-This trait design provides a robust, type-safe interface for reasonkit-core to integrate with reasonkit-web's browser automation capabilities. The implementation is:
+This trait design provides a robust, type-safe interface for ReasonKit-core to integrate with ReasonKit-web's browser automation capabilities. The implementation is:
 
 - **Complete**: All required methods implemented
 - **Type-Safe**: Strong types prevent runtime errors
@@ -434,4 +459,4 @@ This trait design provides a robust, type-safe interface for reasonkit-core to i
 - **Well-Documented**: 2,000+ lines of documentation
 - **Production-Ready**: Comprehensive error handling and validation
 
-The trait is ready for immediate implementation of concrete adapters (MCP, HTTP, FFI) in reasonkit-web.
+The trait is ready for immediate implementation of concrete adapters (MCP, HTTP, FFI) in ReasonKit-web.

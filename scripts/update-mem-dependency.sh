@@ -22,7 +22,7 @@ if ! cargo search reasonkit-mem --limit 1 | grep -q "reasonkit-mem = \"${VERSION
     echo "⚠️  Warning: reasonkit-mem v${VERSION} not found on crates.io"
     echo "   Waiting 30 seconds for index update..."
     sleep 30
-    
+
     if ! cargo search reasonkit-mem --limit 1 | grep -q "reasonkit-mem = \"${VERSION}\""; then
         echo "❌ Error: reasonkit-mem v${VERSION} still not available"
         echo "   Please verify publication and wait for index update (5-10 minutes)"
@@ -94,4 +94,3 @@ fi
 echo ""
 echo "✅ All checks passed! Cargo.toml updated successfully."
 echo "   Backup saved at: ${CARGO_TOML}.bak"
-

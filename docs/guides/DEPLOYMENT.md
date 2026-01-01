@@ -29,12 +29,12 @@
 
 ### System Requirements
 
-| Component | Minimum | Recommended | Production |
-|-----------|---------|-------------|------------|
-| CPU | 2 cores | 4 cores | 8+ cores |
-| RAM | 2 GB | 4 GB | 8+ GB |
-| Storage | 10 GB SSD | 50 GB SSD | 100+ GB NVMe |
-| Network | 100 Mbps | 1 Gbps | 10 Gbps |
+| Component | Minimum   | Recommended | Production   |
+| --------- | --------- | ----------- | ------------ |
+| CPU       | 2 cores   | 4 cores     | 8+ cores     |
+| RAM       | 2 GB      | 4 GB        | 8+ GB        |
+| Storage   | 10 GB SSD | 50 GB SSD   | 100+ GB NVMe |
+| Network   | 100 Mbps  | 1 Gbps      | 10 Gbps      |
 
 ### Software Requirements
 
@@ -1018,8 +1018,8 @@ docker push ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/reasonkit/core:lat
         }
       ],
       "environment": [
-        {"name": "RUST_LOG", "value": "info"},
-        {"name": "REASONKIT_ENV", "value": "production"}
+        { "name": "RUST_LOG", "value": "info" },
+        { "name": "REASONKIT_ENV", "value": "production" }
       ],
       "secrets": [
         {
@@ -1449,42 +1449,42 @@ ReasonKit uses a layered configuration system:
 
 ### Core Environment Variables
 
-| Variable | Description | Default | Required |
-|----------|-------------|---------|----------|
-| `RUST_LOG` | Log level (trace, debug, info, warn, error) | `info` | No |
-| `REASONKIT_ENV` | Environment (development, staging, production) | `development` | No |
-| `SERVER_HOST` | Bind address | `127.0.0.1` | No |
-| `SERVER_PORT` | Listen port | `8080` | No |
-| `SERVER_WORKERS` | Worker threads | CPU count | No |
+| Variable         | Description                                    | Default       | Required |
+| ---------------- | ---------------------------------------------- | ------------- | -------- |
+| `RUST_LOG`       | Log level (trace, debug, info, warn, error)    | `info`        | No       |
+| `REASONKIT_ENV`  | Environment (development, staging, production) | `development` | No       |
+| `SERVER_HOST`    | Bind address                                   | `127.0.0.1`   | No       |
+| `SERVER_PORT`    | Listen port                                    | `8080`        | No       |
+| `SERVER_WORKERS` | Worker threads                                 | CPU count     | No       |
 
 ### LLM Provider Configuration
 
-| Variable | Description | Required |
-|----------|-------------|----------|
-| `ANTHROPIC_API_KEY` | Anthropic Claude API key | At least one |
-| `OPENAI_API_KEY` | OpenAI API key | At least one |
-| `OPENROUTER_API_KEY` | OpenRouter API key | At least one |
-| `LLM_DEFAULT_PROVIDER` | Default provider (anthropic, openai, openrouter) | No |
-| `LLM_DEFAULT_MODEL` | Default model ID | No |
-| `LLM_TEMPERATURE` | Default temperature (0.0-2.0) | No |
-| `LLM_MAX_TOKENS` | Default max tokens | No |
+| Variable               | Description                                      | Required     |
+| ---------------------- | ------------------------------------------------ | ------------ |
+| `ANTHROPIC_API_KEY`    | Anthropic Claude API key                         | At least one |
+| `OPENAI_API_KEY`       | OpenAI API key                                   | At least one |
+| `OPENROUTER_API_KEY`   | OpenRouter API key                               | At least one |
+| `LLM_DEFAULT_PROVIDER` | Default provider (anthropic, openai, openrouter) | No           |
+| `LLM_DEFAULT_MODEL`    | Default model ID                                 | No           |
+| `LLM_TEMPERATURE`      | Default temperature (0.0-2.0)                    | No           |
+| `LLM_MAX_TOKENS`       | Default max tokens                               | No           |
 
 ### Database Configuration
 
-| Variable | Description | Default |
-|----------|-------------|---------|
-| `QDRANT_URL` | Qdrant vector DB URL | `http://localhost:6333` |
-| `QDRANT_API_KEY` | Qdrant API key | None |
-| `REDIS_URL` | Redis cache URL | `redis://localhost:6379` |
+| Variable         | Description          | Default                  |
+| ---------------- | -------------------- | ------------------------ |
+| `QDRANT_URL`     | Qdrant vector DB URL | `http://localhost:6333`  |
+| `QDRANT_API_KEY` | Qdrant API key       | None                     |
+| `REDIS_URL`      | Redis cache URL      | `redis://localhost:6379` |
 
 ### Feature Flags
 
-| Variable | Description | Default |
-|----------|-------------|---------|
-| `ENABLE_METRICS` | Enable Prometheus metrics | `false` |
-| `ENABLE_TRACING` | Enable distributed tracing | `false` |
-| `ENABLE_HEALTH_CHECKS` | Enable health endpoints | `true` |
-| `ENABLE_CACHE` | Enable response caching | `true` |
+| Variable               | Description                | Default |
+| ---------------------- | -------------------------- | ------- |
+| `ENABLE_METRICS`       | Enable Prometheus metrics  | `false` |
+| `ENABLE_TRACING`       | Enable distributed tracing | `false` |
+| `ENABLE_HEALTH_CHECKS` | Enable health endpoints    | `true`  |
+| `ENABLE_CACHE`         | Enable response caching    | `true`  |
 
 ### Configuration File Example
 
@@ -1541,12 +1541,12 @@ max_request_size_mb = 50
 
 ### Endpoints
 
-| Endpoint | Method | Description | Response |
-|----------|--------|-------------|----------|
-| `/health` | GET | Basic health check | `200 OK` or `503 Service Unavailable` |
-| `/health/live` | GET | Liveness probe | `200 OK` if process is running |
-| `/health/ready` | GET | Readiness probe | `200 OK` if ready to accept traffic |
-| `/metrics` | GET | Prometheus metrics | Prometheus format |
+| Endpoint        | Method | Description        | Response                              |
+| --------------- | ------ | ------------------ | ------------------------------------- |
+| `/health`       | GET    | Basic health check | `200 OK` or `503 Service Unavailable` |
+| `/health/live`  | GET    | Liveness probe     | `200 OK` if process is running        |
+| `/health/ready` | GET    | Readiness probe    | `200 OK` if ready to accept traffic   |
+| `/metrics`      | GET    | Prometheus metrics | Prometheus format                     |
 
 ### Health Response Format
 
@@ -1620,6 +1620,7 @@ startupProbe:
 ReasonKit is designed for horizontal scaling. Each instance is stateless.
 
 **Scaling Triggers:**
+
 - CPU utilization > 70%
 - Memory utilization > 80%
 - Request latency p99 > 500ms
@@ -1665,20 +1666,22 @@ spec:
 
 For single-instance deployments:
 
-| Workload | CPU | Memory | Storage |
-|----------|-----|--------|---------|
-| Development | 2 cores | 2 GB | 10 GB |
-| Small (< 100 req/min) | 4 cores | 4 GB | 50 GB |
-| Medium (< 1000 req/min) | 8 cores | 8 GB | 100 GB |
-| Large (< 10000 req/min) | 16 cores | 16 GB | 500 GB |
+| Workload                | CPU      | Memory | Storage |
+| ----------------------- | -------- | ------ | ------- |
+| Development             | 2 cores  | 2 GB   | 10 GB   |
+| Small (< 100 req/min)   | 4 cores  | 4 GB   | 50 GB   |
+| Medium (< 1000 req/min) | 8 cores  | 8 GB   | 100 GB  |
+| Large (< 10000 req/min) | 16 cores | 16 GB  | 500 GB  |
 
 ### Database Scaling
 
 **Qdrant:**
+
 - Horizontal: Cluster mode with sharding
 - Vertical: Increase memory for larger indices
 
 **Redis:**
+
 - Horizontal: Redis Cluster for > 100GB data
 - Vertical: Increase memory for hot cache
 
@@ -1686,11 +1689,11 @@ For single-instance deployments:
 
 Design for provider rate limits:
 
-| Provider | Default Limit | Strategy |
-|----------|---------------|----------|
-| Anthropic | 60 req/min | Queue + retry |
-| OpenAI | 500 req/min | Round-robin |
-| OpenRouter | 200 req/min | Fallback |
+| Provider   | Default Limit | Strategy      |
+| ---------- | ------------- | ------------- |
+| Anthropic  | 60 req/min    | Queue + retry |
+| OpenAI     | 500 req/min   | Round-robin   |
+| OpenRouter | 200 req/min   | Fallback      |
 
 **Rate Limit Handling:**
 
@@ -1791,12 +1794,14 @@ spec:
 ### Secret Management
 
 **Never store secrets in:**
+
 - Docker images
 - ConfigMaps
 - Environment variables in manifests
 - Version control
 
 **Use:**
+
 - Kubernetes Secrets (encrypted at rest)
 - HashiCorp Vault
 - AWS Secrets Manager
@@ -1896,7 +1901,7 @@ global:
   evaluation_interval: 15s
 
 scrape_configs:
-  - job_name: 'reasonkit-core'
+  - job_name: "reasonkit-core"
     kubernetes_sd_configs:
       - role: pod
     relabel_configs:
@@ -1918,6 +1923,7 @@ scrape_configs:
 Import the ReasonKit dashboard from `monitoring/grafana/dashboards/reasonkit-overview.json` or use dashboard ID `XXXXX` from Grafana.com.
 
 **Key Panels:**
+
 - Request rate and latency (p50, p95, p99)
 - Error rate by type
 - LLM token usage and costs
@@ -2079,11 +2085,11 @@ docker run -v /tmp/heap:/tmp/heap reasonkit/core:latest \
 
 ## Version History
 
-| Version | Date | Changes |
-|---------|------|---------|
-| 1.0.0 | 2026-01-01 | Initial release |
+| Version | Date       | Changes         |
+| ------- | ---------- | --------------- |
+| 1.0.0   | 2026-01-01 | Initial release |
 
 ---
 
-*ReasonKit - Turn Prompts into Protocols*
+_ReasonKit - Turn Prompts into Protocols_
 *https://reasonkit.sh*

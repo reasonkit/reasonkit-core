@@ -1,5 +1,5 @@
 //! # Cline Adapter
-//! 
+//!
 //! Adapter for Cline framework
 //! Focus: Structured logical analysis with fallacy detection
 
@@ -98,7 +98,7 @@ impl ClineAdapter {
         }
 
         // Check for logical connectors
-        let has_connectors = structure.conclusions.iter().any(|c| 
+        let has_connectors = structure.conclusions.iter().any(|c|
             c.contains("therefore") || c.contains("thus") || c.contains("hence")
         );
         if has_connectors {
@@ -250,22 +250,22 @@ impl ClineAdapter {
     fn identify_reasoning_weaknesses(&self, structure: &LogicalStructure, fallacies: &FallacyReport) -> Vec<String> {
         let mut weaknesses = Vec::new();
         if structure.premises.len() < 2 { weaknesses.push("Insufficient premises".to_string()); }
-        if !fallacies.detected_fallacies.is_empty() { 
-            weaknesses.push(format!("{} logical fallacies detected", fallacies.detected_fallacies.len())); 
+        if !fallacies.detected_fallacies.is_empty() {
+            weaknesses.push(format!("{} logical fallacies detected", fallacies.detected_fallacies.len()));
         }
-        if structure.deductive_structure.major_premise.is_empty() { 
-            weaknesses.push("Missing major premise".to_string()); 
+        if structure.deductive_structure.major_premise.is_empty() {
+            weaknesses.push("Missing major premise".to_string());
         }
         weaknesses
     }
 
     fn suggest_improvements(&self, structure: &LogicalStructure, fallacies: &FallacyReport) -> Vec<String> {
         let mut improvements = Vec::new();
-        if structure.premises.len() < 3 { 
-            improvements.push("Add more supporting evidence".to_string()); 
+        if structure.premises.len() < 3 {
+            improvements.push("Add more supporting evidence".to_string());
         }
-        if !fallacies.detected_fallacies.is_empty() { 
-            improvements.push("Address identified logical fallacies".to_string()); 
+        if !fallacies.detected_fallacies.is_empty() {
+            improvements.push("Address identified logical fallacies".to_string());
         }
         improvements.push("Strengthen deductive reasoning structure".to_string());
         improvements
@@ -531,7 +531,7 @@ pub struct ClineResult {
 pub struct LogicalAnalyzer;
 impl LogicalAnalyzer {
     pub fn new() -> Self { Self }
-    
+
     pub async fn analyze(&self, protocol: &Protocol) -> Result<LogicalStructure> {
         // Simple logical structure extraction
         Ok(LogicalStructure {
@@ -549,7 +549,7 @@ impl LogicalAnalyzer {
 pub struct FallacyDetector;
 impl FallacyDetector {
     pub fn new() -> Self { Self }
-    
+
     pub async fn detect(&self, structure: &LogicalStructure) -> Result<FallacyReport> {
         // Simple fallacy detection
         Ok(FallacyReport {
@@ -563,7 +563,7 @@ impl FallacyDetector {
 pub struct DeductiveReasoningEngine;
 impl DeductiveReasoningEngine {
     pub fn new() -> Self { Self }
-    
+
     pub async fn enhance(&self, structure: LogicalStructure) -> Result<LogicalStructure> {
         Ok(structure) // Return enhanced structure
     }
@@ -586,7 +586,7 @@ mod tests {
             severity_level: 0,
             confidence_score: 0.0,
         };
-        
+
         assert_eq!(report.confidence_score(), 0.8);
     }
 }

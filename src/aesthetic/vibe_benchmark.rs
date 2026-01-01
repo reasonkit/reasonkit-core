@@ -4,7 +4,7 @@
 //!
 //! ## M2 Proven Benchmarks
 //! - VIBE-Web: 91.5%
-//! - VIBE-Android: 89.7%  
+//! - VIBE-Android: 89.7%
 //! - VIBE-iOS: 88.0%
 
 use super::types::*;

@@ -4,7 +4,7 @@
 
 ## Overview
 
-The reasonkit-core project uses **5 primary GitHub Actions workflows** that enforce CONS-009 quality gates and automate the entire build-test-release lifecycle.
+The ReasonKit-core project uses **5 primary GitHub Actions workflows** that enforce CONS-009 quality gates and automate the entire build-test-release lifecycle.
 
 ```
 Workflows:
@@ -355,7 +355,7 @@ cargo test test_name -- --nocapture
 - **ORCHESTRATOR.md** - Master orchestration document
 - **QA_PLAN.md** - Quality assurance plan
 - **REVIEW_PROTOCOL.md** - Code review protocol
-- **GitHub Actions Docs** - https://docs.github.com/actions
+- **GitHub Actions Docs** - <https://docs.github.com/actions>
 
 ---
 

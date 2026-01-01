@@ -571,26 +571,26 @@ export AZURE_OPENAI_DEPLOYMENT="your-deployment"
 
 ### Complete Provider Reference
 
-| Provider | Env Variable | Default Model |
-|----------|-------------|---------------|
-| Anthropic | `ANTHROPIC_API_KEY` | claude-sonnet-4-20250514 |
-| OpenAI | `OPENAI_API_KEY` | gpt-4o |
-| Google Gemini | `GOOGLE_API_KEY` | gemini-2.0-flash |
-| Vertex AI | `GOOGLE_PROJECT_ID` | gemini-2.0-flash |
-| Azure OpenAI | `AZURE_OPENAI_API_KEY` | gpt-4o |
-| AWS Bedrock | `AWS_ACCESS_KEY_ID` | anthropic.claude-sonnet-4-v1:0 |
-| xAI | `XAI_API_KEY` | grok-2 |
-| Groq | `GROQ_API_KEY` | llama-3.3-70b-versatile |
-| Mistral | `MISTRAL_API_KEY` | mistral-large-latest |
-| DeepSeek | `DEEPSEEK_API_KEY` | deepseek-chat |
-| Cohere | `COHERE_API_KEY` | command-r-plus |
-| Perplexity | `PERPLEXITY_API_KEY` | sonar-pro |
-| Cerebras | `CEREBRAS_API_KEY` | llama-3.3-70b |
-| Together AI | `TOGETHER_API_KEY` | meta-llama/Llama-3.3-70B |
-| Fireworks AI | `FIREWORKS_API_KEY` | llama-v3p3-70b-instruct |
-| Alibaba Qwen | `QWEN_API_KEY` | qwen-max |
-| Cloudflare AI | `CLOUDFLARE_API_KEY` | @cf/meta/llama-3.3-70b |
-| OpenRouter | `OPENROUTER_API_KEY` | anthropic/claude-3.5-sonnet |
+| Provider      | Env Variable           | Default Model                  |
+| ------------- | ---------------------- | ------------------------------ |
+| Anthropic     | `ANTHROPIC_API_KEY`    | claude-sonnet-4-20250514       |
+| OpenAI        | `OPENAI_API_KEY`       | gpt-4o                         |
+| Google Gemini | `GOOGLE_API_KEY`       | gemini-2.0-flash               |
+| Vertex AI     | `GOOGLE_PROJECT_ID`    | gemini-2.0-flash               |
+| Azure OpenAI  | `AZURE_OPENAI_API_KEY` | gpt-4o                         |
+| AWS Bedrock   | `AWS_ACCESS_KEY_ID`    | anthropic.claude-sonnet-4-v1:0 |
+| xAI           | `XAI_API_KEY`          | grok-2                         |
+| Groq          | `GROQ_API_KEY`         | llama-3.3-70b-versatile        |
+| Mistral       | `MISTRAL_API_KEY`      | mistral-large-latest           |
+| DeepSeek      | `DEEPSEEK_API_KEY`     | deepseek-chat                  |
+| Cohere        | `COHERE_API_KEY`       | command-r-plus                 |
+| Perplexity    | `PERPLEXITY_API_KEY`   | sonar-pro                      |
+| Cerebras      | `CEREBRAS_API_KEY`     | llama-3.3-70b                  |
+| Together AI   | `TOGETHER_API_KEY`     | meta-llama/Llama-3.3-70B       |
+| Fireworks AI  | `FIREWORKS_API_KEY`    | llama-v3p3-70b-instruct        |
+| Alibaba Qwen  | `QWEN_API_KEY`         | qwen-max                       |
+| Cloudflare AI | `CLOUDFLARE_API_KEY`   | @cf/meta/llama-3.3-70b         |
+| OpenRouter    | `OPENROUTER_API_KEY`   | anthropic/claude-3.5-sonnet    |
 
 ---
 
@@ -660,11 +660,11 @@ async fn main() -> anyhow::Result<()> {
 
 ### MCP Tools Available
 
-| Tool | Description | Arguments |
-|------|-------------|-----------|
-| `think` | Execute reasoning protocol | `query`, `profile`, `protocol` |
-| `verify` | Triangulate claims with 3+ sources | `claim`, `sources` |
-| `web` | Deep research with web + KB | `query`, `depth` |
+| Tool     | Description                        | Arguments                      |
+| -------- | ---------------------------------- | ------------------------------ |
+| `think`  | Execute reasoning protocol         | `query`, `profile`, `protocol` |
+| `verify` | Triangulate claims with 3+ sources | `claim`, `sources`             |
+| `web`    | Deep research with web + KB        | `query`, `depth`               |
 
 ---
 
@@ -1023,7 +1023,7 @@ CMD ["rk-core", "serve", "--host", "0.0.0.0", "--port", "8080"]
 
 ```yaml
 # docker-compose.yml
-version: '3.8'
+version: "3.8"
 
 services:
   reasonkit:
@@ -1069,37 +1069,37 @@ spec:
         app: reasonkit
     spec:
       containers:
-      - name: reasonkit
-        image: reasonkit/reasonkit-core:latest
-        ports:
-        - containerPort: 8080
-        env:
-        - name: ANTHROPIC_API_KEY
-          valueFrom:
-            secretKeyRef:
-              name: reasonkit-secrets
-              key: anthropic-api-key
-        - name: RUST_LOG
-          value: "info"
-        resources:
-          requests:
-            memory: "256Mi"
-            cpu: "100m"
-          limits:
-            memory: "1Gi"
-            cpu: "1000m"
-        livenessProbe:
-          httpGet:
-            path: /health
-            port: 8080
-          initialDelaySeconds: 10
-          periodSeconds: 30
-        readinessProbe:
-          httpGet:
-            path: /ready
-            port: 8080
-          initialDelaySeconds: 5
-          periodSeconds: 10
+        - name: reasonkit
+          image: reasonkit/reasonkit-core:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: ANTHROPIC_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: reasonkit-secrets
+                  key: anthropic-api-key
+            - name: RUST_LOG
+              value: "info"
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "100m"
+            limits:
+              memory: "1Gi"
+              cpu: "1000m"
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
 ---
 apiVersion: v1
 kind: Service
@@ -1109,22 +1109,22 @@ spec:
   selector:
     app: reasonkit
   ports:
-  - port: 80
-    targetPort: 8080
+    - port: 80
+      targetPort: 8080
   type: LoadBalancer
 ```
 
 ### Environment Variables Reference
 
-| Variable | Description | Default |
-|----------|-------------|---------|
-| `REASONKIT_DATA_DIR` | Data directory path | `./data` |
-| `REASONKIT_CONFIG` | Config file path | None |
-| `RUST_LOG` | Log level | `warn` |
-| `ANTHROPIC_API_KEY` | Anthropic API key | None |
-| `OPENAI_API_KEY` | OpenAI API key | None |
-| `TELEMETRY_ENABLED` | Enable telemetry | `true` |
-| `TELEMETRY_DB_PATH` | Telemetry DB path | `.rk_telemetry.db` |
+| Variable             | Description         | Default            |
+| -------------------- | ------------------- | ------------------ |
+| `REASONKIT_DATA_DIR` | Data directory path | `./data`           |
+| `REASONKIT_CONFIG`   | Config file path    | None               |
+| `RUST_LOG`           | Log level           | `warn`             |
+| `ANTHROPIC_API_KEY`  | Anthropic API key   | None               |
+| `OPENAI_API_KEY`     | OpenAI API key      | None               |
+| `TELEMETRY_ENABLED`  | Enable telemetry    | `true`             |
+| `TELEMETRY_DB_PATH`  | Telemetry DB path   | `.rk_telemetry.db` |
 
 ---
 
@@ -1213,9 +1213,9 @@ RUST_LOG=trace rk-core think -vvv "Query"
 
 ## Version Compatibility
 
-| ReasonKit | Rust | Python | MCP Protocol |
-|-----------|------|--------|--------------|
-| 0.1.x | 1.74+ | 3.10+ | 1.0 |
+| ReasonKit | Rust  | Python | MCP Protocol |
+| --------- | ----- | ------ | ------------ |
+| 0.1.x     | 1.74+ | 3.10+  | 1.0          |
 
 ---
 

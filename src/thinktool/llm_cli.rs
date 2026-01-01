@@ -356,8 +356,7 @@ impl LlmCliClient {
             .map_err(Error::Io)?;
 
         if !output.status.success() {
-            return Err(Error::Io(std::io::Error::new(
-                std::io::ErrorKind::Other,
+            return Err(Error::Io(std::io::Error::other(
                 String::from_utf8_lossy(&output.stderr).to_string(),
             )));
         }
@@ -386,8 +385,7 @@ impl LlmCliClient {
         let output = cmd.output().map_err(Error::Io)?;
 
         if !output.status.success() {
-            return Err(Error::Io(std::io::Error::new(
-                std::io::ErrorKind::Other,
+            return Err(Error::Io(std::io::Error::other(
                 String::from_utf8_lossy(&output.stderr).to_string(),
             )));
         }
@@ -429,8 +427,7 @@ impl LlmCliClient {
         let output = cmd.output().map_err(Error::Io)?;
 
         if !output.status.success() {
-            return Err(Error::Io(std::io::Error::new(
-                std::io::ErrorKind::Other,
+            return Err(Error::Io(std::io::Error::other(
                 String::from_utf8_lossy(&output.stderr).to_string(),
             )));
         }
@@ -475,8 +472,7 @@ impl LlmCliClient {
         let output = cmd.output().map_err(Error::Io)?;
 
         if !output.status.success() {
-            return Err(Error::Io(std::io::Error::new(
-                std::io::ErrorKind::Other,
+            return Err(Error::Io(std::io::Error::other(
                 String::from_utf8_lossy(&output.stderr).to_string(),
             )));
         }
@@ -532,8 +528,7 @@ impl LlmCliClient {
         let output = cmd.output().map_err(Error::Io)?;
 
         if !output.status.success() {
-            return Err(Error::Io(std::io::Error::new(
-                std::io::ErrorKind::Other,
+            return Err(Error::Io(std::io::Error::other(
                 String::from_utf8_lossy(&output.stderr).to_string(),
             )));
         }
@@ -560,8 +555,7 @@ impl LlmCliClient {
         let output = cmd.output().map_err(Error::Io)?;
 
         if !output.status.success() {
-            return Err(Error::Io(std::io::Error::new(
-                std::io::ErrorKind::Other,
+            return Err(Error::Io(std::io::Error::other(
                 String::from_utf8_lossy(&output.stderr).to_string(),
             )));
         }
@@ -640,8 +634,7 @@ impl LlmCliClient {
         let output = cmd.output().map_err(Error::Io)?;
 
         if !output.status.success() {
-            return Err(Error::Io(std::io::Error::new(
-                std::io::ErrorKind::Other,
+            return Err(Error::Io(std::io::Error::other(
                 String::from_utf8_lossy(&output.stderr).to_string(),
             )));
         }

@@ -1,5 +1,5 @@
 //! # Roo Code Adapter
-//! 
+//!
 //! Adapter for Roo Code framework
 //! Focus: Multi-agent collaboration with protocol delegation
 
@@ -427,7 +427,7 @@ mod tests {
             delegations: vec![],
             coordination_strategy: "test".to_string(),
         };
-        
+
         assert!(plan.workflow.is_parallel);
     }
 }

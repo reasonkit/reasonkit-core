@@ -43,17 +43,17 @@
 | **Philosophy**  | "Designed, Not Dreamed" / "High Logic > Lost Hopes"   |
 | **Positioning** | "Structure Beats Intelligence"                        |
 | **Technical**   | "Auditable Reasoning by Default"                      |
-| **Website**     | https://reasonkit.sh                                  |
+| **Website**     | <https://reasonkit.sh>                                  |
 | **Mission**     | Make AI reasoning structured, auditable, and reliable |
 
 ### Product Ecosystem
 
 | Project            | License     | Purpose                         | Status |
 | ------------------ | ----------- | ------------------------------- | ------ |
-| **reasonkit-core** | Apache 2.0  | Structured reasoning engine     | OSS    |
-| **reasonkit-mem**  | Apache 2.0  | Memory/vector layer (optional)  | OSS    |
-| **reasonkit-web**  | Apache 2.0  | Web sensing MCP sidecar         | OSS    |
-| **reasonkit-pro**  | Proprietary | Advanced ThinkTools, enterprise | Paid   |
+| **ReasonKit-core** | Apache 2.0  | Structured reasoning engine     | OSS    |
+| **ReasonKit-mem**  | Apache 2.0  | Memory/vector layer (optional)  | OSS    |
+| **ReasonKit-web**  | Apache 2.0  | Web sensing MCP sidecar         | OSS    |
+| **ReasonKit-pro**  | Proprietary | Advanced ThinkTools, enterprise | Paid   |
 
 ---
 
@@ -280,7 +280,7 @@ reasonkit-core/brand/                    # CANONICAL ASSET LOCATION
 
 ## Touchpoint-Specific Guidelines
 
-### 1. Website (reasonkit.sh)
+### 1. Website (ReasonKit.sh)
 
 **Primary touchpoint for users discovering ReasonKit.**
 
@@ -301,7 +301,7 @@ reasonkit-core/brand/                    # CANONICAL ASSET LOCATION
 /og-image.png
 ```
 
-### 2. README.md (reasonkit-core)
+### 2. README.md (ReasonKit-core)
 
 **Primary touchpoint for developers on GitHub.**
 
@@ -320,7 +320,7 @@ reasonkit-core/brand/                    # CANONICAL ASSET LOCATION
 ![Description](./brand/readme/filename.png)
 ```
 
-### 3. Other OSS READMEs (reasonkit-mem, reasonkit-web)
+### 3. Other OSS READMEs (ReasonKit-mem, ReasonKit-web)
 
 Copy relevant assets to each project's `assets/` directory:
 
@@ -436,7 +436,7 @@ Competitive: "Structure Beats Intelligence"
 
 | Version | Date       | Changes                                                                                                                                                                   |
 | ------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 1.0.0   | 2025-12-31 | Initial BRAND_PLAYBOOK.md - Consolidated all brand assets into reasonkit-core/brand/, created comprehensive AI agent instructions, defined touchpoint-specific guidelines |
+| 1.0.0   | 2025-12-31 | Initial BRAND_PLAYBOOK.md - Consolidated all brand assets into ReasonKit-core/brand/, created comprehensive AI agent instructions, defined touchpoint-specific guidelines |
 
 ---
 
@@ -455,4 +455,4 @@ All AI agents, projects, documentation, and marketing materials MUST:
 
 ---
 
-_"Designed, Not Dreamed" | https://reasonkit.sh_
+*"Designed, Not Dreamed" | <https://reasonkit.sh>*

@@ -1,4 +1,4 @@
-# Crates.io Validation Report for reasonkit-core
+# Crates.io Validation Report for ReasonKit-core
 
 **Date:** 2025-12-30
 **Status:** ❌ NOT READY
@@ -25,9 +25,11 @@ The crate fails to compile with over 200 errors. Major issues include:
 ### 2. Dependency Issues
 
 - **Path Dependency**: `reasonkit-mem` is defined as a path dependency:
+
   ```toml
   reasonkit-mem = { version = "0.1.0", path = "../reasonkit-mem", optional = true }
   ```
+
   Crates.io does not support path dependencies. This must be removed or `reasonkit-mem` must be published first and the path dependency removed from the published version.
 
 ### 3. Untracked Files
@@ -36,11 +38,11 @@ Many source files in `src/vibe/` and `src/code_intelligence/` are untracked in g
 
 ## Recommendations
 
-1.  **Fix Compilation Errors**: Address all compilation errors in `vibe` and `code_intelligence` modules.
-2.  **Feature Gating**: Ensure experimental modules like `code_intelligence` are properly gated behind feature flags and disabled by default if they are not stable.
-3.  **Dependency Management**: Prepare `reasonkit-mem` for publication or remove the dependency if it's not ready.
-4.  **Testing**: Run `cargo test` and ensure all tests pass. Currently, the build fails, so tests cannot run.
-5.  **Documentation**: Ensure all public items have documentation (`#![warn(missing_docs)]` is currently allowed, but should be warned for release).
+1. **Fix Compilation Errors**: Address all compilation errors in `vibe` and `code_intelligence` modules.
+2. **Feature Gating**: Ensure experimental modules like `code_intelligence` are properly gated behind feature flags and disabled by default if they are not stable.
+3. **Dependency Management**: Prepare `reasonkit-mem` for publication or remove the dependency if it's not ready.
+4. **Testing**: Run `cargo test` and ensure all tests pass. Currently, the build fails, so tests cannot run.
+5. **Documentation**: Ensure all public items have documentation (`#![warn(missing_docs)]` is currently allowed, but should be warned for release).
 
 ## Action Taken
 

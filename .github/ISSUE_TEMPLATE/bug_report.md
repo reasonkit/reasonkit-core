@@ -9,7 +9,7 @@ assignees: ""
 ## Pre-Submission Checklist
 
 - [ ] I have searched existing issues to ensure this bug has not already been reported
-- [ ] I have updated to the latest version of reasonkit-core
+- [ ] I have updated to the latest version of ReasonKit-core
 - [ ] I can provide steps to reproduce this bug
 
 ---

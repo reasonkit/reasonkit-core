@@ -193,24 +193,33 @@ grep -r "TODO\|FIXME\|XXX" src/
 
 1. **Pick an issue or quick win** from above
 2. **Create a branch:**
+
    ```bash
    git checkout -b fix/your-change-description
    ```
+
 3. **Make your changes**
 4. **Format and lint:**
+
    ```bash
    cargo fmt
    cargo clippy -- -D warnings
    ```
+
 5. **Run tests:**
+
    ```bash
    cargo test
    ```
+
 6. **Commit:**
+
    ```bash
    git commit -m "docs: fix typo in README.md"
    ```
+
 7. **Push and create PR:**
+
    ```bash
    git push origin fix/your-change-description
    ```
@@ -391,7 +400,7 @@ reasonkit-core/
 
 **Happy Hacking! 🎃**
 
-_Turn Prompts into Protocols. Make AI reasoning structured, auditable, and reliable._
+*Turn Prompts into Protocols. Make AI reasoning structured, auditable, and reliable.*
 
 ---
 

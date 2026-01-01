@@ -1,6 +1,6 @@
 # ReasonKit Core - Benchmarks
 
-This directory contains the Criterion.rs benchmark suite for reasonkit-core.
+This directory contains the Criterion.rs benchmark suite for ReasonKit-core.
 
 ## Performance Target
 
@@ -205,11 +205,13 @@ criterion_main!(benches);
 
 1. Create new file: `benches/my_bench.rs`
 2. Add to `Cargo.toml`:
+
    ```toml
    [[bench]]
    name = "my_bench"
    harness = false
    ```
+
 3. Implement benchmark using template above
 4. Run: `cargo bench --bench my_bench`
 5. Update documentation

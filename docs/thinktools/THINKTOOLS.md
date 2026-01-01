@@ -35,13 +35,13 @@ A ThinkTool is a structured reasoning protocol that:
 
 ### Why ThinkTools?
 
-| Problem with Raw Prompting | ThinkTool Solution |
-|---|---|
-| Inconsistent reasoning quality | Structured, reproducible protocols |
-| No confidence calibration | Evidence-based confidence scoring |
-| Difficult to audit decisions | Full execution trace and provenance |
-| Single perspective blindness | Multi-dimensional analysis |
-| Hidden assumptions | Explicit assumption surfacing |
+| Problem with Raw Prompting     | ThinkTool Solution                  |
+| ------------------------------ | ----------------------------------- |
+| Inconsistent reasoning quality | Structured, reproducible protocols  |
+| No confidence calibration      | Evidence-based confidence scoring   |
+| Difficult to audit decisions   | Full execution trace and provenance |
+| Single perspective blindness   | Multi-dimensional analysis          |
+| Hidden assumptions             | Explicit assumption surfacing       |
 
 ### Quick Start
 
@@ -71,25 +71,25 @@ async fn main() -> anyhow::Result<()> {
 
 ## ThinkTool Family
 
-| Module | Code | Purpose | Profile |
-|--------|------|---------|---------|
-| **GigaThink** | `gt` | Expansive creative thinking, 10+ perspectives | `--creative` |
-| **LaserLogic** | `ll` | Precision deductive reasoning, fallacy detection | `--balanced` |
-| **BedRock** | `br` | First principles decomposition | `--deep` |
-| **ProofGuard** | `pg` | Multi-source verification | `--paranoid` |
-| **BrutalHonesty** | `bh` | Adversarial self-critique | `--paranoid` |
+| Module            | Code | Purpose                                          | Profile      |
+| ----------------- | ---- | ------------------------------------------------ | ------------ |
+| **GigaThink**     | `gt` | Expansive creative thinking, 10+ perspectives    | `--creative` |
+| **LaserLogic**    | `ll` | Precision deductive reasoning, fallacy detection | `--balanced` |
+| **BedRock**       | `br` | First principles decomposition                   | `--deep`     |
+| **ProofGuard**    | `pg` | Multi-source verification                        | `--paranoid` |
+| **BrutalHonesty** | `bh` | Adversarial self-critique                        | `--paranoid` |
 
 ### Confidence Weight Allocation
 
 Each ThinkTool contributes to composite confidence with calibrated weights:
 
-| Module | Weight | Rationale |
-|--------|--------|-----------|
-| ProofGuard | 0.30 | Verification-focused, highest reliability |
-| LaserLogic | 0.25 | Formal logic, high precision |
-| BedRock | 0.25 | Foundational analysis |
-| GigaThink | 0.15 | Creative expansion, lower certainty |
-| BrutalHonesty | 0.15 | Critique-focused, conservative |
+| Module        | Weight | Rationale                                 |
+| ------------- | ------ | ----------------------------------------- |
+| ProofGuard    | 0.30   | Verification-focused, highest reliability |
+| LaserLogic    | 0.25   | Formal logic, high precision              |
+| BedRock       | 0.25   | Foundational analysis                     |
+| GigaThink     | 0.15   | Creative expansion, lower certainty       |
+| BrutalHonesty | 0.15   | Critique-focused, conservative            |
 
 ---
 
@@ -109,20 +109,20 @@ GigaThink generates 10+ diverse perspectives through systematic exploration of a
 
 ### Analytical Dimensions
 
-| Dimension | Focus Area |
-|-----------|------------|
-| Economic/Financial | Costs, revenues, market forces |
-| Technological/Innovation | Enabling tech, constraints, opportunities |
-| Social/Cultural | Stakeholder interests, adoption barriers |
-| Environmental/Sustainability | Ecological impact, resource use |
-| Political/Regulatory | Regulations, policy changes |
-| Psychological/Behavioral | Cognitive biases, decision patterns |
-| Ethical/Moral | Fairness, harms, benefits |
-| Historical/Evolutionary | Precedents, patterns |
-| Competitive/Market | Competition, positioning |
-| User Experience/Adoption | Usability, friction |
-| Risk/Opportunity | Downsides, upsides |
-| Long-term/Strategic | Future impact, optionality |
+| Dimension                    | Focus Area                                |
+| ---------------------------- | ----------------------------------------- |
+| Economic/Financial           | Costs, revenues, market forces            |
+| Technological/Innovation     | Enabling tech, constraints, opportunities |
+| Social/Cultural              | Stakeholder interests, adoption barriers  |
+| Environmental/Sustainability | Ecological impact, resource use           |
+| Political/Regulatory         | Regulations, policy changes               |
+| Psychological/Behavioral     | Cognitive biases, decision patterns       |
+| Ethical/Moral                | Fairness, harms, benefits                 |
+| Historical/Evolutionary      | Precedents, patterns                      |
+| Competitive/Market           | Competition, positioning                  |
+| User Experience/Adoption     | Usability, friction                       |
+| Risk/Opportunity             | Downsides, upsides                        |
+| Long-term/Strategic          | Future impact, optionality                |
 
 ### Configuration
 
@@ -210,35 +210,35 @@ LaserLogic performs rigorous logical analysis with formal fallacy detection, arg
 
 **Formal Fallacies (Invalid Argument Structure):**
 
-| Fallacy | Pattern | Description |
-|---------|---------|-------------|
-| Affirming Consequent | P->Q, Q |- P | "If rain then wet ground. Ground is wet. Therefore it rained." |
-| Denying Antecedent | P->Q, ~P |- ~Q | "If rain then wet. No rain. Therefore not wet." |
-| Undistributed Middle | All A are B, All C are B |- All A are C | Middle term not distributed |
-| Illicit Major/Minor | Distribution errors in syllogism | Term distribution violations |
-| Four Terms | 4 terms in 3-term syllogism | Equivocation in terms |
-| Existential Fallacy | Universal -> Existential | "All unicorns are white, so some unicorn is white" |
+| Fallacy              | Pattern                          | Description                                        |
+| -------------------- | -------------------------------- | -------------------------------------------------- | -------------------------------------------------------------- |
+| Affirming Consequent | P->Q, Q                          | - P                                                | "If rain then wet ground. Ground is wet. Therefore it rained." |
+| Denying Antecedent   | P->Q, ~P                         | - ~Q                                               | "If rain then wet. No rain. Therefore not wet."                |
+| Undistributed Middle | All A are B, All C are B         | - All A are C                                      | Middle term not distributed                                    |
+| Illicit Major/Minor  | Distribution errors in syllogism | Term distribution violations                       |
+| Four Terms           | 4 terms in 3-term syllogism      | Equivocation in terms                              |
+| Existential Fallacy  | Universal -> Existential         | "All unicorns are white, so some unicorn is white" |
 
 **Semi-Formal and Causal Fallacies:**
 
-| Fallacy | Description |
-|---------|-------------|
-| Circular Reasoning | Conclusion restated in premises |
-| Non Sequitur | Conclusion does not follow |
-| Post Hoc | Temporal sequence implies causation |
-| Slippery Slope | Unwarranted chain of consequences |
-| False Dichotomy | Only two options presented when more exist |
-| Equivocation | Same term used with different meanings |
+| Fallacy            | Description                                |
+| ------------------ | ------------------------------------------ |
+| Circular Reasoning | Conclusion restated in premises            |
+| Non Sequitur       | Conclusion does not follow                 |
+| Post Hoc           | Temporal sequence implies causation        |
+| Slippery Slope     | Unwarranted chain of consequences          |
+| False Dichotomy    | Only two options presented when more exist |
+| Equivocation       | Same term used with different meanings     |
 
 ### Argument Forms Recognized
 
-| Form | Pattern | Example |
-|------|---------|---------|
-| Modus Ponens | P->Q, P |- Q | "If rain, ground wet. It rains. Therefore, wet." |
-| Modus Tollens | P->Q, ~Q |- ~P | "If rain, wet. Not wet. Therefore, no rain." |
-| Hypothetical Syllogism | P->Q, Q->R |- P->R | Chain reasoning |
-| Disjunctive Syllogism | P v Q, ~P |- Q | Process of elimination |
-| Categorical Syllogism | All M are P, All S are M |- All S are P | Term-based reasoning |
+| Form                   | Pattern                  | Example       |
+| ---------------------- | ------------------------ | ------------- | ------------------------------------------------ |
+| Modus Ponens           | P->Q, P                  | - Q           | "If rain, ground wet. It rains. Therefore, wet." |
+| Modus Tollens          | P->Q, ~Q                 | - ~P          | "If rain, wet. Not wet. Therefore, no rain."     |
+| Hypothetical Syllogism | P->Q, Q->R               | - P->R        | Chain reasoning                                  |
+| Disjunctive Syllogism  | P v Q, ~P                | - Q           | Process of elimination                           |
+| Categorical Syllogism  | All M are P, All S are M | - All S are P | Term-based reasoning                             |
 
 ### Configuration
 
@@ -336,14 +336,14 @@ BedRock reduces problems to fundamental axioms through recursive analysis, then 
 
 ### Principle Types
 
-| Type | Weight | Description | Example |
-|------|--------|-------------|---------|
-| Axiom | 1.0 | Self-evident truth | "A = A", physical laws |
-| Definition | 0.95 | Clarifying terminology | "What does X mean?" |
-| Empirical | 0.80 | Based on data/observation | Research findings |
-| Derived | 0.75 | Logically derived from axioms | Conclusions |
-| Assumption | 0.50 | Assumed for argument | Unstated premises |
-| Contested | 0.30 | Debatable claim | Opinions |
+| Type       | Weight | Description                   | Example                |
+| ---------- | ------ | ----------------------------- | ---------------------- |
+| Axiom      | 1.0    | Self-evident truth            | "A = A", physical laws |
+| Definition | 0.95   | Clarifying terminology        | "What does X mean?"    |
+| Empirical  | 0.80   | Based on data/observation     | Research findings      |
+| Derived    | 0.75   | Logically derived from axioms | Conclusions            |
+| Assumption | 0.50   | Assumed for argument          | Unstated premises      |
+| Contested  | 0.30   | Debatable claim               | Opinions               |
 
 ### Configuration
 
@@ -439,23 +439,23 @@ ProofGuard triangulates claims across 3+ independent sources to verify factual a
 
 ### Source Tiers
 
-| Tier | Weight | Examples |
-|------|--------|----------|
-| Primary (Tier 1) | 1.0 | Official docs, peer-reviewed papers, primary sources |
-| Secondary (Tier 2) | 0.7 | Reputable news, expert blogs, industry reports |
-| Independent (Tier 3) | 0.4 | Community content, forums |
-| Unverified (Tier 4) | 0.2 | Social media, unknown sources |
+| Tier                 | Weight | Examples                                             |
+| -------------------- | ------ | ---------------------------------------------------- |
+| Primary (Tier 1)     | 1.0    | Official docs, peer-reviewed papers, primary sources |
+| Secondary (Tier 2)   | 0.7    | Reputable news, expert blogs, industry reports       |
+| Independent (Tier 3) | 0.4    | Community content, forums                            |
+| Unverified (Tier 4)  | 0.2    | Social media, unknown sources                        |
 
 ### Verification Verdicts
 
-| Verdict | Description |
-|---------|-------------|
-| Verified | High confidence, 3+ supporting sources |
-| Partially Verified | Needs qualifier, mixed evidence |
-| Contested | Conflicting evidence from sources |
-| Insufficient Sources | Need more sources |
-| Refuted | Evidence contradicts claim |
-| Inconclusive | Unable to determine |
+| Verdict              | Description                            |
+| -------------------- | -------------------------------------- |
+| Verified             | High confidence, 3+ supporting sources |
+| Partially Verified   | Needs qualifier, mixed evidence        |
+| Contested            | Conflicting evidence from sources      |
+| Insufficient Sources | Need more sources                      |
+| Refuted              | Evidence contradicts claim             |
+| Inconclusive         | Unable to determine                    |
 
 ### Configuration
 
@@ -532,33 +532,33 @@ BrutalHonesty performs red-team analysis to find flaws before others do, challen
 
 ### Critique Severity Levels
 
-| Level | Skepticism Multiplier | Description |
-|-------|----------------------|-------------|
-| Gentle | 0.90 (10% reduction) | Constructive feedback focus |
-| Standard | 0.80 (20% reduction) | Balanced flaw detection |
-| Harsh | 0.65 (35% reduction) | Aggressive assumption challenging |
-| Ruthless | 0.50 (50% reduction) | No mercy, find every flaw |
+| Level    | Skepticism Multiplier | Description                       |
+| -------- | --------------------- | --------------------------------- |
+| Gentle   | 0.90 (10% reduction)  | Constructive feedback focus       |
+| Standard | 0.80 (20% reduction)  | Balanced flaw detection           |
+| Harsh    | 0.65 (35% reduction)  | Aggressive assumption challenging |
+| Ruthless | 0.50 (50% reduction)  | No mercy, find every flaw         |
 
 ### Flaw Categories
 
-| Category | Description |
-|----------|-------------|
-| Logical | Fallacy, contradiction, non-sequitur |
-| Evidential | Missing data, weak sources, cherry-picking |
-| Assumption | Unexamined premises, hidden biases |
-| Scope | Overgeneralization, false dichotomy |
-| Temporal | Recency bias, ignoring history |
-| Adversarial | Vulnerability to counter-arguments |
-| Completeness | Missing considerations, blind spots |
+| Category     | Description                                |
+| ------------ | ------------------------------------------ |
+| Logical      | Fallacy, contradiction, non-sequitur       |
+| Evidential   | Missing data, weak sources, cherry-picking |
+| Assumption   | Unexamined premises, hidden biases         |
+| Scope        | Overgeneralization, false dichotomy        |
+| Temporal     | Recency bias, ignoring history             |
+| Adversarial  | Vulnerability to counter-arguments         |
+| Completeness | Missing considerations, blind spots        |
 
 ### Flaw Severities
 
-| Severity | Confidence Penalty | Description |
-|----------|-------------------|-------------|
-| Minor | -0.02 | Worth noting but not critical |
-| Moderate | -0.08 | Should be addressed |
-| Major | -0.15 | Significantly weakens argument |
-| Critical | -0.30 | Fundamentally undermines position |
+| Severity | Confidence Penalty | Description                       |
+| -------- | ------------------ | --------------------------------- |
+| Minor    | -0.02              | Worth noting but not critical     |
+| Moderate | -0.08              | Should be addressed               |
+| Major    | -0.15              | Significantly weakens argument    |
+| Critical | -0.30              | Fundamentally undermines position |
 
 ### Configuration
 
@@ -742,15 +742,15 @@ let custom_profile = ReasoningProfile {
 
 ### Available Profiles
 
-| Profile | Modules | Min Confidence | Token Budget | Use Case |
-|---------|---------|----------------|--------------|----------|
-| `quick` | gt, ll | 70% | 3,000 | Rapid insights, time-sensitive |
-| `balanced` | gt, ll, br, pg | 80% | 8,000 | Standard analysis |
-| `deep` | gt, ll, br, pg, bh (conditional) | 85% | 12,000 | Thorough analysis |
-| `paranoid` | gt, ll, br, pg, bh, pg (2nd pass) | 95% | 18,000 | Maximum verification |
-| `decide` | ll, br, bh | 85% | 6,000 | Decision support |
-| `scientific` | gt, br, pg | 85% | 8,000 | Research, experiments |
-| `powercombo` | All 5 + validation | 95% | 25,000 | Ultimate reasoning |
+| Profile      | Modules                           | Min Confidence | Token Budget | Use Case                       |
+| ------------ | --------------------------------- | -------------- | ------------ | ------------------------------ |
+| `quick`      | gt, ll                            | 70%            | 3,000        | Rapid insights, time-sensitive |
+| `balanced`   | gt, ll, br, pg                    | 80%            | 8,000        | Standard analysis              |
+| `deep`       | gt, ll, br, pg, bh (conditional)  | 85%            | 12,000       | Thorough analysis              |
+| `paranoid`   | gt, ll, br, pg, bh, pg (2nd pass) | 95%            | 18,000       | Maximum verification           |
+| `decide`     | ll, br, bh                        | 85%            | 6,000        | Decision support               |
+| `scientific` | gt, br, pg                        | 85%            | 8,000        | Research, experiments          |
+| `powercombo` | All 5 + validation                | 95%            | 25,000       | Ultimate reasoning             |
 
 ### Profile Details
 
@@ -956,7 +956,7 @@ let (output, consistency_result) = executor.execute_with_self_consistency(
       "key_insight": "The Economic/Financial lens reveals unique factors that warrant deeper exploration.",
       "confidence": 0.76,
       "quality_score": 0.75
-    },
+    }
     // ... 10+ more perspectives
   ],
   "themes": [
@@ -972,7 +972,7 @@ let (output, consistency_result) = executor.execute_with_self_consistency(
     {
       "id": "insight_1",
       "content": "High-confidence analysis from 10 perspectives suggests actionable opportunities.",
-      "actionability": 0.80,
+      "actionability": 0.8,
       "confidence": 0.85
     }
   ],
@@ -1034,7 +1034,7 @@ let (output, consistency_result) = executor.execute_with_self_consistency(
       },
       {
         "assumption": "Use of 'best' implies unstated certainty or universality",
-        "confidence": 0.60,
+        "confidence": 0.6,
         "risk": "Assumes optimal status without comparison",
         "likely_valid": true
       }
@@ -1057,7 +1057,7 @@ let (output, consistency_result) = executor.execute_with_self_consistency(
   "metadata": {
     "input_length": 56,
     "previous_steps_count": 0,
-    "skepticism_multiplier": 0.80
+    "skepticism_multiplier": 0.8
   }
 }
 ```
@@ -1160,7 +1160,7 @@ let (output, consistency_result) = executor.execute_with_self_consistency(
       "confidence": 1.0,
       "depth": 0,
       "parent_id": null
-    },
+    }
     // ... additional principles
   ],
   "reconstruction": [
@@ -1207,5 +1207,5 @@ let (output, consistency_result) = executor.execute_with_self_consistency(
 
 ---
 
-*ReasonKit ThinkTools - Designed, Not Dreamed*
+_ReasonKit ThinkTools - Designed, Not Dreamed_
 *https://reasonkit.sh*

@@ -69,7 +69,7 @@ export DEEPSEEK_API_KEY="..."            # DeepSeek
 
 ## Default Configuration
 
-### ~/.reasonkit/config.toml
+### ~/.ReasonKit/config.toml
 
 ```toml
 # Default provider for rk-core think
@@ -230,5 +230,5 @@ rk-core metrics cost --provider anthropic
 
 ---
 
-_ReasonKit Integrations | v1.0.0 | Apache 2.0_
-_"See How Your AI Thinks"_
+*ReasonKit Integrations | v1.0.0 | Apache 2.0*
+*"See How Your AI Thinks"*

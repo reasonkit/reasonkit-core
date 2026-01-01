@@ -4,20 +4,20 @@
 
 ### **The Reasoning Engine**
 
-> _"From Prompt to Cognitive Engineering."_ -- Turn Prompts into Protocols.
+> *"From Prompt to Cognitive Engineering."* -- Turn Prompts into Protocols.
 
 **Auditable Reasoning for Production AI | Rust-Native | SSR/SSG Compatible**
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="./brand/readme/reasonkit-core_hero.svg">
-  <source media="(prefers-color-scheme: light)" srcset="./brand/readme/reasonkit-core_hero.svg">
-  <img src="./brand/readme/reasonkit-core_hero.svg" alt="ReasonKit - Auditable Reasoning for Production AI" width="100%">
+  <source media="(prefers-color-scheme: dark)" srcset="./brand/readme/reasonkit-core_hero.png">
+  <source media="(prefers-color-scheme: light)" srcset="./brand/readme/reasonkit-core_hero.png">
+  <img src="./brand/readme/reasonkit-core_hero.png" alt="ReasonKit - Auditable Reasoning for Production AI" width="100%">
 </picture>
 
 [![CI](https://img.shields.io/github/actions/workflow/status/reasonkit/reasonkit-core/ci.yml?branch=main&style=flat-square&logo=github&label=CI&color=06b6d4&logoColor=06b6d4)](https://github.com/reasonkit/reasonkit-core/actions)
 [![Crates.io](https://img.shields.io/crates/v/reasonkit-core?style=flat-square&logo=rust&color=10b981&logoColor=f9fafb)](https://crates.io/crates/reasonkit-core)
 [![Docs](https://img.shields.io/badge/docs-docs.rs-06b6d4?style=flat-square&logo=rust&logoColor=f9fafb)](https://docs.rs/reasonkit-core)
-[![License](https://img.shields.io/badge/license-Apache%202.0-a855f7?style=flat-square&labelColor=030508)](LICENSE)
+[![License](https://img.shields.io/badge/license-Apache%202.0-a855f7?style=flat-square&labelColor=030508)](https://github.com/reasonkit/reasonkit-core/blob/main/LICENSE)
 [![Architecture](https://img.shields.io/badge/stack-Rust%E2%80%A2MCP%E2%80%A2LLMs-f97316?style=flat-square&labelColor=030508)](https://reasonkit.sh)
 
 [Website](https://reasonkit.sh) | [Docs](https://docs.rs/reasonkit-core) | [GitHub](https://github.com/reasonkit/reasonkit-core)
@@ -36,6 +36,7 @@
 
 ## Jump To
 
+- [Full Documentation](./docs/README.md)
 - Quick Start and Verify
 - Hello, World (CLI + Rust)
 - Who This Is For (and Not)
@@ -123,9 +124,9 @@ Each ThinkTool acts as a **variance reduction filter**, transforming probabilist
 <div align="center">
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="./brand/readme/powercombo_process.svg">
-  <source media="(prefers-color-scheme: light)" srcset="./brand/readme/powercombo_process.svg">
-  <img src="./brand/readme/powercombo_process.svg" alt="PowerCombo Process: GigaThink (Diverge) -> LaserLogic (Converge) -> BedRock (Ground) -> ProofGuard (Verify) -> BrutalHonesty (Critique)" width="900">
+  <source media="(prefers-color-scheme: dark)" srcset="./brand/readme/powercombo_process.png">
+  <source media="(prefers-color-scheme: light)" srcset="./brand/readme/powercombo_process.png">
+  <img src="./brand/readme/powercombo_process.png" alt="PowerCombo Process: GigaThink (Diverge) -> LaserLogic (Converge) -> BedRock (Ground) -> ProofGuard (Verify) -> BrutalHonesty (Critique)" width="900">
 </picture>
 
 <sub><b>The PowerCombo Process:</b> Five cognitive operations that systematically reduce variance from raw LLM output (~85%) to protocol-constrained reasoning (~28%)</sub>
@@ -145,9 +146,9 @@ Each ThinkTool acts as a **variance reduction filter**, transforming probabilist
 <div align="center">
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="./brand/readme/chart_variance_reduction.svg">
-  <source media="(prefers-color-scheme: light)" srcset="./brand/readme/chart_variance_reduction.svg">
-  <img src="./brand/readme/chart_variance_reduction.svg" alt="Variance Reduction Concept: Each stage constrains output variance" width="800">
+  <source media="(prefers-color-scheme: dark)" srcset="./brand/readme/chart_variance_reduction.png">
+  <source media="(prefers-color-scheme: light)" srcset="./brand/readme/chart_variance_reduction.png">
+  <img src="./brand/readme/chart_variance_reduction.png" alt="Variance Reduction Concept: Each stage constrains output variance" width="800">
 </picture>
 
 <sub><b>Conceptual Model:</b> Each ThinkTool stage applies constraints that reduce output variability</sub>
@@ -199,16 +200,16 @@ rk-core think --profile paranoid "Validate this cryptographic implementation"
 <div align="center">
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="./brand/readme/terminal_mockup.svg">
-  <source media="(prefers-color-scheme: light)" srcset="./brand/readme/terminal_mockup.svg">
-  <img src="./brand/readme/terminal_mockup.svg" alt="ReasonKit Terminal showing execution trace" width="850">
+  <source media="(prefers-color-scheme: dark)" srcset="./brand/readme/terminal_mockup.png">
+  <source media="(prefers-color-scheme: light)" srcset="./brand/readme/terminal_mockup.png">
+  <img src="./brand/readme/terminal_mockup.png" alt="ReasonKit Terminal Demo" width="100%">
 </picture>
 
 <sub><b>Execution Trace:</b> Every reasoning step logged with confidence scores</sub>
 
 </div>
 
-```
+```text
 $ rk-core think --profile balanced "Should we migrate to microservices?"
 
 ThinkTool Chain: GigaThink -> LaserLogic -> BedRock -> ProofGuard
@@ -251,9 +252,9 @@ VERDICT: conditional_yes | Confidence: 87% | Duration: 2.3s
 <div align="center">
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="./brand/readme/architecture_diagram.svg">
-  <source media="(prefers-color-scheme: light)" srcset="./brand/readme/architecture_diagram.svg">
-  <img src="./brand/readme/architecture_diagram.svg" alt="ReasonKit Architecture: CLI -> Protocol Engine -> ThinkTools -> LLM Layer with SQLite trace storage" width="900">
+  <source media="(prefers-color-scheme: dark)" srcset="./brand/readme/architecture_diagram.png">
+  <source media="(prefers-color-scheme: light)" srcset="./brand/readme/architecture_diagram.png">
+  <img src="./brand/readme/architecture_diagram.png" alt="ReasonKit Architecture: CLI -> Protocol Engine -> ThinkTools -> LLM Layer with SQLite trace storage" width="900">
 </picture>
 
 <sub><b>Three-Layer Architecture:</b> Deterministic protocol engine wrapping probabilistic LLM layer with full execution tracing</sub>
@@ -347,9 +348,9 @@ rk-core trace view <id>
   "id": "trace_2025-12-31T23:59:59Z",
   "profile": "balanced",
   "steps": [
-    {"tool": "GigaThink", "status": "ok", "outputs": 10},
-    {"tool": "LaserLogic", "status": "ok", "gaps": 2},
-    {"tool": "ProofGuard", "status": "ok", "sources": 3}
+    { "tool": "GigaThink", "status": "ok", "outputs": 10 },
+    { "tool": "LaserLogic", "status": "ok", "gaps": 2 },
+    { "tool": "ProofGuard", "status": "ok", "sources": 3 }
   ],
   "confidence": 0.87
 }
@@ -403,7 +404,7 @@ ReasonKit's Rust foundation ensures deterministic, auditable execution every tim
 
 | Feature flag | Adds                      | Use When                 | Perf/Footprint Impact |
 | ------------ | ------------------------- | ------------------------ | --------------------- |
-| `memory`     | reasonkit-mem integration | You need retrieval + RAG | Higher memory/CPU     |
+| `memory`     | ReasonKit-mem integration | You need retrieval + RAG | Higher memory/CPU     |
 | `qdrant`     | Embedded Qdrant           | Local vector search      | Adds storage engine   |
 | `onnx`       | Local embeddings (BGE-M3) | Offline embeddings       | Adds ONNX runtime     |
 
@@ -537,7 +538,7 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for complete guidelines.
 
 ## License
 
-**Apache 2.0** - See [LICENSE](LICENSE)
+**Apache 2.0** - See [LICENSE](https://github.com/reasonkit/reasonkit-core/blob/main/LICENSE)
 
 **Open Source Core:** All core reasoning protocols and ThinkTools are open source under Apache 2.0.
 
@@ -546,9 +547,9 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for complete guidelines.
 <div align="center">
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="./brand/readme/designed_not_dreamed.svg">
-  <source media="(prefers-color-scheme: light)" srcset="./brand/readme/designed_not_dreamed.svg">
-  <img src="./brand/readme/designed_not_dreamed.svg" alt="ReasonKit -- Turn Prompts into Protocols | Designed, Not Dreamed" width="100%">
+  <source media="(prefers-color-scheme: dark)" srcset="./brand/readme/designed_not_dreamed.png">
+  <source media="(prefers-color-scheme: light)" srcset="./brand/readme/designed_not_dreamed.png">
+  <img src="./brand/readme/designed_not_dreamed.png" alt="ReasonKit -- Turn Prompts into Protocols | Designed, Not Dreamed" width="100%">
 </picture>
 
 [Website](https://reasonkit.sh) | [Docs](https://docs.rs/reasonkit-core) | [GitHub](https://github.com/reasonkit/reasonkit-core)

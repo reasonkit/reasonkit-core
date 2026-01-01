@@ -4,9 +4,9 @@ This prototype demonstrates how **ReasonKit** (a Rust-based verified reasoning e
 
 Unlike standard "Black Box" agents that think obscurely, this agent delegates critical reasoning steps to ReasonKit's verified `ThinkTools`, providing:
 
-1.  **Structured Reasoning**: Chains like `GigaThink` (divergent) -> `LaserLogic` (convergent).
-2.  **Auditability**: Every reasoning step is a structured artifact, not just text stream.
-3.  **Verification**: The `ProofGuard` tool provides 3-source triangulation for claims.
+1. **Structured Reasoning**: Chains like `GigaThink` (divergent) -> `LaserLogic` (convergent).
+2. **Auditability**: Every reasoning step is a structured artifact, not just text stream.
+3. **Verification**: The `ProofGuard` tool provides 3-source triangulation for claims.
 
 ## Prerequisites
 
@@ -172,7 +172,7 @@ if __name__ == "__main__":
 
 ## How It Works
 
-1.  **Tool Registration**: We subclass `BaseTool` to create `ReasonKitTool`. This exposes the `rk-core think` CLI command as a callable function within Python.
-2.  **Structured Execution**: When the Python agent calls the tool, it shells out to the optimized Rust binary.
-3.  **Config-Driven**: The agent can select profiles (`quick`, `paranoid`) defined in your YAML configuration, leveraging the work we just finished.
-4.  **Artifact Return**: Instead of just text, the tool returns a summary of the _verification steps_ (Confidence, Step Success), making the reasoning "Glass Box".
+1. **Tool Registration**: We subclass `BaseTool` to create `ReasonKitTool`. This exposes the `rk-core think` CLI command as a callable function within Python.
+2. **Structured Execution**: When the Python agent calls the tool, it shells out to the optimized Rust binary.
+3. **Config-Driven**: The agent can select profiles (`quick`, `paranoid`) defined in your YAML configuration, leveraging the work we just finished.
+4. **Artifact Return**: Instead of just text, the tool returns a summary of the *verification steps* (Confidence, Step Success), making the reasoning "Glass Box".

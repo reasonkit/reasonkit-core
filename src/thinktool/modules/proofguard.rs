@@ -587,11 +587,8 @@ impl ProofGuard {
         // Boost for source diversity
         let diversity_boost = result.source_diversity as f64 * 0.1;
 
-        // Calculate final confidence
-        let final_confidence =
-            (base_confidence * level_modifier - issue_penalty + diversity_boost).clamp(0.0, 1.0);
-
-        final_confidence
+        // Calculate final confidence - return directly
+        (base_confidence * level_modifier - issue_penalty + diversity_boost).clamp(0.0, 1.0)
     }
 }
 

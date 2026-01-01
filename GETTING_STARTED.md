@@ -63,7 +63,7 @@ This is "structured reasoning" - organized, auditable thinking instead of a wall
 
 ---
 
-**Website:** [reasonkit.sh](https://reasonkit.sh)  
+**Website:** [ReasonKit.sh](https://reasonkit.sh)  
 **Questions?** [GitHub Discussions](https://github.com/reasonkit/reasonkit-core/discussions)
 
-_Turn prompts into protocols._
+*Turn prompts into protocols.*

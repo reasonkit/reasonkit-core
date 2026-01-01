@@ -2,7 +2,7 @@
 
 > **REDIRECT:** This file has been superseded.
 >
-> ## The MASTER source of truth is now:
+> ## The MASTER source of truth is now
 >
 > ## [`brand/BRAND_PLAYBOOK.md`](./brand/BRAND_PLAYBOOK.md)
 
@@ -31,4 +31,4 @@ The `brand/` directory contains ~140+ consolidated assets organized by type:
 
 **For the full brand playbook, see:** [brand/BRAND_PLAYBOOK.md](./brand/BRAND_PLAYBOOK.md)
 
-_"Designed, Not Dreamed" | https://reasonkit.sh_
+*"Designed, Not Dreamed" | <https://reasonkit.sh>*

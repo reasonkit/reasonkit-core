@@ -823,7 +823,7 @@ For each source, evaluate what it says about the claim. Determine support level 
 For each source identified:
 
 1. **What Does It Say?**: What does the source explicitly state about the claim?
-2. **Support Level**: 
+2. **Support Level**:
    - **Confirms**: Source directly supports the claim
    - **Partially Confirms**: Source supports part of the claim
    - **Neutral**: Source doesn't address the claim directly

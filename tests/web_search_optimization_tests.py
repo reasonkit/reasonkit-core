@@ -20,29 +20,31 @@ References:
 - arXiv:2310.11511 (Self-RAG)
 """
 
+import asyncio
 import os
 import time
-import json
-import asyncio
-from dataclasses import dataclass, field
-from typing import List, Dict, Optional, Any
-from enum import Enum
 from abc import ABC, abstractmethod
+from dataclasses import dataclass, field
+from enum import Enum
+from typing import Any, Dict, List, Optional
 
 # ============================================================================
 # CONFIGURATION
 # ============================================================================
 
+
 class SourceTier(Enum):
     """Source credibility tiers per ProofGuard protocol"""
+
     TIER_1_AUTHORITATIVE = 1.0  # Official docs, arXiv, GitHub
-    TIER_2_SECONDARY = 0.8      # Tech blogs, framework docs
-    TIER_3_INDEPENDENT = 0.6   # Community tutorials, forums
+    TIER_2_SECONDARY = 0.8  # Tech blogs, framework docs
+    TIER_3_INDEPENDENT = 0.6  # Community tutorials, forums
 
 
 @dataclass
 class SearchResult:
     """Structured search result with credibility metadata"""
+
     url: str
     title: str
     content: str
@@ -56,6 +58,7 @@ class SearchResult:
 @dataclass
 class TriangulatedClaim:
     """A claim with triangulation evidence"""
+
     claim: str
     source_a_primary: Optional[SearchResult] = None
     source_b_secondary: Optional[SearchResult] = None
@@ -68,9 +71,11 @@ class TriangulatedClaim:
 # RATE LIMITING WITH CIRCUIT BREAKER
 # ============================================================================
 
+
 @dataclass
 class CircuitBreakerState:
     """Circuit breaker state for API resilience"""
+
     failure_count: int = 0
     last_failure_time: float = 0.0
     state: str = "CLOSED"  # CLOSED, OPEN, HALF_OPEN
@@ -90,7 +95,8 @@ class ExponentialBackoff:
     def get_delay(self) -> float:
         """Calculate delay with exponential backoff and jitter"""
         import random
-        delay = min(self.base_delay * (2 ** self.attempt), self.max_delay)
+
+        delay = min(self.base_delay * (2**self.attempt), self.max_delay)
         jitter_amount = delay * self.jitter * random.random()
         return delay + jitter_amount
 
@@ -114,7 +120,10 @@ class RateLimiter:
         """Acquire rate limit slot, respecting circuit breaker"""
         # Check circuit breaker state
         if self.circuit_breaker.state == "OPEN":
-            if time.time() - self.circuit_breaker.last_failure_time > self.circuit_breaker.recovery_timeout:
+            if (
+                time.time() - self.circuit_breaker.last_failure_time
+                > self.circuit_breaker.recovery_timeout
+            ):
                 self.circuit_breaker.state = "HALF_OPEN"
             else:
                 return False
@@ -147,6 +156,7 @@ class RateLimiter:
 # ============================================================================
 # SEARCH PROVIDER INTERFACES
 # ============================================================================
+
 
 class SearchProvider(ABC):
     """Abstract base class for search providers"""
@@ -194,7 +204,7 @@ class TavilyProvider(SearchProvider):
 
             self.rate_limiter.record_success()
             return []  # Placeholder
-        except Exception as e:
+        except Exception:
             self.rate_limiter.record_failure()
             raise
 
@@ -222,7 +232,7 @@ class ExaProvider(SearchProvider):
         try:
             self.rate_limiter.record_success()
             return []  # Placeholder
-        except Exception as e:
+        except Exception:
             self.rate_limiter.record_failure()
             raise
 
@@ -255,7 +265,7 @@ class SemanticScholarProvider(SearchProvider):
 
             self.rate_limiter.record_success()
             return []  # Placeholder
-        except Exception as e:
+        except Exception:
             self.rate_limiter.record_failure()
             raise
 
@@ -286,7 +296,7 @@ class ArxivProvider(SearchProvider):
 
             self.rate_limiter.record_success()
             return []  # Placeholder
-        except Exception as e:
+        except Exception:
             self.rate_limiter.record_failure()
             raise
 
@@ -294,6 +304,7 @@ class ArxivProvider(SearchProvider):
 # ============================================================================
 # HYDE QUERY EXPANSION
 # ============================================================================
+
 
 class HyDEQueryExpander:
     """
@@ -340,11 +351,13 @@ Hypothetical Answer Document:"""
 # ADAPTIVE RETRIEVAL ROUTER
 # ============================================================================
 
+
 class QueryComplexityLevel(Enum):
     """Query complexity levels for adaptive routing"""
-    SIMPLE = "simple"      # Direct answer, no retrieval needed
+
+    SIMPLE = "simple"  # Direct answer, no retrieval needed
     MODERATE = "moderate"  # Single-step retrieval
-    COMPLEX = "complex"    # Multi-step retrieval with reasoning
+    COMPLEX = "complex"  # Multi-step retrieval with reasoning
 
 
 class AdaptiveRetrievalRouter:
@@ -371,15 +384,25 @@ class AdaptiveRetrievalRouter:
 
         # Complex indicators
         complex_indicators = [
-            "compare", "contrast", "analyze", "explain why",
-            "what are the differences", "how does X relate to Y",
-            "multi-step", "reasoning"
+            "compare",
+            "contrast",
+            "analyze",
+            "explain why",
+            "what are the differences",
+            "how does X relate to Y",
+            "multi-step",
+            "reasoning",
         ]
 
         # Moderate indicators
         moderate_indicators = [
-            "what is", "define", "describe", "list",
-            "when did", "where is", "who is"
+            "what is",
+            "define",
+            "describe",
+            "list",
+            "when did",
+            "where is",
+            "who is",
         ]
 
         for indicator in complex_indicators:
@@ -400,21 +423,21 @@ class AdaptiveRetrievalRouter:
                 "retrieval_steps": 0,
                 "use_hyde": False,
                 "providers": [],
-                "max_results_per_provider": 0
+                "max_results_per_provider": 0,
             },
             QueryComplexityLevel.MODERATE: {
                 "retrieval_steps": 1,
                 "use_hyde": True,
                 "providers": ["tavily", "semantic_scholar"],
-                "max_results_per_provider": 5
+                "max_results_per_provider": 5,
             },
             QueryComplexityLevel.COMPLEX: {
                 "retrieval_steps": 3,
                 "use_hyde": True,
                 "providers": ["tavily", "exa", "semantic_scholar", "arxiv"],
                 "max_results_per_provider": 10,
-                "enable_multi_hop": True
-            }
+                "enable_multi_hop": True,
+            },
         }
         return strategies[complexity]
 
@@ -422,6 +445,7 @@ class AdaptiveRetrievalRouter:
 # ============================================================================
 # SOURCE CREDIBILITY SCORER
 # ============================================================================
+
 
 class CredibilityScorer:
     """
@@ -432,15 +456,27 @@ class CredibilityScorer:
 
     # Domain classifications
     TIER_1_DOMAINS = {
-        "arxiv.org", "github.com", "semanticscholar.org",
-        "huggingface.co", "nature.com", "science.org",
-        "acm.org", "ieee.org", "openreview.net"
+        "arxiv.org",
+        "github.com",
+        "semanticscholar.org",
+        "huggingface.co",
+        "nature.com",
+        "science.org",
+        "acm.org",
+        "ieee.org",
+        "openreview.net",
     }
 
     TIER_2_DOMAINS = {
-        "nvidia.com", "google.ai", "anthropic.com", "openai.com",
-        "langchain.com", "llamaindex.ai", "docs.tavily.com",
-        "medium.com", "towardsdatascience.com"
+        "nvidia.com",
+        "google.ai",
+        "anthropic.com",
+        "openai.com",
+        "langchain.com",
+        "llamaindex.ai",
+        "docs.tavily.com",
+        "medium.com",
+        "towardsdatascience.com",
     }
 
     def score_source(self, url: str, metadata: Optional[Dict] = None) -> SourceTier:
@@ -462,7 +498,7 @@ class CredibilityScorer:
         boosts = {
             SourceTier.TIER_1_AUTHORITATIVE: 0.15,
             SourceTier.TIER_2_SECONDARY: 0.10,
-            SourceTier.TIER_3_INDEPENDENT: 0.05
+            SourceTier.TIER_3_INDEPENDENT: 0.05,
         }
         return boosts.get(tier, 0.0)
 
@@ -470,6 +506,7 @@ class CredibilityScorer:
 # ============================================================================
 # TRIANGULATION ENGINE
 # ============================================================================
+
 
 class TriangulationEngine:
     """
@@ -511,11 +548,13 @@ class TriangulationEngine:
             triangulated.source_c_independent = tier_3_results[0]
 
         # Determine consensus
-        sources_found = sum([
-            triangulated.source_a_primary is not None,
-            triangulated.source_b_secondary is not None,
-            triangulated.source_c_independent is not None
-        ])
+        sources_found = sum(
+            [
+                triangulated.source_a_primary is not None,
+                triangulated.source_b_secondary is not None,
+                triangulated.source_c_independent is not None,
+            ]
+        )
 
         if sources_found >= 3:
             triangulated.consensus = "VERIFIED"
@@ -537,6 +576,7 @@ class TriangulationEngine:
 # MASTER SEARCH ORCHESTRATOR
 # ============================================================================
 
+
 class WebSearchOrchestrator:
     """
     Master orchestrator for optimized web search
@@ -554,7 +594,7 @@ class WebSearchOrchestrator:
             "tavily": TavilyProvider(),
             "exa": ExaProvider(),
             "semantic_scholar": SemanticScholarProvider(),
-            "arxiv": ArxivProvider()
+            "arxiv": ArxivProvider(),
         }
         self.hyde_expander = HyDEQueryExpander()
         self.router = AdaptiveRetrievalRouter()
@@ -584,8 +624,7 @@ class WebSearchOrchestrator:
         # Step 3: Execute parallel searches
         all_results: List[SearchResult] = []
         active_providers = [
-            self.providers[p] for p in strategy.get("providers", [])
-            if p in self.providers
+            self.providers[p] for p in strategy.get("providers", []) if p in self.providers
         ]
 
         search_tasks = [
@@ -619,10 +658,16 @@ class WebSearchOrchestrator:
             "results": all_results,
             "triangulated_claims": triangulated_claims,
             "sources_by_tier": {
-                "tier_1": len([r for r in all_results if r.source_tier == SourceTier.TIER_1_AUTHORITATIVE]),
-                "tier_2": len([r for r in all_results if r.source_tier == SourceTier.TIER_2_SECONDARY]),
-                "tier_3": len([r for r in all_results if r.source_tier == SourceTier.TIER_3_INDEPENDENT])
-            }
+                "tier_1": len(
+                    [r for r in all_results if r.source_tier == SourceTier.TIER_1_AUTHORITATIVE]
+                ),
+                "tier_2": len(
+                    [r for r in all_results if r.source_tier == SourceTier.TIER_2_SECONDARY]
+                ),
+                "tier_3": len(
+                    [r for r in all_results if r.source_tier == SourceTier.TIER_3_INDEPENDENT]
+                ),
+            },
         }
 
 
@@ -646,7 +691,7 @@ class TestRateLimiting(unittest.TestCase):
 
         # Each delay should be roughly 2x the previous (with jitter)
         for i in range(1, len(delays)):
-            self.assertGreater(delays[i], delays[i-1] * 0.5)
+            self.assertGreater(delays[i], delays[i - 1] * 0.5)
 
     def test_circuit_breaker_opens(self):
         limiter = RateLimiter(requests_per_second=10.0)
@@ -669,17 +714,14 @@ class TestCredibilityScoring(unittest.TestCase):
         urls = [
             "https://arxiv.org/abs/2212.10496",
             "https://github.com/stanford-futuredata/ColBERT",
-            "https://www.semanticscholar.org/paper/123"
+            "https://www.semanticscholar.org/paper/123",
         ]
         for url in urls:
             tier = self.scorer.score_source(url)
             self.assertEqual(tier, SourceTier.TIER_1_AUTHORITATIVE)
 
     def test_tier_2_scoring(self):
-        urls = [
-            "https://docs.langchain.com/docs",
-            "https://medium.com/@user/article"
-        ]
+        urls = ["https://docs.langchain.com/docs", "https://medium.com/@user/article"]
         for url in urls:
             tier = self.scorer.score_source(url)
             self.assertEqual(tier, SourceTier.TIER_2_SECONDARY)
@@ -722,22 +764,22 @@ class TestTriangulation(unittest.TestCase):
                 title="Paper 1",
                 content="Content",
                 source_tier=SourceTier.TIER_1_AUTHORITATIVE,
-                relevance_score=0.9
+                relevance_score=0.9,
             ),
             SearchResult(
                 url="https://medium.com/article",
                 title="Blog Post",
                 content="Content",
                 source_tier=SourceTier.TIER_2_SECONDARY,
-                relevance_score=0.8
+                relevance_score=0.8,
             ),
             SearchResult(
                 url="https://community.example.com/post",
                 title="Forum Post",
                 content="Content",
                 source_tier=SourceTier.TIER_3_INDEPENDENT,
-                relevance_score=0.7
-            )
+                relevance_score=0.7,
+            ),
         ]
 
         triangulated = self.triangulator.triangulate("Test claim", results)
@@ -752,7 +794,7 @@ class TestTriangulation(unittest.TestCase):
                 title="Paper 1",
                 content="Content",
                 source_tier=SourceTier.TIER_1_AUTHORITATIVE,
-                relevance_score=0.9
+                relevance_score=0.9,
             )
         ]
 

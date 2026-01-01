@@ -9,7 +9,7 @@ The ReasonKit community is committed to providing a welcoming, inclusive, and ha
 - **Be inclusive** - Welcome newcomers and diverse perspectives
 - **Be professional** - Maintain appropriate conduct in all interactions
 
-Violations may result in warnings, temporary bans, or permanent exclusion from the community. Report concerns to **conduct@reasonkit.sh**.
+Violations may result in warnings, temporary bans, or permanent exclusion from the community. Report concerns to **<conduct@reasonkit.sh>**.
 
 ---
 
@@ -64,7 +64,7 @@ This Code of Conduct also applies when an individual is officially representing 
 
 Instances of abusive, harassing, or otherwise unacceptable behavior may be reported to the community leaders responsible for enforcement at:
 
-**conduct@reasonkit.sh**
+**<conduct@reasonkit.sh>**
 
 All complaints will be reviewed and investigated promptly and fairly.
 
@@ -119,4 +119,4 @@ For answers to common questions about this code of conduct, see the FAQ at [http
 
 ---
 
-_Last updated: December 2025_
+*Last updated: December 2025*

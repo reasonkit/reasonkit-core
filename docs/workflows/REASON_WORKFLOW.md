@@ -82,6 +82,7 @@ Commands::Think {
 ```
 
 **Key Files**:
+
 - `src/main.rs` - CLI entry point
 - `src/bin/mcp_cli.rs` - MCP-specific CLI commands
 
@@ -105,6 +106,7 @@ impl ProtocolInput {
 ```
 
 Input types map to ThinkTools:
+
 - `query` -> GigaThink (expansive thinking)
 - `argument` -> LaserLogic (deductive reasoning)
 - `statement` -> BedRock (first principles)
@@ -129,6 +131,7 @@ pub struct ProtocolExecutor {
 **Location**: `/home/zyxsys/RK-PROJECT/reasonkit-core/src/thinktool/registry.rs`
 
 Protocols are loaded from:
+
 1. `protocols/thinktools.yaml` (primary)
 2. Hardcoded fallbacks (if YAML fails)
 3. Custom TOML/JSON files
@@ -281,14 +284,14 @@ impl LlmClient for UnifiedLlmClient {
 
 **Location**: `/home/zyxsys/RK-PROJECT/reasonkit-core/src/thinktool/modules/`
 
-| Module | File | Purpose |
-|--------|------|---------|
-| GigaThink | `gigathink.rs` | 10+ perspective expansion |
-| LaserLogic | `laserlogic.rs` | Deductive reasoning, fallacy detection |
-| BedRock | `bedrock.rs` | First principles decomposition |
-| ProofGuard | `proofguard.rs` | Multi-source verification |
-| BrutalHonesty | `brutalhonesty.rs` | Adversarial self-critique |
-| BrutalHonestyEnhanced | `brutalhonesty_enhanced.rs` | Cognitive bias detection |
+| Module                | File                        | Purpose                                |
+| --------------------- | --------------------------- | -------------------------------------- |
+| GigaThink             | `gigathink.rs`              | 10+ perspective expansion              |
+| LaserLogic            | `laserlogic.rs`             | Deductive reasoning, fallacy detection |
+| BedRock               | `bedrock.rs`                | First principles decomposition         |
+| ProofGuard            | `proofguard.rs`             | Multi-source verification              |
+| BrutalHonesty         | `brutalhonesty.rs`          | Adversarial self-critique              |
+| BrutalHonestyEnhanced | `brutalhonesty_enhanced.rs` | Cognitive bias detection               |
 
 Each module implements:
 
@@ -623,24 +626,24 @@ async fn test_trace_capture_complete() {
 
 ## 6. Key File Reference
 
-| Purpose | File Path |
-|---------|-----------|
-| CLI Entry | `src/main.rs` |
-| Executor Core | `src/thinktool/executor.rs` |
-| Protocol Registry | `src/thinktool/registry.rs` |
-| Profile System | `src/thinktool/profiles.rs` |
-| LLM Client | `src/thinktool/llm.rs` |
-| Trace Types | `src/thinktool/trace.rs` |
-| Module Trait | `src/thinktool/modules/mod.rs` |
-| GigaThink | `src/thinktool/modules/gigathink.rs` |
-| LaserLogic | `src/thinktool/modules/laserlogic.rs` |
-| BedRock | `src/thinktool/modules/bedrock.rs` |
-| ProofGuard | `src/thinktool/modules/proofguard.rs` |
-| BrutalHonesty | `src/thinktool/modules/brutalhonesty.rs` |
-| M2 Connector | `src/m2/connector.rs` |
-| ReasoningLoop | `src/engine/reasoning_loop.rs` |
-| Protocol Loader | `src/thinktool/yaml_loader.rs` |
-| Integration Tests | `tests/thinktool_integration_tests.rs` |
+| Purpose           | File Path                                |
+| ----------------- | ---------------------------------------- |
+| CLI Entry         | `src/main.rs`                            |
+| Executor Core     | `src/thinktool/executor.rs`              |
+| Protocol Registry | `src/thinktool/registry.rs`              |
+| Profile System    | `src/thinktool/profiles.rs`              |
+| LLM Client        | `src/thinktool/llm.rs`                   |
+| Trace Types       | `src/thinktool/trace.rs`                 |
+| Module Trait      | `src/thinktool/modules/mod.rs`           |
+| GigaThink         | `src/thinktool/modules/gigathink.rs`     |
+| LaserLogic        | `src/thinktool/modules/laserlogic.rs`    |
+| BedRock           | `src/thinktool/modules/bedrock.rs`       |
+| ProofGuard        | `src/thinktool/modules/proofguard.rs`    |
+| BrutalHonesty     | `src/thinktool/modules/brutalhonesty.rs` |
+| M2 Connector      | `src/m2/connector.rs`                    |
+| ReasoningLoop     | `src/engine/reasoning_loop.rs`           |
+| Protocol Loader   | `src/thinktool/yaml_loader.rs`           |
+| Integration Tests | `tests/thinktool_integration_tests.rs`   |
 
 ---
 
@@ -655,6 +658,7 @@ The Query->Reason->Response workflow in ReasonKit Core is well-architected with 
 5. **Response**: Aggregated results with confidence scores
 
 **Strengths**:
+
 - Clean module separation
 - Comprehensive trace capture
 - Flexible profile system
@@ -662,6 +666,7 @@ The Query->Reason->Response workflow in ReasonKit Core is well-architected with 
 - Parallel execution capability
 
 **Areas for Improvement**:
+
 - Complete M2 integration
 - Connection pooling for parallel execution
 - More realistic mock mode

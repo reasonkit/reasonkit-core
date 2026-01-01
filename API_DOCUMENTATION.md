@@ -2,7 +2,7 @@
 
 **Version:** 1.0.0
 **License:** Apache 2.0
-**Repository:** https://github.com/reasonkit/reasonkit-core
+**Repository:** <https://github.com/reasonkit/reasonkit-core>
 
 ---
 
@@ -1030,8 +1030,8 @@ cargo build --release
 
 ## Additional Resources
 
-- **GitHub Repository**: https://github.com/reasonkit/reasonkit-core
-- **Documentation**: https://docs.rs/reasonkit-core
+- **GitHub Repository**: <https://github.com/reasonkit/reasonkit-core>
+- **Documentation**: <https://docs.rs/reasonkit-core>
 - **Examples**: `/examples` directory in the repository
 - **Architecture Guide**: `ARCHITECTURE.md`
 - **Source Overview**: `docs/SOURCE_OVERVIEW.md`

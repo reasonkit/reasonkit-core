@@ -2409,7 +2409,7 @@ mod tests {
         assert_eq!(trace.protocol_id, "test_protocol");
         assert_eq!(trace.protocol_version, "1.0.0");
         assert!(trace.steps.is_empty());
-        assert_eq!(trace.status, super::trace::ExecutionStatus::Running);
+        assert_eq!(trace.status, crate::thinktool::trace::ExecutionStatus::Running);
     }
 
     #[test]
@@ -2923,7 +2923,7 @@ mod tests {
                 max_count: 10,
             },
             prompt_template: "".to_string(),
-            output_format: super::protocol::StepOutputFormat::List,
+            output_format: crate::thinktool::protocol::StepOutputFormat::List,
             min_confidence: 0.7,
             depends_on: vec![],
             branch: None,
@@ -2942,7 +2942,7 @@ mod tests {
                 criteria: vec!["accuracy".to_string()],
             },
             prompt_template: "".to_string(),
-            output_format: super::protocol::StepOutputFormat::Text,
+            output_format: crate::thinktool::protocol::StepOutputFormat::Text,
             min_confidence: 0.7,
             depends_on: vec![],
             branch: None,
@@ -2960,7 +2960,7 @@ mod tests {
                 rules: vec!["rule1".to_string()],
             },
             prompt_template: "".to_string(),
-            output_format: super::protocol::StepOutputFormat::Boolean,
+            output_format: crate::thinktool::protocol::StepOutputFormat::Boolean,
             min_confidence: 0.7,
             depends_on: vec![],
             branch: None,

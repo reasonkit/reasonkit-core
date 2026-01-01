@@ -8,7 +8,7 @@
 
 ## Overview
 
-This document captures baseline measurements for reasonkit-core before any performance or accuracy improvements. These measurements serve as the reference point for evaluating future changes.
+This document captures baseline measurements for ReasonKit-core before any performance or accuracy improvements. These measurements serve as the reference point for evaluating future changes.
 
 **Measurement Categories:**
 

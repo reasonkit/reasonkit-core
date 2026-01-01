@@ -161,43 +161,43 @@ flowchart TB
 
 ### Core Components (reasonkit-core)
 
-| Component | Module | Purpose |
-|-----------|--------|---------|
-| **ReasoningLoop** | `engine/` | Main async execution engine for structured reasoning |
-| **ProtocolExecutor** | `thinktool/executor.rs` | Executes ThinkTool protocols with validation |
-| **UnifiedLlmClient** | `thinktool/llm.rs` | Provider-agnostic LLM client (18+ providers) |
-| **MCP Server** | `mcp/` | Model Context Protocol server for tool integration |
-| **Telemetry** | `telemetry/` | Privacy-preserving metrics and tracing |
-| **Orchestration** | `orchestration/` | Long-horizon task coordination (100+ tool calls) |
+| Component            | Module                  | Purpose                                              |
+| -------------------- | ----------------------- | ---------------------------------------------------- |
+| **ReasoningLoop**    | `engine/`               | Main async execution engine for structured reasoning |
+| **ProtocolExecutor** | `thinktool/executor.rs` | Executes ThinkTool protocols with validation         |
+| **UnifiedLlmClient** | `thinktool/llm.rs`      | Provider-agnostic LLM client (18+ providers)         |
+| **MCP Server**       | `mcp/`                  | Model Context Protocol server for tool integration   |
+| **Telemetry**        | `telemetry/`            | Privacy-preserving metrics and tracing               |
+| **Orchestration**    | `orchestration/`        | Long-horizon task coordination (100+ tool calls)     |
 
 ### ThinkTools (5 Core Modules)
 
-| ThinkTool | Code | Operation | Purpose |
-|-----------|------|-----------|---------|
-| **GigaThink** | `gt` | `Diverge()` | Generate 10+ perspectives, explore solution space |
-| **LaserLogic** | `ll` | `Converge()` | Detect fallacies, validate logical chains |
-| **BedRock** | `br` | `Ground()` | First principles decomposition, identify axioms |
-| **ProofGuard** | `pg` | `Verify()` | Multi-source triangulation (3+ sources required) |
-| **BrutalHonesty** | `bh` | `Critique()` | Adversarial self-critique, find flaws first |
+| ThinkTool         | Code | Operation    | Purpose                                           |
+| ----------------- | ---- | ------------ | ------------------------------------------------- |
+| **GigaThink**     | `gt` | `Diverge()`  | Generate 10+ perspectives, explore solution space |
+| **LaserLogic**    | `ll` | `Converge()` | Detect fallacies, validate logical chains         |
+| **BedRock**       | `br` | `Ground()`   | First principles decomposition, identify axioms   |
+| **ProofGuard**    | `pg` | `Verify()`   | Multi-source triangulation (3+ sources required)  |
+| **BrutalHonesty** | `bh` | `Critique()` | Adversarial self-critique, find flaws first       |
 
 ### Memory Components (reasonkit-mem)
 
-| Component | Module | Purpose |
-|-----------|--------|---------|
-| **Storage** | `storage/` | Qdrant vector + file-based storage backends |
-| **Embedding** | `embedding/` | Dense vectors (BGE-M3 ONNX, OpenAI, etc.) |
+| Component     | Module       | Purpose                                            |
+| ------------- | ------------ | -------------------------------------------------- |
+| **Storage**   | `storage/`   | Qdrant vector + file-based storage backends        |
+| **Embedding** | `embedding/` | Dense vectors (BGE-M3 ONNX, OpenAI, etc.)          |
 | **Retrieval** | `retrieval/` | Hybrid search, RRF fusion, cross-encoder reranking |
-| **RAPTOR** | `raptor/` | Hierarchical tree structure for long-form QA |
-| **Indexing** | `indexing/` | BM25/Tantivy sparse indexing |
+| **RAPTOR**    | `raptor/`    | Hierarchical tree structure for long-form QA       |
+| **Indexing**  | `indexing/`  | BM25/Tantivy sparse indexing                       |
 
 ### Web Components (reasonkit-web)
 
-| Component | Module | Purpose |
-|-----------|--------|---------|
-| **Browser** | `browser/` | Headless browser control and DOM extraction |
-| **Extraction** | `extraction/` | Content extraction and preprocessing |
-| **MCP Sidecar** | `mcp/` | Web sensing as MCP tool provider |
-| **Handlers** | `handlers/` | HTTP request/response processing |
+| Component       | Module        | Purpose                                     |
+| --------------- | ------------- | ------------------------------------------- |
+| **Browser**     | `browser/`    | Headless browser control and DOM extraction |
+| **Extraction**  | `extraction/` | Content extraction and preprocessing        |
+| **MCP Sidecar** | `mcp/`        | Web sensing as MCP tool provider            |
+| **Handlers**    | `handlers/`   | HTTP request/response processing            |
 
 ---
 
@@ -561,18 +561,18 @@ impl MemoryService for QdrantMemory {
 
 ### Cargo Features
 
-| Feature | Dependencies | Purpose |
-|---------|--------------|---------|
-| `default` | `cli` | Basic CLI functionality |
-| `cli` | - | Command-line interface |
-| `memory` | `reasonkit-mem`, `qdrant-client`, `tantivy` | Full memory infrastructure |
-| `local-embeddings` | `ort`, `tokenizers`, `ndarray` | BGE-M3 ONNX local inference |
-| `embedded-qdrant` | - | Qdrant embedded mode |
-| `arf` | `sled`, `wasmtime`, `sysinfo`, `petgraph`, `rust-bert`, `parking_lot` | Advanced Reasoning Framework |
-| `aesthetic` | `md5` | UI/UX assessment system |
-| `vibe` | - | VIBE Protocol Validation (experimental) |
-| `code-intelligence` | - | Multi-language code analysis (experimental) |
-| `minimax` | - | MiniMax M2 enhanced tools (experimental) |
+| Feature             | Dependencies                                                          | Purpose                                     |
+| ------------------- | --------------------------------------------------------------------- | ------------------------------------------- |
+| `default`           | `cli`                                                                 | Basic CLI functionality                     |
+| `cli`               | -                                                                     | Command-line interface                      |
+| `memory`            | `reasonkit-mem`, `qdrant-client`, `tantivy`                           | Full memory infrastructure                  |
+| `local-embeddings`  | `ort`, `tokenizers`, `ndarray`                                        | BGE-M3 ONNX local inference                 |
+| `embedded-qdrant`   | -                                                                     | Qdrant embedded mode                        |
+| `arf`               | `sled`, `wasmtime`, `sysinfo`, `petgraph`, `rust-bert`, `parking_lot` | Advanced Reasoning Framework                |
+| `aesthetic`         | `md5`                                                                 | UI/UX assessment system                     |
+| `vibe`              | -                                                                     | VIBE Protocol Validation (experimental)     |
+| `code-intelligence` | -                                                                     | Multi-language code analysis (experimental) |
+| `minimax`           | -                                                                     | MiniMax M2 enhanced tools (experimental)    |
 
 ### Build Configurations
 
@@ -661,32 +661,32 @@ cargo build --release --features "memory,local-embeddings,arf,aesthetic"
 
 ### Latency Targets
 
-| Operation | Target | Measured |
-|-----------|--------|----------|
-| Protocol orchestration | <10ms | ~7ms |
-| ThinkTool chain (balanced) | <5s | ~4.2s |
-| ThinkTool chain (quick) | <2s | ~1.8s |
-| Hybrid search (10 results) | <100ms | ~85ms |
-| Embedding (single) | <50ms | ~42ms |
-| Concurrent chains (8x) | <10ms overhead | ~7ms |
+| Operation                  | Target         | Measured |
+| -------------------------- | -------------- | -------- |
+| Protocol orchestration     | <10ms          | ~7ms     |
+| ThinkTool chain (balanced) | <5s            | ~4.2s    |
+| ThinkTool chain (quick)    | <2s            | ~1.8s    |
+| Hybrid search (10 results) | <100ms         | ~85ms    |
+| Embedding (single)         | <50ms          | ~42ms    |
+| Concurrent chains (8x)     | <10ms overhead | ~7ms     |
 
 ### Memory Usage
 
-| Component | Base | Per Document | Per Query |
-|-----------|------|--------------|-----------|
-| Core engine | ~50MB | - | ~5MB |
-| Qdrant embedded | ~200MB | ~1KB vectors | ~10MB |
-| BGE-M3 model | ~400MB | - | ~50MB |
-| SQLite traces | ~10MB | ~1KB/trace | - |
+| Component       | Base   | Per Document | Per Query |
+| --------------- | ------ | ------------ | --------- |
+| Core engine     | ~50MB  | -            | ~5MB      |
+| Qdrant embedded | ~200MB | ~1KB vectors | ~10MB     |
+| BGE-M3 model    | ~400MB | -            | ~50MB     |
+| SQLite traces   | ~10MB  | ~1KB/trace   | -         |
 
 ### Throughput
 
-| Scenario | Requests/sec |
-|----------|--------------|
-| Quick profile (cached) | ~50 |
-| Balanced profile | ~10 |
-| Deep profile | ~5 |
-| Paranoid profile | ~2 |
+| Scenario               | Requests/sec |
+| ---------------------- | ------------ |
+| Quick profile (cached) | ~50          |
+| Balanced profile       | ~10          |
+| Deep profile           | ~5           |
+| Paranoid profile       | ~2           |
 
 ---
 
@@ -728,36 +728,36 @@ cargo build --release --features "memory,local-embeddings,arf,aesthetic"
 
 ### Key Security Properties
 
-| Property | Implementation |
-|----------|----------------|
-| No hardcoded secrets | Environment variables only (CONS-003) |
-| GDPR by default | EU data residency, local-first storage (CONS-004) |
-| Input validation | JSON Schema validation on all outputs |
-| Audit trail | SQLite traces for all reasoning steps |
-| Memory isolation | Rust memory safety, no `unsafe` without approval |
+| Property             | Implementation                                    |
+| -------------------- | ------------------------------------------------- |
+| No hardcoded secrets | Environment variables only (CONS-003)             |
+| GDPR by default      | EU data residency, local-first storage (CONS-004) |
+| Input validation     | JSON Schema validation on all outputs             |
+| Audit trail          | SQLite traces for all reasoning steps             |
+| Memory isolation     | Rust memory safety, no `unsafe` without approval  |
 
 ---
 
 ## Related Documentation
 
-| Document | Purpose |
-|----------|---------|
-| [THINKTOOLS_GUIDE.md](./THINKTOOLS_GUIDE.md) | Comprehensive ThinkTools usage guide |
+| Document                                                   | Purpose                                   |
+| ---------------------------------------------------------- | ----------------------------------------- |
+| [THINKTOOLS_GUIDE.md](./THINKTOOLS_GUIDE.md)               | Comprehensive ThinkTools usage guide      |
 | [THINKTOOLS_ARCHITECTURE.md](./THINKTOOLS_ARCHITECTURE.md) | ThinkTools-specific architecture diagrams |
-| [API_REFERENCE.md](./API_REFERENCE.md) | Complete API documentation |
-| [CLI_REFERENCE.md](./CLI_REFERENCE.md) | CLI command reference |
-| [MEMORY_INTERFACE_DESIGN.md](./MEMORY_INTERFACE_DESIGN.md) | Memory service interface design |
-| [QUICKSTART.md](./QUICKSTART.md) | Getting started guide |
+| [API_REFERENCE.md](./API_REFERENCE.md)                     | Complete API documentation                |
+| [CLI_REFERENCE.md](./CLI_REFERENCE.md)                     | CLI command reference                     |
+| [MEMORY_INTERFACE_DESIGN.md](./MEMORY_INTERFACE_DESIGN.md) | Memory service interface design           |
+| [QUICKSTART.md](./QUICKSTART.md)                           | Getting started guide                     |
 
 ---
 
 ## Version History
 
-| Version | Date | Changes |
-|---------|------|---------|
-| 1.0.0 | 2026-01-01 | Initial comprehensive architecture documentation |
+| Version | Date       | Changes                                          |
+| ------- | ---------- | ------------------------------------------------ |
+| 1.0.0   | 2026-01-01 | Initial comprehensive architecture documentation |
 
 ---
 
-*"Designed, Not Dreamed. Turn Prompts into Protocols."*
+_"Designed, Not Dreamed. Turn Prompts into Protocols."_
 *https://reasonkit.sh*

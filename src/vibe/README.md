@@ -536,4 +536,4 @@ VIBE Protocol Validation System is part of ReasonKit Core and follows the Apache
 
 **"Designed, Not Dreamed - Structure beats intelligence."**
 
-_Turn Prompts into Protocols with intelligent validation._
+*Turn Prompts into Protocols with intelligent validation.*

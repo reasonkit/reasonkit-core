@@ -1,5 +1,5 @@
 //! # Performance Monitoring System
-//! 
+//!
 //! Real-time performance monitoring and analytics for all agent frameworks
 
 use crate::error::Result;
@@ -207,7 +207,7 @@ impl PerformanceMonitor {
     /// Assess system health
     async fn assess_system_health(&self, trends: &PerformanceTrends) -> Result<SystemHealth> {
         let health_score = self.calculate_overall_performance_score(trends).await?;
-        
+
         let status = if health_score >= 0.9 {
             SystemStatus::Excellent
         } else if health_score >= 0.8 {
@@ -364,7 +364,7 @@ impl PerformanceMonitor {
 
         let time_span = data.last().unwrap().timestamp.signed_duration_since(data[0].timestamp);
         let duration_seconds = time_span.num_seconds() as f64;
-        
+
         if duration_seconds > 0.0 {
             data.len() as f64 / duration_seconds
         } else {
@@ -381,7 +381,7 @@ impl PerformanceMonitor {
         let recent_avg: f64 = data.iter().rev().take(5)
             .map(|r| r.confidence_score)
             .sum::<f64>() / 5.0;
-        
+
         let earlier_avg: f64 = data.iter().take(5)
             .map(|r| r.confidence_score)
             .sum::<f64>() / 5.0;
@@ -453,7 +453,7 @@ impl PerformanceMonitor {
 
         let time_span = data.last().unwrap().timestamp.signed_duration_since(data[0].timestamp);
         let duration_seconds = time_span.num_seconds() as f64;
-        
+
         if duration_seconds > 0.0 {
             data.len() as f64 / duration_seconds
         } else {
@@ -470,7 +470,7 @@ impl PerformanceMonitor {
         let recent_success_rate = data.iter().rev().take(5)
             .filter(|r| r.success)
             .count() as f64 / 5.0;
-        
+
         let earlier_success_rate = data.iter().take(5)
             .filter(|r| r.success)
             .count() as f64 / 5.0;
@@ -875,7 +875,7 @@ mod tests {
     #[test]
     fn test_performance_trend_determination() {
         let monitor = PerformanceMonitor::new().await.unwrap();
-        
+
         let data = vec![
             PerformanceMetricsRecord {
                 framework: FrameworkType::ClaudeCode,
@@ -889,7 +889,7 @@ mod tests {
             };
             10
         ];
-        
+
         let trend = monitor.calculate_trend(&data.iter().collect::<Vec<_>>());
         assert!(matches!(trend, PerformanceTrend::Stable));
     }

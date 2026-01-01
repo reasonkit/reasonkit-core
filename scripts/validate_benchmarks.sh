@@ -123,14 +123,14 @@ if cargo run --release --bin bench -- \
     --profile balanced \
     --output json \
     > "$RESULTS_DIR/gsm8k_mock.json" 2>&1; then
-    
+
     echo -e "${GREEN}✅ Mock mode validation complete${NC}"
-    
+
     # Validate JSON structure
     if command -v jq >/dev/null; then
         if jq empty "$RESULTS_DIR/gsm8k_mock.json" 2>/dev/null; then
             echo -e "${GREEN}✅ Results JSON is valid${NC}"
-            
+
             # Show summary
             echo ""
             echo -e "${BLUE}Mock Mode Results Summary:${NC}"
@@ -161,14 +161,14 @@ if [[ "$USE_MOCK" == "false" ]]; then
     echo -e "${CYAN}Phase 3: Real Data Validation${NC}"
     echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
     echo ""
-    
+
     echo -e "${YELLOW}⚠️  This will make real API calls and incur costs (~\$0.50-\$2.00)${NC}"
     echo -e "${YELLOW}   Press Ctrl+C to cancel, or wait 5 seconds to continue...${NC}"
     sleep 5
-    
+
     echo ""
     echo -e "${BLUE}Running GSM8K benchmark (real LLM, ${SAMPLES} samples)...${NC}"
-    
+
     if cargo run --release --bin bench -- \
         --benchmark gsm8k \
         --samples "$SAMPLES" \
@@ -177,9 +177,9 @@ if [[ "$USE_MOCK" == "false" ]]; then
         --profile balanced \
         --output json \
         > "$RESULTS_DIR/gsm8k_real.json" 2>&1; then
-        
+
         echo -e "${GREEN}✅ Real data validation complete${NC}"
-        
+
         # Validate and show results
         if command -v jq >/dev/null; then
             if jq empty "$RESULTS_DIR/gsm8k_real.json" 2>/dev/null; then
@@ -193,11 +193,11 @@ if [[ "$USE_MOCK" == "false" ]]; then
                     "Token Multiplier: \(.token_multiplier | floor)x",
                     "Avg Latency: \(.baseline_avg_latency_ms | floor)ms"
                 ' "$RESULTS_DIR/gsm8k_real.json"
-                
+
                 # Check if improvement is significant
                 DELTA=$(jq -r '.accuracy_delta' "$RESULTS_DIR/gsm8k_real.json")
                 SIGNIFICANT=$(jq -r '.is_significant' "$RESULTS_DIR/gsm8k_real.json")
-                
+
                 echo ""
                 if (( $(echo "$DELTA > 0.05" | bc -l) )) && [[ "$SIGNIFICANT" == "true" ]]; then
                     echo -e "${GREEN}✅ VALIDATED: Meaningful improvement observed (+$(echo "$DELTA * 100" | bc -l | xargs printf "%.1f")%)${NC}"
@@ -249,4 +249,3 @@ echo "  1. Review results in: $RESULTS_DIR"
 echo "  2. Check HTML reports: target/criterion/report/index.html"
 echo "  3. Document findings in: docs/BENCHMARK_VALIDATION_REPORT.md"
 echo ""
-

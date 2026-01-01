@@ -2,7 +2,7 @@
 //!
 //! Implements M2's composite instruction constraints including:
 //! - System Prompts
-//! - User Queries  
+//! - User Queries
 //! - Memory Context
 //! - Tool Schemas
 //!

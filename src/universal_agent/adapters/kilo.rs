@@ -1,5 +1,5 @@
 //! # Kilo Code Adapter
-//! 
+//!
 //! Adapter for Kilo Code framework
 //! Focus: Comprehensive critique with flaw categorization
 

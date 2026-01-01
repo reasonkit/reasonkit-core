@@ -224,7 +224,7 @@ pub struct MemoryStats {
 ///
 /// All implementations MUST be:
 /// - `Send + Sync` for safe cross-thread sharing
-/// - Internally synchronized (locks, Arc<RwLock>, etc.)
+/// - Internally synchronized (e.g., using `Arc<RwLock<T>>`)
 /// - Panic-safe (errors should propagate, not panic)
 #[async_trait]
 pub trait MemoryService: Send + Sync {

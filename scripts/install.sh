@@ -85,11 +85,11 @@ fatal() {
 detect_platform() {
     OS="$(uname -s)"
     ARCH="$(uname -m)"
-    
+
     case "$OS" in
         Linux*)     OS_NAME="linux";;
         Darwin*)    OS_NAME="macos";;
-        CYGWIN*|MINGW*|MSYS*) 
+        CYGWIN*|MINGW*|MSYS*)
             OS_NAME="windows"
             warn "Windows detected. For best experience, use WSL2."
             ;;
@@ -132,19 +132,19 @@ determine_install_dir() {
 
 check_dependencies() {
     info "Checking dependencies..."
-    
+
     MISSING_DEPS=""
-    
+
     # Check for git (required for source build)
     if ! command -v git &> /dev/null; then
         MISSING_DEPS="$MISSING_DEPS git"
     fi
-    
+
     # Check for curl or wget
     if ! command -v curl &> /dev/null && ! command -v wget &> /dev/null; then
         MISSING_DEPS="$MISSING_DEPS curl"
     fi
-    
+
     if [ -n "$MISSING_DEPS" ]; then
         warn "Missing dependencies:$MISSING_DEPS"
         echo ""
@@ -180,14 +180,14 @@ check_rust() {
 
 try_prebuilt_binary() {
     info "Checking for pre-built binary..."
-    
+
     BINARY_NAME="rk-core-${OS_NAME}-${ARCH_NAME}"
     if [ "$OS_NAME" = "windows" ]; then
         BINARY_NAME="${BINARY_NAME}.exe"
     fi
-    
+
     DOWNLOAD_URL="${GITHUB_RELEASE_URL}/${BINARY_NAME}"
-    
+
     # Check if binary exists
     if command -v curl &> /dev/null; then
         HTTP_CODE=$(curl -sI -o /dev/null -w "%{http_code}" "$DOWNLOAD_URL" 2>/dev/null || echo "000")
@@ -196,16 +196,16 @@ try_prebuilt_binary() {
     else
         HTTP_CODE="000"
     fi
-    
+
     if [ "$HTTP_CODE" = "200" ]; then
         info "Downloading pre-built binary..."
-        
+
         if command -v curl &> /dev/null; then
             curl -fsSL "$DOWNLOAD_URL" -o "$INSTALL_DIR/rk-core"
         else
             wget -q "$DOWNLOAD_URL" -O "$INSTALL_DIR/rk-core"
         fi
-        
+
         chmod +x "$INSTALL_DIR/rk-core"
         success "Pre-built binary installed"
         return 0
@@ -222,12 +222,12 @@ install_via_cargo() {
         source "$HOME/.cargo/env"
         success "Rust installed"
     fi
-    
+
     info "Installing ReasonKit via cargo (this may take 2-5 minutes)..."
-    
+
     if cargo install reasonkit-core 2>/dev/null; then
         success "ReasonKit installed via cargo"
-        
+
         # Copy to install dir if cargo bin is different
         if [ "$INSTALL_DIR" != "$HOME/.cargo/bin" ]; then
             cp "$HOME/.cargo/bin/rk-core" "$INSTALL_DIR/rk-core" 2>/dev/null || true
@@ -241,20 +241,20 @@ install_via_cargo() {
 
 install_from_source() {
     info "Building from source..."
-    
+
     # Create temp directory
     TEMP_DIR=$(mktemp -d)
     trap "rm -rf $TEMP_DIR" EXIT
-    
+
     cd "$TEMP_DIR"
-    
+
     info "Cloning repository..."
     if ! git clone --depth 1 "https://github.com/${GITHUB_REPO}.git" 2>/dev/null; then
         fatal "Failed to clone repository. Check your internet connection."
     fi
-    
+
     cd reasonkit-core
-    
+
     info "Building (this may take 2-5 minutes)..."
     if ! cargo build --release 2>/dev/null; then
         echo ""
@@ -273,11 +273,11 @@ install_from_source() {
         echo "See: https://reasonkit.sh/docs/installation-troubleshooting"
         exit 1
     fi
-    
+
     # Install binary
     cp target/release/rk-core "$INSTALL_DIR/"
     chmod +x "$INSTALL_DIR/rk-core"
-    
+
     success "Built and installed from source"
 }
 
@@ -291,7 +291,7 @@ configure_path() {
         echo ""
         warn "$INSTALL_DIR is not in your PATH"
         echo ""
-        
+
         # Detect shell and provide appropriate instructions
         SHELL_NAME=$(basename "$SHELL")
         case "$SHELL_NAME" in
@@ -312,7 +312,7 @@ configure_path() {
                 RC_FILE="$HOME/.profile"
                 ;;
         esac
-        
+
         echo "Add this to $RC_FILE:"
         echo ""
         if [ "$SHELL_NAME" = "fish" ]; then
@@ -324,7 +324,7 @@ configure_path() {
         echo "Then run:"
         echo -e "  ${CYAN}source $RC_FILE${NC}"
         echo ""
-        
+
         # Offer to add automatically
         if [ -t 0 ]; then
             read -p "Add to PATH automatically? [Y/n] " -n 1 -r
@@ -349,7 +349,7 @@ configure_path() {
 validate_installation() {
     echo ""
     info "Validating installation..."
-    
+
     # Find the binary
     RK_BINARY=""
     if [ -x "$INSTALL_DIR/rk-core" ]; then
@@ -357,7 +357,7 @@ validate_installation() {
     elif command -v rk-core &> /dev/null; then
         RK_BINARY=$(command -v rk-core)
     fi
-    
+
     if [ -z "$RK_BINARY" ]; then
         error "rk-core binary not found after installation"
         echo ""
@@ -365,7 +365,7 @@ validate_installation() {
         echo "  $INSTALL_DIR/rk-core --version"
         return 1
     fi
-    
+
     # Test version command
     VERSION_OUTPUT=$("$RK_BINARY" --version 2>&1)
     if [ $? -eq 0 ]; then
@@ -374,12 +374,12 @@ validate_installation() {
         warn "Binary found but --version failed"
         echo "Output: $VERSION_OUTPUT"
     fi
-    
+
     # Test help command
     if "$RK_BINARY" --help &> /dev/null; then
         success "Help command works"
     fi
-    
+
     return 0
 }
 
@@ -432,15 +432,15 @@ print_quickstart() {
 
 main() {
     print_banner
-    
+
     detect_platform
     determine_install_dir
     check_dependencies
     check_rust
-    
+
     echo ""
     info "Installing ReasonKit..."
-    
+
     # Try installation methods in order of preference
     if try_prebuilt_binary; then
         : # Success
@@ -449,7 +449,7 @@ main() {
     else
         install_from_source
     fi
-    
+
     configure_path
     validate_installation
     print_quickstart

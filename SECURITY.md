@@ -15,9 +15,9 @@ We adhere to Semantic Versioning 2.0.0. Security updates are provided for the cu
 
 If you discover a security vulnerability in ReasonKit, please report it privately:
 
-1.  **Email:** security@reasonkit.sh
-2.  **Response Time:** We are committed to responding to security reports within 48 hours.
-3.  **Process:**
+1. **Email:** <security@reasonkit.sh>
+2. **Response Time:** We are committed to responding to security reports within 48 hours.
+3. **Process:**
     - We will investigate and verify the issue.
     - We will develop a patch.
     - We will release a security advisory and a patched version.

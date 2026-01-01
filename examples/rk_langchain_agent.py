@@ -1,8 +1,7 @@
 import json
-import subprocess
 import os
+import subprocess
 import sys
-from typing import Optional, List, Dict, Any
 
 from langchain_core.tools import BaseTool
 
@@ -34,9 +33,7 @@ if not os.path.exists(RK_CORE_PATH):
 
 
 class ReasonKitInput(BaseModel):
-    query: str = Field(
-        description="The input query, claim, or problem to reason about."
-    )
+    query: str = Field(description="The input query, claim, or problem to reason about.")
     profile: str = Field(
         default="quick",
         description="The reasoning profile: 'quick', 'balanced', 'scientific', 'paranoid'.",

@@ -131,7 +131,7 @@ N/A - Initial release
 ## Known Issues
 
 1. Integration tests need API sync with library changes
-2. `--all-features` requires rust-bert dependency fixes
+2. `--all-features` requires Rust-bert dependency fixes
 3. Workspace profile configuration warning (non-blocking)
 
 ---
@@ -169,5 +169,5 @@ curl -fsSL https://reasonkit.sh/install | bash
 
 ---
 
-_"Designed, Not Dreamed. Turn Prompts into Protocols."_
-*https://reasonkit.sh*
+*"Designed, Not Dreamed. Turn Prompts into Protocols."*
+*<https://reasonkit.sh>*

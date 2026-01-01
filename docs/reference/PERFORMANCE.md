@@ -27,45 +27,45 @@ This guide provides comprehensive performance optimization recommendations for R
 
 All non-LLM operations must complete within the specified targets:
 
-| Operation | Target | Expected Baseline | Notes |
-|-----------|--------|-------------------|-------|
-| **Retrieval Operations** |
-| Sparse search (BM25) @ 100 docs | < 5ms | ~2.5ms | Pure text matching |
-| Hybrid search @ 100 docs | < 10ms | ~8.0ms | Sparse + dense fusion |
-| Concurrent 8 queries | < 15ms | ~12ms | Parallel execution |
-| **Fusion Operations** |
-| RRF @ 100 results (2 methods) | < 5ms | ~1.2ms | Reciprocal Rank Fusion |
-| Weighted sum @ 100 results | < 5ms | ~1.5ms | Linear combination |
-| Multi-method (3 methods) | < 10ms | ~3.5ms | Complex fusion |
-| **Embedding Operations** |
-| Mock embedding (cache hit) | < 0.1ms | ~0.02ms | In-memory lookup |
-| Batch embedding @ 100 | < 5ms | ~4.5ms | Parallel processing |
-| Cosine similarity @ 384-dim | < 1ms | ~0.08ms | Vector math |
-| **RAPTOR Operations** |
-| Tree creation @ 100 leaves | < 50ms | ~8ms | Hierarchical clustering |
-| Tree traversal @ 1000 nodes | < 5ms | ~2.5ms | DFS/BFS |
-| Node lookup | < 0.1ms | ~0.03ms | HashMap access |
-| **Ingestion Operations** |
-| Fixed chunking @ 10KB | < 5ms | ~1.8ms | Text splitting |
-| Sentence chunking @ 10KB | < 10ms | ~3.2ms | NLP-based splitting |
-| Parallel @ 100 docs | < 50ms | ~35ms | Rayon parallelism |
-| **ThinkTools Operations** |
-| Protocol orchestration | < 5ms | ~1-2ms | Excluding LLM time |
-| Template rendering | < 1ms | ~100-500us | String substitution |
-| Confidence extraction | < 0.5ms | ~50-200us | Regex parsing |
-| Profile lookup | < 0.1ms | ~0.03ms | Registry access |
+| Operation                       | Target  | Expected Baseline | Notes                   |
+| ------------------------------- | ------- | ----------------- | ----------------------- |
+| **Retrieval Operations**        |
+| Sparse search (BM25) @ 100 docs | < 5ms   | ~2.5ms            | Pure text matching      |
+| Hybrid search @ 100 docs        | < 10ms  | ~8.0ms            | Sparse + dense fusion   |
+| Concurrent 8 queries            | < 15ms  | ~12ms             | Parallel execution      |
+| **Fusion Operations**           |
+| RRF @ 100 results (2 methods)   | < 5ms   | ~1.2ms            | Reciprocal Rank Fusion  |
+| Weighted sum @ 100 results      | < 5ms   | ~1.5ms            | Linear combination      |
+| Multi-method (3 methods)        | < 10ms  | ~3.5ms            | Complex fusion          |
+| **Embedding Operations**        |
+| Mock embedding (cache hit)      | < 0.1ms | ~0.02ms           | In-memory lookup        |
+| Batch embedding @ 100           | < 5ms   | ~4.5ms            | Parallel processing     |
+| Cosine similarity @ 384-dim     | < 1ms   | ~0.08ms           | Vector math             |
+| **RAPTOR Operations**           |
+| Tree creation @ 100 leaves      | < 50ms  | ~8ms              | Hierarchical clustering |
+| Tree traversal @ 1000 nodes     | < 5ms   | ~2.5ms            | DFS/BFS                 |
+| Node lookup                     | < 0.1ms | ~0.03ms           | HashMap access          |
+| **Ingestion Operations**        |
+| Fixed chunking @ 10KB           | < 5ms   | ~1.8ms            | Text splitting          |
+| Sentence chunking @ 10KB        | < 10ms  | ~3.2ms            | NLP-based splitting     |
+| Parallel @ 100 docs             | < 50ms  | ~35ms             | Rayon parallelism       |
+| **ThinkTools Operations**       |
+| Protocol orchestration          | < 5ms   | ~1-2ms            | Excluding LLM time      |
+| Template rendering              | < 1ms   | ~100-500us        | String substitution     |
+| Confidence extraction           | < 0.5ms | ~50-200us         | Regex parsing           |
+| Profile lookup                  | < 0.1ms | ~0.03ms           | Registry access         |
 
 ### 1.2 LLM Latency Considerations
 
 LLM calls are the dominant factor in end-to-end latency:
 
-| Provider | Model | Typical Latency | Notes |
-|----------|-------|-----------------|-------|
-| OpenAI | gpt-4o | 1-5s | Varies by prompt length |
-| Anthropic | claude-sonnet-4 | 1-4s | Consistent performance |
-| Anthropic | claude-opus-4 | 2-8s | Higher quality, slower |
-| Local | DeepSeek-V3 | 0.5-2s | Self-hosted, GPU required |
-| Local | Llama 3.3 70B | 1-3s | Self-hosted, GPU required |
+| Provider  | Model           | Typical Latency | Notes                     |
+| --------- | --------------- | --------------- | ------------------------- |
+| OpenAI    | gpt-4o          | 1-5s            | Varies by prompt length   |
+| Anthropic | claude-sonnet-4 | 1-4s            | Consistent performance    |
+| Anthropic | claude-opus-4   | 2-8s            | Higher quality, slower    |
+| Local     | DeepSeek-V3     | 0.5-2s          | Self-hosted, GPU required |
+| Local     | Llama 3.3 70B   | 1-3s            | Self-hosted, GPU required |
 
 **Key Insight**: ReasonKit's overhead is typically <1% of total execution time. Focus optimization efforts on reducing LLM calls, not on ReasonKit internals.
 
@@ -73,13 +73,13 @@ LLM calls are the dominant factor in end-to-end latency:
 
 Structured prompting via ThinkTools reduces output variance:
 
-| Metric | Raw Prompts | Structured Prompts | Improvement |
-|--------|-------------|-------------------|-------------|
-| Mean Agreement Rate (TARa) | 96.0% | 98.0% | +2.0 pp |
-| Inconsistency Rate | 4.0% | 2.0% | -2.0 pp |
-| Variance Reduction | - | - | 5.0% |
+| Metric                     | Raw Prompts | Structured Prompts | Improvement |
+| -------------------------- | ----------- | ------------------ | ----------- |
+| Mean Agreement Rate (TARa) | 96.0%       | 98.0%              | +2.0 pp     |
+| Inconsistency Rate         | 4.0%        | 2.0%               | -2.0 pp     |
+| Variance Reduction         | -           | -                  | 5.0%        |
 
-*Results from Claude Sonnet 4 at temperature=0, N=5 runs per question.*
+_Results from Claude Sonnet 4 at temperature=0, N=5 runs per question._
 
 ---
 
@@ -155,12 +155,12 @@ timeout = 30
 
 #### Storage Backend Selection
 
-| Setting | Performance Impact | When to Use |
-|---------|-------------------|-------------|
-| `embedded = true` | Fastest startup, no network overhead | Development, single-node |
-| `embedded = false` | Slightly higher latency, scalable | Production, multi-node |
-| `quantization = true` | 4x memory reduction, ~2% accuracy loss | Memory-constrained |
-| `quantization = false` | Full precision | Maximum accuracy required |
+| Setting                | Performance Impact                     | When to Use               |
+| ---------------------- | -------------------------------------- | ------------------------- |
+| `embedded = true`      | Fastest startup, no network overhead   | Development, single-node  |
+| `embedded = false`     | Slightly higher latency, scalable      | Production, multi-node    |
+| `quantization = true`  | 4x memory reduction, ~2% accuracy loss | Memory-constrained        |
+| `quantization = false` | Full precision                         | Maximum accuracy required |
 
 #### HNSW Parameters
 
@@ -171,11 +171,11 @@ hnsw_ef_construction = 200  # Build-time beam width (100-500)
 ```
 
 | hnsw_m | Memory/Vector | Search Speed | Accuracy |
-|--------|---------------|--------------|----------|
-| 8 | ~256 bytes | Very fast | 95% |
-| 16 | ~512 bytes | Fast | 98% |
-| 32 | ~1KB | Medium | 99% |
-| 64 | ~2KB | Slow | 99.5% |
+| ------ | ------------- | ------------ | -------- |
+| 8      | ~256 bytes    | Very fast    | 95%      |
+| 16     | ~512 bytes    | Fast         | 98%      |
+| 32     | ~1KB          | Medium       | 99%      |
+| 64     | ~2KB          | Slow         | 99.5%    |
 
 **Recommendation**: Start with `hnsw_m = 16` for most use cases.
 
@@ -190,12 +190,12 @@ alpha = 0.7  -> 70% vector, 30% BM25 (recommended default)
 alpha = 1.0  -> 100% vector (semantic only)
 ```
 
-| Use Case | Recommended Alpha | Rationale |
-|----------|-------------------|-----------|
-| Technical documentation | 0.5 | Keywords matter |
-| General knowledge | 0.7 | Semantic similarity important |
-| Code search | 0.3 | Exact matches critical |
-| Conversational search | 0.8 | Semantic understanding key |
+| Use Case                | Recommended Alpha | Rationale                     |
+| ----------------------- | ----------------- | ----------------------------- |
+| Technical documentation | 0.5               | Keywords matter               |
+| General knowledge       | 0.7               | Semantic similarity important |
+| Code search             | 0.3               | Exact matches critical        |
+| Conversational search   | 0.8               | Semantic understanding key    |
 
 ### 2.3 Environment Variables
 
@@ -226,15 +226,15 @@ export TOKIO_WORKER_THREADS="4"   # Async runtime threads
 
 ### 3.1 Memory Usage by Component
 
-| Component | Memory Per Unit | Scaling Factor |
-|-----------|-----------------|----------------|
-| Raw document | ~1x document size | Linear |
-| Chunks | ~1.1x raw (overlap) | Linear |
-| BM25 index | ~0.2x corpus size | Linear |
-| Dense embeddings (f32) | 4 bytes * dim * chunks | Linear |
-| Dense embeddings (quantized) | 1 byte * dim * chunks | Linear |
-| HNSW graph | ~512 bytes * chunks (m=16) | Linear |
-| RAPTOR tree | ~2x leaf nodes | Logarithmic |
+| Component                    | Memory Per Unit             | Scaling Factor |
+| ---------------------------- | --------------------------- | -------------- |
+| Raw document                 | ~1x document size           | Linear         |
+| Chunks                       | ~1.1x raw (overlap)         | Linear         |
+| BM25 index                   | ~0.2x corpus size           | Linear         |
+| Dense embeddings (f32)       | 4 bytes _ dim _ chunks      | Linear         |
+| Dense embeddings (quantized) | 1 byte _ dim _ chunks       | Linear         |
+| HNSW graph                   | ~512 bytes \* chunks (m=16) | Linear         |
+| RAPTOR tree                  | ~2x leaf nodes              | Logarithmic    |
 
 ### 3.2 Memory Reduction Strategies
 
@@ -256,11 +256,11 @@ dimensions = 512  # Down from 1536
 ```
 
 | Dimensions | Memory/Chunk | Accuracy (relative) |
-|------------|--------------|---------------------|
-| 1536 | 6KB | 100% |
-| 1024 | 4KB | 98% |
-| 512 | 2KB | 95% |
-| 256 | 1KB | 90% |
+| ---------- | ------------ | ------------------- |
+| 1536       | 6KB          | 100%                |
+| 1024       | 4KB          | 98%                 |
+| 512        | 2KB          | 95%                 |
+| 256        | 1KB          | 90%                 |
 
 #### 3. Increase Chunk Size
 
@@ -296,12 +296,12 @@ curl localhost:6333/collections/reasonkit_docs | jq '.result.points_count, .resu
 
 ### 3.4 Recommended Memory Sizing
 
-| Corpus Size | Chunks (512 tok) | Memory (quantized) | Memory (full) |
-|-------------|------------------|-------------------|---------------|
-| 1,000 docs | ~10,000 | ~100MB | ~400MB |
-| 10,000 docs | ~100,000 | ~1GB | ~4GB |
-| 100,000 docs | ~1,000,000 | ~10GB | ~40GB |
-| 1,000,000 docs | ~10,000,000 | ~100GB | ~400GB |
+| Corpus Size    | Chunks (512 tok) | Memory (quantized) | Memory (full) |
+| -------------- | ---------------- | ------------------ | ------------- |
+| 1,000 docs     | ~10,000          | ~100MB             | ~400MB        |
+| 10,000 docs    | ~100,000         | ~1GB               | ~4GB          |
+| 100,000 docs   | ~1,000,000       | ~10GB              | ~40GB         |
+| 1,000,000 docs | ~10,000,000      | ~100GB             | ~400GB        |
 
 ---
 
@@ -311,22 +311,22 @@ curl localhost:6333/collections/reasonkit_docs | jq '.result.points_count, .resu
 
 #### Cloud Providers (via API)
 
-| Provider | Model | Dimensions | Cost/1M tokens | Quality |
-|----------|-------|------------|----------------|---------|
-| OpenAI | text-embedding-3-large | 3072 | $0.13 | Excellent |
-| OpenAI | text-embedding-3-small | 1536 | $0.02 | Good |
-| Cohere | embed-english-v3.0 | 1024 | $0.10 | Excellent |
-| Voyage | voyage-2 | 1024 | $0.10 | Excellent |
-| Anthropic | (via Voyage) | 1024 | $0.10 | Excellent |
+| Provider  | Model                  | Dimensions | Cost/1M tokens | Quality   |
+| --------- | ---------------------- | ---------- | -------------- | --------- |
+| OpenAI    | text-embedding-3-large | 3072       | $0.13          | Excellent |
+| OpenAI    | text-embedding-3-small | 1536       | $0.02          | Good      |
+| Cohere    | embed-english-v3.0     | 1024       | $0.10          | Excellent |
+| Voyage    | voyage-2               | 1024       | $0.10          | Excellent |
+| Anthropic | (via Voyage)           | 1024       | $0.10          | Excellent |
 
 #### Local Models (via ONNX)
 
-| Model | Dimensions | Memory | Speed (CPU) | Speed (GPU) |
-|-------|------------|--------|-------------|-------------|
-| BGE-M3 | 1024 | ~2GB | 50ms/text | 5ms/text |
-| BGE-Large-EN | 1024 | ~1.5GB | 40ms/text | 4ms/text |
-| all-MiniLM-L6 | 384 | ~100MB | 10ms/text | 1ms/text |
-| E5-Large-v2 | 1024 | ~1.5GB | 40ms/text | 4ms/text |
+| Model         | Dimensions | Memory | Speed (CPU) | Speed (GPU) |
+| ------------- | ---------- | ------ | ----------- | ----------- |
+| BGE-M3        | 1024       | ~2GB   | 50ms/text   | 5ms/text    |
+| BGE-Large-EN  | 1024       | ~1.5GB | 40ms/text   | 4ms/text    |
+| all-MiniLM-L6 | 384        | ~100MB | 10ms/text   | 1ms/text    |
+| E5-Large-v2   | 1024       | ~1.5GB | 40ms/text   | 4ms/text    |
 
 ### 4.2 Model Selection Guide
 
@@ -385,11 +385,11 @@ Cache format: Binary (4 bytes per dimension)
 
 Cache performance:
 
-| Operation | Latency |
-|-----------|---------|
-| Cache hit | < 0.1ms |
-| Cache miss (API) | 100-500ms |
-| Cache miss (local) | 5-50ms |
+| Operation          | Latency   |
+| ------------------ | --------- |
+| Cache hit          | < 0.1ms   |
+| Cache miss (API)   | 100-500ms |
+| Cache miss (local) | 5-50ms    |
 
 ---
 
@@ -428,12 +428,12 @@ rk-core ingest /path --threads 8
 
 Optimal thread count:
 
-| CPU Cores | Recommended Threads | Notes |
-|-----------|---------------------|-------|
-| 2 | 2 | Limited parallelism |
-| 4 | 4 | Good for development |
-| 8 | 6-8 | Leave 2 for system |
-| 16+ | 12-14 | Diminishing returns |
+| CPU Cores | Recommended Threads | Notes                |
+| --------- | ------------------- | -------------------- |
+| 2         | 2                   | Limited parallelism  |
+| 4         | 4                   | Good for development |
+| 8         | 6-8                 | Leave 2 for system   |
+| 16+       | 12-14               | Diminishing returns  |
 
 ### 5.3 Batch Embedding Strategies
 
@@ -464,14 +464,14 @@ embedder.embed_streaming(chunks_iter).await?;
 
 ### 5.4 Ingestion Performance Expectations
 
-| Corpus Size | Documents | Chunks | Ingestion Time |
-|-------------|-----------|--------|----------------|
-| Small | 100 | 1,000 | ~30s |
-| Medium | 1,000 | 10,000 | ~5min |
-| Large | 10,000 | 100,000 | ~1hr |
-| Enterprise | 100,000 | 1,000,000 | ~10hr |
+| Corpus Size | Documents | Chunks    | Ingestion Time |
+| ----------- | --------- | --------- | -------------- |
+| Small       | 100       | 1,000     | ~30s           |
+| Medium      | 1,000     | 10,000    | ~5min          |
+| Large       | 10,000    | 100,000   | ~1hr           |
+| Enterprise  | 100,000   | 1,000,000 | ~10hr          |
 
-*Times assume API embeddings with batch_size=100. Local embeddings with GPU are ~5x faster.*
+_Times assume API embeddings with batch_size=100. Local embeddings with GPU are ~5x faster._
 
 ---
 
@@ -513,14 +513,14 @@ cargo bench -- --baseline main
 
 ### 6.2 Benchmark Suites
 
-| Suite | File | What It Tests |
-|-------|------|---------------|
-| Retrieval | `benches/retrieval_bench.rs` | BM25, hybrid search, scaling |
-| Fusion | `benches/fusion_bench.rs` | RRF, weighted sum, multi-method |
-| Embedding | `benches/embedding_bench.rs` | Dense/sparse, batch, cache |
-| RAPTOR | `benches/raptor_bench.rs` | Tree operations, traversal |
-| Ingestion | `benches/ingestion_bench.rs` | Chunking, cleaning, parallel |
-| ThinkTools | `benches/thinktool_bench.rs` | Protocol execution, profiles |
+| Suite      | File                         | What It Tests                   |
+| ---------- | ---------------------------- | ------------------------------- |
+| Retrieval  | `benches/retrieval_bench.rs` | BM25, hybrid search, scaling    |
+| Fusion     | `benches/fusion_bench.rs`    | RRF, weighted sum, multi-method |
+| Embedding  | `benches/embedding_bench.rs` | Dense/sparse, batch, cache      |
+| RAPTOR     | `benches/raptor_bench.rs`    | Tree operations, traversal      |
+| Ingestion  | `benches/ingestion_bench.rs` | Chunking, cleaning, parallel    |
+| ThinkTools | `benches/thinktool_bench.rs` | Protocol execution, profiles    |
 
 ### 6.3 Reading Benchmark Results
 
@@ -544,6 +544,7 @@ open target/criterion/report/index.html
 ```
 
 Reports include:
+
 - Performance trends over time
 - Violin plots showing distribution
 - Regression analysis
@@ -627,7 +628,7 @@ For high availability and scale:
 
 ```yaml
 # docker-compose.yml
-version: '3.8'
+version: "3.8"
 services:
   qdrant-1:
     image: qdrant/qdrant:latest
@@ -672,14 +673,14 @@ reqwest::Client::builder()
 
 #### Metrics to Track
 
-| Metric | Target | Alert Threshold |
-|--------|--------|-----------------|
-| Query latency p50 | < 100ms | > 500ms |
-| Query latency p99 | < 500ms | > 2s |
-| Ingestion rate | > 10 docs/sec | < 1 doc/sec |
-| Memory usage | < 80% | > 90% |
-| Error rate | < 0.1% | > 1% |
-| Cache hit rate | > 80% | < 50% |
+| Metric            | Target        | Alert Threshold |
+| ----------------- | ------------- | --------------- |
+| Query latency p50 | < 100ms       | > 500ms         |
+| Query latency p99 | < 500ms       | > 2s            |
+| Ingestion rate    | > 10 docs/sec | < 1 doc/sec     |
+| Memory usage      | < 80%         | > 90%           |
+| Error rate        | < 0.1%        | > 1%            |
+| Cache hit rate    | > 80%         | < 50%           |
 
 #### Prometheus Metrics
 
@@ -691,6 +692,7 @@ rk-core serve --metrics-port 9090
 #### Grafana Dashboard
 
 Import the provided dashboard:
+
 ```
 grafana/dashboards/reasonkit-overview.json
 ```
@@ -706,6 +708,7 @@ grafana/dashboards/reasonkit-overview.json
 **Symptoms**: Queries take > 1s (excluding LLM time)
 
 **Diagnosis**:
+
 ```bash
 # Check collection stats
 curl localhost:6333/collections/reasonkit_docs | jq
@@ -715,6 +718,7 @@ rk-core stats --verbose
 ```
 
 **Solutions**:
+
 1. Ensure HNSW index is built: `rk-core index rebuild`
 2. Enable quantization for memory pressure
 3. Reduce `top_k` if returning too many results
@@ -725,12 +729,14 @@ rk-core stats --verbose
 **Symptoms**: OOM errors or swap thrashing
 
 **Diagnosis**:
+
 ```bash
 ps aux | grep rk-core
 cat /proc/$(pgrep rk-core)/status | grep VmRSS
 ```
 
 **Solutions**:
+
 1. Enable quantization (`quantization = true`)
 2. Reduce embedding dimensions
 3. Increase chunk size
@@ -741,6 +747,7 @@ cat /proc/$(pgrep rk-core)/status | grep VmRSS
 **Symptoms**: Documents take > 10s each to ingest
 
 **Diagnosis**:
+
 ```bash
 # Check embedding latency
 time rk-core embed "test text"
@@ -750,6 +757,7 @@ time rk-core chunk /path/to/doc.md
 ```
 
 **Solutions**:
+
 1. Increase `batch_size` for API embeddings
 2. Use local embeddings with GPU
 3. Increase parallel threads
@@ -760,12 +768,14 @@ time rk-core chunk /path/to/doc.md
 **Symptoms**: Same query produces different results
 
 **Diagnosis**:
+
 ```bash
 # Run variance benchmark
 python benchmarks/variance_benchmark.py --quick
 ```
 
 **Solutions**:
+
 1. Use structured prompting (ThinkTools profiles)
 2. Set `temperature = 0` for deterministic output
 3. Enable self-consistency voting
@@ -813,15 +823,15 @@ RUST_LOG=reasonkit=trace rk-core query "test"
 
 ## Appendix A: Benchmark File Reference
 
-| File | Purpose | Key Tests |
-|------|---------|-----------|
-| `benches/retrieval_bench.rs` | Search performance | BM25, hybrid, scaling, concurrent |
-| `benches/fusion_bench.rs` | Result fusion | RRF, weighted sum, multi-method |
-| `benches/embedding_bench.rs` | Embedding ops | Dense, sparse, batch, cache |
-| `benches/raptor_bench.rs` | RAPTOR trees | Create, traverse, lookup |
-| `benches/ingestion_bench.rs` | Document processing | Chunk, clean, parallel |
-| `benches/thinktool_bench.rs` | ThinkTools protocols | Execute, profile, concurrent |
-| `benchmarks/variance_benchmark.py` | LLM consistency | TARa, structured vs raw |
+| File                               | Purpose              | Key Tests                         |
+| ---------------------------------- | -------------------- | --------------------------------- |
+| `benches/retrieval_bench.rs`       | Search performance   | BM25, hybrid, scaling, concurrent |
+| `benches/fusion_bench.rs`          | Result fusion        | RRF, weighted sum, multi-method   |
+| `benches/embedding_bench.rs`       | Embedding ops        | Dense, sparse, batch, cache       |
+| `benches/raptor_bench.rs`          | RAPTOR trees         | Create, traverse, lookup          |
+| `benches/ingestion_bench.rs`       | Document processing  | Chunk, clean, parallel            |
+| `benches/thinktool_bench.rs`       | ThinkTools protocols | Execute, profile, concurrent      |
+| `benchmarks/variance_benchmark.py` | LLM consistency      | TARa, structured vs raw           |
 
 ## Appendix B: Performance Optimization Checklist
 
@@ -862,7 +872,7 @@ RUST_LOG=reasonkit=trace rk-core query "test"
 
 ---
 
-*"All core loops < 5ms" - This is our contract with users.*
+_"All core loops < 5ms" - This is our contract with users._
 
 **ReasonKit Performance Engineering**
 Version 1.0.0 | https://reasonkit.sh

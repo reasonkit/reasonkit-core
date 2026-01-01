@@ -59,7 +59,7 @@ rk-core providers search openrouter "claude"
 
 ## Full Configuration Options
 
-### ~/.reasonkit/config.toml
+### ~/.ReasonKit/config.toml
 
 ```toml
 [providers.openrouter]
@@ -667,14 +667,14 @@ rk-core consensus "Is this architecture sound?" \
 
 ## Resources
 
-- **OpenRouter Dashboard:** https://openrouter.ai/
-- **API Documentation:** https://openrouter.ai/docs
-- **Model List:** https://openrouter.ai/models
-- **Pricing:** https://openrouter.ai/pricing
-- **Credits:** https://openrouter.ai/credits
-- **Status:** https://status.openrouter.ai/
+- **OpenRouter Dashboard:** <https://openrouter.ai/>
+- **API Documentation:** <https://openrouter.ai/docs>
+- **Model List:** <https://openrouter.ai/models>
+- **Pricing:** <https://openrouter.ai/pricing>
+- **Credits:** <https://openrouter.ai/credits>
+- **Status:** <https://status.openrouter.ai/>
 
 ---
 
-_ReasonKit + OpenRouter Integration Guide | v1.0.0 | Apache 2.0_
-_"See How Your AI Thinks - With Any Model"_
+*ReasonKit + OpenRouter Integration Guide | v1.0.0 | Apache 2.0*
+*"See How Your AI Thinks - With Any Model"*

@@ -124,6 +124,20 @@ docs:
 docs-build:
     cargo doc --no-deps
 
+# Check documentation links (requires lychee)
+docs-check:
+    @echo "🔗 Checking documentation links..."
+    @if command -v lychee >/dev/null; then \
+        lychee --exclude-mail "docs/**/*.md" "README.md"; \
+    else \
+        echo "⚠️ lychee not found. Install with 'cargo install lychee'"; \
+    fi
+
+# List documentation structure
+docs-tree:
+    @echo "📂 Documentation Structure:"
+    @tree docs -I "assets|images" --dirsfirst
+
 # ═══════════════════════════════════════════════════════════════════════════════
 # SPEC PANEL REVIEWS (Monthly requirement)
 # ═══════════════════════════════════════════════════════════════════════════════

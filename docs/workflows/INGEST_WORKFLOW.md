@@ -69,14 +69,14 @@ impl DocumentIngester {
 
 ### Supported Formats
 
-| Extension | Handler Method | Document Type |
-|-----------|----------------|---------------|
-| `.pdf` | `pdf::PdfIngester::ingest()` | Paper |
-| `.md`, `.markdown` | `ingest_markdown()` | Documentation |
-| `.html`, `.htm` | `ingest_html()` | Documentation |
-| `.json` | `ingest_json()` | Note / Deserialized Document |
-| `.jsonl` | `ingest_jsonl()` | Documentation |
-| `.txt` | `ingest_text()` | Note |
+| Extension          | Handler Method               | Document Type                |
+| ------------------ | ---------------------------- | ---------------------------- |
+| `.pdf`             | `pdf::PdfIngester::ingest()` | Paper                        |
+| `.md`, `.markdown` | `ingest_markdown()`          | Documentation                |
+| `.html`, `.htm`    | `ingest_html()`              | Documentation                |
+| `.json`            | `ingest_json()`              | Note / Deserialized Document |
+| `.jsonl`           | `ingest_jsonl()`             | Documentation                |
+| `.txt`             | `ingest_text()`              | Note                         |
 
 ### Document Data Flow
 
@@ -125,12 +125,12 @@ pub fn chunk_document(
 
 ### Chunking Strategies
 
-| Strategy | Description | Use Case |
-|----------|-------------|----------|
-| `FixedSize` | Fixed token count per chunk | Simple documents |
-| `Semantic` | Split on paragraph/section boundaries | Prose documents |
-| `Recursive` | Try different delimiters in order | General purpose (default) |
-| `DocumentAware` | Document-type specific logic | Mixed document types |
+| Strategy        | Description                           | Use Case                  |
+| --------------- | ------------------------------------- | ------------------------- |
+| `FixedSize`     | Fixed token count per chunk           | Simple documents          |
+| `Semantic`      | Split on paragraph/section boundaries | Prose documents           |
+| `Recursive`     | Try different delimiters in order     | General purpose (default) |
+| `DocumentAware` | Document-type specific logic          | Mixed document types      |
 
 ### Configuration
 
@@ -194,11 +194,11 @@ impl EmbeddingPipeline {
 
 ### Embedding Providers
 
-| Provider | Configuration | Dimension |
-|----------|--------------|-----------|
-| OpenAI (`text-embedding-3-small`) | Default | 1536 |
-| BGE-M3 (local ONNX) | `feature = "local-embeddings"` | 1024 |
-| E5-small (local ONNX) | `feature = "local-embeddings"` | 384 |
+| Provider                          | Configuration                  | Dimension |
+| --------------------------------- | ------------------------------ | --------- |
+| OpenAI (`text-embedding-3-small`) | Default                        | 1536      |
+| BGE-M3 (local ONNX)               | `feature = "local-embeddings"` | 1024      |
+| E5-small (local ONNX)             | `feature = "local-embeddings"` | 384       |
 
 ### Embedding Flow
 
@@ -267,11 +267,11 @@ impl Storage {
                      +--------+
 ```
 
-| Layer | Purpose | Characteristics |
-|-------|---------|-----------------|
-| Hot | Recent/active memories | Fast access, in-memory |
-| Cold | Historical/archived | Persistent, optimized storage |
-| WAL | Write-ahead log | Durability, crash recovery |
+| Layer | Purpose                | Characteristics               |
+| ----- | ---------------------- | ----------------------------- |
+| Hot   | Recent/active memories | Fast access, in-memory        |
+| Cold  | Historical/archived    | Persistent, optimized storage |
+| WAL   | Write-ahead log        | Durability, crash recovery    |
 
 ### Backend Options
 
@@ -351,11 +351,11 @@ impl HybridRetriever {
 
 ### Retrieval Modes
 
-| Mode | Method | Backend Used |
-|------|--------|--------------|
-| Sparse | `search_sparse()` | BM25 (Tantivy) only |
-| Dense | `search_dense()` | Vector (Qdrant) only |
-| Hybrid | `search_hybrid()` | Both + RRF Fusion |
+| Mode   | Method            | Backend Used         |
+| ------ | ----------------- | -------------------- |
+| Sparse | `search_sparse()` | BM25 (Tantivy) only  |
+| Dense  | `search_dense()`  | Vector (Qdrant) only |
+| Hybrid | `search_hybrid()` | Both + RRF Fusion    |
 
 ### Hybrid Search Flow
 
@@ -403,11 +403,11 @@ Vec<HybridResult> {
 
 **Location:** `/reasonkit-mem/src/retrieval/fusion.rs`
 
-| Strategy | Formula | Default |
-|----------|---------|---------|
-| RRF (Reciprocal Rank Fusion) | `1 / (k + rank + 1)` | Yes (k=60) |
-| Weighted Sum | `dense_weight * dense_score + (1-dense_weight) * sparse_score` | No |
-| RBF (Rank-Biased Fusion) | Uses decay parameter `rho` | No |
+| Strategy                     | Formula                                                        | Default    |
+| ---------------------------- | -------------------------------------------------------------- | ---------- |
+| RRF (Reciprocal Rank Fusion) | `1 / (k + rank + 1)`                                           | Yes (k=60) |
+| Weighted Sum                 | `dense_weight * dense_score + (1-dense_weight) * sparse_score` | No         |
+| RBF (Rank-Biased Fusion)     | Uses decay parameter `rho`                                     | No         |
 
 ### Reranking (Optional)
 
@@ -552,19 +552,20 @@ RagResponse {
 
 ### Existing Tests
 
-| Module | Test File | Coverage |
-|--------|-----------|----------|
-| Ingestion | `ingestion/mod.rs` (unit tests) | Markdown, Text |
-| Chunking | `processing/chunking.rs` (unit tests) | All strategies |
-| Embedding | `embedding/mod.rs` (unit tests) | Normalization, cache |
-| Indexing | `indexing/mod.rs` (unit tests) | BM25 search |
-| Retrieval | `retrieval/mod.rs` (unit tests) | Hybrid, KnowledgeBase |
-| Storage | `tests/storage_integration_tests.rs` | Full workflow |
-| RAG | `rag/mod.rs` (unit tests) | Engine, retrieve |
+| Module    | Test File                             | Coverage              |
+| --------- | ------------------------------------- | --------------------- |
+| Ingestion | `ingestion/mod.rs` (unit tests)       | Markdown, Text        |
+| Chunking  | `processing/chunking.rs` (unit tests) | All strategies        |
+| Embedding | `embedding/mod.rs` (unit tests)       | Normalization, cache  |
+| Indexing  | `indexing/mod.rs` (unit tests)        | BM25 search           |
+| Retrieval | `retrieval/mod.rs` (unit tests)       | Hybrid, KnowledgeBase |
+| Storage   | `tests/storage_integration_tests.rs`  | Full workflow         |
+| RAG       | `rag/mod.rs` (unit tests)             | Engine, retrieve      |
 
 ### Missing E2E Test
 
 A full end-to-end test covering:
+
 1. File ingestion
 2. Chunking
 3. Embedding (mock or real)
@@ -648,27 +649,27 @@ for source in response.sources {
 
 ## Appendix: Key File Locations
 
-| Component | File Path |
-|-----------|-----------|
-| Document Ingestion | `reasonkit-core/src/ingestion/mod.rs` |
-| PDF Ingestion | `reasonkit-core/src/ingestion/pdf.rs` |
-| Chunking | `reasonkit-core/src/processing/chunking.rs` |
-| Text Processing | `reasonkit-core/src/processing/mod.rs` |
-| Embedding | `reasonkit-mem/src/embedding/mod.rs` |
-| Embedding Cache | `reasonkit-mem/src/embedding/cache.rs` |
-| Storage | `reasonkit-mem/src/storage/mod.rs` |
-| BM25 Indexing | `reasonkit-mem/src/indexing/mod.rs` |
-| Hybrid Retrieval | `reasonkit-mem/src/retrieval/mod.rs` |
-| Fusion | `reasonkit-mem/src/retrieval/fusion.rs` |
-| Reranking | `reasonkit-mem/src/retrieval/rerank.rs` |
-| RAG Engine | `reasonkit-core/src/rag/mod.rs` |
-| Core Types | `reasonkit-core/src/lib.rs` |
-| Memory Types | `reasonkit-mem/src/types.rs` |
+| Component          | File Path                                   |
+| ------------------ | ------------------------------------------- |
+| Document Ingestion | `reasonkit-core/src/ingestion/mod.rs`       |
+| PDF Ingestion      | `reasonkit-core/src/ingestion/pdf.rs`       |
+| Chunking           | `reasonkit-core/src/processing/chunking.rs` |
+| Text Processing    | `reasonkit-core/src/processing/mod.rs`      |
+| Embedding          | `reasonkit-mem/src/embedding/mod.rs`        |
+| Embedding Cache    | `reasonkit-mem/src/embedding/cache.rs`      |
+| Storage            | `reasonkit-mem/src/storage/mod.rs`          |
+| BM25 Indexing      | `reasonkit-mem/src/indexing/mod.rs`         |
+| Hybrid Retrieval   | `reasonkit-mem/src/retrieval/mod.rs`        |
+| Fusion             | `reasonkit-mem/src/retrieval/fusion.rs`     |
+| Reranking          | `reasonkit-mem/src/retrieval/rerank.rs`     |
+| RAG Engine         | `reasonkit-core/src/rag/mod.rs`             |
+| Core Types         | `reasonkit-core/src/lib.rs`                 |
+| Memory Types       | `reasonkit-mem/src/types.rs`                |
 
 ---
 
 ## Version History
 
-| Version | Date | Changes |
-|---------|------|---------|
-| 1.0.0 | 2026-01-01 | Initial workflow documentation |
+| Version | Date       | Changes                        |
+| ------- | ---------- | ------------------------------ |
+| 1.0.0   | 2026-01-01 | Initial workflow documentation |

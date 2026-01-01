@@ -231,7 +231,7 @@ verbose_output:
 
 ---
 
-## MODULE 1: GIGATHINK (Divergent Thinking)
+## MODULE 1: GigaThink (Divergent Thinking)
 
 ### Purpose
 
@@ -473,7 +473,7 @@ Execution Time: 34.2s | Tokens: 3,847 | Version: gigathink-v2.0.0
 
 ---
 
-## MODULE 2: LASERLOGIC (Deductive Reasoning)
+## MODULE 2: LaserLogic (Deductive Reasoning)
 
 ### Purpose
 
@@ -748,7 +748,7 @@ Execution Time: 28.7s | Tokens: 2,934 | Version: laserlogic-v2.0.0
 
 ---
 
-## MODULE 3: BEDROCK (First Principles)
+## MODULE 3: BedRock (First Principles)
 
 ### Purpose
 
@@ -1042,7 +1042,7 @@ Execution Time: 47.3s | Tokens: 4,256 | Version: bedrock-v2.0.0
 
 ---
 
-## MODULE 4: PROOFGUARD (Verification)
+## MODULE 4: ProofGuard (Verification)
 
 ### Purpose
 
@@ -1393,7 +1393,7 @@ Execution Time: 124.6s | Tokens: 6,892 | Version: proofguard-v2.0.0
 
 ---
 
-## MODULE 5: BRUTALHONESTY (Adversarial Critique)
+## MODULE 5: BrutalHonesty (Adversarial Critique)
 
 ### Purpose
 
@@ -2046,5 +2046,5 @@ consultation_count: 2 # Claude + Gemini (CONS-008 compliant)
 
 ---
 
-_"Turn Prompts into Protocols"_
-*https://reasonkit.sh*
+*"Turn Prompts into Protocols"*
+*<https://reasonkit.sh>*

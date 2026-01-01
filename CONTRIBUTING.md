@@ -31,15 +31,15 @@ We are committed to providing a welcoming environment for everyone. Please read 
 
 ## Ways to Contribute
 
-| Type                 | Impact | Good For                 | Difficulty   |
-| -------------------- | ------ | ------------------------ | ------------ |
-| **Report bugs**      | High   | Everyone                 | Beginner     |
-| **Fix typos/docs**   | Medium | Writers, newcomers       | Beginner     |
-| **Fix bugs**         | High   | Developers               | Intermediate |
-| **Add tests**        | High   | Detail-oriented devs     | Intermediate |
-| **Improve docs**     | Medium | Technical writers        | Intermediate |
-| **Add features**     | High   | Experienced contributors | Advanced     |
-| **Review PRs**       | High   | Experienced developers   | Advanced     |
+| Type               | Impact | Good For                 | Difficulty   |
+| ------------------ | ------ | ------------------------ | ------------ |
+| **Report bugs**    | High   | Everyone                 | Beginner     |
+| **Fix typos/docs** | Medium | Writers, newcomers       | Beginner     |
+| **Fix bugs**       | High   | Developers               | Intermediate |
+| **Add tests**      | High   | Detail-oriented devs     | Intermediate |
+| **Improve docs**   | Medium | Technical writers        | Intermediate |
+| **Add features**   | High   | Experienced contributors | Advanced     |
+| **Review PRs**     | High   | Experienced developers   | Advanced     |
 
 ### Good First Issues
 
@@ -57,10 +57,10 @@ Browse: [Good First Issues](https://github.com/reasonkit/reasonkit-core/issues?q
 
 ### Prerequisites
 
-| Tool       | Version | Installation                                     |
-| ---------- | ------- | ------------------------------------------------ |
-| **Rust**   | 1.74+   | [rustup.rs](https://rustup.rs/)                  |
-| **Git**    | 2.30+   | [git-scm.com](https://git-scm.com/)              |
+| Tool     | Version | Installation                        |
+| -------- | ------- | ----------------------------------- |
+| **Rust** | 1.74+   | [rustup.rs](https://rustup.rs/)     |
+| **Git**  | 2.30+   | [git-scm.com](https://git-scm.com/) |
 
 ### Quick Start (5 minutes)
 
@@ -101,7 +101,8 @@ cargo install cargo-nextest   # Faster test runner
 **VS Code (Recommended)**
 
 Install these extensions:
-- [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer) - Rust language support
+
+- [Rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer) - Rust language support
 - [Even Better TOML](https://marketplace.visualstudio.com/items?itemName=tamasfe.even-better-toml) - Cargo.toml support
 - [Error Lens](https://marketplace.visualstudio.com/items?itemName=usernamehw.errorlens) - Inline error display
 
@@ -132,13 +133,13 @@ Recommended `settings.json`:
 
 ReasonKit Core follows **The Rust Supremacy** - a non-negotiable architectural principle:
 
-| Principle           | Requirement                                    |
-| ------------------- | ---------------------------------------------- |
-| **Performance**     | All core loops must execute in < 5ms           |
-| **Memory Safety**   | No `unsafe` without documented justification   |
-| **Type Safety**     | Prefer strong typing over runtime checks       |
-| **Error Handling**  | Use `Result<T, E>` - no panics in library code |
-| **Concurrency**     | Use Rust's ownership model, avoid shared state |
+| Principle          | Requirement                                    |
+| ------------------ | ---------------------------------------------- |
+| **Performance**    | All core loops must execute in < 5ms           |
+| **Memory Safety**  | No `unsafe` without documented justification   |
+| **Type Safety**    | Prefer strong typing over runtime checks       |
+| **Error Handling** | Use `Result<T, E>` - no panics in library code |
+| **Concurrency**    | Use Rust's ownership model, avoid shared state |
 
 ### Formatting and Linting
 
@@ -157,22 +158,22 @@ cargo clippy --all-targets --all-features -- -D warnings
 
 ### Naming Conventions
 
-| Item                | Convention      | Example                          |
-| ------------------- | --------------- | -------------------------------- |
-| Crates              | `snake_case`    | `reasonkit_core`                 |
-| Modules             | `snake_case`    | `think_tools`                    |
-| Types/Traits        | `PascalCase`    | `ThinkClient`, `Searchable`      |
-| Functions/Methods   | `snake_case`    | `hybrid_search`                  |
-| Constants           | `SCREAMING_CASE`| `MAX_RETRIES`                    |
-| Local Variables     | `snake_case`    | `query_result`                   |
-| Type Parameters     | Single letter   | `T`, `E`, `R`                    |
-| Lifetimes           | Short lowercase | `'a`, `'ctx`                     |
+| Item              | Convention       | Example                     |
+| ----------------- | ---------------- | --------------------------- |
+| Crates            | `snake_case`     | `reasonkit_core`            |
+| Modules           | `snake_case`     | `think_tools`               |
+| Types/Traits      | `PascalCase`     | `ThinkClient`, `Searchable` |
+| Functions/Methods | `snake_case`     | `hybrid_search`             |
+| Constants         | `SCREAMING_CASE` | `MAX_RETRIES`               |
+| Local Variables   | `snake_case`     | `query_result`              |
+| Type Parameters   | Single letter    | `T`, `E`, `R`               |
+| Lifetimes         | Short lowercase  | `'a`, `'ctx`                |
 
 ### Documentation Standards
 
-All public APIs must be documented with `///` doc comments:
+All public APIs must be documented with `///` doc comments. For general documentation contributions, please refer to our [Documentation Maintenance Guide](docs/MAINTENANCE.md).
 
-```rust
+````rust
 /// Performs hybrid search combining BM25 and vector similarity.
 ///
 /// This method executes both sparse (BM25) and dense (vector) retrieval,
@@ -211,7 +212,7 @@ All public APIs must be documented with `///` doc comments:
 pub fn hybrid_search(&self, query: &str, top_k: usize) -> Result<Vec<SearchResult>, SearchError> {
     // Implementation
 }
-```
+````
 
 ### Error Handling Best Practices
 
@@ -271,12 +272,12 @@ unsafe {
 
 ### Test Coverage Expectations
 
-| Change Type     | Test Requirement                              |
-| --------------- | --------------------------------------------- |
-| Bug fix         | Add regression test that fails without fix    |
-| New feature     | Unit tests + integration test (if applicable) |
-| Refactoring     | Existing tests must continue to pass          |
-| Performance     | Add benchmark if claiming improvement         |
+| Change Type | Test Requirement                              |
+| ----------- | --------------------------------------------- |
+| Bug fix     | Add regression test that fails without fix    |
+| New feature | Unit tests + integration test (if applicable) |
+| Refactoring | Existing tests must continue to pass          |
+| Performance | Add benchmark if claiming improvement         |
 
 ### Running Tests
 
@@ -390,22 +391,23 @@ We use [Conventional Commits](https://www.conventionalcommits.org/) for clear, p
 
 ### Types
 
-| Type       | When to Use                                          |
-| ---------- | ---------------------------------------------------- |
-| `feat`     | New feature                                          |
-| `fix`      | Bug fix                                              |
-| `docs`     | Documentation only                                   |
-| `style`    | Formatting, missing semicolons (no code change)      |
-| `refactor` | Code change that neither fixes a bug nor adds feature|
-| `perf`     | Performance improvement                              |
-| `test`     | Adding or updating tests                             |
-| `build`    | Build system or external dependencies                |
-| `ci`       | CI configuration                                     |
-| `chore`    | Other changes (e.g., updating .gitignore)            |
+| Type       | When to Use                                           |
+| ---------- | ----------------------------------------------------- |
+| `feat`     | New feature                                           |
+| `fix`      | Bug fix                                               |
+| `docs`     | Documentation only                                    |
+| `style`    | Formatting, missing semicolons (no code change)       |
+| `refactor` | Code change that neither fixes a bug nor adds feature |
+| `perf`     | Performance improvement                               |
+| `test`     | Adding or updating tests                              |
+| `build`    | Build system or external dependencies                 |
+| `ci`       | CI configuration                                      |
+| `chore`    | Other changes (e.g., updating .gitignore)             |
 
 ### Scopes (Optional)
 
 Use the module or component name:
+
 - `search`, `retrieval`, `embedding`, `ingestion`
 - `thinktool`, `protocol`, `trace`
 - `cli`, `api`, `config`
@@ -476,6 +478,7 @@ feat(search): implement the new revolutionary algorithm that will change everyth
 1. **Fork** the repository on GitHub
 
 2. **Create a branch** from `main`:
+
    ```bash
    git checkout main
    git pull upstream main
@@ -485,6 +488,7 @@ feat(search): implement the new revolutionary algorithm that will change everyth
 3. **Make your changes** following the code guidelines
 
 4. **Run the quality gates** (mandatory):
+
    ```bash
    cargo build --release        # Gate 1: Build
    cargo clippy -- -D warnings  # Gate 2: Lint
@@ -496,6 +500,7 @@ feat(search): implement the new revolutionary algorithm that will change everyth
 5. **Commit** with conventional commit messages
 
 6. **Push** to your fork:
+
    ```bash
    git push origin feature/your-feature-name
    ```
@@ -504,14 +509,14 @@ feat(search): implement the new revolutionary algorithm that will change everyth
 
 ### Branch Naming
 
-| Prefix     | Purpose                      | Example                    |
-| ---------- | ---------------------------- | -------------------------- |
-| `feature/` | New features                 | `feature/hybrid-search`    |
-| `fix/`     | Bug fixes                    | `fix/chunk-splitting`      |
-| `docs/`    | Documentation                | `docs/api-reference`       |
-| `perf/`    | Performance improvements     | `perf/vector-optimization` |
-| `test/`    | Test additions/improvements  | `test/search-edge-cases`   |
-| `refactor/`| Code refactoring             | `refactor/error-handling`  |
+| Prefix      | Purpose                     | Example                    |
+| ----------- | --------------------------- | -------------------------- |
+| `feature/`  | New features                | `feature/hybrid-search`    |
+| `fix/`      | Bug fixes                   | `fix/chunk-splitting`      |
+| `docs/`     | Documentation               | `docs/api-reference`       |
+| `perf/`     | Performance improvements    | `perf/vector-optimization` |
+| `test/`     | Test additions/improvements | `test/search-edge-cases`   |
+| `refactor/` | Code refactoring            | `refactor/error-handling`  |
 
 ### PR Checklist
 
@@ -531,13 +536,13 @@ Before submitting, ensure:
 
 All PRs must pass these gates. They are enforced by CI.
 
-| Gate   | Command                       | Threshold       | Enforcement |
-| ------ | ----------------------------- | --------------- | ----------- |
-| 1      | `cargo build --release`       | Exit 0          | BLOCKING    |
-| 2      | `cargo clippy -- -D warnings` | 0 warnings      | BLOCKING    |
-| 3      | `cargo fmt --check`           | Pass            | BLOCKING    |
-| 4      | `cargo test --all-features`   | 100% pass       | BLOCKING    |
-| 5      | `cargo bench`                 | < 5% regression | ADVISORY    |
+| Gate | Command                       | Threshold       | Enforcement |
+| ---- | ----------------------------- | --------------- | ----------- |
+| 1    | `cargo build --release`       | Exit 0          | BLOCKING    |
+| 2    | `cargo clippy -- -D warnings` | 0 warnings      | BLOCKING    |
+| 3    | `cargo fmt --check`           | Pass            | BLOCKING    |
+| 4    | `cargo test --all-features`   | 100% pass       | BLOCKING    |
+| 5    | `cargo bench`                 | < 5% regression | ADVISORY    |
 
 ### Review Process
 
@@ -579,6 +584,7 @@ We provide templates to help you create effective issues:
 ### Bug Report Essentials
 
 Include:
+
 - ReasonKit version (`rk-core --version`)
 - Rust version (`rustc --version`)
 - Operating system and version
@@ -589,6 +595,7 @@ Include:
 ### Feature Request Essentials
 
 Include:
+
 - Clear problem statement / use case
 - Proposed solution
 - Alternatives you have considered
@@ -598,11 +605,11 @@ Include:
 
 ## Getting Help
 
-| Channel                | Best For                         | Link                                                                   |
-| ---------------------- | -------------------------------- | ---------------------------------------------------------------------- |
-| **GitHub Discussions** | Questions, ideas, help           | [Discussions](https://github.com/reasonkit/reasonkit-core/discussions) |
-| **GitHub Issues**      | Bugs, feature requests           | [Issues](https://github.com/reasonkit/reasonkit-core/issues)           |
-| **Security Issues**    | Vulnerabilities (private)        | security@reasonkit.sh                                                  |
+| Channel                | Best For                  | Link                                                                   |
+| ---------------------- | ------------------------- | ---------------------------------------------------------------------- |
+| **GitHub Discussions** | Questions, ideas, help    | [Discussions](https://github.com/reasonkit/reasonkit-core/discussions) |
+| **GitHub Issues**      | Bugs, feature requests    | [Issues](https://github.com/reasonkit/reasonkit-core/issues)           |
+| **Security Issues**    | Vulnerabilities (private) | <security@reasonkit.sh>                                                  |
 
 ### Response Times
 
@@ -643,4 +650,4 @@ Questions? Open a [Discussion](https://github.com/reasonkit/reasonkit-core/discu
 
 *"Designed, Not Dreamed. Turn Prompts into Protocols."*
 
-https://reasonkit.sh
+<https://reasonkit.sh>

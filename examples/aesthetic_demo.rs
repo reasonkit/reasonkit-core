@@ -109,7 +109,7 @@ async fn main() -> anyhow::Result<()> {
             import { Canvas } from '@react-three/fiber';
             import { Suspense } from 'react';
             import { OrbitControls, Environment } from '@react-three/drei';
-            
+
             function Scene() {
                 return (
                     <Canvas>

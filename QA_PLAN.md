@@ -7,7 +7,7 @@
 
 ## EXECUTIVE SUMMARY
 
-This document establishes **permanent, embedded quality gates** for reasonkit-core development.
+This document establishes **permanent, embedded quality gates** for ReasonKit-core development.
 All work MUST pass these gates before merge. No exceptions.
 
 ```
@@ -24,7 +24,7 @@ VERIFICATION AXES:
 
 ---
 
-## 1. RUST QUALITY GATES (MANDATORY)
+## 1. Rust QUALITY GATES (MANDATORY)
 
 ### Gate 1: Compilation (BLOCKING)
 
@@ -420,5 +420,5 @@ Date: 2025-12-11
 
 ---
 
-_"Quality is not an act, it is a habit." - Aristotle_
-_"Designed, Not Dreamed." - ReasonKit_
+*"Quality is not an act, it is a habit." - Aristotle*
+*"Designed, Not Dreamed." - ReasonKit*

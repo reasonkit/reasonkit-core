@@ -1470,7 +1470,7 @@ impl ThinkToolModule for LaserLogic {
         let (premises, conclusion) = self.parse_argument_from_query(query)?;
 
         // Analyze the argument
-        let result = self.analyze_argument(&premises, &conclusion)?;
+        let result = self.analyze_argument(&premises, conclusion)?;
 
         // Convert to ThinkToolOutput
         Ok(ThinkToolOutput {
@@ -1539,7 +1539,7 @@ impl LaserLogic {
 
                 // Parse premises (split by period, semicolon, or "and")
                 let premises: Vec<&str> = premises_part
-                    .split(|c| c == '.' || c == ';')
+                    .split(['.', ';'])
                     .map(|s| s.trim())
                     .filter(|s| !s.is_empty())
                     .collect();

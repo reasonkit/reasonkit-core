@@ -239,7 +239,7 @@ rk_codex() {
 
 rk_opencode() {
   local first="${1:-}"
-  
+
   # Pass through if it's a file or directory (opening editor)
   if [[ -e "$first" ]]; then
     exec "$real_bin" "${args[@]}"

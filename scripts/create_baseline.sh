@@ -89,4 +89,3 @@ echo "  1. Review baseline results"
 echo "  2. Update benchmarks/BASELINE_MEASUREMENTS.md with actual numbers"
 echo "  3. Commit baseline to version control"
 echo "  4. Use baseline for comparison after improvements"
-

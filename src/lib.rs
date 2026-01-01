@@ -1,3 +1,7 @@
+#![doc = include_str!("../README.md")]
+#![cfg_attr(docsrs, feature(doc_cfg))]
+#![cfg_attr(docsrs, feature(doc_auto_cfg))]
+
 //! # ReasonKit Core
 //!
 //! AI Thinking Enhancement System - Turn Prompts into Protocols
@@ -120,10 +124,10 @@
 //!
 //! ## Optional Modules (Feature-Gated)
 //!
-//! - [`rag`] - Full RAG engine with LLM integration (requires `memory`)
-//! - [`aesthetic`] - UI/UX assessment system (requires `aesthetic`)
-//! - [`vibe`] - VIBE protocol validation (requires `vibe`)
-//! - [`code_intelligence`] - Multi-language code analysis (requires `code-intelligence`)
+//! - \[`rag`\] - Full RAG engine with LLM integration (requires `memory`)
+//! - \[`aesthetic`\] - UI/UX assessment system (requires `aesthetic`)
+//! - \[`vibe`\] - VIBE protocol validation (requires `vibe`)
+//! - \[`code_intelligence`\] - Multi-language code analysis (requires `code-intelligence`)
 
 // TRACKED: Enable `#![warn(missing_docs)]` before v1.0 release
 // Status: All public APIs need documentation first (tracked in QA plan)

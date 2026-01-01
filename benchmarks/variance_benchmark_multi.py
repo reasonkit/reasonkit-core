@@ -19,20 +19,19 @@ Run with:
 
 """
 
-import os
-import sys
-import json
-import time
-import random
-import hashlib
 import argparse
+import json
+import os
+import random
 import statistics
+import sys
+import time
+from abc import ABC, abstractmethod
+from collections import Counter
+from dataclasses import asdict, dataclass
 from datetime import datetime
 from pathlib import Path
-from typing import Optional, Protocol
-from dataclasses import dataclass, asdict
-from collections import Counter
-from abc import ABC, abstractmethod
+from typing import Optional
 
 # ============================================================================
 # TEST QUESTIONS
@@ -44,71 +43,71 @@ VARIANCE_TEST_QUESTIONS = [
         "category": "math",
         "question": "If a train travels at 60 mph for 2.5 hours, how many miles does it travel?",
         "expected_answer": "150",
-        "answer_type": "numeric"
+        "answer_type": "numeric",
     },
     {
         "id": "math_002",
         "category": "math",
         "question": "A store sells apples for $0.75 each. If you buy 8 apples and pay with a $10 bill, how much change do you receive?",
         "expected_answer": "4",
-        "answer_type": "numeric"
+        "answer_type": "numeric",
     },
     {
         "id": "math_003",
         "category": "math",
         "question": "What is 15% of 240?",
         "expected_answer": "36",
-        "answer_type": "numeric"
+        "answer_type": "numeric",
     },
     {
         "id": "logic_001",
         "category": "logic",
         "question": "All roses are flowers. Some flowers fade quickly. Can we conclude that some roses fade quickly?",
         "expected_answer": "no",
-        "answer_type": "boolean"
+        "answer_type": "boolean",
     },
     {
         "id": "logic_002",
         "category": "logic",
         "question": "If it rains, the ground gets wet. The ground is wet. Did it rain?",
         "expected_answer": "unknown",
-        "answer_type": "categorical"
+        "answer_type": "categorical",
     },
     {
         "id": "fact_001",
         "category": "factual",
         "question": "What is the chemical symbol for gold?",
         "expected_answer": "Au",
-        "answer_type": "text"
+        "answer_type": "text",
     },
     {
         "id": "fact_002",
         "category": "factual",
         "question": "How many planets are in our solar system?",
         "expected_answer": "8",
-        "answer_type": "numeric"
+        "answer_type": "numeric",
     },
     {
         "id": "decision_001",
         "category": "decision",
         "question": "A company has $100,000 to invest. Option A offers 5% guaranteed return. Option B offers 50% chance of 15% return, 50% chance of -5% return. Which is the safer choice?",
         "expected_answer": "A",
-        "answer_type": "categorical"
+        "answer_type": "categorical",
     },
     {
         "id": "decision_002",
         "category": "decision",
         "question": "For a critical medical diagnosis system, should you prioritize minimizing false negatives or false positives?",
         "expected_answer": "false negatives",
-        "answer_type": "categorical"
+        "answer_type": "categorical",
     },
     {
         "id": "complex_001",
         "category": "complex",
         "question": "In a room of 23 people, what is the approximate probability that at least two share a birthday? Answer: above 50%, below 50%, or exactly 50%?",
         "expected_answer": "above 50%",
-        "answer_type": "categorical"
-    }
+        "answer_type": "categorical",
+    },
 ]
 
 # ============================================================================
@@ -154,6 +153,7 @@ Begin your structured analysis:"""
 # LLM BACKENDS
 # ============================================================================
 
+
 class LLMBackend(ABC):
     """Abstract base class for LLM backends."""
 
@@ -190,7 +190,7 @@ class AnthropicBackend(LLMBackend):
             model=self.model,
             max_tokens=1024,
             temperature=temperature,
-            messages=[{"role": "user", "content": prompt}]
+            messages=[{"role": "user", "content": prompt}],
         )
         latency_ms = (time.perf_counter() - start) * 1000
         tokens = response.usage.input_tokens + response.usage.output_tokens
@@ -227,7 +227,7 @@ class OpenRouterBackend(LLMBackend):
                 "Authorization": f"Bearer {self.api_key}",
                 "HTTP-Referer": "https://reasonkit.sh",
                 "X-Title": "ReasonKit Variance Benchmark",
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
             },
             json={
                 "model": self.model,
@@ -236,10 +236,10 @@ class OpenRouterBackend(LLMBackend):
                 "max_tokens": 1024,
                 "provider": {
                     "order": ["Anthropic", "Google", "DeepSeek", "OpenAI"],
-                    "allow_fallbacks": True
-                }
+                    "allow_fallbacks": True,
+                },
             },
-            timeout=120.0
+            timeout=120.0,
         )
 
         latency_ms = (time.perf_counter() - start) * 1000
@@ -307,83 +307,219 @@ class MockBackend(LLMBackend):
         # Identify question type
         if "60 mph" in question and "2.5 hours" in question:
             correct = "150"
-            variants_raw = ["150", "150", "150", "150", "150", "150", "150",
-                          "150 miles", "The answer is 150", "150.0",
-                          "One hundred fifty", "approximately 150"]
-            variants_struct = ["150", "150", "150", "150", "150", "150", "150",
-                              "150", "150", "150", "FINAL ANSWER: 150", "FINAL ANSWER: 150"]
+            variants_raw = [
+                "150",
+                "150",
+                "150",
+                "150",
+                "150",
+                "150",
+                "150",
+                "150 miles",
+                "The answer is 150",
+                "150.0",
+                "One hundred fifty",
+                "approximately 150",
+            ]
+            variants_struct = [
+                "150",
+                "150",
+                "150",
+                "150",
+                "150",
+                "150",
+                "150",
+                "150",
+                "150",
+                "150",
+                "FINAL ANSWER: 150",
+                "FINAL ANSWER: 150",
+            ]
 
         elif "$0.75" in question and "8 apples" in question:
             correct = "4"
-            variants_raw = ["4", "4", "4", "4", "4", "4",
-                          "$4", "$4.00", "4 dollars", "four dollars", "4.00"]
-            variants_struct = ["4", "4", "4", "4", "4", "4", "4",
-                              "FINAL ANSWER: 4", "FINAL ANSWER: $4.00", "FINAL ANSWER: 4"]
+            variants_raw = [
+                "4",
+                "4",
+                "4",
+                "4",
+                "4",
+                "4",
+                "$4",
+                "$4.00",
+                "4 dollars",
+                "four dollars",
+                "4.00",
+            ]
+            variants_struct = [
+                "4",
+                "4",
+                "4",
+                "4",
+                "4",
+                "4",
+                "4",
+                "FINAL ANSWER: 4",
+                "FINAL ANSWER: $4.00",
+                "FINAL ANSWER: 4",
+            ]
 
         elif "15%" in question and "240" in question:
             correct = "36"
-            variants_raw = ["36", "36", "36", "36", "36",
-                          "36.0", "36.00", "thirty-six", "The answer is 36"]
-            variants_struct = ["36", "36", "36", "36", "36", "36",
-                              "FINAL ANSWER: 36", "FINAL ANSWER: 36"]
+            variants_raw = [
+                "36",
+                "36",
+                "36",
+                "36",
+                "36",
+                "36.0",
+                "36.00",
+                "thirty-six",
+                "The answer is 36",
+            ]
+            variants_struct = [
+                "36",
+                "36",
+                "36",
+                "36",
+                "36",
+                "36",
+                "FINAL ANSWER: 36",
+                "FINAL ANSWER: 36",
+            ]
 
         elif "roses" in question.lower() and "flowers" in question.lower():
             correct = "no"
-            variants_raw = ["no", "no", "no", "no",
-                          "No", "No, we cannot", "Cannot conclude",
-                          "The answer is no", "Logically, no",
-                          "No - this is an invalid syllogism"]
-            variants_struct = ["no", "no", "no", "no", "no", "no",
-                              "FINAL ANSWER: No", "FINAL ANSWER: no"]
+            variants_raw = [
+                "no",
+                "no",
+                "no",
+                "no",
+                "No",
+                "No, we cannot",
+                "Cannot conclude",
+                "The answer is no",
+                "Logically, no",
+                "No - this is an invalid syllogism",
+            ]
+            variants_struct = [
+                "no",
+                "no",
+                "no",
+                "no",
+                "no",
+                "no",
+                "FINAL ANSWER: No",
+                "FINAL ANSWER: no",
+            ]
 
         elif "rains" in question.lower() and "ground" in question.lower():
             correct = "unknown"
-            variants_raw = ["unknown", "cannot determine", "maybe", "possibly",
-                          "we cannot conclude", "not necessarily", "unknown",
-                          "It's uncertain", "Could be, but not certain"]
-            variants_struct = ["unknown", "unknown", "unknown", "unknown",
-                              "FINAL ANSWER: unknown", "FINAL ANSWER: Cannot determine"]
+            variants_raw = [
+                "unknown",
+                "cannot determine",
+                "maybe",
+                "possibly",
+                "we cannot conclude",
+                "not necessarily",
+                "unknown",
+                "It's uncertain",
+                "Could be, but not certain",
+            ]
+            variants_struct = [
+                "unknown",
+                "unknown",
+                "unknown",
+                "unknown",
+                "FINAL ANSWER: unknown",
+                "FINAL ANSWER: Cannot determine",
+            ]
 
         elif "gold" in question.lower() and "symbol" in question.lower():
             correct = "Au"
-            variants_raw = ["Au", "Au", "Au", "Au", "Au", "Au",
-                          "Au (from Latin 'aurum')", "The symbol is Au"]
-            variants_struct = ["Au", "Au", "Au", "Au", "Au",
-                              "FINAL ANSWER: Au", "FINAL ANSWER: Au"]
+            variants_raw = [
+                "Au",
+                "Au",
+                "Au",
+                "Au",
+                "Au",
+                "Au",
+                "Au (from Latin 'aurum')",
+                "The symbol is Au",
+            ]
+            variants_struct = ["Au", "Au", "Au", "Au", "Au", "FINAL ANSWER: Au", "FINAL ANSWER: Au"]
 
         elif "planets" in question.lower():
             correct = "8"
-            variants_raw = ["8", "8", "8", "8", "8", "8",
-                          "eight", "Eight", "There are 8 planets"]
-            variants_struct = ["8", "8", "8", "8", "8", "8",
-                              "FINAL ANSWER: 8", "FINAL ANSWER: 8"]
+            variants_raw = ["8", "8", "8", "8", "8", "8", "eight", "Eight", "There are 8 planets"]
+            variants_struct = ["8", "8", "8", "8", "8", "8", "FINAL ANSWER: 8", "FINAL ANSWER: 8"]
 
         elif "$100,000" in question and "Option A" in question:
             correct = "A"
-            variants_raw = ["A", "A", "A", "A", "Option A", "Option A",
-                          "A is safer", "Choose A", "Go with A",
-                          "Option A - guaranteed return"]
-            variants_struct = ["A", "A", "A", "A", "A", "A",
-                              "FINAL ANSWER: Option A", "FINAL ANSWER: A"]
+            variants_raw = [
+                "A",
+                "A",
+                "A",
+                "A",
+                "Option A",
+                "Option A",
+                "A is safer",
+                "Choose A",
+                "Go with A",
+                "Option A - guaranteed return",
+            ]
+            variants_struct = [
+                "A",
+                "A",
+                "A",
+                "A",
+                "A",
+                "A",
+                "FINAL ANSWER: Option A",
+                "FINAL ANSWER: A",
+            ]
 
         elif "medical diagnosis" in question.lower():
             correct = "false negatives"
-            variants_raw = ["false negatives", "false negatives", "false negatives",
-                          "minimize false negatives", "False negatives should be minimized",
-                          "FN - missing a disease is worse", "false negatives",
-                          "Type II errors", "Prioritize sensitivity"]
-            variants_struct = ["false negatives", "false negatives", "false negatives",
-                              "false negatives", "false negatives",
-                              "FINAL ANSWER: false negatives"]
+            variants_raw = [
+                "false negatives",
+                "false negatives",
+                "false negatives",
+                "minimize false negatives",
+                "False negatives should be minimized",
+                "FN - missing a disease is worse",
+                "false negatives",
+                "Type II errors",
+                "Prioritize sensitivity",
+            ]
+            variants_struct = [
+                "false negatives",
+                "false negatives",
+                "false negatives",
+                "false negatives",
+                "false negatives",
+                "FINAL ANSWER: false negatives",
+            ]
 
         elif "23 people" in question and "birthday" in question.lower():
             correct = "above 50%"
-            variants_raw = ["above 50%", "above 50%", "above 50%",
-                          "greater than 50%", "more than 50%",
-                          "surprisingly high - over 50%", "about 50.7%",
-                          "above 50% (birthday paradox)"]
-            variants_struct = ["above 50%", "above 50%", "above 50%",
-                              "above 50%", "FINAL ANSWER: above 50%"]
+            variants_raw = [
+                "above 50%",
+                "above 50%",
+                "above 50%",
+                "greater than 50%",
+                "more than 50%",
+                "surprisingly high - over 50%",
+                "about 50.7%",
+                "above 50% (birthday paradox)",
+            ]
+            variants_struct = [
+                "above 50%",
+                "above 50%",
+                "above 50%",
+                "above 50%",
+                "FINAL ANSWER: above 50%",
+            ]
 
         else:
             correct = "unknown"
@@ -418,6 +554,7 @@ class MockBackend(LLMBackend):
 # ============================================================================
 # DATA STRUCTURES
 # ============================================================================
+
 
 @dataclass
 class QuestionVarianceResult:
@@ -461,6 +598,7 @@ class BenchmarkSummary:
 # PARSING AND METRICS
 # ============================================================================
 
+
 def parse_answer(raw_output: str, answer_type: str) -> str:
     output = raw_output.strip()
 
@@ -472,7 +610,7 @@ def parse_answer(raw_output: str, answer_type: str) -> str:
     import re
 
     if answer_type == "numeric":
-        numbers = re.findall(r'-?\d+\.?\d*', output)
+        numbers = re.findall(r"-?\d+\.?\d*", output)
         if numbers:
             num = float(numbers[0])
             if num == int(num):
@@ -489,7 +627,7 @@ def parse_answer(raw_output: str, answer_type: str) -> str:
         return output_lower.strip()[:50]
 
     elif answer_type == "categorical":
-        first_line = output.split('\n')[0]
+        first_line = output.split("\n")[0]
         return first_line.lower().strip()[:100]
 
     else:
@@ -521,14 +659,14 @@ def check_correct(parsed_answer: str, expected: str, answer_type: str) -> bool:
 # BENCHMARK EXECUTION
 # ============================================================================
 
+
 def run_variance_test(
     backend: LLMBackend,
     question_data: dict,
     n_runs: int = 20,
     temperature: float = 0.0,
-    verbose: bool = True
+    verbose: bool = True,
 ) -> QuestionVarianceResult:
-
     question = question_data["question"]
     question_id = question_data["id"]
     category = question_data["category"]
@@ -569,8 +707,12 @@ def run_variance_test(
     raw_most_common = raw_counter.most_common(1)[0] if raw_results else ("", 0)
     structured_most_common = structured_counter.most_common(1)[0] if structured_results else ("", 0)
 
-    raw_correct = sum(1 for a in raw_results if check_correct(a, expected, answer_type)) / len(raw_results)
-    structured_correct = sum(1 for a in structured_results if check_correct(a, expected, answer_type)) / len(structured_results)
+    raw_correct = sum(1 for a in raw_results if check_correct(a, expected, answer_type)) / len(
+        raw_results
+    )
+    structured_correct = sum(
+        1 for a in structured_results if check_correct(a, expected, answer_type)
+    ) / len(structured_results)
 
     raw_unique = len(set(raw_results))
     structured_unique = len(set(structured_results))
@@ -601,7 +743,7 @@ def run_variance_test(
         structured_most_common_count=structured_most_common[1],
         structured_correct_rate=structured_correct,
         agreement_improvement=agreement_improvement,
-        variance_reduction_pct=variance_reduction
+        variance_reduction_pct=variance_reduction,
     )
 
 
@@ -610,9 +752,8 @@ def run_full_benchmark(
     n_runs: int = 20,
     temperature: float = 0.0,
     questions: Optional[list] = None,
-    verbose: bool = True
+    verbose: bool = True,
 ) -> BenchmarkSummary:
-
     if questions is None:
         questions = VARIANCE_TEST_QUESTIONS
 
@@ -645,9 +786,13 @@ def run_full_benchmark(
         by_category[cat] = {
             "n_questions": len(cat_results),
             "mean_raw_agreement": statistics.mean(r.raw_agreement_rate for r in cat_results),
-            "mean_structured_agreement": statistics.mean(r.structured_agreement_rate for r in cat_results),
+            "mean_structured_agreement": statistics.mean(
+                r.structured_agreement_rate for r in cat_results
+            ),
             "mean_improvement": statistics.mean(r.agreement_improvement for r in cat_results),
-            "mean_variance_reduction": statistics.mean(r.variance_reduction_pct for r in cat_results)
+            "mean_variance_reduction": statistics.mean(
+                r.variance_reduction_pct for r in cat_results
+            ),
         }
 
     return BenchmarkSummary(
@@ -661,7 +806,7 @@ def run_full_benchmark(
         mean_agreement_improvement=mean_improvement,
         mean_variance_reduction_pct=mean_variance_reduction,
         by_category=by_category,
-        question_results=[asdict(r) for r in results]
+        question_results=[asdict(r) for r in results],
     )
 
 
@@ -683,7 +828,7 @@ def print_summary(summary: BenchmarkSummary):
     struct_pct = summary.mean_structured_agreement_rate * 100
     improvement = summary.mean_agreement_improvement * 100
 
-    print(f"\nMean Agreement Rate (TARa):")
+    print("\nMean Agreement Rate (TARa):")
     print(f"  Raw prompts:        {raw_pct:.1f}%")
     print(f"  Structured prompts: {struct_pct:.1f}%")
     print(f"  Improvement:        +{improvement:.1f} percentage points")
@@ -693,12 +838,14 @@ def print_summary(summary: BenchmarkSummary):
     raw_inconsistency = (1 - summary.mean_raw_agreement_rate) * 100
     structured_inconsistency = (1 - summary.mean_structured_agreement_rate) * 100
 
-    print(f"\nInconsistency Rate:")
+    print("\nInconsistency Rate:")
     print(f"  Raw prompts:        {raw_inconsistency:.1f}% inconsistent")
     print(f"  Structured prompts: {structured_inconsistency:.1f}% inconsistent")
 
     if raw_inconsistency > 0:
-        relative_reduction = ((raw_inconsistency - structured_inconsistency) / raw_inconsistency) * 100
+        relative_reduction = (
+            (raw_inconsistency - structured_inconsistency) / raw_inconsistency
+        ) * 100
         print(f"  Relative reduction: {relative_reduction:.1f}%")
 
     print("\n" + "-" * 70)
@@ -800,23 +947,29 @@ Structured prompting reduced output inconsistency from **{raw_inconsistency:.1f}
 # MAIN
 # ============================================================================
 
+
 def main():
     parser = argparse.ArgumentParser(description="ReasonKit Variance Benchmark")
-    parser.add_argument("--backend", "-b", type=str, default="mock",
-                       choices=["anthropic", "openrouter", "mock"],
-                       help="LLM backend to use")
-    parser.add_argument("--model", "-m", type=str, default=None,
-                       help="Model name (backend-specific)")
-    parser.add_argument("--runs", "-n", type=int, default=20,
-                       help="Runs per question (default: 20)")
-    parser.add_argument("--temperature", "-t", type=float, default=0.0,
-                       help="Temperature (default: 0.0)")
-    parser.add_argument("--output-dir", "-o", type=str, default="results",
-                       help="Output directory")
-    parser.add_argument("--quick", action="store_true",
-                       help="Quick test (5 runs, 3 questions)")
-    parser.add_argument("--quiet", "-q", action="store_true",
-                       help="Suppress verbose output")
+    parser.add_argument(
+        "--backend",
+        "-b",
+        type=str,
+        default="mock",
+        choices=["anthropic", "openrouter", "mock"],
+        help="LLM backend to use",
+    )
+    parser.add_argument(
+        "--model", "-m", type=str, default=None, help="Model name (backend-specific)"
+    )
+    parser.add_argument(
+        "--runs", "-n", type=int, default=20, help="Runs per question (default: 20)"
+    )
+    parser.add_argument(
+        "--temperature", "-t", type=float, default=0.0, help="Temperature (default: 0.0)"
+    )
+    parser.add_argument("--output-dir", "-o", type=str, default="results", help="Output directory")
+    parser.add_argument("--quick", action="store_true", help="Quick test (5 runs, 3 questions)")
+    parser.add_argument("--quiet", "-q", action="store_true", help="Suppress verbose output")
 
     args = parser.parse_args()
 
@@ -838,7 +991,7 @@ def main():
         n_runs=n_runs,
         temperature=args.temperature,
         questions=questions,
-        verbose=not args.quiet
+        verbose=not args.quiet,
     )
 
     print_summary(summary)

@@ -55,13 +55,13 @@ ReasonKit Core is designed with a **defense-in-depth** security model, implement
 
 ### Core Security Principles
 
-| Principle | Implementation |
-|-----------|----------------|
-| **Memory Safety** | Rust's ownership model; `#![deny(unsafe_code)]` enforced |
-| **Privacy by Default** | Local-first storage; telemetry opt-in only |
-| **Least Privilege** | Minimal required permissions; scoped API keys |
-| **Defense in Depth** | Multiple validation layers; fail-safe defaults |
-| **Auditability** | Structured logging; execution traces |
+| Principle              | Implementation                                           |
+| ---------------------- | -------------------------------------------------------- |
+| **Memory Safety**      | Rust's ownership model; `#![deny(unsafe_code)]` enforced |
+| **Privacy by Default** | Local-first storage; telemetry opt-in only               |
+| **Least Privilege**    | Minimal required permissions; scoped API keys            |
+| **Defense in Depth**   | Multiple validation layers; fail-safe defaults           |
+| **Auditability**       | Structured logging; execution traces                     |
 
 ---
 
@@ -78,6 +78,7 @@ ReasonKit Core is written in Rust with strict memory safety enforcement:
 ```
 
 This means:
+
 - **No buffer overflows** - Bounds checking on all array/vector access
 - **No use-after-free** - Ownership system prevents dangling pointers
 - **No data races** - Borrow checker prevents concurrent mutation
@@ -135,13 +136,13 @@ export DEEPSEEK_API_KEY="sk-..."
 
 #### Provider-Specific Key Requirements
 
-| Provider | Environment Variable | Key Format |
-|----------|---------------------|------------|
-| Anthropic | `ANTHROPIC_API_KEY` | `sk-ant-api...` |
-| OpenAI | `OPENAI_API_KEY` | `sk-...` |
-| DeepSeek | `DEEPSEEK_API_KEY` | `sk-...` |
-| OpenRouter | `OPENROUTER_API_KEY` | `sk-or-v1-...` |
-| Google | `GOOGLE_API_KEY` | Project-specific |
+| Provider   | Environment Variable | Key Format       |
+| ---------- | -------------------- | ---------------- |
+| Anthropic  | `ANTHROPIC_API_KEY`  | `sk-ant-api...`  |
+| OpenAI     | `OPENAI_API_KEY`     | `sk-...`         |
+| DeepSeek   | `DEEPSEEK_API_KEY`   | `sk-...`         |
+| OpenRouter | `OPENROUTER_API_KEY` | `sk-or-v1-...`   |
+| Google     | `GOOGLE_API_KEY`     | Project-specific |
 
 ### Authorization Model
 
@@ -215,12 +216,12 @@ pub fn hash_query(&self, query: &str) -> String {
 
 ### Data Storage Locations
 
-| Data Type | Location | Encryption | User Control |
-|-----------|----------|------------|--------------|
-| Telemetry DB | `~/.reasonkit/.rk_telemetry.db` | Optional | Full |
-| Configuration | `~/.reasonkit/config.toml` | No (user-readable) | Full |
-| Vector indexes | User-specified | Optional | Full |
-| Session traces | In-memory only | N/A | Ephemeral |
+| Data Type      | Location                        | Encryption         | User Control |
+| -------------- | ------------------------------- | ------------------ | ------------ |
+| Telemetry DB   | `~/.reasonkit/.rk_telemetry.db` | Optional           | Full         |
+| Configuration  | `~/.reasonkit/config.toml`      | No (user-readable) | Full         |
+| Vector indexes | User-specified                  | Optional           | Full         |
+| Session traces | In-memory only                  | N/A                | Ephemeral    |
 
 ### Data Retention
 
@@ -236,14 +237,14 @@ ReasonKit is designed with GDPR compliance as a hard constraint (CONS-004).
 
 ### Data Subject Rights Implementation
 
-| GDPR Right | ReasonKit Implementation |
-|------------|-------------------------|
-| **Right to Access** | Local-first storage; user has full filesystem access |
-| **Right to Rectification** | User can modify local SQLite databases directly |
-| **Right to Erasure** | Delete `~/.reasonkit/` directory completely |
-| **Right to Portability** | Export via `--export` CLI flag or SQLite tools |
-| **Right to Object** | Telemetry is opt-in only; default is disabled |
-| **Right to Restriction** | Disable telemetry in `config.toml` |
+| GDPR Right                 | ReasonKit Implementation                             |
+| -------------------------- | ---------------------------------------------------- |
+| **Right to Access**        | Local-first storage; user has full filesystem access |
+| **Right to Rectification** | User can modify local SQLite databases directly      |
+| **Right to Erasure**       | Delete `~/.reasonkit/` directory completely          |
+| **Right to Portability**   | Export via `--export` CLI flag or SQLite tools       |
+| **Right to Object**        | Telemetry is opt-in only; default is disabled        |
+| **Right to Restriction**   | Disable telemetry in `config.toml`                   |
 
 ### Privacy Configuration
 
@@ -324,13 +325,13 @@ Analyze the above query and provide structured reasoning.
 
 ### Validation Patterns
 
-| Input Type | Validation |
-|------------|------------|
-| Query text | Length limits, character filtering |
-| File paths | Canonicalization, directory traversal check |
-| URLs | Protocol whitelist (https only for external) |
-| JSON | Schema validation via `jsonschema` crate |
-| Configuration | Type checking, range validation |
+| Input Type    | Validation                                   |
+| ------------- | -------------------------------------------- |
+| Query text    | Length limits, character filtering           |
+| File paths    | Canonicalization, directory traversal check  |
+| URLs          | Protocol whitelist (https only for external) |
+| JSON          | Schema validation via `jsonschema` crate     |
+| Configuration | Type checking, range validation              |
 
 ---
 
@@ -395,14 +396,14 @@ cargo audit --ignore RUSTSEC-0000-0000  # Known exceptions only
 
 ### Key Dependencies Security Status
 
-| Dependency | Purpose | Security Notes |
-|------------|---------|----------------|
-| `reqwest` | HTTP client | TLS 1.2+ enforced, certificate validation |
-| `rusqlite` | SQLite bindings | Bundled SQLite for consistent security |
-| `sha2` | Cryptographic hashing | Standard SHA-256, no custom crypto |
-| `regex` | Pattern matching | Safe patterns, no ReDoS vectors |
-| `serde` | Serialization | Type-safe, no arbitrary code execution |
-| `tokio` | Async runtime | Widely audited, active maintenance |
+| Dependency | Purpose               | Security Notes                            |
+| ---------- | --------------------- | ----------------------------------------- |
+| `reqwest`  | HTTP client           | TLS 1.2+ enforced, certificate validation |
+| `rusqlite` | SQLite bindings       | Bundled SQLite for consistent security    |
+| `sha2`     | Cryptographic hashing | Standard SHA-256, no custom crypto        |
+| `regex`    | Pattern matching      | Safe patterns, no ReDoS vectors           |
+| `serde`    | Serialization         | Type-safe, no arbitrary code execution    |
+| `tokio`    | Async runtime         | Widely audited, active maintenance        |
 
 ### Supply Chain Security
 
@@ -436,12 +437,12 @@ chmod 700 ~/.reasonkit/
 
 ### Secure Defaults
 
-| Setting | Default | Security Rationale |
-|---------|---------|-------------------|
-| `telemetry.enabled` | `false` | Privacy by default |
-| `storage.backend` | `local` | Data locality |
-| `network.timeout_secs` | `60` | Prevent hanging connections |
-| `logging.level` | `warn` | Minimal information exposure |
+| Setting                | Default | Security Rationale           |
+| ---------------------- | ------- | ---------------------------- |
+| `telemetry.enabled`    | `false` | Privacy by default           |
+| `storage.backend`      | `local` | Data locality                |
+| `network.timeout_secs` | `60`    | Prevent hanging connections  |
+| `logging.level`        | `warn`  | Minimal information exposure |
 
 ### Environment Variable Precedence
 
@@ -487,12 +488,12 @@ static DEFAULT_HTTP_CLIENT: Lazy<reqwest::Client> = Lazy::new(|| {
 
 ### Provider Endpoints
 
-| Provider | Endpoint | Protocol |
-|----------|----------|----------|
-| Anthropic | `api.anthropic.com` | HTTPS/TLS 1.2+ |
-| OpenAI | `api.openai.com` | HTTPS/TLS 1.2+ |
-| DeepSeek | `api.deepseek.com` | HTTPS/TLS 1.2+ |
-| OpenRouter | `openrouter.ai` | HTTPS/TLS 1.2+ |
+| Provider   | Endpoint            | Protocol       |
+| ---------- | ------------------- | -------------- |
+| Anthropic  | `api.anthropic.com` | HTTPS/TLS 1.2+ |
+| OpenAI     | `api.openai.com`    | HTTPS/TLS 1.2+ |
+| DeepSeek   | `api.deepseek.com`  | HTTPS/TLS 1.2+ |
+| OpenRouter | `openrouter.ai`     | HTTPS/TLS 1.2+ |
 
 ### Network Security Best Practices
 
@@ -720,12 +721,12 @@ With permission, we acknowledge security researchers in:
 
 ## Version History
 
-| Version | Date | Changes |
-|---------|------|---------|
-| 1.0.0 | 2026-01-01 | Initial comprehensive security documentation |
+| Version | Date       | Changes                                      |
+| ------- | ---------- | -------------------------------------------- |
+| 1.0.0   | 2026-01-01 | Initial comprehensive security documentation |
 
 ---
 
-*"Designed, Not Dreamed" - Security is engineered, not hoped for.*
+_"Designed, Not Dreamed" - Security is engineered, not hoped for._
 
 *https://reasonkit.sh*

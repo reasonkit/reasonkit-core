@@ -36,6 +36,7 @@ GROK.md
 .cursorrules
 .github/copilot-instructions.md
 .windsurfrules
+memory-bank/
 
 # ============================================================
 # SENSITIVE DOCUMENTS
@@ -167,3 +168,7 @@ demo_outputs/
 *BASELINE_AUDIT*
 *_SUMMARY.md
 *_COMPLETE.md
+
+
+#Ignore insiders AI rules
+.github/instructions/codacy.instructions.md

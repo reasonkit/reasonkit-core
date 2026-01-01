@@ -24,7 +24,7 @@ Protocol: User Authentication System
 Purpose: Secure user authentication with multi-factor support
 Steps:
 1. Validate user credentials (email/password)
-2. Check account status and permissions  
+2. Check account status and permissions
 3. Generate secure session token
 4. Log authentication event
 5. Redirect to appropriate dashboard
@@ -153,7 +153,7 @@ Android:
 - Android Auto integration
 iOS:
 - iOS Human Interface Guidelines
-- Face ID/Touch ID support  
+- Face ID/Touch ID support
 - Apple Pay integration
 - Siri shortcuts
 Web:

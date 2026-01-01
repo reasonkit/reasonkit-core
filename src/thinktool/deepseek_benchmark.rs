@@ -1337,7 +1337,7 @@ mod tests {
     #[test]
     fn test_empty_scenario_results_summary() {
         let runner = DeepSeekBenchmarkRunner::default();
-        let scenario_results = HashMap::new();
+        let scenario_results: HashMap<String, ScenarioResult> = HashMap::new();
 
         // This should not panic even with empty results
         // Note: Division by zero is avoided by checking is_empty in real code

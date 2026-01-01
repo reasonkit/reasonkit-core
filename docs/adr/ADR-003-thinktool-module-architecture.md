@@ -115,7 +115,7 @@ impl ModuleRegistry {
 }
 ```
 
-### Built-in Modules (OSS - reasonkit-core)
+### Built-in Modules (OSS - ReasonKit-core)
 
 | Module        | ID   | Purpose                                            |
 | ------------- | ---- | -------------------------------------------------- |
@@ -125,7 +125,7 @@ impl ModuleRegistry {
 | ProofGuard    | `pg` | Multi-source verification, contradiction detection |
 | BrutalHonesty | `bh` | Adversarial self-critique, flaw detection          |
 
-### Advanced Modules (reasonkit-pro)
+### Advanced Modules (ReasonKit-pro)
 
 | Module      | ID   | Purpose                                       |
 | ----------- | ---- | --------------------------------------------- |

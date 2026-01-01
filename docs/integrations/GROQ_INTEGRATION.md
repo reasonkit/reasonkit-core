@@ -53,7 +53,7 @@ rk-core providers show groq
 
 ## Full Configuration Options
 
-### ~/.reasonkit/config.toml
+### ~/.ReasonKit/config.toml
 
 ```toml
 [providers.groq]
@@ -554,13 +554,13 @@ rk-core think "Final analysis" --provider anthropic --profile deep
 
 ## Resources
 
-- **Groq Console:** https://console.groq.com/
-- **API Documentation:** https://console.groq.com/docs
-- **Pricing:** https://groq.com/pricing/
-- **LPU Technology:** https://groq.com/technology/
-- **Status Page:** https://status.groq.com/
+- **Groq Console:** <https://console.groq.com/>
+- **API Documentation:** <https://console.groq.com/docs>
+- **Pricing:** <https://groq.com/pricing/>
+- **LPU Technology:** <https://groq.com/technology/>
+- **Status Page:** <https://status.groq.com/>
 
 ---
 
-_ReasonKit + Groq Integration Guide | v1.0.0 | Apache 2.0_
-_"See How Your AI Thinks - At Lightning Speed"_
+*ReasonKit + Groq Integration Guide | v1.0.0 | Apache 2.0*
+*"See How Your AI Thinks - At Lightning Speed"*

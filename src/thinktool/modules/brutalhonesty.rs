@@ -35,23 +35,18 @@ use serde::{Deserialize, Serialize};
 use serde_json::json;
 
 /// Severity level for critique analysis.
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub enum CritiqueSeverity {
     /// Gentle critique - focus on constructive feedback
     Gentle,
     /// Standard critique - balanced flaw detection
+    #[default]
     Standard,
     /// Harsh critique - aggressive assumption challenging
     Harsh,
     /// Ruthless critique - no mercy, find every possible flaw
     Ruthless,
-}
-
-impl Default for CritiqueSeverity {
-    fn default() -> Self {
-        Self::Standard
-    }
 }
 
 impl CritiqueSeverity {
@@ -549,17 +544,18 @@ impl BrutalHonesty {
         }
 
         // Check for confirmation bias indicators
-        if self.config.check_confirmation_bias {
-            if query_lower.contains("proves") && !query_lower.contains("disproves") {
-                flaws.push(
-                    DetectedFlaw::new(
-                        FlawCategory::Assumption,
-                        FlawSeverity::Moderate,
-                        "One-sided evidence presentation may indicate confirmation bias",
-                    )
-                    .with_remediation("Actively seek disconfirming evidence"),
-                );
-            }
+        if self.config.check_confirmation_bias
+            && query_lower.contains("proves")
+            && !query_lower.contains("disproves")
+        {
+            flaws.push(
+                DetectedFlaw::new(
+                    FlawCategory::Assumption,
+                    FlawSeverity::Moderate,
+                    "One-sided evidence presentation may indicate confirmation bias",
+                )
+                .with_remediation("Actively seek disconfirming evidence"),
+            );
         }
 
         // Limit flaws to configured maximum

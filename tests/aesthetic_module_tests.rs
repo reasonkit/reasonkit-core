@@ -23,6 +23,7 @@ use reasonkit_core::aesthetic::three_d::*;
 use reasonkit_core::aesthetic::usability::*;
 use reasonkit_core::aesthetic::vibe_benchmark::*;
 use reasonkit_core::aesthetic::visual_analysis::*;
+use reasonkit_core::error::Error;
 use std::collections::HashMap;
 
 // =============================================================================
@@ -1408,7 +1409,7 @@ mod engine_tests {
         let engine = AestheticMasteryEngine::new(config).unwrap();
         let input = create_full_input();
 
-        let result = engine.comprehensive_assessment(input).await.unwrap();
+        let result: DesignAssessmentResult = engine.comprehensive_assessment(input).await.unwrap();
 
         assert!(result.overall_score > 0.0);
         assert!(result.overall_score <= 1.0);
@@ -1422,7 +1423,7 @@ mod engine_tests {
         let engine = AestheticMasteryEngine::new(config).unwrap();
         let input = create_full_input();
 
-        let result = engine.visual_assessment(input).await.unwrap();
+        let result: VisualAssessmentResult = engine.visual_assessment(input).await.unwrap();
 
         assert!(result.score > 0.0);
         assert!(result.score <= 1.0);
@@ -1434,7 +1435,7 @@ mod engine_tests {
         let engine = AestheticMasteryEngine::new(config).unwrap();
         let input = create_full_input();
 
-        let result = engine.accessibility_assessment(input).await.unwrap();
+        let result: AccessibilityResult = engine.accessibility_assessment(input).await.unwrap();
 
         assert!(result.score > 0.0);
     }
@@ -1445,7 +1446,7 @@ mod engine_tests {
         let engine = AestheticMasteryEngine::new(config).unwrap();
         let input = create_full_input();
 
-        let result = engine.cross_platform_validation(input).await.unwrap();
+        let result: CrossPlatformResult = engine.cross_platform_validation(input).await.unwrap();
 
         assert_eq!(result.platform_results.len(), 3);
     }
@@ -1456,7 +1457,7 @@ mod engine_tests {
         let engine = AestheticMasteryEngine::new(config).unwrap();
         let input = create_3d_input();
 
-        let result = engine.three_d_assessment(input).await.unwrap();
+        let result: ThreeDAssessmentResult = engine.three_d_assessment(input).await.unwrap();
 
         assert!(result.score > 0.0);
         assert!(result.r3f_instance_count.is_some());
@@ -1479,7 +1480,7 @@ mod engine_tests {
         let engine = AestheticMasteryEngine::new(config).unwrap();
         let input = create_full_input();
 
-        let result = engine.comprehensive_assessment(input).await.unwrap();
+        let result: DesignAssessmentResult = engine.comprehensive_assessment(input).await.unwrap();
 
         // Should still produce a result with VIBE scores
         assert!(result.overall_score >= 0.0);
@@ -1518,7 +1519,7 @@ mod engine_tests {
             design_tokens: None, // No tokens = lower scores = recommendations
         };
 
-        let result = engine.comprehensive_assessment(input).await.unwrap();
+        let result: DesignAssessmentResult = engine.comprehensive_assessment(input).await.unwrap();
 
         // Should have recommendations for improving scores
         // (may be empty if scores are high enough)
@@ -1531,7 +1532,7 @@ mod engine_tests {
         let engine = AestheticMasteryEngine::new(config).unwrap();
         let input = create_full_input();
 
-        let result = engine.comprehensive_assessment(input).await.unwrap();
+        let result: DesignAssessmentResult = engine.comprehensive_assessment(input).await.unwrap();
 
         // Check metadata is populated
         assert!(!result.metadata.assessment_id.is_empty());
@@ -1551,14 +1552,14 @@ mod service_tests {
     #[tokio::test]
     async fn test_service_creation() {
         let config = AestheticConfig::default();
-        let service = AestheticExpressionService::new(config).await;
+        let service: Result<AestheticExpressionService, Error> = AestheticExpressionService::new(config).await;
 
         assert!(service.is_ok());
     }
 
     #[tokio::test]
     async fn test_service_builder() {
-        let service = AestheticServiceBuilder::new()
+        let service: Result<AestheticExpressionService, Error> = AestheticServiceBuilder::new()
             .with_config(AestheticConfig::default())
             .build()
             .await;
@@ -1574,7 +1575,7 @@ mod service_tests {
             ios: 0.85,
         };
 
-        let service = AestheticServiceBuilder::new()
+        let service: Result<AestheticExpressionService, Error> = AestheticServiceBuilder::new()
             .with_config(AestheticConfig::default())
             .with_vibe_targets(custom_vibe)
             .build()

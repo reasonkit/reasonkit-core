@@ -55,7 +55,7 @@ rk-core config show | grep anthropic
 
 ## Full Configuration Options
 
-### ~/.reasonkit/config.toml
+### ~/.ReasonKit/config.toml
 
 ```toml
 [providers.anthropic]
@@ -447,13 +447,13 @@ log_file = "~/.reasonkit/logs/anthropic.log"
 
 ## Resources
 
-- **Anthropic Console:** https://console.anthropic.com/
-- **API Documentation:** https://docs.anthropic.com/
-- **Claude CLI:** https://github.com/anthropics/claude-code
-- **Pricing:** https://www.anthropic.com/pricing
-- **Model Card:** https://docs.anthropic.com/claude/docs/models-overview
+- **Anthropic Console:** <https://console.anthropic.com/>
+- **API Documentation:** <https://docs.anthropic.com/>
+- **Claude CLI:** <https://github.com/anthropics/claude-code>
+- **Pricing:** <https://www.anthropic.com/pricing>
+- **Model Card:** <https://docs.anthropic.com/claude/docs/models-overview>
 
 ---
 
-_ReasonKit + Anthropic Integration Guide | v1.0.0 | Apache 2.0_
-_"See How Your AI Thinks"_
+*ReasonKit + Anthropic Integration Guide | v1.0.0 | Apache 2.0*
+*"See How Your AI Thinks"*

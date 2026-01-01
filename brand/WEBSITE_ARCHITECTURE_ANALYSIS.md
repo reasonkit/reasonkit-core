@@ -2,13 +2,13 @@
 
 > **PowerCombo + BrutalHonesty Assessment**
 > **Date:** 2025-12-31
-> **Decision Required:** How to structure reasonkit-site relative to reasonkit-core
+> **Decision Required:** How to structure ReasonKit-site relative to ReasonKit-core
 
 ---
 
 ## Executive Summary
 
-**RECOMMENDATION: Option A - Website Internal + Assets from reasonkit-core**
+**RECOMMENDATION: Option A - Website Internal + Assets from ReasonKit-core**
 
 This is the TOP BEST approach because it:
 
@@ -40,7 +40,7 @@ This is the TOP BEST approach because it:
 **Honest Pros:**
 
 - Clean separation of concerns
-- Brand assets live in the OSS repo (reasonkit-core/brand/)
+- Brand assets live in the OSS repo (ReasonKit-core/brand/)
 - Marketing strategy stays private
 - Minimal maintenance overhead
 - Website can pull assets from published crate or git submodule
@@ -57,7 +57,7 @@ positioning while the BRAND ASSETS (which community needs) are in the OSS repo.
 
 ---
 
-### Option B: reasonkit-site as OSS
+### Option B: ReasonKit-site as OSS
 
 **Honest Pros:**
 
@@ -77,7 +77,7 @@ strategy, sync complexity) far outweighs the negligible benefit.
 
 ---
 
-### Option C: Merge into reasonkit-core
+### Option C: Merge into ReasonKit-core
 
 **Honest Pros:**
 
@@ -145,6 +145,7 @@ pollution. The "single repo" benefit is not worth the confusion cost.
    ```
 
 3. **Symlink** (Development only)
+
    ```bash
    ln -s ../reasonkit-core/brand ./assets/brand
    ```
@@ -165,4 +166,4 @@ This maintains:
 
 ---
 
-_Analysis performed with PowerCombo (GigaThink → LaserLogic → BedRock → ProofGuard → BrutalHonesty)_
+*Analysis performed with PowerCombo (GigaThink → LaserLogic → BedRock → ProofGuard → BrutalHonesty)*

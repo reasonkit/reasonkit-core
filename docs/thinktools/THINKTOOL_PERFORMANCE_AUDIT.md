@@ -11,15 +11,15 @@
 
 The ThinkTool module demonstrates **mature performance engineering** with several optimizations already in place. However, there are opportunities for further improvement, particularly in allocation patterns, parallelization, and async optimization.
 
-| Category | Current Status | Issues Found | Priority |
-|----------|---------------|--------------|----------|
-| Blocking Operations | GOOD | 2 minor | LOW |
-| Memory Allocations | FAIR | 6 patterns | MEDIUM |
-| String Operations | FAIR | 4 patterns | MEDIUM |
-| Tokio Runtime Usage | GOOD | 1 issue | LOW |
-| Parallelization | GOOD (implemented) | 3 opportunities | LOW |
-| Regex Performance | EXCELLENT | Optimized | N/A |
-| HTTP Connection Pooling | EXCELLENT | Optimized | N/A |
+| Category                | Current Status     | Issues Found    | Priority |
+| ----------------------- | ------------------ | --------------- | -------- |
+| Blocking Operations     | GOOD               | 2 minor         | LOW      |
+| Memory Allocations      | FAIR               | 6 patterns      | MEDIUM   |
+| String Operations       | FAIR               | 4 patterns      | MEDIUM   |
+| Tokio Runtime Usage     | GOOD               | 1 issue         | LOW      |
+| Parallelization         | GOOD (implemented) | 3 opportunities | LOW      |
+| Regex Performance       | EXCELLENT          | Optimized       | N/A      |
+| HTTP Connection Pooling | EXCELLENT          | Optimized       | N/A      |
 
 **Overall Assessment**: The codebase is well-optimized for production use. The identified issues are optimization opportunities rather than critical problems.
 
@@ -104,7 +104,7 @@ fn render_template(...) -> String {
 }
 ```
 
-**Impact**: O(n*m) allocations where n=fields, m=outputs
+**Impact**: O(n\*m) allocations where n=fields, m=outputs
 **Recommendation**: Use `Cow<str>` and in-place replacement where possible
 
 ```rust
@@ -316,6 +316,7 @@ fn extract_confidence(&self, content: &str) -> Option<f64> {
 **Location**: `/home/zyxsys/RK-PROJECT/reasonkit-core/src/thinktool/executor.rs:764-870`
 
 The parallel execution correctly uses:
+
 - `FuturesUnordered` for concurrent task management
 - `Arc<TokioRwLock<...>>` for shared state
 - Proper async/await patterns
@@ -357,6 +358,7 @@ async fn cli_tool_call(...) -> Result<(String, TokenUsage)> {
 **Location**: `/home/zyxsys/RK-PROJECT/reasonkit-core/src/thinktool/executor.rs:689-923`
 
 The `execute_steps_parallel` method correctly implements:
+
 - Dependency tracking
 - Concurrent step execution
 - Configurable concurrency limits
@@ -470,12 +472,12 @@ HashMap::with_capacity(chain_len)
 
 ### Current Benchmark Coverage
 
-| Benchmark | Coverage | Status |
-|-----------|----------|--------|
-| Protocol Execution (Mock) | Full | GOOD |
-| Profile Chains | Full | GOOD |
-| Step Overhead | Full | GOOD |
-| Concurrent Execution | Full | GOOD |
+| Benchmark                 | Coverage | Status |
+| ------------------------- | -------- | ------ |
+| Protocol Execution (Mock) | Full     | GOOD   |
+| Profile Chains            | Full     | GOOD   |
+| Step Overhead             | Full     | GOOD   |
+| Concurrent Execution      | Full     | GOOD   |
 
 ### Missing Benchmarks
 
@@ -544,14 +546,14 @@ fn bench_template_rendering(c: &mut Criterion) {
 
 ## 9. Performance Targets Verification
 
-| Metric | Target | Current Estimate | Status |
-|--------|--------|------------------|--------|
-| Protocol orchestration (excluding LLM) | < 5ms | ~1-2ms | PASS |
-| Template rendering | < 1ms | ~100-500us | PASS |
-| Confidence extraction | < 100us | ~50-200us (with fix) | PASS |
-| List parsing | < 1ms | ~200-500us | PASS |
-| Step overhead | < 500us | ~100-300us | PASS |
-| Parallel step dispatch | < 1ms | ~500us | PASS |
+| Metric                                 | Target  | Current Estimate     | Status |
+| -------------------------------------- | ------- | -------------------- | ------ |
+| Protocol orchestration (excluding LLM) | < 5ms   | ~1-2ms               | PASS   |
+| Template rendering                     | < 1ms   | ~100-500us           | PASS   |
+| Confidence extraction                  | < 100us | ~50-200us (with fix) | PASS   |
+| List parsing                           | < 1ms   | ~200-500us           | PASS   |
+| Step overhead                          | < 500us | ~100-300us           | PASS   |
+| Parallel step dispatch                 | < 1ms   | ~500us               | PASS   |
 
 **Overall**: The codebase meets the < 5ms target for core loops.
 
@@ -567,6 +569,7 @@ The ThinkTool module demonstrates strong performance engineering practices:
 4. **Parallel execution** is properly implemented
 
 The main issues found are:
+
 - One instance of regex recompilation (HIGH priority fix)
 - Some blocking I/O in async context (LOW priority)
 - Allocation patterns that could be further optimized (MEDIUM priority)
@@ -577,19 +580,19 @@ The main issues found are:
 
 ## Appendix: File References
 
-| File | Lines | Primary Functions Analyzed |
-|------|-------|---------------------------|
-| `executor.rs` | 1952 | Protocol execution, template rendering, step dispatch |
-| `llm.rs` | 1405 | HTTP client pooling, LLM provider abstraction |
-| `consistency.rs` | 550 | Self-consistency voting, answer normalization |
-| `tot.rs` | 699 | Tree-of-Thoughts exploration |
-| `trace.rs` | 353 | Execution tracing |
-| `step.rs` | 276 | Step result types |
-| `protocol.rs` | 459 | Protocol definitions |
-| `registry.rs` | 833 | Protocol registration |
-| `modules/*.rs` | ~350 | Module type definitions |
+| File             | Lines | Primary Functions Analyzed                            |
+| ---------------- | ----- | ----------------------------------------------------- |
+| `executor.rs`    | 1952  | Protocol execution, template rendering, step dispatch |
+| `llm.rs`         | 1405  | HTTP client pooling, LLM provider abstraction         |
+| `consistency.rs` | 550   | Self-consistency voting, answer normalization         |
+| `tot.rs`         | 699   | Tree-of-Thoughts exploration                          |
+| `trace.rs`       | 353   | Execution tracing                                     |
+| `step.rs`        | 276   | Step result types                                     |
+| `protocol.rs`    | 459   | Protocol definitions                                  |
+| `registry.rs`    | 833   | Protocol registration                                 |
+| `modules/*.rs`   | ~350  | Module type definitions                               |
 
 ---
 
-*Report generated by Performance Engineering Analysis*
-*Target: reasonkit-core v1.0.0*
+_Report generated by Performance Engineering Analysis_
+_Target: reasonkit-core v1.0.0_

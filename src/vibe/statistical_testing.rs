@@ -14,16 +14,16 @@ use std::collections::HashMap;
 pub struct StatisticalConfig {
     /// Number of bootstrap samples
     pub bootstrap_samples: usize,
-    
+
     /// Confidence level for intervals (e.g., 0.95 for 95%)
     pub confidence_level: f32,
-    
+
     /// Significance threshold for p-values
     pub significance_threshold: f32,
-    
+
     /// Enable robust statistics (resistant to outliers)
     pub enable_robust_statistics: bool,
-    
+
     /// Use Bayesian methods for uncertainty estimation
     pub enable_bayesian_methods: bool,
 }
@@ -45,19 +45,19 @@ impl Default for StatisticalConfig {
 pub struct StatisticalResult {
     /// Calculated p-value
     pub p_value: f32,
-    
+
     /// Statistical significance (p < threshold)
     pub is_significant: bool,
-    
+
     /// Effect size measure
     pub effect_size: f32,
-    
+
     /// Confidence intervals
     pub confidence_interval: (f32, f32),
-    
+
     /// Power of the test
     pub test_power: f32,
-    
+
     /// Method used for analysis
     pub method: StatisticalMethod,
 }
@@ -112,16 +112,16 @@ impl StatisticalEngine {
 
         // Perform bootstrap resampling
         let bootstrap_distribution = self.bootstrap_resampling(&scores)?;
-        
+
         // Calculate p-value
         let p_value = self.calculate_p_value(baseline_score, &bootstrap_distribution);
-        
+
         // Calculate effect size
         let effect_size = self.calculate_effect_size(&scores, baseline_score);
-        
+
         // Calculate confidence intervals
         let confidence_interval = self.calculate_confidence_interval(&bootstrap_distribution);
-        
+
         // Calculate test power
         let test_power = self.calculate_power(&scores, baseline_score);
 
@@ -147,23 +147,23 @@ impl StatisticalEngine {
         }
 
         let scores: Vec<f32> = model_scores.values().copied().collect();
-        
+
         // Use mean score as baseline
         let mean_score = scores.iter().sum::<f32>() / scores.len() as f32;
-        
+
         // Calculate variance as indicator of consistency
         let variance = scores
             .iter()
             .map(|score| (score - mean_score).powi(2))
             .sum::<f32>()
             / scores.len() as f32;
-        
+
         // Lower variance indicates better consistency
         let consistency_score = 1.0 - variance.min(1.0);
-        
+
         // For consistency testing, we want low variance (high consistency)
         let p_value = variance; // Simplified: variance as p-value
-        
+
         Ok(StatisticalResult {
             p_value,
             is_significant: variance < 0.1, // Low variance is significant
@@ -272,7 +272,7 @@ impl StatisticalEngine {
             let sample: Vec<f32> = (0..n)
                 .map(|_| scores[self.rng.gen_range(0..n)])
                 .collect();
-            
+
             let mean = sample.iter().sum::<f32>() / sample.len() as f32;
             bootstrap_means.push(mean);
         }
@@ -296,11 +296,11 @@ impl StatisticalEngine {
     fn calculate_effect_size(&self, scores: &[f32], baseline: f32) -> f32 {
         let sample_mean = scores.iter().sum::<f32>() / scores.len() as f32;
         let sample_std = self.calculate_standard_deviation(scores);
-        
+
         if sample_std == 0.0 {
             return 0.0;
         }
-        
+
         (sample_mean - baseline) / sample_std
     }
 
@@ -309,7 +309,7 @@ impl StatisticalEngine {
         let n = bootstrap_distribution.len();
         let lower_index = ((1.0 - self.config.confidence_level) / 2.0 * n as f32) as usize;
         let upper_index = n - lower_index - 1;
-        
+
         (
             bootstrap_distribution[lower_index],
             bootstrap_distribution[upper_index],
@@ -321,11 +321,11 @@ impl StatisticalEngine {
         // Simplified power calculation
         let effect_size = self.calculate_effect_size(scores, baseline);
         let n = scores.len();
-        
+
         if n == 0 {
             return 0.0;
         }
-        
+
         // Cohen's approximate power calculation
         let power = 1.0 - (-effect_size.abs() * (n as f32).sqrt()).exp();
         power.min(1.0).max(0.0)
@@ -336,14 +336,14 @@ impl StatisticalEngine {
         if data.is_empty() {
             return 0.0;
         }
-        
+
         let mean = data.iter().sum::<f32>() / data.len() as f32;
         let variance = data
             .iter()
             .map(|value| (value - mean).powi(2))
             .sum::<f32>()
             / data.len() as f32;
-        
+
         variance.sqrt()
     }
 }
@@ -374,19 +374,19 @@ impl BayesianAnalyzer {
         // Beta-Binomial conjugate prior update
         let posterior_alpha = self.prior_alpha + successes as f32;
         let posterior_beta = self.prior_beta + (total - successes) as f32;
-        
+
         // Calculate posterior mean and credible interval
         let posterior_mean = posterior_alpha / (posterior_alpha + posterior_beta);
-        let posterior_variance = (posterior_alpha * posterior_beta) 
-            / ((posterior_alpha + posterior_beta).powi(2) 
+        let posterior_variance = (posterior_alpha * posterior_beta)
+            / ((posterior_alpha + posterior_beta).powi(2)
             * (posterior_alpha + posterior_beta + 1.0));
-        
+
         // 95% credible interval (approximate)
         let credible_interval = (
             posterior_mean - 1.96 * posterior_variance.sqrt(),
             posterior_mean + 1.96 * posterior_variance.sqrt(),
         );
-        
+
         (posterior_mean, credible_interval.1)
     }
 }
@@ -445,7 +445,7 @@ mod tests {
     fn test_bayesian_inference() {
         let analyzer = BayesianAnalyzer::new(1.0, 1.0); // Uniform prior
         let (mean, _) = analyzer.bayesian_inference(80, 100);
-        
+
         assert!(mean > 0.7 && mean < 0.9);
     }
 }

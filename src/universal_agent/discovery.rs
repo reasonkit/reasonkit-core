@@ -251,7 +251,7 @@ impl DiscoveryEngine {
 
         for discovery in discoveries {
             let key = (discovery.framework_type, discovery.endpoint.clone());
-            
+
             if let Some(existing) = merged.get_mut(&key) {
                 // Keep the discovery with higher confidence score
                 if discovery.confidence_score > existing.confidence_score {
@@ -327,7 +327,7 @@ impl AgentRegistry {
     /// Auto-detect the best framework for a given protocol
     pub async fn auto_detect_best_framework(&self, protocol: &Protocol) -> Result<FrameworkType> {
         let registrations = self.registrations.read().await;
-        
+
         // Score each available framework based on protocol characteristics
         let mut best_framework = FrameworkType::ClaudeCode;
         let mut best_score = 0.0;
@@ -387,7 +387,7 @@ impl AgentRegistry {
     /// Get or create an adapter for a framework
     pub async fn get_or_create_adapter(&self, framework: FrameworkType) -> Result<Box<dyn FrameworkAdapter>> {
         let mut adapters = self.adapters.write().await;
-        
+
         if let Some(adapter) = adapters.get(&framework) {
             Ok(adapter.clone())
         } else {
@@ -465,7 +465,7 @@ impl AgentRegistry {
     /// Update framework usage statistics
     pub async fn update_usage(&self, framework: FrameworkType, performance: f64) -> Result<()> {
         let mut registrations = self.registrations.write().await;
-        
+
         if let Some(registration) = registrations.get_mut(&framework) {
             registration.last_used = Some(chrono::Utc::now());
             registration.usage_count += 1;
@@ -526,7 +526,7 @@ mod tests {
     #[tokio::test]
     async fn test_framework_scoring() {
         let registry = AgentRegistry::new().await.unwrap();
-        
+
         // Create a test protocol
         let protocol = Protocol {
             id: Uuid::new_v4(),

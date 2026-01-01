@@ -46,6 +46,7 @@ pub trait MemoryService: Send + Sync {
 ```
 
 **Use Cases:**
+
 - Loading research papers or documentation
 - Versioning document updates
 - Removing outdated content
@@ -70,14 +71,15 @@ async fn search_by_keywords(&self, query: &str, top_k: usize)
 
 **Search Methods Explained:**
 
-| Method | Input | Use Case | Speed | Relevance |
-|--------|-------|----------|-------|-----------|
-| `search()` | Text query | General purpose | Fast | Good (semantic + keyword) |
-| `search_with_config()` | Text + config | Fine-tuned retrieval | Variable | Excellent |
-| `search_by_vector()` | Pre-computed embedding | Pre-embedded queries | Very Fast | Good (semantic only) |
-| `search_by_keywords()` | Text keywords | Exact term matching | Very Fast | Variable |
+| Method                 | Input                  | Use Case             | Speed     | Relevance                 |
+| ---------------------- | ---------------------- | -------------------- | --------- | ------------------------- |
+| `search()`             | Text query             | General purpose      | Fast      | Good (semantic + keyword) |
+| `search_with_config()` | Text + config          | Fine-tuned retrieval | Variable  | Excellent                 |
+| `search_by_vector()`   | Pre-computed embedding | Pre-embedded queries | Very Fast | Good (semantic only)      |
+| `search_by_keywords()` | Text keywords          | Exact term matching  | Very Fast | Variable                  |
 
 **Hybrid Search Details:**
+
 - Combines dense vectors (semantic meaning) and sparse BM25 (keyword matching)
 - Uses Reciprocal Rank Fusion (RRF) to combine results
 - Optional cross-encoder reranking for precision
@@ -96,6 +98,7 @@ async fn get_document_chunks(&self, doc_id: &Uuid) -> MemoryResult<Vec<Chunk>>;
 ```
 
 **Context Window Structure:**
+
 ```rust
 pub struct ContextWindow {
     pub chunks: Vec<Chunk>,           // Ordered relevant chunks
@@ -108,6 +111,7 @@ pub struct ContextWindow {
 ```
 
 **Example Usage:**
+
 ```rust
 let context = memory.get_context("What is RAG?", 5).await?;
 
@@ -130,6 +134,7 @@ async fn embed_batch(&self, texts: &[&str]) -> MemoryResult<Vec<Vec<f32>>>;
 ```
 
 **Features:**
+
 - Uses configured embedding model (local ONNX or remote API)
 - Results cached where possible
 - Batch operations optimized for throughput
@@ -143,6 +148,7 @@ async fn check_index_health(&self) -> MemoryResult<IndexStats>;
 ```
 
 **When to Use:**
+
 - `build_indexes()`: After adding new documents (idempotent)
 - `rebuild_indexes()`: After corruption or for optimization
 - `check_index_health()`: Monitor index consistency
@@ -155,6 +161,7 @@ async fn is_healthy(&self) -> MemoryResult<bool>;
 ```
 
 **Returned Metrics:**
+
 ```rust
 pub struct MemoryStats {
     pub document_count: usize,
@@ -184,6 +191,7 @@ pub struct ContextConfig {
 **Optimization Examples:**
 
 **Fast, Default Search:**
+
 ```rust
 ContextConfig {
     top_k: 10,
@@ -195,6 +203,7 @@ ContextConfig {
 ```
 
 **High-Quality, Precision Search:**
+
 ```rust
 ContextConfig {
     top_k: 20,
@@ -207,6 +216,7 @@ ContextConfig {
 ```
 
 **Semantic-Only Search:**
+
 ```rust
 ContextConfig {
     alpha: 1.0,    // Dense only
@@ -300,6 +310,7 @@ reasonkit-mem implementations
 ## Feature Flag Behavior
 
 ### With `memory` feature enabled:
+
 ```rust
 pub use reasonkit_mem::{
     Chunk, Document, DocumentContent, DocumentType,
@@ -310,6 +321,7 @@ pub use reasonkit_mem::{
 ```
 
 ### Without `memory` feature:
+
 ```rust
 pub type Chunk = ();
 pub type Document = ();
@@ -357,6 +369,7 @@ async fn test_search() {
 ## API Stability
 
 **Stable (v0.1.0+):**
+
 - Document storage operations
 - Hybrid search with ContextConfig
 - Context assembly (ContextWindow)
@@ -364,6 +377,7 @@ async fn test_search() {
 - Stats and health checks
 
 **Experimental (may change):**
+
 - RAPTOR tree integration (optimization opportunity)
 - Cross-encoder reranking options (quality tuning)
 - AccessContext integration (fine-grained permissions)

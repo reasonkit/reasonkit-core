@@ -1,5 +1,5 @@
 //! # MiniMax M2 Performance Optimization Engine
-//! 
+//!
 //! Leverages MiniMax M2's proven cross-platform capabilities to achieve
 //! M2-level performance (95%+ success rate, <50ms latency) across all agent frameworks
 
@@ -458,7 +458,7 @@ impl M2PerformanceEngine {
     /// Generate optimization cache key
     fn generate_optimization_key(&self, framework: FrameworkType, protocol: &Protocol) -> String {
         use sha2::{Sha256, Digest};
-        
+
         let mut hasher = Sha256::new();
         hasher.update(format!("{}-{:?}-{:?}", protocol.id, framework, protocol.content_length()));
         format!("m2_opt_{:x}", hasher.finalize())
@@ -753,7 +753,7 @@ mod tests {
     #[tokio::test]
     async fn test_framework_optimization() {
         let engine = M2PerformanceEngine::new().await.unwrap();
-        
+
         let protocol = Protocol {
             id: uuid::Uuid::new_v4(),
             content: ProtocolContent::Text("test content".to_string()),
@@ -769,7 +769,7 @@ mod tests {
     fn test_m2_compliance_assessment() {
         let engine = M2PerformanceEngine::new().await.unwrap();
         let targets = M2PerformanceTargets::default();
-        
+
         let compliance = engine.assess_m2_compliance(&0.20, &targets);
         assert!(compliance.compliance_score > 0.0);
     }

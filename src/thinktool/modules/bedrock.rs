@@ -724,17 +724,15 @@ impl BedRock {
     }
 
     /// Classify all principles and refine their types.
-    fn classify_principles(&self, principles: &mut Vec<Principle>) {
+    fn classify_principles(&self, principles: &mut [Principle]) {
         for principle in principles.iter_mut() {
             // Upgrade to axiom if fundamentality is high enough
             if principle.fundamentality >= self.analysis_config.axiom_threshold
                 && principle.principle_type != PrincipleType::Axiom
+                && principle.principle_type != PrincipleType::Contested
             {
-                // Only upgrade if it's not already contested
-                if principle.principle_type != PrincipleType::Contested {
-                    principle.principle_type = PrincipleType::Axiom;
-                    principle.challenges.clear();
-                }
+                principle.principle_type = PrincipleType::Axiom;
+                principle.challenges.clear();
             }
 
             // Downgrade contested claims with no support
@@ -992,8 +990,7 @@ impl BedRock {
             .count();
         let axiom_bonus = (axiom_count as f64 * 0.05).min(0.2);
 
-        let confidence = (principle_confidence + axiom_bonus - gap_penalty).clamp(0.0, 1.0);
-        confidence
+        (principle_confidence + axiom_bonus - gap_penalty).clamp(0.0, 1.0)
     }
 
     /// Calculate completeness of the analysis.

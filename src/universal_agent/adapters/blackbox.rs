@@ -1,5 +1,5 @@
 //! # BlackBox AI Adapter
-//! 
+//!
 //! Adapter for BlackBox AI framework
 //! Focus: High-throughput operations with speed optimization
 
@@ -468,7 +468,7 @@ mod tests {
                 scaling_factor: 2.0,
             },
         };
-        
+
         let metrics = adapter.calculate_throughput_metrics(&content);
         assert!(metrics.requests_per_second > 200.0);
         assert!(metrics.average_latency_ms < 50.0);

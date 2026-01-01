@@ -164,7 +164,7 @@ impl ProtocolTranslator {
     async fn apply_basic_optimization(&self, protocol: &Protocol, framework: FrameworkType) -> Result<Protocol> {
         // Basic optimization: remove unnecessary whitespace, normalize formatting
         let mut optimized = protocol.clone();
-        
+
         match &mut optimized.content {
             ProtocolContent::Text(text) => {
                 *text = text.trim().to_string();
@@ -283,10 +283,10 @@ impl ProtocolTranslator {
         // Simple similarity calculation - in production would use more sophisticated algorithms
         let words1: std::collections::HashSet<&str> = text1.split_whitespace().collect();
         let words2: std::collections::HashSet<&str> = text2.split_whitespace().collect();
-        
+
         let intersection: usize = words1.intersection(&words2).count();
         let union = words1.union(&words2).count();
-        
+
         if union == 0 { 0.0 } else { intersection as f64 / union as f64 }
     }
 
@@ -303,7 +303,7 @@ impl ProtocolTranslator {
     /// Generate cache key for translation
     fn generate_cache_key(&self, source: FrameworkType, target: FrameworkType, protocol: &Protocol) -> String {
         use sha2::{Sha256, Digest};
-        
+
         let mut hasher = Sha256::new();
         hasher.update(format!("{}-{:?}-{:?}", protocol.id, source, target));
         format!("{:x}", hasher.finalize())
@@ -487,7 +487,7 @@ impl ClaudeCodeConverter {
 
     fn reconstruct_protocol(&self, claude_format: ClaudeCodeFormat) -> Result<Protocol> {
         let content = ProtocolContent::Text(claude_format.reasoning);
-        
+
         Ok(Protocol {
             id: uuid::Uuid::new_v4(),
             content,
@@ -706,7 +706,7 @@ pub struct ValidationEngine {
 }
 impl ValidationEngine {
     pub fn new() -> Self { Self }
-    
+
     pub async fn validate_compatibility(&self, protocol: &Protocol, framework: FrameworkType) -> Result<CompatibilityResult> {
         Ok(CompatibilityResult {
             is_compatible: true,
@@ -715,7 +715,7 @@ impl ValidationEngine {
             suggestions: Vec::new(),
         })
     }
-    
+
     pub async fn validate_translation(&self, content: &ProtocolContent, framework: FrameworkType) -> Result<ProtocolContent> {
         Ok(content.clone())
     }
@@ -728,11 +728,11 @@ impl OptimizationCache {
     pub fn new() -> Self {
         Self { cache: HashMap::new() }
     }
-    
+
     pub fn get(&self, key: &str) -> Option<TranslationResult> {
         self.cache.get(key).cloned()
     }
-    
+
     pub fn insert(&mut self, key: String, value: TranslationResult) {
         self.cache.insert(key, value);
     }
@@ -768,7 +768,7 @@ mod tests {
     #[tokio::test]
     async fn test_translation_cache() {
         let translator = ProtocolTranslator::new().await.unwrap();
-        
+
         // Test would require actual protocol creation
         // This is a placeholder test structure
     }

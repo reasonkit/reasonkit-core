@@ -38,9 +38,11 @@
 use criterion::{
     black_box, criterion_group, criterion_main, BenchmarkId, Criterion, SamplingMode, Throughput,
 };
+use once_cell::sync::Lazy;
 use std::collections::HashMap;
 use std::sync::Arc;
 use std::time::Duration;
+use tokio::runtime::Runtime;
 
 // Import from the library (lib.name = "reasonkit" in Cargo.toml)
 use reasonkit::thinktool::{
@@ -50,6 +52,10 @@ use reasonkit::thinktool::{
     registry::ProtocolRegistry,
     step::{ListItem, StepOutput, StepResult, TokenUsage},
 };
+
+// Shared tokio runtime reused across all benchmarks to avoid per-benchmark
+// startup/teardown overhead and syscalls.
+static RT: Lazy<Runtime> = Lazy::new(|| Runtime::new().expect("initialize tokio runtime"));
 
 // =============================================================================
 // TEST DATA GENERATORS
@@ -185,7 +191,7 @@ Confidence: 0.84"#,
 /// Benchmark end-to-end protocol execution with mock LLM
 /// Measures: orchestration overhead, step sequencing, output aggregation
 fn bench_protocol_execution(c: &mut Criterion) {
-    let rt = tokio::runtime::Runtime::new().unwrap();
+    let rt = &*RT;
 
     let config = ExecutorConfig {
         use_mock: true,
@@ -581,7 +587,7 @@ fn bench_profile_switching(c: &mut Criterion) {
 /// Benchmark parallel protocol execution efficiency
 /// Measures: thread scaling, lock contention, async overhead
 fn bench_concurrent_execution(c: &mut Criterion) {
-    let rt = tokio::runtime::Runtime::new().unwrap();
+    let rt = &*RT;
 
     let config = ExecutorConfig {
         use_mock: true,
@@ -685,7 +691,7 @@ fn bench_concurrent_execution(c: &mut Criterion) {
 /// Benchmark full profile chain execution
 /// Measures: chain overhead, step hand-off, cumulative latency
 fn bench_profile_chains(c: &mut Criterion) {
-    let rt = tokio::runtime::Runtime::new().unwrap();
+    let rt = &*RT;
 
     let config = ExecutorConfig {
         use_mock: true,
@@ -751,7 +757,7 @@ fn bench_profile_chains(c: &mut Criterion) {
 /// Benchmark per-step orchestration overhead
 /// Measures: overhead independent of LLM call time
 fn bench_step_overhead(c: &mut Criterion) {
-    let rt = tokio::runtime::Runtime::new().unwrap();
+    let rt = &*RT;
 
     let config = ExecutorConfig {
         use_mock: true,

@@ -370,7 +370,7 @@ impl LayoutAnalyzer {
     }
 }
 
-/// Visual hierarchy analyzer  
+/// Visual hierarchy analyzer
 pub struct HierarchyAnalyzer;
 
 impl HierarchyAnalyzer {

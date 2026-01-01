@@ -11,17 +11,17 @@ When new information adds <5% entropy, the Anchor relaxes.
 License: Apache-2.0
 """
 
-import zlib
-import json
 import argparse
+import json
+import zlib
 from dataclasses import dataclass, field
-from typing import Optional
 from datetime import datetime
 
 
 @dataclass
 class ResearchState:
     """Current state of research session"""
+
     anchor: str
     accumulated_content: str = ""
     step_count: int = 0
@@ -37,8 +37,8 @@ def calculate_compression_ratio(content: str) -> float:
     """Calculate compression ratio as proxy for information density"""
     if not content:
         return 0.0
-    original_size = len(content.encode('utf-8'))
-    compressed_size = len(zlib.compress(content.encode('utf-8')))
+    original_size = len(content.encode("utf-8"))
+    compressed_size = len(zlib.compress(content.encode("utf-8")))
     return compressed_size / original_size
 
 
@@ -67,9 +67,9 @@ def calculate_information_gain(old_content: str, new_content: str) -> float:
     return normalized_gain
 
 
-def check_saturation(state: ResearchState, new_content: str,
-                     threshold: float = 0.3,
-                     max_low_gain_steps: int = 3) -> tuple[float, bool]:
+def check_saturation(
+    state: ResearchState, new_content: str, threshold: float = 0.3, max_low_gain_steps: int = 3
+) -> tuple[float, bool]:
     """
     Check if research has reached saturation.
 
@@ -88,9 +88,9 @@ def check_saturation(state: ResearchState, new_content: str,
     return gain, is_saturated
 
 
-def process_research_step(state: ResearchState, new_content: str,
-                          new_entities: list = None,
-                          new_insights: list = None) -> dict:
+def process_research_step(
+    state: ResearchState, new_content: str, new_entities: list = None, new_insights: list = None
+) -> dict:
     """
     Process a research step and check for saturation.
 
@@ -109,13 +109,15 @@ def process_research_step(state: ResearchState, new_content: str,
         state.insights.extend(new_insights)
 
     # Record history
-    state.history.append({
-        "step": state.step_count,
-        "gain": round(gain, 3),
-        "low_gain_steps": state.low_gain_steps,
-        "mode": state.mode,
-        "timestamp": datetime.now().isoformat()
-    })
+    state.history.append(
+        {
+            "step": state.step_count,
+            "gain": round(gain, 3),
+            "low_gain_steps": state.low_gain_steps,
+            "mode": state.mode,
+            "timestamp": datetime.now().isoformat(),
+        }
+    )
 
     # Handle saturation
     if is_saturated and not state.saturation_triggered:
@@ -131,11 +133,11 @@ def process_research_step(state: ResearchState, new_content: str,
                 "Synthesize patterns from collected data",
                 "Analyze relationships between entities",
                 "Generate insights about ecosystem dynamics",
-                "Identify gaps in coverage and their significance"
+                "Identify gaps in coverage and their significance",
             ],
             "message": f"[Dynamic Beta] SATURATION DETECTED after {state.step_count} steps. "
-                      f"Information gain ({gain:.2%}) below threshold for {state.low_gain_steps} consecutive steps. "
-                      f"Relaxing anchor to allow lateral pivot."
+            f"Information gain ({gain:.2%}) below threshold for {state.low_gain_steps} consecutive steps. "
+            f"Relaxing anchor to allow lateral pivot.",
         }
 
     # Normal progress
@@ -149,7 +151,7 @@ def process_research_step(state: ResearchState, new_content: str,
         "entities_found": len(state.entities_found),
         "insights_count": len(state.insights),
         "message": f"[Dynamic Beta] Step {state.step_count}: Gain={gain:.2%}, "
-                  f"Status={status}, Mode={state.mode}"
+        f"Status={status}, Mode={state.mode}",
     }
 
 
@@ -167,8 +169,8 @@ def run_anti_drift_session(anchor: str, content_stream: list) -> dict:
     state = ResearchState(anchor=anchor)
     results = []
 
-    print(f"[Dynamic Beta] Anchor: \"{anchor}\"")
-    print(f"[Dynamic Beta] Starting research session...")
+    print(f'[Dynamic Beta] Anchor: "{anchor}"')
+    print("[Dynamic Beta] Starting research session...")
     print("-" * 60)
 
     for i, content in enumerate(content_stream):
@@ -193,7 +195,7 @@ def run_anti_drift_session(anchor: str, content_stream: list) -> dict:
         "entities_found": len(state.entities_found),
         "insights": len(state.insights),
         "history": state.history,
-        "step_results": results
+        "step_results": results,
     }
 
 
@@ -201,14 +203,22 @@ def main():
     parser = argparse.ArgumentParser(
         description="Dynamic Beta Protocol: Anti-Drift with Saturation Trigger"
     )
-    parser.add_argument("--anchor", "-a", required=True,
-                       help="Research anchor/goal")
-    parser.add_argument("--threshold", "-t", type=float, default=0.3,
-                       help="Information gain threshold (default: 0.3)")
-    parser.add_argument("--max-low-gain", "-m", type=int, default=3,
-                       help="Max consecutive low-gain steps before trigger (default: 3)")
-    parser.add_argument("--demo", action="store_true",
-                       help="Run demo mode with sample data")
+    parser.add_argument("--anchor", "-a", required=True, help="Research anchor/goal")
+    parser.add_argument(
+        "--threshold",
+        "-t",
+        type=float,
+        default=0.3,
+        help="Information gain threshold (default: 0.3)",
+    )
+    parser.add_argument(
+        "--max-low-gain",
+        "-m",
+        type=int,
+        default=3,
+        help="Max consecutive low-gain steps before trigger (default: 3)",
+    )
+    parser.add_argument("--demo", action="store_true", help="Run demo mode with sample data")
     parser.add_argument("--output", "-o", help="Output JSON file")
 
     args = parser.parse_args()
@@ -230,7 +240,7 @@ def main():
         result = run_anti_drift_session(args.anchor, demo_content)
 
         if args.output:
-            with open(args.output, 'w') as f:
+            with open(args.output, "w") as f:
                 json.dump(result, f, indent=2)
             print(f"\nResults saved to {args.output}")
 
@@ -238,7 +248,7 @@ def main():
 
     else:
         # Interactive mode - read content from stdin
-        print(f"[Dynamic Beta] Anchor: \"{args.anchor}\"")
+        print(f'[Dynamic Beta] Anchor: "{args.anchor}"')
         print("Enter research content (one paragraph per step, empty line to finish):")
         print("-" * 60)
 

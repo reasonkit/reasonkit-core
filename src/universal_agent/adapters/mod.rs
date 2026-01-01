@@ -1,5 +1,5 @@
 //! # Framework-Specific Adapters
-//! 
+//!
 //! Individual adapters for each supported AI agent framework
 
 pub mod claude;
@@ -57,7 +57,7 @@ impl BaseAdapter {
     /// Update performance metrics after processing
     pub fn update_performance(&mut self, success: bool, latency_ms: u64) {
         self.performance_metrics.total_requests += 1;
-        
+
         if success {
             self.performance_metrics.successful_requests += 1;
         } else {
@@ -65,20 +65,20 @@ impl BaseAdapter {
         }
 
         // Update latency metrics
-        self.performance_metrics.average_latency_ms = 
+        self.performance_metrics.average_latency_ms =
             (self.performance_metrics.average_latency_ms * 0.9) + (latency_ms as f64 * 0.1);
-        
+
         if latency_ms > self.performance_metrics.p95_latency_ms as u64 {
             self.performance_metrics.p95_latency_ms = latency_ms as f64;
         }
 
         // Update throughput (requests per second)
-        self.performance_metrics.throughput_rps = 
-            self.performance_metrics.successful_requests as f64 / 
+        self.performance_metrics.throughput_rps =
+            self.performance_metrics.successful_requests as f64 /
             (chrono::Utc::now().signed_duration_since(self.performance_metrics.last_updated).num_seconds() as f64 + 1.0);
 
         // Update error rate
-        self.performance_metrics.error_rate = 
+        self.performance_metrics.error_rate =
             self.performance_metrics.failed_requests as f64 / self.performance_metrics.total_requests as f64;
 
         self.performance_metrics.last_updated = chrono::Utc::now();
@@ -87,8 +87,8 @@ impl BaseAdapter {
     /// Check if adapter meets M2 performance standards
     pub fn meets_m2_standards(&self) -> bool {
         let metrics = &self.performance_metrics;
-        metrics.success_rate() >= 0.95 
-            && metrics.average_latency_ms <= 50.0 
+        metrics.success_rate() >= 0.95
+            && metrics.average_latency_ms <= 50.0
             && metrics.error_rate <= 0.05
     }
 
@@ -185,11 +185,11 @@ mod tests {
     #[test]
     fn test_performance_update() {
         let mut adapter = BaseAdapter::new(FrameworkType::ClaudeCode);
-        
+
         adapter.update_performance(true, 45);
         assert_eq!(adapter.performance_metrics.successful_requests, 1);
         assert_eq!(adapter.performance_metrics.total_requests, 1);
-        
+
         adapter.update_performance(false, 60);
         assert_eq!(adapter.performance_metrics.failed_requests, 1);
         assert_eq!(adapter.performance_metrics.total_requests, 2);

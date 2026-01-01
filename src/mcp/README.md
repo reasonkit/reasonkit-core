@@ -387,14 +387,14 @@ Following CONS-001 (No Node.js):
 
 ## References
 
-- **MCP Specification**: https://spec.modelcontextprotocol.io
-- **MCP GitHub**: https://github.com/modelcontextprotocol
-- **JSON-RPC 2.0**: https://www.jsonrpc.org/specification
+- **MCP Specification**: <https://spec.modelcontextprotocol.io>
+- **MCP GitHub**: <https://github.com/modelcontextprotocol>
+- **JSON-RPC 2.0**: <https://www.jsonrpc.org/specification>
 - **ReasonKit Documentation**: ../../../docs/
 
 ## License
 
-Apache 2.0 (consistent with reasonkit-core)
+Apache 2.0 (consistent with ReasonKit-core)
 
 ---
 
