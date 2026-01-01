@@ -389,7 +389,9 @@ mod tests {
 
         for phase in &protocol.phases {
             assert!(!phase.validation_methods.is_empty());
-            assert!(phase.validation_methods.contains(&ValidationMethod::SelfCheck));
+            assert!(phase
+                .validation_methods
+                .contains(&ValidationMethod::SelfCheck));
         }
     }
 
@@ -505,9 +507,15 @@ mod tests {
 
         let protocol = generator.generate_protocol(&classification, None).unwrap();
 
-        assert_eq!(protocol.m2_optimizations.context_optimization.method, "auto");
         assert_eq!(
-            protocol.m2_optimizations.context_optimization.compression_ratio,
+            protocol.m2_optimizations.context_optimization.method,
+            "auto"
+        );
+        assert_eq!(
+            protocol
+                .m2_optimizations
+                .context_optimization
+                .compression_ratio,
             0.8
         );
     }
@@ -851,15 +859,9 @@ mod tests {
         let classification2 = complex_classification();
 
         // Generate multiple protocols
-        let p1 = generator
-            .generate_protocol(&classification1, None)
-            .unwrap();
-        let p2 = generator
-            .generate_protocol(&classification2, None)
-            .unwrap();
-        let p3 = generator
-            .generate_protocol(&classification1, None)
-            .unwrap();
+        let p1 = generator.generate_protocol(&classification1, None).unwrap();
+        let p2 = generator.generate_protocol(&classification2, None).unwrap();
+        let p3 = generator.generate_protocol(&classification1, None).unwrap();
 
         // All should be independent
         assert_ne!(p1.id, p2.id);
@@ -949,10 +951,7 @@ mod tests {
 
             for phase in &protocol.phases {
                 assert_eq!(phase.synthesis_methods.len(), 1);
-                assert_eq!(
-                    phase.synthesis_methods[0],
-                    SynthesisMethod::WeightedAverage
-                );
+                assert_eq!(phase.synthesis_methods[0], SynthesisMethod::WeightedAverage);
             }
         }
     }

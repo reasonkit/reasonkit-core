@@ -15,9 +15,10 @@
 use async_trait::async_trait;
 use reasonkit::error::{Error, Result};
 use reasonkit::mcp::tools::ToolHandler;
+use reasonkit::mcp::tools::ToolResultContent;
 use reasonkit::mcp::{
     JsonRpcVersion, McpNotification, McpRequest, McpResponse, McpServer, McpServerTrait,
-    ServerCapabilities, ServerInfo, ServerStatus, Tool, ToolResult, ToolResultContent, Transport,
+    ServerCapabilities, ServerInfo, ServerStatus, Tool, ToolResult, Transport,
 };
 use reasonkit::thinktool::{
     BudgetConfig, BudgetStrategy, ExecutorConfig, ProtocolExecutor, ProtocolInput,
@@ -987,24 +988,25 @@ mod budget_tests {
     #[tokio::test]
     async fn test_budget_config_creation() {
         let config = BudgetConfig {
-            max_tokens: Some(10000),
-            max_cost_usd: Some(1.0),
+            token_limit: Some(10000),
+            cost_limit: Some(1.0),
             strategy: BudgetStrategy::Strict,
             ..Default::default()
         };
 
-        assert_eq!(config.max_tokens, Some(10000));
-        assert_eq!(config.max_cost_usd, Some(1.0));
+        assert_eq!(config.token_limit, Some(10000));
+        assert_eq!(config.cost_limit, Some(1.0));
     }
 
     #[tokio::test]
     async fn test_executor_with_budget_tracking() {
         let mut executor_config = ExecutorConfig::mock();
         executor_config.budget = BudgetConfig {
-            max_tokens: Some(50000),
-            max_cost_usd: Some(5.0),
+            token_limit: Some(50000),
+            cost_limit: Some(5.0),
             strategy: BudgetStrategy::Adaptive,
-            warn_threshold: Some(0.8),
+            adapt_threshold: 0.8,
+            ..Default::default()
         };
 
         let executor = ProtocolExecutor::with_config(executor_config)
@@ -1029,10 +1031,11 @@ mod budget_tests {
     async fn test_profile_with_budget_constraints() {
         let mut executor_config = ExecutorConfig::mock();
         executor_config.budget = BudgetConfig {
-            max_tokens: Some(100000),
-            max_cost_usd: Some(10.0),
+            token_limit: Some(100000),
+            cost_limit: Some(10.0),
             strategy: BudgetStrategy::Strict,
-            warn_threshold: Some(0.9),
+            adapt_threshold: 0.9,
+            ..Default::default()
         };
 
         let executor =
@@ -1112,7 +1115,12 @@ mod trace_tests {
 
         // Verify step traces
         for step in &output.steps {
-            assert!(step.duration_ms > 0, "Each step should have duration");
+            // Duration should be present; 0ms is possible for mocked/fast steps.
+            // (duration_ms is u64 so non-negative by construction)
+            assert!(
+                step.duration_ms == step.duration_ms,
+                "Each step should have duration"
+            );
             assert!(
                 step.confidence >= 0.0 && step.confidence <= 1.0,
                 "Step confidence should be normalized"

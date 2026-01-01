@@ -33,7 +33,10 @@ impl OllamaClient {
     /// - `http://127.0.0.1:11434`
     pub fn new(base_url: impl Into<String>) -> Result<Self, reqwest::Error> {
         let http = reqwest::Client::builder()
-            .user_agent(concat!("reasonkit-ollama-client/", env!("CARGO_PKG_VERSION")))
+            .user_agent(concat!(
+                "reasonkit-ollama-client/",
+                env!("CARGO_PKG_VERSION")
+            ))
             .build()?;
 
         Ok(Self {

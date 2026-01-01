@@ -291,9 +291,6 @@ fn print_result(name: &str, output: &ProtocolOutput) {
 
     // Show budget summary if available
     if let Some(budget) = &output.budget_summary {
-        println!(
-            "  Budget: {}/{} tokens used",
-            budget.tokens_used, budget.tokens_limit
-        );
+        println!("  Budget: {} tokens used", budget.tokens_used);
     }
 }

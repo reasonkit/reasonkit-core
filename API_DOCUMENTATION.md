@@ -22,7 +22,7 @@
 
 ## Overview
 
-ReasonKit Core is a Rust-first knowledge base and RAG (Retrieval-Augmented Generation) system designed for AI reasoning enhancement. It provides a complete pipeline for document ingestion, embedding, indexing, retrieval, and LLM-powered query answering.
+ReasonKit Core is **The Reasoning Engine** — a Rust-native system for auditable, structured AI reasoning. It provides a complete pipeline for document ingestion, embedding, indexing, retrieval, and LLM-powered query answering with ThinkTools protocols.
 
 ### Key Features
 

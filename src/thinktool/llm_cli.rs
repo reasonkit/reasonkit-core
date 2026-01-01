@@ -485,7 +485,7 @@ impl LlmCliClient {
                 format!(
                     "Failed to parse embedding response: {}. Response: {}",
                     e, stdout
-                )
+                ),
             ))
         })?;
 

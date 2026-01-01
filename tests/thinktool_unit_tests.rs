@@ -63,12 +63,10 @@ mod gigathink_module_tests {
         let gt = GigaThink::new();
         let config = gt.config();
 
-        assert_eq!(config.name, "GigaThink");
-        assert_eq!(config.version, "2.0.0");
-        assert!(
-            config.description.contains("creative") || config.description.contains("perspective")
-        );
-        assert!(config.confidence_weight > 0.0 && config.confidence_weight <= 1.0);
+        // GigaThinkConfig is behavioral configuration (not metadata)
+        assert!(config.min_perspectives > 0);
+        assert!(config.max_perspectives >= config.min_perspectives);
+        assert!(config.min_confidence >= 0.0 && config.min_confidence <= 1.0);
     }
 
     #[test]
@@ -76,7 +74,9 @@ mod gigathink_module_tests {
         let gt = GigaThink::default();
         let config = gt.config();
 
-        assert_eq!(config.name, "GigaThink");
+        // GigaThinkConfig has no metadata fields; just validate invariants
+        assert!(config.min_perspectives > 0);
+        assert!(config.max_perspectives >= config.min_perspectives);
     }
 
     #[test]
@@ -142,15 +142,18 @@ mod gigathink_module_tests {
     }
 
     #[test]
-    fn test_gigathink_confidence_weight_valid() {
+    fn test_gigathink_config_weights_valid() {
         let gt = GigaThink::new();
         let config = gt.config();
 
-        // Confidence weight should be between 0 and 1
-        assert!(config.confidence_weight >= 0.0);
-        assert!(config.confidence_weight <= 1.0);
-        // GigaThink typically has lower weight (creative vs analytical)
-        assert_eq!(config.confidence_weight, 0.15);
+        // Weights should be between 0 and 1
+        assert!(config.novelty_weight >= 0.0 && config.novelty_weight <= 1.0);
+        assert!(config.depth_weight >= 0.0 && config.depth_weight <= 1.0);
+        assert!(config.coherence_weight >= 0.0 && config.coherence_weight <= 1.0);
+
+        // Should sum to ~1.0 in the default config
+        let sum = config.novelty_weight + config.depth_weight + config.coherence_weight;
+        assert!((sum - 1.0).abs() < 1e-6);
     }
 }
 

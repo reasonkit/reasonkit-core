@@ -1,0 +1,122 @@
+<svg width="1200" height="400" viewBox="0 0 1200 400" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Gradients -->
+    <linearGradient id="cardGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0a0d14;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#111827;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="cyanGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#06b6d4;stop-opacity:0.2" />
+      <stop offset="100%" style="stop-color:#06b6d4;stop-opacity:0.05" />
+    </linearGradient>
+    <linearGradient id="purpleGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#a855f7;stop-opacity:0.2" />
+      <stop offset="100%" style="stop-color:#a855f7;stop-opacity:0.05" />
+    </linearGradient>
+    <linearGradient id="pinkGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ec4899;stop-opacity:0.2" />
+      <stop offset="100%" style="stop-color:#ec4899;stop-opacity:0.05" />
+    </linearGradient>
+    <linearGradient id="greenGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#10b981;stop-opacity:0.2" />
+      <stop offset="100%" style="stop-color:#10b981;stop-opacity:0.05" />
+    </linearGradient>
+    <linearGradient id="orangeGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f97316;stop-opacity:0.2" />
+      <stop offset="100%" style="stop-color:#f97316;stop-opacity:0.05" />
+    </linearGradient>
+    
+    <!-- Glow Filters -->
+    <filter id="glowCyan" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="5" result="blur" />
+      <feColorMatrix in="blur" type="matrix" values="0 0 0 0 0.02 0 0 0 0 0.71 0 0 0 0 0.83 0 0 0 0.5 0" />
+      <feBlend in="SourceGraphic" mode="normal" />
+    </filter>
+  </defs>
+
+  <style>
+    .card-bg { fill: url(#cardGradient); stroke-width: 1; rx: 8; }
+    .card-title { font-family: 'Inter', sans-serif; font-weight: 700; font-size: 18px; fill: #f9fafb; }
+    .card-subtitle { font-family: 'JetBrains Mono', monospace; font-size: 12px; opacity: 0.8; }
+    .card-desc { font-family: 'Inter', sans-serif; font-size: 14px; fill: #9ca3af; }
+    .icon-bg { fill-opacity: 0.1; }
+  </style>
+
+  <!-- Card 1: GigaThink -->
+  <g transform="translate(20, 50)">
+    <rect x="0" y="0" width="220" height="300" class="card-bg" stroke="#06b6d4" stroke-opacity="0.3" fill="url(#cyanGradient)" />
+    <!-- Icon Placeholder -->
+    <circle cx="110" cy="80" r="30" fill="#06b6d4" fill-opacity="0.1" stroke="#06b6d4" stroke-width="2" />
+    <path d="M110 65 L110 95 M95 80 L125 80 M100 70 L120 90 M120 70 L100 90" stroke="#06b6d4" stroke-width="2" />
+    
+    <text x="110" y="140" text-anchor="middle" class="card-title">GigaThink</text>
+    <text x="110" y="160" text-anchor="middle" class="card-subtitle" fill="#06b6d4">Diverge()</text>
+    <text x="110" y="200" text-anchor="middle" class="card-desc">
+      <tspan x="110" dy="0">Generate 10+</tspan>
+      <tspan x="110" dy="20">Perspectives</tspan>
+    </text>
+  </g>
+
+  <!-- Card 2: LaserLogic -->
+  <g transform="translate(255, 50)">
+    <rect x="0" y="0" width="220" height="300" class="card-bg" stroke="#a855f7" stroke-opacity="0.3" fill="url(#purpleGradient)" />
+    <!-- Icon Placeholder -->
+    <circle cx="110" cy="80" r="30" fill="#a855f7" fill-opacity="0.1" stroke="#a855f7" stroke-width="2" />
+    <path d="M95 80 L125 80 M110 65 L110 95" stroke="#a855f7" stroke-width="2" />
+    <circle cx="110" cy="80" r="10" stroke="#a855f7" stroke-width="1.5" fill="none" />
+    
+    <text x="110" y="140" text-anchor="middle" class="card-title">LaserLogic</text>
+    <text x="110" y="160" text-anchor="middle" class="card-subtitle" fill="#a855f7">Converge()</text>
+    <text x="110" y="200" text-anchor="middle" class="card-desc">
+      <tspan x="110" dy="0">Detect Fallacies</tspan>
+      <tspan x="110" dy="20">& Validate Logic</tspan>
+    </text>
+  </g>
+
+  <!-- Card 3: BedRock -->
+  <g transform="translate(490, 50)">
+    <rect x="0" y="0" width="220" height="300" class="card-bg" stroke="#ec4899" stroke-opacity="0.3" fill="url(#pinkGradient)" />
+    <!-- Icon Placeholder -->
+    <rect x="80" y="65" width="60" height="30" stroke="#ec4899" stroke-width="2" fill="none" />
+    <rect x="85" y="60" width="50" height="40" stroke="#ec4899" stroke-width="1" fill="none" opacity="0.5" />
+    <path d="M80 95 L140 95" stroke="#ec4899" stroke-width="3" />
+    
+    <text x="110" y="140" text-anchor="middle" class="card-title">BedRock</text>
+    <text x="110" y="160" text-anchor="middle" class="card-subtitle" fill="#ec4899">Ground()</text>
+    <text x="110" y="200" text-anchor="middle" class="card-desc">
+      <tspan x="110" dy="0">First Principles</tspan>
+      <tspan x="110" dy="20">Decomposition</tspan>
+    </text>
+  </g>
+
+  <!-- Card 4: ProofGuard -->
+  <g transform="translate(725, 50)">
+    <rect x="0" y="0" width="220" height="300" class="card-bg" stroke="#10b981" stroke-opacity="0.3" fill="url(#greenGradient)" />
+    <!-- Icon Placeholder -->
+    <path d="M110 60 L140 75 L140 100 L110 115 L80 100 L80 75 Z" stroke="#10b981" stroke-width="2" fill="none" />
+    <path d="M100 85 L110 95 L125 75" stroke="#10b981" stroke-width="2" fill="none" />
+    
+    <text x="110" y="140" text-anchor="middle" class="card-title">ProofGuard</text>
+    <text x="110" y="160" text-anchor="middle" class="card-subtitle" fill="#10b981">Verify()</text>
+    <text x="110" y="200" text-anchor="middle" class="card-desc">
+      <tspan x="110" dy="0">Multi-Source</tspan>
+      <tspan x="110" dy="20">Triangulation</tspan>
+    </text>
+  </g>
+
+  <!-- Card 5: BrutalHonesty -->
+  <g transform="translate(960, 50)">
+    <rect x="0" y="0" width="220" height="300" class="card-bg" stroke="#f97316" stroke-opacity="0.3" fill="url(#orangeGradient)" />
+    <!-- Icon Placeholder -->
+    <path d="M90 70 L130 110 M130 70 L90 110" stroke="#f97316" stroke-width="3" />
+    <circle cx="110" cy="90" r="35" stroke="#f97316" stroke-width="2" fill="none" />
+    
+    <text x="110" y="140" text-anchor="middle" class="card-title">BrutalHonesty</text>
+    <text x="110" y="160" text-anchor="middle" class="card-subtitle" fill="#f97316">Critique()</text>
+    <text x="110" y="200" text-anchor="middle" class="card-desc">
+      <tspan x="110" dy="0">Adversarial</tspan>
+      <tspan x="110" dy="20">Red Teaming</tspan>
+    </text>
+  </g>
+
+</svg>

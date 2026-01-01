@@ -40,7 +40,7 @@ use std::sync::{Arc, RwLock};
 use uuid::Uuid;
 
 // Import from the traits module
-use reasonkit::traits::memory::{
+use reasonkit::traits::{
     Chunk, ContextWindow, Document, HybridConfig, IndexConfig, IndexStats, MemoryConfig,
     MemoryError, MemoryResult, MemoryService, RetrievalSource, SearchResult,
 };
@@ -430,11 +430,11 @@ impl MemoryService for MockMemoryService {
 
     async fn health_check(&self) -> MemoryResult<bool> {
         // Check that locks are not poisoned
-        let _ = self
+        let _documents_guard = self
             .documents
             .read()
             .map_err(|_| MemoryError::Storage("Lock poisoned".to_string()))?;
-        let _ = self
+        let _chunks_guard = self
             .chunks
             .read()
             .map_err(|_| MemoryError::Storage("Lock poisoned".to_string()))?;
@@ -627,7 +627,7 @@ async fn demo_index_management(memory: &impl MemoryService) -> MemoryResult<()> 
     let index_config = IndexConfig {
         name: "my-index".to_string(),
         dimensions: 384,
-        metric: reasonkit::traits::memory::DistanceMetric::Cosine,
+        metric: reasonkit::traits::DistanceMetric::Cosine,
         ef_construction: 200,
         m: 16,
     };

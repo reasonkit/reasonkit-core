@@ -192,7 +192,8 @@ impl ThinkToolOutput {
             .map_err(|e| PyValueError::new_err(e.to_string()))?;
 
         json_to_pyobject(py, &data).and_then(|obj| {
-            obj.downcast::<PyDict>().cloned()
+            obj.downcast::<PyDict>()
+                .cloned()
                 .map_err(|_| PyValueError::new_err("Output is not a dict"))
         })
     }
@@ -731,6 +732,7 @@ fn version() -> &'static str {
 // ============================================================================
 
 /// Convert serde_json::Value to Python object
+#[allow(deprecated)]
 fn json_to_pyobject<'py>(
     py: Python<'py>,
     value: &serde_json::Value,
@@ -750,14 +752,14 @@ fn json_to_pyobject<'py>(
         }
         serde_json::Value::String(s) => Ok(s.to_object(py).into_bound(py)),
         serde_json::Value::Array(arr) => {
-            let list = PyList::empty_bound(py);
+            let list = PyList::empty(py);
             for item in arr {
                 list.append(json_to_pyobject(py, item)?)?;
             }
             Ok(list.into_any())
         }
         serde_json::Value::Object(map) => {
-            let dict = PyDict::new_bound(py);
+            let dict = PyDict::new(py);
             for (k, v) in map {
                 dict.set_item(k, json_to_pyobject(py, v)?)?;
             }
@@ -779,7 +781,7 @@ pub fn register_bindings(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_class::<StepResultPy>()?;
 
     // Exception
-    m.add("ReasonerError", m.py().get_type_bound::<ReasonerError>())?;
+    m.add("ReasonerError", m.py().get_type::<ReasonerError>())?;
 
     // Convenience functions
     m.add_function(wrap_pyfunction!(run_gigathink, m)?)?;
@@ -854,7 +856,10 @@ mod tests {
             .iter()
             .filter(|&&t| t == "proofguard")
             .count();
-        assert_eq!(proofguard_count, 2, "Paranoid should have 2 proofguard passes");
+        assert_eq!(
+            proofguard_count, 2,
+            "Paranoid should have 2 proofguard passes"
+        );
     }
 
     #[test]
@@ -1616,10 +1621,7 @@ mod tests {
     #[test]
     fn test_protocol_input_statement() {
         let input = ProtocolInput::statement("The Earth orbits the Sun");
-        assert_eq!(
-            input.get_str("statement"),
-            Some("The Earth orbits the Sun")
-        );
+        assert_eq!(input.get_str("statement"), Some("The Earth orbits the Sun"));
     }
 
     #[test]
@@ -1683,7 +1685,10 @@ mod tests {
         };
 
         assert!(output.protocol_id.is_empty());
-        assert_eq!(output.__repr__(), "ThinkToolOutput(protocol='', success=true, confidence=0.00)");
+        assert_eq!(
+            output.__repr__(),
+            "ThinkToolOutput(protocol='', success=true, confidence=0.00)"
+        );
     }
 
     #[test]

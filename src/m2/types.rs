@@ -749,9 +749,14 @@ mod tests {
             let json = serde_json::to_string(&config).unwrap();
             let deserialized: PerformanceConfig = serde_json::from_str(&json).unwrap();
 
-            assert!((config.cost_reduction_target - deserialized.cost_reduction_target).abs() < f64::EPSILON);
+            assert!(
+                (config.cost_reduction_target - deserialized.cost_reduction_target).abs()
+                    < f64::EPSILON
+            );
             assert_eq!(config.latency_target_ms, deserialized.latency_target_ms);
-            assert!((config.quality_threshold - deserialized.quality_threshold).abs() < f64::EPSILON);
+            assert!(
+                (config.quality_threshold - deserialized.quality_threshold).abs() < f64::EPSILON
+            );
             assert_eq!(config.enable_caching, deserialized.enable_caching);
             assert_eq!(config.compression_level, deserialized.compression_level);
         }
@@ -762,7 +767,10 @@ mod tests {
             let json = serde_json::to_string(&config).unwrap();
             let deserialized: M2IntegrationConfig = serde_json::from_str(&json).unwrap();
 
-            assert_eq!(config.max_concurrent_executions, deserialized.max_concurrent_executions);
+            assert_eq!(
+                config.max_concurrent_executions,
+                deserialized.max_concurrent_executions
+            );
             assert_eq!(config.default_timeout_ms, deserialized.default_timeout_ms);
             assert_eq!(config.enable_caching, deserialized.enable_caching);
             assert_eq!(config.enable_monitoring, deserialized.enable_monitoring);
@@ -784,8 +792,14 @@ mod tests {
             let deserialized: OptimizationGoals = serde_json::from_str(&json).unwrap();
 
             assert_eq!(goals.primary_goal, deserialized.primary_goal);
-            assert_eq!(goals.secondary_goals.len(), deserialized.secondary_goals.len());
-            assert_eq!(goals.constraints.max_cost, deserialized.constraints.max_cost);
+            assert_eq!(
+                goals.secondary_goals.len(),
+                deserialized.secondary_goals.len()
+            );
+            assert_eq!(
+                goals.constraints.max_cost,
+                deserialized.constraints.max_cost
+            );
         }
 
         #[test]
@@ -795,16 +809,26 @@ mod tests {
                 complexity_level: ComplexityLevel::Complex,
                 domain: TaskDomain::SystemProgramming,
                 expected_output_size: OutputSize::Large,
-                time_constraints: TimeConstraints { max_duration_ms: Some(60000) },
-                quality_requirements: QualityRequirements { quality_level: QualityLevel::High },
+                time_constraints: TimeConstraints {
+                    max_duration_ms: Some(60000),
+                },
+                quality_requirements: QualityRequirements {
+                    quality_level: QualityLevel::High,
+                },
             };
             let json = serde_json::to_string(&classification).unwrap();
             let deserialized: TaskClassification = serde_json::from_str(&json).unwrap();
 
             assert_eq!(classification.task_type, deserialized.task_type);
-            assert_eq!(classification.complexity_level, deserialized.complexity_level);
+            assert_eq!(
+                classification.complexity_level,
+                deserialized.complexity_level
+            );
             assert_eq!(classification.domain, deserialized.domain);
-            assert_eq!(classification.expected_output_size, deserialized.expected_output_size);
+            assert_eq!(
+                classification.expected_output_size,
+                deserialized.expected_output_size
+            );
         }
 
         #[test]
@@ -823,13 +847,11 @@ mod tests {
             let output = ProtocolOutput {
                 result: "Analysis complete".to_string(),
                 confidence: 0.95,
-                evidence: vec![
-                    Evidence {
-                        content: "Source code reviewed".to_string(),
-                        source: "file.rs".to_string(),
-                        confidence: 0.9,
-                    },
-                ],
+                evidence: vec![Evidence {
+                    content: "Source code reviewed".to_string(),
+                    source: "file.rs".to_string(),
+                    confidence: 0.9,
+                }],
             };
             let json = serde_json::to_string(&output).unwrap();
             let deserialized: ProtocolOutput = serde_json::from_str(&json).unwrap();
@@ -887,7 +909,10 @@ mod tests {
 
             assert_eq!(metrics.duration_ms, deserialized.duration_ms);
             assert_eq!(metrics.token_usage.total, deserialized.token_usage.total);
-            assert_eq!(metrics.audit_trail.steps.len(), deserialized.audit_trail.steps.len());
+            assert_eq!(
+                metrics.audit_trail.steps.len(),
+                deserialized.audit_trail.steps.len()
+            );
         }
 
         #[test]
@@ -909,7 +934,10 @@ mod tests {
 
             assert_eq!(phase.name, deserialized.name);
             assert_eq!(phase.parallel_branches, deserialized.parallel_branches);
-            assert_eq!(phase.validation_methods.len(), deserialized.validation_methods.len());
+            assert_eq!(
+                phase.validation_methods.len(),
+                deserialized.validation_methods.len()
+            );
         }
 
         #[test]
@@ -932,7 +960,10 @@ mod tests {
             let json = serde_json::to_string(&allocation).unwrap();
             let deserialized: ResourceAllocation = serde_json::from_str(&json).unwrap();
 
-            assert_eq!(allocation.token_budget.total, deserialized.token_budget.total);
+            assert_eq!(
+                allocation.token_budget.total,
+                deserialized.token_budget.total
+            );
             assert_eq!(allocation.priority, deserialized.priority);
             assert_eq!(allocation.parallel_capacity, deserialized.parallel_capacity);
         }
@@ -964,9 +995,18 @@ mod tests {
             let json = serde_json::to_string(&optimizations).unwrap();
             let deserialized: M2Optimizations = serde_json::from_str(&json).unwrap();
 
-            assert_eq!(optimizations.context_optimization.method, deserialized.context_optimization.method);
-            assert_eq!(optimizations.output_optimization.format, deserialized.output_optimization.format);
-            assert_eq!(optimizations.cost_optimization.strategy, deserialized.cost_optimization.strategy);
+            assert_eq!(
+                optimizations.context_optimization.method,
+                deserialized.context_optimization.method
+            );
+            assert_eq!(
+                optimizations.output_optimization.format,
+                deserialized.output_optimization.format
+            );
+            assert_eq!(
+                optimizations.cost_optimization.strategy,
+                deserialized.cost_optimization.strategy
+            );
         }
 
         #[test]
@@ -1003,12 +1043,30 @@ mod tests {
 
         #[test]
         fn test_agent_framework_snake_case() {
-            assert_eq!(serde_json::to_string(&AgentFramework::ClaudeCode).unwrap(), "\"claude_code\"");
-            assert_eq!(serde_json::to_string(&AgentFramework::Cline).unwrap(), "\"cline\"");
-            assert_eq!(serde_json::to_string(&AgentFramework::KiloCode).unwrap(), "\"kilo_code\"");
-            assert_eq!(serde_json::to_string(&AgentFramework::Droid).unwrap(), "\"droid\"");
-            assert_eq!(serde_json::to_string(&AgentFramework::RooCode).unwrap(), "\"roo_code\"");
-            assert_eq!(serde_json::to_string(&AgentFramework::BlackBoxAi).unwrap(), "\"black_box_ai\"");
+            assert_eq!(
+                serde_json::to_string(&AgentFramework::ClaudeCode).unwrap(),
+                "\"claude_code\""
+            );
+            assert_eq!(
+                serde_json::to_string(&AgentFramework::Cline).unwrap(),
+                "\"cline\""
+            );
+            assert_eq!(
+                serde_json::to_string(&AgentFramework::KiloCode).unwrap(),
+                "\"kilo_code\""
+            );
+            assert_eq!(
+                serde_json::to_string(&AgentFramework::Droid).unwrap(),
+                "\"droid\""
+            );
+            assert_eq!(
+                serde_json::to_string(&AgentFramework::RooCode).unwrap(),
+                "\"roo_code\""
+            );
+            assert_eq!(
+                serde_json::to_string(&AgentFramework::BlackBoxAi).unwrap(),
+                "\"black_box_ai\""
+            );
         }
 
         #[test]
@@ -1022,84 +1080,195 @@ mod tests {
 
         #[test]
         fn test_use_case_snake_case() {
-            assert_eq!(serde_json::to_string(&UseCase::CodeAnalysis).unwrap(), "\"code_analysis\"");
-            assert_eq!(serde_json::to_string(&UseCase::BugFinding).unwrap(), "\"bug_finding\"");
-            assert_eq!(serde_json::to_string(&UseCase::Documentation).unwrap(), "\"documentation\"");
-            assert_eq!(serde_json::to_string(&UseCase::Architecture).unwrap(), "\"architecture\"");
-            assert_eq!(serde_json::to_string(&UseCase::General).unwrap(), "\"general\"");
+            assert_eq!(
+                serde_json::to_string(&UseCase::CodeAnalysis).unwrap(),
+                "\"code_analysis\""
+            );
+            assert_eq!(
+                serde_json::to_string(&UseCase::BugFinding).unwrap(),
+                "\"bug_finding\""
+            );
+            assert_eq!(
+                serde_json::to_string(&UseCase::Documentation).unwrap(),
+                "\"documentation\""
+            );
+            assert_eq!(
+                serde_json::to_string(&UseCase::Architecture).unwrap(),
+                "\"architecture\""
+            );
+            assert_eq!(
+                serde_json::to_string(&UseCase::General).unwrap(),
+                "\"general\""
+            );
         }
 
         #[test]
         fn test_task_type_snake_case() {
-            assert_eq!(serde_json::to_string(&TaskType::CodeAnalysis).unwrap(), "\"code_analysis\"");
-            assert_eq!(serde_json::to_string(&TaskType::BugFinding).unwrap(), "\"bug_finding\"");
-            assert_eq!(serde_json::to_string(&TaskType::Documentation).unwrap(), "\"documentation\"");
-            assert_eq!(serde_json::to_string(&TaskType::Architecture).unwrap(), "\"architecture\"");
-            assert_eq!(serde_json::to_string(&TaskType::General).unwrap(), "\"general\"");
+            assert_eq!(
+                serde_json::to_string(&TaskType::CodeAnalysis).unwrap(),
+                "\"code_analysis\""
+            );
+            assert_eq!(
+                serde_json::to_string(&TaskType::BugFinding).unwrap(),
+                "\"bug_finding\""
+            );
+            assert_eq!(
+                serde_json::to_string(&TaskType::Documentation).unwrap(),
+                "\"documentation\""
+            );
+            assert_eq!(
+                serde_json::to_string(&TaskType::Architecture).unwrap(),
+                "\"architecture\""
+            );
+            assert_eq!(
+                serde_json::to_string(&TaskType::General).unwrap(),
+                "\"general\""
+            );
         }
 
         #[test]
         fn test_task_domain_snake_case() {
-            assert_eq!(serde_json::to_string(&TaskDomain::SystemProgramming).unwrap(), "\"system_programming\"");
+            assert_eq!(
+                serde_json::to_string(&TaskDomain::SystemProgramming).unwrap(),
+                "\"system_programming\""
+            );
             assert_eq!(serde_json::to_string(&TaskDomain::Web).unwrap(), "\"web\"");
-            assert_eq!(serde_json::to_string(&TaskDomain::Data).unwrap(), "\"data\"");
-            assert_eq!(serde_json::to_string(&TaskDomain::General).unwrap(), "\"general\"");
+            assert_eq!(
+                serde_json::to_string(&TaskDomain::Data).unwrap(),
+                "\"data\""
+            );
+            assert_eq!(
+                serde_json::to_string(&TaskDomain::General).unwrap(),
+                "\"general\""
+            );
         }
 
         #[test]
         fn test_complexity_level_snake_case() {
-            assert_eq!(serde_json::to_string(&ComplexityLevel::Simple).unwrap(), "\"simple\"");
-            assert_eq!(serde_json::to_string(&ComplexityLevel::Moderate).unwrap(), "\"moderate\"");
-            assert_eq!(serde_json::to_string(&ComplexityLevel::Complex).unwrap(), "\"complex\"");
+            assert_eq!(
+                serde_json::to_string(&ComplexityLevel::Simple).unwrap(),
+                "\"simple\""
+            );
+            assert_eq!(
+                serde_json::to_string(&ComplexityLevel::Moderate).unwrap(),
+                "\"moderate\""
+            );
+            assert_eq!(
+                serde_json::to_string(&ComplexityLevel::Complex).unwrap(),
+                "\"complex\""
+            );
         }
 
         #[test]
         fn test_quality_level_snake_case() {
-            assert_eq!(serde_json::to_string(&QualityLevel::Draft).unwrap(), "\"draft\"");
-            assert_eq!(serde_json::to_string(&QualityLevel::Standard).unwrap(), "\"standard\"");
-            assert_eq!(serde_json::to_string(&QualityLevel::High).unwrap(), "\"high\"");
+            assert_eq!(
+                serde_json::to_string(&QualityLevel::Draft).unwrap(),
+                "\"draft\""
+            );
+            assert_eq!(
+                serde_json::to_string(&QualityLevel::Standard).unwrap(),
+                "\"standard\""
+            );
+            assert_eq!(
+                serde_json::to_string(&QualityLevel::High).unwrap(),
+                "\"high\""
+            );
         }
 
         #[test]
         fn test_output_size_snake_case() {
-            assert_eq!(serde_json::to_string(&OutputSize::Small).unwrap(), "\"small\"");
-            assert_eq!(serde_json::to_string(&OutputSize::Medium).unwrap(), "\"medium\"");
-            assert_eq!(serde_json::to_string(&OutputSize::Large).unwrap(), "\"large\"");
+            assert_eq!(
+                serde_json::to_string(&OutputSize::Small).unwrap(),
+                "\"small\""
+            );
+            assert_eq!(
+                serde_json::to_string(&OutputSize::Medium).unwrap(),
+                "\"medium\""
+            );
+            assert_eq!(
+                serde_json::to_string(&OutputSize::Large).unwrap(),
+                "\"large\""
+            );
         }
 
         #[test]
         fn test_optimization_goal_snake_case() {
-            assert_eq!(serde_json::to_string(&OptimizationGoal::Cost).unwrap(), "\"cost\"");
-            assert_eq!(serde_json::to_string(&OptimizationGoal::Latency).unwrap(), "\"latency\"");
-            assert_eq!(serde_json::to_string(&OptimizationGoal::Quality).unwrap(), "\"quality\"");
-            assert_eq!(serde_json::to_string(&OptimizationGoal::BalanceAll).unwrap(), "\"balance_all\"");
+            assert_eq!(
+                serde_json::to_string(&OptimizationGoal::Cost).unwrap(),
+                "\"cost\""
+            );
+            assert_eq!(
+                serde_json::to_string(&OptimizationGoal::Latency).unwrap(),
+                "\"latency\""
+            );
+            assert_eq!(
+                serde_json::to_string(&OptimizationGoal::Quality).unwrap(),
+                "\"quality\""
+            );
+            assert_eq!(
+                serde_json::to_string(&OptimizationGoal::BalanceAll).unwrap(),
+                "\"balance_all\""
+            );
         }
 
         #[test]
         fn test_synthesis_method_serialization() {
-            assert_eq!(serde_json::to_string(&SynthesisMethod::Ensemble).unwrap(), "\"Ensemble\"");
-            assert_eq!(serde_json::to_string(&SynthesisMethod::WeightedAverage).unwrap(), "\"WeightedAverage\"");
-            assert_eq!(serde_json::to_string(&SynthesisMethod::BestOfN).unwrap(), "\"BestOfN\"");
+            assert_eq!(
+                serde_json::to_string(&SynthesisMethod::Ensemble).unwrap(),
+                "\"Ensemble\""
+            );
+            assert_eq!(
+                serde_json::to_string(&SynthesisMethod::WeightedAverage).unwrap(),
+                "\"WeightedAverage\""
+            );
+            assert_eq!(
+                serde_json::to_string(&SynthesisMethod::BestOfN).unwrap(),
+                "\"BestOfN\""
+            );
         }
 
         #[test]
         fn test_synthesis_strategy_serialization() {
-            assert_eq!(serde_json::to_string(&SynthesisStrategy::Standard).unwrap(), "\"Standard\"");
-            assert_eq!(serde_json::to_string(&SynthesisStrategy::Aggressive).unwrap(), "\"Aggressive\"");
-            assert_eq!(serde_json::to_string(&SynthesisStrategy::Conservative).unwrap(), "\"Conservative\"");
+            assert_eq!(
+                serde_json::to_string(&SynthesisStrategy::Standard).unwrap(),
+                "\"Standard\""
+            );
+            assert_eq!(
+                serde_json::to_string(&SynthesisStrategy::Aggressive).unwrap(),
+                "\"Aggressive\""
+            );
+            assert_eq!(
+                serde_json::to_string(&SynthesisStrategy::Conservative).unwrap(),
+                "\"Conservative\""
+            );
         }
 
         #[test]
         fn test_compliance_flag_serialization() {
-            assert_eq!(serde_json::to_string(&ComplianceFlag::GDPRCompliant).unwrap(), "\"GDPRCompliant\"");
-            assert_eq!(serde_json::to_string(&ComplianceFlag::HIPAACompliant).unwrap(), "\"HIPAACompliant\"");
+            assert_eq!(
+                serde_json::to_string(&ComplianceFlag::GDPRCompliant).unwrap(),
+                "\"GDPRCompliant\""
+            );
+            assert_eq!(
+                serde_json::to_string(&ComplianceFlag::HIPAACompliant).unwrap(),
+                "\"HIPAACompliant\""
+            );
         }
 
         #[test]
         fn test_validation_method_serialization() {
-            assert_eq!(serde_json::to_string(&ValidationMethod::SelfCheck).unwrap(), "\"SelfCheck\"");
-            assert_eq!(serde_json::to_string(&ValidationMethod::PeerReview).unwrap(), "\"PeerReview\"");
-            assert_eq!(serde_json::to_string(&ValidationMethod::FormalVerification).unwrap(), "\"FormalVerification\"");
+            assert_eq!(
+                serde_json::to_string(&ValidationMethod::SelfCheck).unwrap(),
+                "\"SelfCheck\""
+            );
+            assert_eq!(
+                serde_json::to_string(&ValidationMethod::PeerReview).unwrap(),
+                "\"PeerReview\""
+            );
+            assert_eq!(
+                serde_json::to_string(&ValidationMethod::FormalVerification).unwrap(),
+                "\"FormalVerification\""
+            );
         }
     }
 
@@ -1170,7 +1339,10 @@ mod tests {
                 UseCase::General,
             ] {
                 let classification: TaskClassification = use_case.into();
-                assert_eq!(classification.time_constraints.max_duration_ms, Some(300_000));
+                assert_eq!(
+                    classification.time_constraints.max_duration_ms,
+                    Some(300_000)
+                );
             }
         }
 
@@ -1184,7 +1356,10 @@ mod tests {
                 UseCase::General,
             ] {
                 let classification: TaskClassification = use_case.into();
-                assert_eq!(classification.quality_requirements.quality_level, QualityLevel::Standard);
+                assert_eq!(
+                    classification.quality_requirements.quality_level,
+                    QualityLevel::Standard
+                );
             }
         }
     }
@@ -1283,7 +1458,10 @@ mod tests {
 
             assert_eq!(original.duration_ms, cloned.duration_ms);
             assert_eq!(original.token_usage.total, cloned.token_usage.total);
-            assert_eq!(original.audit_trail.steps.len(), cloned.audit_trail.steps.len());
+            assert_eq!(
+                original.audit_trail.steps.len(),
+                cloned.audit_trail.steps.len()
+            );
         }
 
         #[test]
@@ -1360,9 +1538,15 @@ mod tests {
 
         #[test]
         fn test_time_constraints_equality() {
-            let a = TimeConstraints { max_duration_ms: Some(1000) };
-            let b = TimeConstraints { max_duration_ms: Some(1000) };
-            let c = TimeConstraints { max_duration_ms: Some(2000) };
+            let a = TimeConstraints {
+                max_duration_ms: Some(1000),
+            };
+            let b = TimeConstraints {
+                max_duration_ms: Some(1000),
+            };
+            let c = TimeConstraints {
+                max_duration_ms: Some(2000),
+            };
 
             assert_eq!(a, b);
             assert_ne!(a, c);
@@ -1370,9 +1554,15 @@ mod tests {
 
         #[test]
         fn test_quality_requirements_equality() {
-            let a = QualityRequirements { quality_level: QualityLevel::High };
-            let b = QualityRequirements { quality_level: QualityLevel::High };
-            let c = QualityRequirements { quality_level: QualityLevel::Draft };
+            let a = QualityRequirements {
+                quality_level: QualityLevel::High,
+            };
+            let b = QualityRequirements {
+                quality_level: QualityLevel::High,
+            };
+            let c = QualityRequirements {
+                quality_level: QualityLevel::Draft,
+            };
 
             assert_eq!(a, b);
             assert_ne!(a, c);
@@ -1393,7 +1583,10 @@ mod tests {
         #[test]
         fn test_compliance_flag_equality() {
             assert_eq!(ComplianceFlag::GDPRCompliant, ComplianceFlag::GDPRCompliant);
-            assert_ne!(ComplianceFlag::GDPRCompliant, ComplianceFlag::HIPAACompliant);
+            assert_ne!(
+                ComplianceFlag::GDPRCompliant,
+                ComplianceFlag::HIPAACompliant
+            );
         }
 
         #[test]
@@ -1490,7 +1683,9 @@ mod tests {
 
         #[test]
         fn test_none_optional_fields() {
-            let constraints = TimeConstraints { max_duration_ms: None };
+            let constraints = TimeConstraints {
+                max_duration_ms: None,
+            };
             let json = serde_json::to_string(&constraints).unwrap();
             let deserialized: TimeConstraints = serde_json::from_str(&json).unwrap();
 
@@ -1547,7 +1742,9 @@ mod tests {
             let deserialized: PerformanceTargets = serde_json::from_str(&json).unwrap();
 
             // JSON float precision may differ slightly
-            assert!((targets.cost_reduction_target - deserialized.cost_reduction_target).abs() < 1e-10);
+            assert!(
+                (targets.cost_reduction_target - deserialized.cost_reduction_target).abs() < 1e-10
+            );
         }
 
         #[test]
@@ -1691,7 +1888,10 @@ mod tests {
 
             assert_eq!(protocol.name, deserialized.name);
             assert_eq!(protocol.phases.len(), deserialized.phases.len());
-            assert_eq!(protocol.framework_compatibility.len(), deserialized.framework_compatibility.len());
+            assert_eq!(
+                protocol.framework_compatibility.len(),
+                deserialized.framework_compatibility.len()
+            );
             assert_eq!(protocol.phases[0].name, deserialized.phases[0].name);
             assert_eq!(protocol.phases[1].constraints.dependencies[0], "reasoning");
         }
@@ -1722,7 +1922,10 @@ mod tests {
             let json = serde_json::to_string(&config).unwrap();
             let deserialized: M2IntegrationConfig = serde_json::from_str(&json).unwrap();
 
-            assert_eq!(config.max_concurrent_executions, deserialized.max_concurrent_executions);
+            assert_eq!(
+                config.max_concurrent_executions,
+                deserialized.max_concurrent_executions
+            );
             assert_eq!(
                 config.default_optimization_goals.primary_goal,
                 deserialized.default_optimization_goals.primary_goal

@@ -228,11 +228,7 @@ pub trait MemoryService: Send + Sync {
     async fn get_by_id(&self, id: Uuid) -> MemoryResult<Option<Document>>;
 
     /// Get a context window optimized for the query and token budget.
-    async fn get_context(
-        &self,
-        query: &str,
-        max_tokens: usize,
-    ) -> MemoryResult<ContextWindow>;
+    async fn get_context(&self, query: &str, max_tokens: usize) -> MemoryResult<ContextWindow>;
 
     // ─────────────────────────────────────────────────────────────────────────
     // Embedding Operations

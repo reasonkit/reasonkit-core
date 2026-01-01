@@ -1,0 +1,46 @@
+{
+  "name": "reasonkit-protocol-mode",
+  "displayName": "ReasonKit Protocol Mode",
+  "description": "Write code in the Void - High-contrast, distraction-free theme for ReasonKit",
+  "version": "1.0.0",
+  "publisher": "reasonkit",
+  "engines": {
+    "vscode": "^1.74.0"
+  },
+  "categories": [
+    "Themes"
+  ],
+  "contributes": {
+    "themes": [
+      {
+        "label": "ReasonKit Protocol Mode",
+        "uiTheme": "vs-dark",
+        "path": "./themes/reasonkit-protocol-mode.json"
+      }
+    ]
+  },
+  "keywords": [
+    "reasonkit",
+    "protocol",
+    "dark",
+    "high-contrast",
+    "industrial",
+    "void",
+    "cyberpunk"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/reasonkit/reasonkit-core"
+  },
+  "license": "Apache-2.0",
+  "icon": "icon.png",
+  "homepage": "https://reasonkit.sh",
+  "bugs": {
+    "url": "https://github.com/reasonkit/reasonkit-core/issues"
+  },
+  "author": {
+    "name": "ReasonKit",
+    "url": "https://reasonkit.sh"
+  }
+}
+

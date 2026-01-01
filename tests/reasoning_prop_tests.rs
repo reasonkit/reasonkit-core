@@ -813,7 +813,15 @@ proptest! {
         let parsed: ListItem = serde_json::from_str(&json).unwrap();
 
         prop_assert_eq!(original.content, parsed.content);
-        prop_assert_eq!(original.confidence, parsed.confidence);
+
+        // Allow small floating point variance for f64 JSON roundtrips.
+        // serde_json is generally precise, but intermediary formatting or
+        // platform differences can produce 1-ulp drift.
+        match (original.confidence, parsed.confidence) {
+            (None, None) => {}
+            (Some(a), Some(b)) => prop_assert!((a - b).abs() < 1e-12),
+            _ => prop_assert!(false, "confidence presence mismatch after roundtrip"),
+        }
     }
 
     /// Property: TokenUsage roundtrip should preserve data

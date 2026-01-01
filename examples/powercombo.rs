@@ -231,10 +231,12 @@ async fn main() -> anyhow::Result<()> {
         ExecutorConfig::default().with_self_consistency_config(SelfConsistencyConfig {
             num_samples: 5,
             voting_method: VotingMethod::MajorityVote,
-            temperature_range: (0.5, 0.9),
+            temperature_base: 0.5,
+            temperature_variance: 0.1,
+            min_sample_confidence: 0.5,
+            use_cisc: true,
             early_stopping: true,
-            early_stopping_threshold: 0.8,
-            normalize_answers: true,
+            consensus_threshold: 0.8,
         })
     };
 

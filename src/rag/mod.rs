@@ -457,8 +457,7 @@ mod tests {
         };
 
         let full_content = chunks.join("\n\n");
-        let mut doc =
-            Document::new(DocumentType::Note, source).with_content(full_content.clone());
+        let mut doc = Document::new(DocumentType::Note, source).with_content(full_content.clone());
 
         let mut char_offset = 0;
         doc.chunks = chunks
@@ -528,8 +527,7 @@ mod tests {
     fn test_rag_config_serialization() {
         let config = RagConfig::default();
         let json = serde_json::to_string(&config).expect("Serialization failed");
-        let deserialized: RagConfig =
-            serde_json::from_str(&json).expect("Deserialization failed");
+        let deserialized: RagConfig = serde_json::from_str(&json).expect("Deserialization failed");
 
         assert_eq!(config.top_k, deserialized.top_k);
         assert_eq!(config.min_score, deserialized.min_score);
@@ -614,7 +612,11 @@ mod tests {
         // Verify chunk indices
         for (i, chunk) in doc.chunks.iter().enumerate() {
             assert_eq!(chunk.index, i);
-            assert!(chunk.section.as_ref().unwrap().contains(&format!("{}", i + 1)));
+            assert!(chunk
+                .section
+                .as_ref()
+                .unwrap()
+                .contains(&format!("{}", i + 1)));
         }
 
         // Verify chunk offsets are sequential
@@ -689,10 +691,7 @@ mod tests {
                 "Rust provides memory safety without garbage collection.",
                 "rust",
             ),
-            create_test_document(
-                "JavaScript runs in web browsers and Node.js.",
-                "javascript",
-            ),
+            create_test_document("JavaScript runs in web browsers and Node.js.", "javascript"),
         ];
 
         for doc in &docs {
@@ -779,8 +778,14 @@ mod tests {
             "self-consistency",
         );
 
-        engine.add_document(&doc1).await.expect("Failed to add doc1");
-        engine.add_document(&doc2).await.expect("Failed to add doc2");
+        engine
+            .add_document(&doc1)
+            .await
+            .expect("Failed to add doc1");
+        engine
+            .add_document(&doc2)
+            .await
+            .expect("Failed to add doc2");
 
         let response = engine
             .query("How does chain of thought work?")
@@ -826,7 +831,10 @@ mod tests {
             create_test_document("Document three content.", "doc3"),
         ];
 
-        let count = engine.add_documents(&docs).await.expect("Failed to add docs");
+        let count = engine
+            .add_documents(&docs)
+            .await
+            .expect("Failed to add docs");
         assert_eq!(count, 3);
 
         let stats = engine.stats().await.expect("Failed to get stats");
@@ -842,10 +850,7 @@ mod tests {
         assert_eq!(stats.document_count, 0);
 
         // Add documents
-        let doc = create_multi_chunk_document(
-            &["Chunk 1", "Chunk 2", "Chunk 3"],
-            "multi-chunk",
-        );
+        let doc = create_multi_chunk_document(&["Chunk 1", "Chunk 2", "Chunk 3"], "multi-chunk");
         engine.add_document(&doc).await.expect("Failed to add doc");
 
         let stats = engine.stats().await.expect("Failed to get stats");
@@ -998,10 +1003,7 @@ mod tests {
         engine.add_document(&doc).await.expect("Failed to add doc");
 
         // Query with special characters
-        let response = engine
-            .query("C++ programming")
-            .await
-            .expect("Query failed");
+        let response = engine.query("C++ programming").await.expect("Query failed");
 
         assert!(!response.answer.is_empty());
     }
@@ -1074,7 +1076,10 @@ mod tests {
         let doc = create_test_document("Source structure test content.", "source");
         engine.add_document(&doc).await.expect("Failed to add doc");
 
-        let response = engine.query("source structure").await.expect("Query failed");
+        let response = engine
+            .query("source structure")
+            .await
+            .expect("Query failed");
 
         for source in &response.sources {
             // Verify source fields
@@ -1136,8 +1141,7 @@ mod tests {
         };
 
         let json = serde_json::to_string(&source).expect("Serialization failed");
-        let deserialized: RagSource =
-            serde_json::from_str(&json).expect("Deserialization failed");
+        let deserialized: RagSource = serde_json::from_str(&json).expect("Deserialization failed");
 
         assert_eq!(source.text, deserialized.text);
         assert_eq!(source.score, deserialized.score);
@@ -1169,8 +1173,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_concurrent_queries() {
-        let engine =
-            std::sync::Arc::new(RagEngine::in_memory().expect("Failed to create engine"));
+        let engine = std::sync::Arc::new(RagEngine::in_memory().expect("Failed to create engine"));
 
         let doc = create_test_document("Concurrent access test document.", "concurrent");
         engine.add_document(&doc).await.expect("Failed to add doc");

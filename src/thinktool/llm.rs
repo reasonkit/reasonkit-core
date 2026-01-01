@@ -24,11 +24,15 @@
 use async_trait::async_trait;
 use once_cell::sync::Lazy;
 use serde::{Deserialize, Serialize};
-use std::collections::HashMap;
+use std::collections::{BTreeMap, HashMap};
 use std::sync::RwLock;
 use std::time::Duration;
 
 use crate::error::{Error, Result};
+use crate::llm::ollama::types::{
+    ChatMessage as OllamaChatMessage, ChatRequest as OllamaChatRequest,
+};
+use crate::llm::ollama::OllamaClient;
 
 // ═══════════════════════════════════════════════════════════════════════════
 // HTTP CLIENT POOL (PERFORMANCE OPTIMIZATION)
@@ -50,6 +54,18 @@ static DEFAULT_HTTP_CLIENT: Lazy<reqwest::Client> = Lazy::new(|| {
         .build()
         .expect("Failed to create default HTTP client")
 });
+
+fn env_first(keys: &[&str]) -> Option<String> {
+    for k in keys {
+        if let Ok(v) = std::env::var(k) {
+            let v = v.trim().to_string();
+            if !v.is_empty() {
+                return Some(v);
+            }
+        }
+    }
+    None
+}
 
 /// Get or create an HTTP client for a specific timeout duration
 /// Clients are cached and reused to maintain connection pools
@@ -262,6 +278,7 @@ pub enum LlmProvider {
     Anthropic,
 
     /// OpenAI GPT models
+    #[serde(rename = "open_ai")]
     OpenAI,
 
     /// Google Gemini via AI Studio (OpenAI-compatible)
@@ -274,17 +291,27 @@ pub enum LlmProvider {
 
     /// Azure OpenAI Service
     /// Base: <https://{resource}.openai.azure.com/openai/deployments/{deployment}>
+    #[serde(rename = "azure_open_ai")]
     AzureOpenAI,
 
     /// AWS Bedrock (OpenAI-compatible via Converse API)
     /// Base: <https://bedrock-runtime.{region}.amazonaws.com>
+    #[serde(rename = "aws_bedrock")]
     AWSBedrock,
+
+    // ─────────────────────────────────────────────────────────────
+    // LOCAL / SELF-HOSTED
+    // ─────────────────────────────────────────────────────────────
+    /// Ollama (local server; can route to Ollama Cloud models)
+    /// Base: <http://localhost:11434>
+    Ollama,
 
     // ─────────────────────────────────────────────────────────────────────────
     // TIER 2: Specialized AI Providers
     // ─────────────────────────────────────────────────────────────────────────
     /// xAI Grok models
     /// Base: <https://api.x.ai/v1>
+    #[serde(rename = "xai")]
     XAI,
 
     /// Groq (ultra-fast inference)
@@ -316,10 +343,12 @@ pub enum LlmProvider {
     // ─────────────────────────────────────────────────────────────────────────
     /// Together AI (open model hosting)
     /// Base: <https://api.together.xyz/v1>
+    #[serde(rename = "together_ai")]
     TogetherAI,
 
     /// Fireworks AI (fast open model inference)
     /// Base: <https://api.fireworks.ai/inference/v1>
+    #[serde(rename = "fireworks_ai")]
     FireworksAI,
 
     /// Alibaba Qwen / DashScope
@@ -335,6 +364,7 @@ pub enum LlmProvider {
 
     /// Cloudflare AI Gateway (unified endpoint)
     /// Base: <https://gateway.ai.cloudflare.com/v1/{account_id}/{gateway_id}/>
+    #[serde(rename = "cloudflare_ai")]
     CloudflareAI,
 
     /// Opencode AI
@@ -352,6 +382,7 @@ impl LlmProvider {
             LlmProvider::GoogleVertex,
             LlmProvider::AzureOpenAI,
             LlmProvider::AWSBedrock,
+            LlmProvider::Ollama,
             LlmProvider::XAI,
             LlmProvider::Groq,
             LlmProvider::Mistral,
@@ -377,6 +408,9 @@ impl LlmProvider {
             LlmProvider::GoogleVertex => "GOOGLE_APPLICATION_CREDENTIALS",
             LlmProvider::AzureOpenAI => "AZURE_OPENAI_API_KEY",
             LlmProvider::AWSBedrock => "AWS_ACCESS_KEY_ID", // Also needs AWS_SECRET_ACCESS_KEY
+            // Ollama does not require an API key; discovery uses RK_OLLAMA_* / OLLAMA_*.
+            // This is kept for display purposes only.
+            LlmProvider::Ollama => "RK_OLLAMA_MODEL",
             LlmProvider::XAI => "XAI_API_KEY",
             LlmProvider::Groq => "GROQ_API_KEY",
             LlmProvider::Mistral => "MISTRAL_API_KEY",
@@ -402,6 +436,7 @@ impl LlmProvider {
             LlmProvider::GoogleVertex => "https://aiplatform.googleapis.com/v1", // Needs project/location
             LlmProvider::AzureOpenAI => "https://RESOURCE.openai.azure.com/openai", // Needs resource
             LlmProvider::AWSBedrock => "https://bedrock-runtime.us-east-1.amazonaws.com", // Needs region
+            LlmProvider::Ollama => "http://localhost:11434",
             LlmProvider::XAI => "https://api.x.ai/v1",
             LlmProvider::Groq => "https://api.groq.com/openai/v1",
             LlmProvider::Mistral => "https://api.mistral.ai/v1",
@@ -428,6 +463,9 @@ impl LlmProvider {
             LlmProvider::GoogleVertex => "gemini-3.0-pro", // Same via Vertex
             LlmProvider::AzureOpenAI => "gpt-5.1",       // Via Azure
             LlmProvider::AWSBedrock => "anthropic.claude-opus-4-5-v1:0", // Via Bedrock
+
+            // Local / Self-hosted
+            LlmProvider::Ollama => "deepseek-v3.2:cloud", // Default cloud tag; override via RK_OLLAMA_MODEL
 
             // Tier 2: Specialized (Latest releases)
             LlmProvider::XAI => "grok-4.1", // Nov 2025, 2M context
@@ -477,6 +515,7 @@ impl LlmProvider {
             LlmProvider::GoogleVertex => "Google Vertex AI",
             LlmProvider::AzureOpenAI => "Azure OpenAI",
             LlmProvider::AWSBedrock => "AWS Bedrock",
+            LlmProvider::Ollama => "Ollama",
             LlmProvider::XAI => "xAI (Grok)",
             LlmProvider::Groq => "Groq",
             LlmProvider::Mistral => "Mistral AI",
@@ -818,6 +857,24 @@ impl UnifiedLlmClient {
         )
     }
 
+    /// Create for Ollama (local server; can route to Ollama Cloud models)
+    ///
+    /// Uses env var resolution (preferred):
+    /// - `RK_OLLAMA_MODEL` (fallback: `OLLAMA_MODEL`)
+    /// - `RK_OLLAMA_URL` (fallback: `OLLAMA_URL`, default: http://localhost:11434)
+    pub fn ollama() -> Result<Self> {
+        let model = env_first(&["RK_OLLAMA_MODEL", "OLLAMA_MODEL"]).ok_or_else(|| {
+            Error::Config("Ollama model not set. Set RK_OLLAMA_MODEL (or OLLAMA_MODEL)".to_string())
+        })?;
+
+        let base_url = env_first(&["RK_OLLAMA_URL", "OLLAMA_URL"]);
+
+        let mut cfg = LlmConfig::for_provider(LlmProvider::Ollama, model);
+        cfg.base_url = base_url;
+
+        Self::new(cfg)
+    }
+
     // ─────────────────────────────────────────────────────────────────────────
     // API KEY & URL RESOLUTION
     // ─────────────────────────────────────────────────────────────────────────
@@ -844,6 +901,10 @@ impl UnifiedLlmClient {
         }
 
         match self.config.provider {
+            LlmProvider::Ollama => {
+                Ok(env_first(&["RK_OLLAMA_URL", "OLLAMA_URL"]) // optional
+                    .unwrap_or_else(|| self.config.provider.default_base_url().to_string()))
+            }
             LlmProvider::AzureOpenAI => {
                 let resource = self
                     .config
@@ -975,6 +1036,63 @@ impl UnifiedLlmClient {
         })
     }
 
+    /// Call Ollama `/api/chat` (non-OpenAI-compatible)
+    async fn call_ollama_chat(&self, request: LlmRequest) -> Result<LlmResponse> {
+        let base_url = self.get_base_url()?;
+
+        let mut messages: Vec<OllamaChatMessage> = Vec::new();
+        if let Some(system) = &request.system {
+            messages.push(OllamaChatMessage {
+                role: "system".to_string(),
+                content: system.clone(),
+            });
+        }
+        messages.push(OllamaChatMessage {
+            role: "user".to_string(),
+            content: request.prompt,
+        });
+
+        // Map ThinkTool request knobs into Ollama options where possible.
+        // `num_predict` is Ollama's equivalent of max_tokens.
+        let mut options: BTreeMap<String, serde_json::Value> = BTreeMap::new();
+        options.insert(
+            "temperature".to_string(),
+            serde_json::Value::from(request.temperature.unwrap_or(self.config.temperature)),
+        );
+        options.insert(
+            "num_predict".to_string(),
+            serde_json::Value::from(
+                request
+                    .max_tokens
+                    .unwrap_or(self.config.max_tokens)
+                    .min(i32::MAX as u32) as i64,
+            ),
+        );
+
+        let req = OllamaChatRequest {
+            model: self.config.model.clone(),
+            messages,
+            stream: Some(false),
+            options: Some(options),
+        };
+
+        let client = OllamaClient::new(base_url)?;
+        let resp = client
+            .chat(req)
+            .await
+            .map_err(|e| Error::Network(format!("Ollama API request failed: {}", e)))?;
+
+        Ok(LlmResponse {
+            content: resp.message.content,
+            model: resp.model,
+            // Ollama done flag indicates completion; we always treat as Stop for now
+            finish_reason: FinishReason::Stop,
+            // Our Ollama types currently don't model token usage.
+            usage: LlmUsage::default(),
+            provider: Some(LlmProvider::Ollama),
+        })
+    }
+
     /// Call OpenAI-compatible API (works for most providers)
     async fn call_openai_compatible(&self, request: LlmRequest) -> Result<LlmResponse> {
         let api_key = self.get_api_key()?;
@@ -1077,10 +1195,10 @@ impl UnifiedLlmClient {
 #[async_trait]
 impl LlmClient for UnifiedLlmClient {
     async fn complete(&self, request: LlmRequest) -> Result<LlmResponse> {
-        if self.config.provider.is_anthropic_format() {
-            self.call_anthropic(request).await
-        } else {
-            self.call_openai_compatible(request).await
+        match self.config.provider {
+            LlmProvider::Anthropic => self.call_anthropic(request).await,
+            LlmProvider::Ollama => self.call_ollama_chat(request).await,
+            _ => self.call_openai_compatible(request).await,
         }
     }
 
@@ -1106,7 +1224,12 @@ pub fn discover_available_providers() -> Vec<LlmProvider> {
             if p.requires_special_auth() {
                 return false;
             }
-            std::env::var(p.env_var()).is_ok()
+
+            match p {
+                // Ollama doesn't use an API key; treat it as available if a model is configured.
+                LlmProvider::Ollama => env_first(&["RK_OLLAMA_MODEL", "OLLAMA_MODEL"]).is_some(),
+                _ => std::env::var(p.env_var()).is_ok(),
+            }
         })
         .copied()
         .collect()
@@ -1118,11 +1241,16 @@ pub fn create_available_client() -> Result<UnifiedLlmClient> {
 
     if available.is_empty() {
         return Err(Error::Config(
-            "No LLM provider API keys found. Set one of: ANTHROPIC_API_KEY, OPENAI_API_KEY, GEMINI_API_KEY, etc.".to_string()
+            "No LLM providers found. Set an API key (e.g. ANTHROPIC_API_KEY, OPENAI_API_KEY, ...) or set RK_OLLAMA_MODEL for Ollama.".to_string(),
         ));
     }
 
     let provider = available[0];
+
+    if provider == LlmProvider::Ollama {
+        return UnifiedLlmClient::ollama();
+    }
+
     UnifiedLlmClient::new(LlmConfig {
         provider,
         model: provider.default_model().to_string(),
@@ -1151,13 +1279,20 @@ pub struct ProviderInfo {
 pub fn get_provider_info() -> Vec<ProviderInfo> {
     LlmProvider::all()
         .iter()
-        .map(|p| ProviderInfo {
-            id: *p,
-            name: p.display_name(),
-            env_var: p.env_var(),
-            default_model: p.default_model(),
-            base_url: p.default_base_url(),
-            is_available: std::env::var(p.env_var()).is_ok(),
+        .map(|p| {
+            let is_available = match p {
+                LlmProvider::Ollama => env_first(&["RK_OLLAMA_MODEL", "OLLAMA_MODEL"]).is_some(),
+                _ => std::env::var(p.env_var()).is_ok(),
+            };
+
+            ProviderInfo {
+                id: *p,
+                name: p.display_name(),
+                env_var: p.env_var(),
+                default_model: p.default_model(),
+                base_url: p.default_base_url(),
+                is_available,
+            }
         })
         .collect()
 }
@@ -1227,7 +1362,7 @@ mod tests {
 
     #[test]
     fn test_provider_count() {
-        assert_eq!(LlmProvider::all().len(), 19);
+        assert_eq!(LlmProvider::all().len(), 20);
     }
 
     #[test]
@@ -1250,6 +1385,7 @@ mod tests {
         assert_eq!(LlmProvider::Anthropic.env_var(), "ANTHROPIC_API_KEY");
         assert_eq!(LlmProvider::OpenAI.env_var(), "OPENAI_API_KEY");
         assert_eq!(LlmProvider::GoogleGemini.env_var(), "GEMINI_API_KEY");
+        assert_eq!(LlmProvider::Ollama.env_var(), "RK_OLLAMA_MODEL");
         assert_eq!(LlmProvider::XAI.env_var(), "XAI_API_KEY");
         assert_eq!(LlmProvider::Groq.env_var(), "GROQ_API_KEY");
         assert_eq!(LlmProvider::Mistral.env_var(), "MISTRAL_API_KEY");
@@ -1274,6 +1410,10 @@ mod tests {
         assert_eq!(
             LlmProvider::OpenAI.default_base_url(),
             "https://api.openai.com/v1"
+        );
+        assert_eq!(
+            LlmProvider::Ollama.default_base_url(),
+            "http://localhost:11434"
         );
         assert_eq!(
             LlmProvider::Groq.default_base_url(),
@@ -1318,6 +1458,16 @@ mod tests {
     fn test_provider_base_urls_contain_https() {
         for provider in LlmProvider::all() {
             let url = provider.default_base_url();
+
+            if *provider == LlmProvider::Ollama {
+                assert!(
+                    url.starts_with("http://localhost"),
+                    "Ollama default URL should be localhost http://: {}",
+                    url
+                );
+                continue;
+            }
+
             assert!(
                 url.starts_with("https://"),
                 "Provider {:?} URL does not start with https://: {}",
@@ -1372,7 +1522,11 @@ mod tests {
     fn test_provider_display_names_non_empty() {
         for provider in LlmProvider::all() {
             let name = provider.display_name();
-            assert!(!name.is_empty(), "Provider {:?} has empty display name", provider);
+            assert!(
+                !name.is_empty(),
+                "Provider {:?} has empty display name",
+                provider
+            );
         }
     }
 
@@ -1380,7 +1534,11 @@ mod tests {
     fn test_provider_default_models_non_empty() {
         for provider in LlmProvider::all() {
             let model = provider.default_model();
-            assert!(!model.is_empty(), "Provider {:?} has empty default model", provider);
+            assert!(
+                !model.is_empty(),
+                "Provider {:?} has empty default model",
+                provider
+            );
         }
     }
 
@@ -1465,7 +1623,10 @@ mod tests {
     #[test]
     fn test_llm_config_with_base_url() {
         let config = LlmConfig::default().with_base_url("https://custom.api.com/v1");
-        assert_eq!(config.base_url, Some("https://custom.api.com/v1".to_string()));
+        assert_eq!(
+            config.base_url,
+            Some("https://custom.api.com/v1".to_string())
+        );
     }
 
     #[test]
@@ -1479,7 +1640,10 @@ mod tests {
         assert_eq!(config.provider, LlmProvider::OpenAI);
         assert_eq!(config.model, "gpt-4o");
         assert_eq!(config.api_key, Some("sk-test".to_string()));
-        assert_eq!(config.base_url, Some("https://proxy.example.com/v1".to_string()));
+        assert_eq!(
+            config.base_url,
+            Some("https://proxy.example.com/v1".to_string())
+        );
         assert_eq!(config.temperature, 0.3);
         assert_eq!(config.max_tokens, 8000);
     }
@@ -1524,8 +1688,7 @@ mod tests {
 
     #[test]
     fn test_llm_config_serialization() {
-        let config = LlmConfig::for_provider(LlmProvider::OpenAI, "gpt-4o")
-            .with_temperature(0.5);
+        let config = LlmConfig::for_provider(LlmProvider::OpenAI, "gpt-4o").with_temperature(0.5);
 
         let json = serde_json::to_string(&config).expect("Serialization failed");
         let parsed: LlmConfig = serde_json::from_str(&json).expect("Deserialization failed");
@@ -1578,7 +1741,8 @@ mod tests {
 
     #[test]
     fn test_llm_request_with_unicode() {
-        let request = LlmRequest::new("Hello world in Japanese: Konnichiwa! Chinese: Ni hao! Emoji: Test");
+        let request =
+            LlmRequest::new("Hello world in Japanese: Konnichiwa! Chinese: Ni hao! Emoji: Test");
         assert!(request.prompt.contains("Konnichiwa"));
         assert!(request.prompt.contains("Ni hao"));
     }
@@ -1969,7 +2133,10 @@ mod tests {
         let client = UnifiedLlmClient::new(config).unwrap();
 
         let url = client.get_base_url().unwrap();
-        assert_eq!(url, "https://gateway.ai.cloudflare.com/v1/acc123/gw456/openai");
+        assert_eq!(
+            url,
+            "https://gateway.ai.cloudflare.com/v1/acc123/gw456/openai"
+        );
     }
 
     #[test]
@@ -2027,7 +2194,7 @@ mod tests {
     #[test]
     fn test_provider_info() {
         let info = get_provider_info();
-        assert_eq!(info.len(), 19);
+        assert_eq!(info.len(), 20);
 
         let anthropic = info
             .iter()
@@ -2143,7 +2310,10 @@ mod tests {
 
         assert_eq!(response.model, "gpt-4o");
         assert_eq!(response.choices.len(), 1);
-        assert_eq!(response.choices[0].message.content, Some("Test response".to_string()));
+        assert_eq!(
+            response.choices[0].message.content,
+            Some("Test response".to_string())
+        );
         assert_eq!(response.choices[0].finish_reason, Some("stop".to_string()));
         assert!(response.usage.is_some());
         let usage = response.usage.unwrap();
@@ -2210,7 +2380,10 @@ mod tests {
         }"#;
 
         let response: OpenAIResponse = serde_json::from_str(json).unwrap();
-        assert_eq!(response.choices[0].finish_reason, Some("content_filter".to_string()));
+        assert_eq!(
+            response.choices[0].finish_reason,
+            Some("content_filter".to_string())
+        );
     }
 
     // =========================================================================
@@ -2275,12 +2448,15 @@ mod tests {
         }
 
         fn try_acquire(&self) -> bool {
-            let count = self.current_count.fetch_add(1, std::sync::atomic::Ordering::SeqCst);
+            let count = self
+                .current_count
+                .fetch_add(1, std::sync::atomic::Ordering::SeqCst);
             count < self.requests_per_second
         }
 
         fn reset(&self) {
-            self.current_count.store(0, std::sync::atomic::Ordering::SeqCst);
+            self.current_count
+                .store(0, std::sync::atomic::Ordering::SeqCst);
         }
     }
 
@@ -2445,7 +2621,9 @@ mod tests {
                 last.is_final = true;
             }
 
-            Self { chunks: stream_chunks }
+            Self {
+                chunks: stream_chunks,
+            }
         }
 
         fn collect_content(&self) -> String {
@@ -2503,7 +2681,10 @@ mod tests {
 
         let response = client.complete(request).await.unwrap();
 
-        assert_eq!(response.content, "This is a comprehensive analysis of your question.");
+        assert_eq!(
+            response.content,
+            "This is a comprehensive analysis of your question."
+        );
         assert_eq!(response.finish_reason, FinishReason::Stop);
         assert_eq!(response.usage.total_tokens, 225);
     }
@@ -2542,10 +2723,7 @@ mod tests {
 
         for i in 0..10 {
             tasks.spawn(async move {
-                let config = LlmConfig::for_provider(
-                    LlmProvider::OpenAI,
-                    format!("gpt-4o-{}", i),
-                );
+                let config = LlmConfig::for_provider(LlmProvider::OpenAI, format!("gpt-4o-{}", i));
                 UnifiedLlmClient::new(config)
             });
         }
@@ -2565,8 +2743,9 @@ mod tests {
         use std::sync::Arc;
         use tokio::task::JoinSet;
 
-        let client = Arc::new(MockLlmClient::new(LlmProvider::OpenAI, "gpt-4o")
-            .with_response("Concurrent response"));
+        let client = Arc::new(
+            MockLlmClient::new(LlmProvider::OpenAI, "gpt-4o").with_response("Concurrent response"),
+        );
 
         let mut tasks = JoinSet::new();
 

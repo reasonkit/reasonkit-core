@@ -1160,7 +1160,10 @@ mod tests {
         fn test_validation_verdict_serialization() {
             let cases = [
                 (ValidationVerdict::Validated, "\"validated\""),
-                (ValidationVerdict::PartiallyValidated, "\"partially_validated\""),
+                (
+                    ValidationVerdict::PartiallyValidated,
+                    "\"partially_validated\"",
+                ),
                 (ValidationVerdict::NeedsImprovement, "\"needs_improvement\""),
                 (ValidationVerdict::Invalid, "\"invalid\""),
                 (ValidationVerdict::CriticalIssues, "\"critical_issues\""),
@@ -1808,7 +1811,10 @@ mod tests {
             let deserialized: ChainIntegrityResult = serde_json::from_str(&json).unwrap();
 
             assert_eq!(result.gaps_detected.len(), deserialized.gaps_detected.len());
-            for (original, parsed) in result.gaps_detected.iter().zip(deserialized.gaps_detected.iter())
+            for (original, parsed) in result
+                .gaps_detected
+                .iter()
+                .zip(deserialized.gaps_detected.iter())
             {
                 assert_eq!(original, parsed);
             }

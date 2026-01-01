@@ -1,0 +1,64 @@
+<svg width="800" height="200" viewBox="0 0 800 200" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="sliderGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#06b6d4" />
+      <stop offset="33%" style="stop-color:#a855f7" />
+      <stop offset="66%" style="stop-color:#ec4899" />
+      <stop offset="100%" style="stop-color:#f97316" />
+    </linearGradient>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <style>
+    .label { font-family: 'JetBrains Mono', monospace; font-size: 14px; fill: #9ca3af; text-anchor: middle; }
+    .title { font-family: 'Inter', sans-serif; font-weight: 700; font-size: 16px; fill: #f9fafb; text-anchor: middle; }
+    .conf { font-family: 'Inter', sans-serif; font-weight: 400; font-size: 12px; opacity: 0.8; text-anchor: middle; }
+  </style>
+
+  <!-- Track -->
+  <line x1="100" y1="100" x2="700" y2="100" stroke="#1f2937" stroke-width="4" stroke-linecap="round" />
+  <line x1="100" y1="100" x2="700" y2="100" stroke="url(#sliderGradient)" stroke-width="4" stroke-linecap="round" stroke-dasharray="600" stroke-dashoffset="0" opacity="0.5" />
+
+  <!-- Node 1: Quick -->
+  <g transform="translate(100, 100)">
+    <circle cx="0" cy="0" r="10" fill="#06b6d4" filter="url(#glow)" />
+    <circle cx="0" cy="0" r="4" fill="#030508" />
+    <text x="0" y="-30" class="title" fill="#06b6d4">Quick</text>
+    <text x="0" y="30" class="label">--quick</text>
+    <text x="0" y="50" class="conf" fill="#06b6d4">70% Conf</text>
+  </g>
+
+  <!-- Node 2: Balanced -->
+  <g transform="translate(300, 100)">
+    <circle cx="0" cy="0" r="10" fill="#a855f7" filter="url(#glow)" />
+    <circle cx="0" cy="0" r="4" fill="#030508" />
+    <text x="0" y="-30" class="title" fill="#a855f7">Balanced</text>
+    <text x="0" y="30" class="label">--balanced</text>
+    <text x="0" y="50" class="conf" fill="#a855f7">80% Conf</text>
+  </g>
+
+  <!-- Node 3: Deep -->
+  <g transform="translate(500, 100)">
+    <circle cx="0" cy="0" r="10" fill="#ec4899" filter="url(#glow)" />
+    <circle cx="0" cy="0" r="4" fill="#030508" />
+    <text x="0" y="-30" class="title" fill="#ec4899">Deep</text>
+    <text x="0" y="30" class="label">--deep</text>
+    <text x="0" y="50" class="conf" fill="#ec4899">85% Conf</text>
+  </g>
+
+  <!-- Node 4: Paranoid -->
+  <g transform="translate(700, 100)">
+    <circle cx="0" cy="0" r="10" fill="#f97316" filter="url(#glow)" />
+    <circle cx="0" cy="0" r="4" fill="#030508" />
+    <text x="0" y="-30" class="title" fill="#f97316">Paranoid</text>
+    <text x="0" y="30" class="label">--paranoid</text>
+    <text x="0" y="50" class="conf" fill="#f97316">95% Conf</text>
+  </g>
+
+</svg>

@@ -1433,7 +1433,7 @@ mod trace_and_budget_tests {
 
         // Assert
         // Budget config exists with default values
-        assert_eq!(config.budget.max_tokens, None);
-        assert_eq!(config.budget.max_cost_usd, None);
+        assert_eq!(config.budget.token_limit, None);
+        assert_eq!(config.budget.cost_limit, None);
     }
 }

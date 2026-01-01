@@ -137,7 +137,7 @@ pub mod types;
 // Re-exports
 pub use types::{
     ErrorCode, Implementation, JsonRpcVersion, McpError, McpMessage, McpNotification, McpRequest,
-    McpResponse, RequestId, ServerCapabilities, ServerInfo,
+    McpResponse, RequestId, ServerCapabilities, ServerInfo, ToolsCapability,
 };
 
 pub use server::{McpServer, McpServerTrait, ServerMetrics, ServerStatus};

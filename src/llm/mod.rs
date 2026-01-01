@@ -4,6 +4,6 @@
 //! the OpenAI-compatible `/chat/completions` shape.
 //!
 //! Current submodules:
-//! - [`ollama`] - Minimal client for Ollama `/api/chat` (supports Ollama Cloud via local server)
+//! - `ollama` - Minimal client for Ollama `/api/chat` (supports Ollama Cloud via local server)
 
 pub mod ollama;

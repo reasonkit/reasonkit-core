@@ -73,7 +73,7 @@ mod thinktool_execution_tests {
     /// Test: Execute GigaThink protocol end-to-end with mock LLM
     #[tokio::test]
     async fn test_gigathink_execution_e2e() {
-        use reasonkit::thinktool::{ProtocolExecutor, ProtocolInput};
+        use reasonkit::thinktool::{LlmProvider, ProtocolExecutor, ProtocolInput};
 
         let executor = ProtocolExecutor::mock().expect("Mock executor creation failed");
 
@@ -99,7 +99,7 @@ mod thinktool_execution_tests {
     /// Test: Execute LaserLogic for argument validation
     #[tokio::test]
     async fn test_laserlogic_argument_validation() {
-        use reasonkit::thinktool::{ProtocolExecutor, ProtocolInput};
+        use reasonkit::thinktool::{LlmProvider, ProtocolExecutor, ProtocolInput};
 
         let executor = ProtocolExecutor::mock().expect("Mock executor creation failed");
 
@@ -124,11 +124,11 @@ mod thinktool_execution_tests {
     /// Test: Execute BedRock for first principles decomposition
     #[tokio::test]
     async fn test_bedrock_first_principles() {
-        use reasonkit::thinktool::{ProtocolExecutor, ProtocolInput};
+        use reasonkit::thinktool::{LlmProvider, ProtocolExecutor, ProtocolInput};
 
         let executor = ProtocolExecutor::mock().expect("Mock executor creation failed");
 
-        let input = ProtocolInput::query(
+        let input = ProtocolInput::statement(
             "What are the fundamental principles of building scalable systems?",
         );
         let result = executor.execute("bedrock", input).await;
@@ -142,7 +142,7 @@ mod thinktool_execution_tests {
     /// Test: Execute ProofGuard for multi-source verification
     #[tokio::test]
     async fn test_proofguard_verification() {
-        use reasonkit::thinktool::{ProtocolExecutor, ProtocolInput};
+        use reasonkit::thinktool::{LlmProvider, ProtocolExecutor, ProtocolInput};
 
         let executor = ProtocolExecutor::mock().expect("Mock executor creation failed");
 
@@ -162,11 +162,11 @@ mod thinktool_execution_tests {
     /// Test: Execute BrutalHonesty for adversarial critique
     #[tokio::test]
     async fn test_brutalhonesty_critique() {
-        use reasonkit::thinktool::{ProtocolExecutor, ProtocolInput};
+        use reasonkit::thinktool::{LlmProvider, ProtocolExecutor, ProtocolInput};
 
         let executor = ProtocolExecutor::mock().expect("Mock executor creation failed");
 
-        let input = ProtocolInput::claim(
+        let input = ProtocolInput::work(
             "Our startup will definitely succeed because we have a great product",
         );
         let result = executor.execute("brutalhonesty", input).await;
@@ -184,7 +184,7 @@ mod thinktool_execution_tests {
     /// Test: Profile chaining (quick -> balanced -> deep)
     #[tokio::test]
     async fn test_profile_chaining() {
-        use reasonkit::thinktool::{ProtocolExecutor, ProtocolInput};
+        use reasonkit::thinktool::{LlmProvider, ProtocolExecutor, ProtocolInput};
 
         let executor = ProtocolExecutor::mock().expect("Mock executor creation failed");
         let query = "Should we migrate to microservices architecture?";
@@ -223,11 +223,12 @@ mod thinktool_execution_tests {
     /// Test: Parallel step execution
     #[tokio::test]
     async fn test_parallel_step_execution() {
-        use reasonkit::thinktool::LlmConfig;
-        use reasonkit::thinktool::{ExecutorConfig, ProtocolExecutor, ProtocolInput};
+        use reasonkit::thinktool::{
+            ExecutorConfig, LlmConfig, LlmProvider, ProtocolExecutor, ProtocolInput,
+        };
 
         let config = ExecutorConfig {
-            llm: LlmConfig::mock(),
+            llm: LlmConfig::for_provider(LlmProvider::OpenAI, "mock-model"),
             enable_parallel: true,
             max_concurrent_steps: 4,
             use_mock: true,
@@ -249,17 +250,19 @@ mod thinktool_execution_tests {
     /// Test: Budget constraints during execution
     #[tokio::test]
     async fn test_budget_constrained_execution() {
-        use reasonkit::thinktool::LlmConfig;
         use reasonkit::thinktool::{
-            BudgetConfig, BudgetStrategy, ExecutorConfig, ProtocolExecutor, ProtocolInput,
+            BudgetConfig, BudgetStrategy, ExecutorConfig, LlmConfig, LlmProvider, ProtocolExecutor,
+            ProtocolInput,
         };
 
         let config = ExecutorConfig {
-            llm: LlmConfig::mock(),
+            llm: LlmConfig::for_provider(LlmProvider::OpenAI, "mock-model"),
             budget: BudgetConfig {
-                max_tokens: Some(10000),
-                max_cost_cents: Some(100),
+                token_limit: Some(10000),
+                cost_limit: Some(1.00),
                 strategy: BudgetStrategy::Adaptive,
+                adapt_threshold: 0.75,
+                ..Default::default()
             },
             use_mock: true,
             show_progress: false,
@@ -296,7 +299,7 @@ mod error_case_tests {
     /// Test: Unknown protocol returns error
     #[tokio::test]
     async fn test_unknown_protocol_error() {
-        use reasonkit::thinktool::{ProtocolExecutor, ProtocolInput};
+        use reasonkit::thinktool::{LlmProvider, ProtocolExecutor, ProtocolInput};
 
         let executor = ProtocolExecutor::mock().expect("Mock executor creation failed");
         let input = ProtocolInput::query("Test query");
@@ -315,7 +318,7 @@ mod error_case_tests {
     /// Test: Empty query handling
     #[tokio::test]
     async fn test_empty_query_handling() {
-        use reasonkit::thinktool::{ProtocolExecutor, ProtocolInput};
+        use reasonkit::thinktool::{LlmProvider, ProtocolExecutor, ProtocolInput};
 
         let executor = ProtocolExecutor::mock().expect("Mock executor creation failed");
         let input = ProtocolInput::query("");
@@ -344,11 +347,12 @@ mod error_case_tests {
     /// Test: Timeout handling
     #[tokio::test]
     async fn test_timeout_handling() {
-        use reasonkit::thinktool::LlmConfig;
-        use reasonkit::thinktool::{ExecutorConfig, ProtocolExecutor, ProtocolInput};
+        use reasonkit::thinktool::{
+            ExecutorConfig, LlmConfig, LlmProvider, ProtocolExecutor, ProtocolInput,
+        };
 
         let config = ExecutorConfig {
-            llm: LlmConfig::mock(),
+            llm: LlmConfig::for_provider(LlmProvider::OpenAI, "mock-model"),
             timeout_secs: 1, // Very short timeout
             use_mock: true,
             show_progress: false,
@@ -366,13 +370,13 @@ mod error_case_tests {
     /// Test: Invalid input type for protocol
     #[tokio::test]
     async fn test_invalid_input_type() {
-        use reasonkit::thinktool::{ProtocolExecutor, ProtocolInput};
+        use reasonkit::thinktool::{LlmProvider, ProtocolExecutor, ProtocolInput};
 
         let executor = ProtocolExecutor::mock().expect("Mock executor creation failed");
 
         // LaserLogic expects an argument, not just a query
         // This tests input validation
-        let input = ProtocolInput::new(); // Empty input
+        let input = ProtocolInput::query(""); // Empty input
         let result = executor.execute("laserlogic", input).await;
 
         // Should either fail gracefully or handle the empty input
@@ -553,12 +557,12 @@ mod mcp_protocol_tests {
         let info = ServerInfo {
             name: "reasonkit-test".to_string(),
             version: "1.0.0".to_string(),
+            description: None,
+            vendor: None,
         };
 
         let capabilities = ServerCapabilities {
-            tools: Some(serde_json::json!({
-                "listChanged": true
-            })),
+            tools: Some(reasonkit::mcp::ToolsCapability { list_changed: true }),
             ..Default::default()
         };
 
@@ -583,6 +587,8 @@ mod mcp_protocol_tests {
                     "query": { "type": "string" }
                 }
             }),
+            server_id: None,
+            server_name: None,
         };
 
         assert_eq!(tool.name, "test_tool");
@@ -596,12 +602,12 @@ mod mcp_protocol_tests {
     /// Test: MCP request structure
     #[test]
     fn test_mcp_request_structure() {
-        use reasonkit::mcp::{JsonRpcVersion, McpRequest};
+        use reasonkit::mcp::{JsonRpcVersion, McpRequest, RequestId};
 
         // Create request
         let request = McpRequest {
             jsonrpc: JsonRpcVersion::default(),
-            id: serde_json::json!(1),
+            id: RequestId::Number(1),
             method: "tools/call".to_string(),
             params: Some(serde_json::json!({
                 "name": "gigathink",
@@ -626,12 +632,12 @@ mod mcp_protocol_tests {
     /// Test: MCP response structure
     #[test]
     fn test_mcp_response_structure() {
-        use reasonkit::mcp::{ErrorCode, JsonRpcVersion, McpError, McpResponse};
+        use reasonkit::mcp::{ErrorCode, JsonRpcVersion, McpError, McpResponse, RequestId};
 
         // Create success response
         let success_response = McpResponse {
             jsonrpc: JsonRpcVersion::default(),
-            id: serde_json::json!(1),
+            id: RequestId::Number(1),
             result: Some(serde_json::json!({
                 "content": [{"type": "text", "text": "Success"}]
             })),
@@ -644,10 +650,10 @@ mod mcp_protocol_tests {
         // Create error response
         let error_response = McpResponse {
             jsonrpc: JsonRpcVersion::default(),
-            id: serde_json::json!(2),
+            id: RequestId::Number(2),
             result: None,
             error: Some(McpError {
-                code: ErrorCode::InvalidRequest,
+                code: ErrorCode::INVALID_REQUEST,
                 message: "Invalid Request".to_string(),
                 data: None,
             }),
@@ -713,7 +719,7 @@ mod concurrency_tests {
     /// Test: Concurrent protocol execution
     #[tokio::test]
     async fn test_concurrent_protocol_execution() {
-        use reasonkit::thinktool::{ProtocolExecutor, ProtocolInput};
+        use reasonkit::thinktool::{LlmProvider, ProtocolExecutor, ProtocolInput};
         use std::sync::Arc;
 
         let executor = Arc::new(ProtocolExecutor::mock().expect("Mock executor creation failed"));
@@ -784,7 +790,7 @@ mod performance_tests {
     /// Test: Protocol execution overhead (mock)
     #[tokio::test]
     async fn test_protocol_execution_time() {
-        use reasonkit::thinktool::{ProtocolExecutor, ProtocolInput};
+        use reasonkit::thinktool::{LlmProvider, ProtocolExecutor, ProtocolInput};
         use std::time::Instant;
 
         let executor = ProtocolExecutor::mock().expect("Mock executor creation failed");
@@ -805,7 +811,7 @@ mod performance_tests {
     /// Test: Memory efficiency - no unbounded allocation
     #[tokio::test]
     async fn test_memory_efficiency() {
-        use reasonkit::thinktool::{ProtocolExecutor, ProtocolInput};
+        use reasonkit::thinktool::{LlmProvider, ProtocolExecutor, ProtocolInput};
 
         let executor = ProtocolExecutor::mock().expect("Mock executor creation failed");
 

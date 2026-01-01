@@ -25,7 +25,7 @@ The `brand/` directory contains ~140+ consolidated assets organized by type:
 - `diagrams/` - Technical diagrams
 - `favicons/` - Favicon sizes
 - `avatars/` - Platform avatars
-- `readme-assets/` - README images
+- `readme/` - README images
 
 ---
 

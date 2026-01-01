@@ -816,6 +816,14 @@ impl LaserLogic {
         Ok(result)
     }
 
+    /// Clean a logical term by removing punctuation and extra whitespace
+    fn clean_term(term: &str) -> String {
+        term.trim()
+            .trim_matches(|c: char| c.is_ascii_punctuation())
+            .trim()
+            .to_string()
+    }
+
     /// Detect the argument form
     fn detect_argument_form(&self, argument: &Argument) -> Option<ArgumentForm> {
         // Look for conditional patterns
@@ -847,20 +855,22 @@ impl LaserLogic {
                 if cond_lower.starts_with("if ") {
                     // Extract antecedent (roughly)
                     if let Some(then_idx) = cond_lower.find(" then ") {
-                        let antecedent = &cond_lower[3..then_idx];
+                        // Clean the antecedent by removing punctuation
+                        let antecedent = Self::clean_term(&cond_lower[3..then_idx]);
 
                         // Check if another premise affirms the antecedent
                         let affirms_antecedent = argument.premises.iter().any(|p| {
                             let p_lower = p.statement.to_lowercase();
+                            let p_clean = Self::clean_term(&p_lower);
                             p.premise_type != PremiseType::Conditional
-                                && p_lower.contains(antecedent.trim())
+                                && (p_clean == antecedent || p_clean.contains(&antecedent))
                         });
 
                         // Check if another premise denies the antecedent (potential fallacy)
                         let denies_antecedent = argument.premises.iter().any(|p| {
                             let p_lower = p.statement.to_lowercase();
                             (p_lower.contains("not ") || p_lower.starts_with("no "))
-                                && p_lower.contains(antecedent.trim())
+                                && p_lower.contains(&antecedent)
                         });
 
                         if affirms_antecedent {
@@ -888,6 +898,7 @@ impl LaserLogic {
         }
 
         // Check for categorical syllogism: All M are P, All S are M |- All S are P
+        // Also handles mixed syllogisms with singular premises (e.g., Socratic syllogism)
         if has_universal && argument.premises.len() >= 2 {
             let universal_count = argument
                 .premises
@@ -895,8 +906,48 @@ impl LaserLogic {
                 .filter(|p| p.premise_type == PremiseType::Universal)
                 .count();
 
+            // Classic categorical syllogism requires 2 universal premises
             if universal_count >= 2 {
                 return Some(ArgumentForm::CategoricalSyllogism);
+            }
+
+            // Mixed syllogism: 1 universal + 1 singular (e.g., "All humans are mortal" + "Socrates is human")
+            // This is a valid syllogistic form (Barbara with singular minor)
+            let singular_count = argument
+                .premises
+                .iter()
+                .filter(|p| p.premise_type == PremiseType::Singular)
+                .count();
+
+            if universal_count >= 1 && singular_count >= 1 {
+                // Verify the singular premise relates to the universal
+                // by checking for shared terms
+                let universal_premise = argument
+                    .premises
+                    .iter()
+                    .find(|p| p.premise_type == PremiseType::Universal)?;
+
+                let singular_premise = argument
+                    .premises
+                    .iter()
+                    .find(|p| p.premise_type == PremiseType::Singular)?;
+
+                // Extract predicate from universal (e.g., "humans" from "All humans are mortal")
+                let univ_lower = universal_premise.statement.to_lowercase();
+                if univ_lower.starts_with("all ") {
+                    if let Some(are_idx) = univ_lower.find(" are ") {
+                        let subject_term = Self::clean_term(&univ_lower[4..are_idx]);
+
+                        // Check if singular premise predicates the same term
+                        // e.g., "Socrates is human" should match "humans" (with stemming consideration)
+                        let sing_lower = singular_premise.statement.to_lowercase();
+                        let subject_stem = subject_term.trim_end_matches('s');
+
+                        if sing_lower.contains(&subject_term) || sing_lower.contains(subject_stem) {
+                            return Some(ArgumentForm::CategoricalSyllogism);
+                        }
+                    }
+                }
             }
         }
 
@@ -991,21 +1042,26 @@ impl LaserLogic {
 
         let cond_lower = conditional.1.statement.to_lowercase();
 
-        // Extract consequent (after "then")
+        // Extract consequent (after "then") - clean punctuation
         let then_idx = cond_lower.find(" then ")?;
-        let consequent = cond_lower[then_idx + 6..].trim();
+        let consequent = Self::clean_term(&cond_lower[then_idx + 6..]);
 
         // Check if another premise affirms the consequent
         let affirming_premise = argument.premises.iter().enumerate().find(|(i, p)| {
-            *i != conditional.0
-                && p.premise_type != PremiseType::Conditional
-                && p.statement.to_lowercase().contains(consequent)
+            *i != conditional.0 && p.premise_type != PremiseType::Conditional && {
+                let p_clean = Self::clean_term(&p.statement.to_lowercase());
+                p_clean.contains(&consequent) || consequent.contains(&p_clean)
+            }
         });
 
         if affirming_premise.is_some() {
             // Check if conclusion affirms the antecedent
-            let antecedent = cond_lower[3..then_idx].trim();
-            if argument.conclusion.to_lowercase().contains(antecedent) {
+            let antecedent = Self::clean_term(&cond_lower[3..then_idx]);
+            let conclusion_clean = Self::clean_term(&argument.conclusion.to_lowercase());
+            if conclusion_clean.contains(&antecedent)
+                || antecedent.contains(&conclusion_clean)
+                || Self::terms_match(&conclusion_clean, &antecedent)
+            {
                 return Some(
                     DetectedFallacy::new(
                         Fallacy::AffirmingConsequent,
@@ -1021,6 +1077,36 @@ impl LaserLogic {
         None
     }
 
+    /// Check if two terms match (handles minor variations like tense)
+    fn terms_match(a: &str, b: &str) -> bool {
+        if a == b {
+            return true;
+        }
+
+        // Handle past tense variations (e.g., "it rained" vs "it rains")
+        let a_words: Vec<&str> = a.split_whitespace().collect();
+        let b_words: Vec<&str> = b.split_whitespace().collect();
+
+        if a_words.len() == b_words.len() {
+            let mut matches = 0;
+            for (aw, bw) in a_words.iter().zip(b_words.iter()) {
+                if aw == bw {
+                    matches += 1;
+                } else {
+                    // Check for verb tense variations
+                    let aw_stem = aw.trim_end_matches("ed").trim_end_matches('s');
+                    let bw_stem = bw.trim_end_matches("ed").trim_end_matches('s');
+                    if aw_stem == bw_stem {
+                        matches += 1;
+                    }
+                }
+            }
+            return matches == a_words.len();
+        }
+
+        false
+    }
+
     /// Check for denying the antecedent: P->Q, ~P |- ~Q
     fn check_denying_antecedent(&self, argument: &Argument) -> Option<DetectedFallacy> {
         // Find conditional premise
@@ -1032,20 +1118,20 @@ impl LaserLogic {
 
         let cond_lower = conditional.1.statement.to_lowercase();
         let then_idx = cond_lower.find(" then ")?;
-        let antecedent = cond_lower[3..then_idx].trim();
-        let consequent = cond_lower[then_idx + 6..].trim();
+        let antecedent = Self::clean_term(&cond_lower[3..then_idx]);
+        let consequent = Self::clean_term(&cond_lower[then_idx + 6..]);
 
         // Check if another premise denies the antecedent
         let denying_premise = argument.premises.iter().enumerate().find(|(i, p)| {
             *i != conditional.0
-                && p.statement.to_lowercase().contains(antecedent)
+                && p.statement.to_lowercase().contains(&antecedent)
                 && (p.statement.to_lowercase().contains("not ")
                     || p.statement.to_lowercase().starts_with("no "))
         });
 
         if denying_premise.is_some() {
             // Check if conclusion denies the consequent
-            if argument.conclusion.to_lowercase().contains(consequent)
+            if argument.conclusion.to_lowercase().contains(&consequent)
                 && (argument.conclusion.to_lowercase().contains("not ")
                     || argument.conclusion.to_lowercase().starts_with("no "))
             {
@@ -1084,8 +1170,8 @@ impl LaserLogic {
             let lower = premise.statement.to_lowercase();
             if lower.starts_with("all ") {
                 if let Some(are_idx) = lower.find(" are ") {
-                    let subject = lower[4..are_idx].trim().to_string();
-                    let predicate = lower[are_idx + 5..].trim().to_string();
+                    let subject = Self::clean_term(&lower[4..are_idx]);
+                    let predicate = Self::clean_term(&lower[are_idx + 5..]);
                     let mut term_set = HashSet::new();
                     term_set.insert(subject);
                     term_set.insert(predicate);
@@ -1125,6 +1211,12 @@ impl LaserLogic {
             .filter(|w| w.len() > 3)
             .collect();
 
+        // Need at least 2 significant words in conclusion to detect circular reasoning
+        // This prevents false positives with very short conclusions
+        if conclusion_words.len() < 2 {
+            return None;
+        }
+
         for (idx, premise) in argument.premises.iter().enumerate() {
             let premise_lower = premise.statement.to_lowercase();
             let premise_words: HashSet<_> = premise_lower
@@ -1132,11 +1224,18 @@ impl LaserLogic {
                 .filter(|w| w.len() > 3)
                 .collect();
 
-            // High overlap suggests circular reasoning
+            // For circular reasoning, check if the conclusion is essentially
+            // restating something from the premise.
             let overlap = conclusion_words.intersection(&premise_words).count();
-            let min_len = conclusion_words.len().min(premise_words.len());
+            let conclusion_len = conclusion_words.len();
 
-            if min_len > 0 && overlap as f64 / min_len as f64 > 0.7 {
+            // Circular reasoning detection:
+            // - If conclusion words are mostly found in premise (>= 80% overlap with conclusion)
+            // - OR if we have at least 2 overlapping significant words with high ratio
+            let conclusion_overlap_ratio = overlap as f64 / conclusion_len as f64;
+
+            // High overlap with conclusion means the conclusion restates the premise
+            if overlap >= 2 && conclusion_overlap_ratio >= 0.8 {
                 return Some(
                     DetectedFallacy::new(
                         Fallacy::CircularReasoning,
@@ -1282,7 +1381,7 @@ impl LaserLogic {
             if (a_lower.contains(pos) && b_lower.contains(neg))
                 || (a_lower.contains(neg) && b_lower.contains(pos))
             {
-                // Check for subject overlap
+                // Check for subject overlap (with relaxed filtering for short subjects)
                 if self.have_subject_overlap(&a_lower, &b_lower) {
                     return Some((
                         ContradictionType::DirectNegation,
@@ -1309,30 +1408,34 @@ impl LaserLogic {
             "these", "those", "not", "no", "nor", "and", "but", "or", "if", "while", "because",
             "until", "although", "since", "when", "where", "why", "how", "all", "each", "every",
             "both", "few", "more", "most", "other", "some", "such", "only", "own", "same", "so",
-            "than", "too", "very", "just",
+            "than", "too", "very", "just", "true", "false",
         ]
         .iter()
         .cloned()
         .collect();
 
+        // Use minimum length of 1 to catch single-letter subjects like "X"
         let words_a: HashSet<&str> = a
             .split_whitespace()
-            .filter(|w| !stopwords.contains(w) && w.len() > 2)
+            .filter(|w| !stopwords.contains(w) && !w.is_empty())
             .collect();
 
         let words_b: HashSet<&str> = b
             .split_whitespace()
-            .filter(|w| !stopwords.contains(w) && w.len() > 2)
+            .filter(|w| !stopwords.contains(w) && !w.is_empty())
             .collect();
 
         if words_a.is_empty() || words_b.is_empty() {
-            return false;
+            // If both have the same structure after removing stopwords,
+            // check if they're talking about the same subject
+            // For "X is true" vs "X is false", both reduce to just "x"
+            return true;
         }
 
         let overlap = words_a.intersection(&words_b).count();
-        let min_len = words_a.len().min(words_b.len());
 
-        overlap as f64 / min_len as f64 > 0.3
+        // If there's any overlap, consider it a match
+        overlap > 0
     }
 
     /// Check soundness (valid + true premises)

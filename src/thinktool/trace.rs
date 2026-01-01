@@ -786,8 +786,8 @@ mod tests {
 
     #[test]
     fn test_trace_to_json() {
-        let trace = ExecutionTrace::new("test_protocol", "1.0.0")
-            .with_input(json!({"query": "test"}));
+        let trace =
+            ExecutionTrace::new("test_protocol", "1.0.0").with_input(json!({"query": "test"}));
 
         let json_str = trace.to_json().expect("JSON serialization should succeed");
 
@@ -1042,10 +1042,7 @@ mod tests {
         let deserialized: ExecutionTrace =
             serde_json::from_str(&json).expect("Should deserialize unicode");
 
-        assert!(deserialized.input["query"]
-            .as_str()
-            .unwrap()
-            .contains(""));
+        assert!(deserialized.input["query"].as_str().unwrap().contains(""));
     }
 
     #[test]

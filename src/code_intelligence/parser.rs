@@ -1677,7 +1677,10 @@ fn test() {
             assert!(features.supports_generics);
             assert!(!features.supports_async); // Java uses threads, not async/await
             assert_eq!(features.type_system, TypeSystem::Static);
-            assert_eq!(features.memory_management, MemoryManagement::GarbageCollected);
+            assert_eq!(
+                features.memory_management,
+                MemoryManagement::GarbageCollected
+            );
             assert_eq!(features.concurrency_model, ConcurrencyModel::Threading);
         }
 
@@ -1697,23 +1700,14 @@ fn test() {
             let parser = JavaParser::new();
 
             // Act & Assert
-            assert_eq!(
-                parser.parse_java_visibility("public"),
-                Visibility::Public
-            );
-            assert_eq!(
-                parser.parse_java_visibility("private"),
-                Visibility::Private
-            );
+            assert_eq!(parser.parse_java_visibility("public"), Visibility::Public);
+            assert_eq!(parser.parse_java_visibility("private"), Visibility::Private);
             assert_eq!(
                 parser.parse_java_visibility("protected"),
                 Visibility::Protected
             );
             assert_eq!(parser.parse_java_visibility(""), Visibility::Package);
-            assert_eq!(
-                parser.parse_java_visibility("unknown"),
-                Visibility::Package
-            );
+            assert_eq!(parser.parse_java_visibility("unknown"), Visibility::Package);
         }
     }
 
@@ -1885,9 +1879,7 @@ fn test() {
             let parser = TypeScriptParser::new();
 
             // Act
-            let result = parser
-                .parse("const x: number = 42;")
-                .await;
+            let result = parser.parse("const x: number = 42;").await;
 
             // Assert
             assert!(result.is_ok());
@@ -1998,7 +1990,10 @@ fn test() {
             // Assert
             assert_eq!(features.language, ProgrammingLanguage::Python);
             assert_eq!(features.type_system, TypeSystem::Dynamic);
-            assert_eq!(features.memory_management, MemoryManagement::GarbageCollected);
+            assert_eq!(
+                features.memory_management,
+                MemoryManagement::GarbageCollected
+            );
         }
 
         #[test]
@@ -2205,12 +2200,12 @@ fn greet() {
         async fn test_parse_code_with_special_characters() {
             // Arrange
             let parser = RustParser::new();
-            let code = r#"
+            let code = r##"
 fn special() {
     let s = "test\n\t\r\\";
     let raw = r#"raw string"#;
 }
-"#;
+"##;
 
             // Act
             let result = parser.parse(code).await;

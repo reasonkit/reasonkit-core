@@ -29,8 +29,50 @@ pub mod usability;
 pub mod vibe_benchmark;
 pub mod visual_analysis;
 
+// Re-export the engine
 pub use engine::AestheticMasteryEngine;
+pub use engine::QuickAssessment;
+
+// Re-export all types from types.rs
 pub use types::*;
+
+// Re-export types from accessibility.rs
+pub use accessibility::{
+    ContrastAnalyzer, KeyboardAccessibilityAnalyzer, KeyboardAccessibilityResult,
+    ScreenReaderAnalyzer, ScreenReaderResult, WcagChecker,
+};
+
+// Re-export types from cross_platform.rs
+pub use cross_platform::{CrossPlatformValidator, ResponsiveValidationResult, ResponsiveValidator};
+
+// Re-export types from performance.rs
+pub use performance::{
+    CoreWebVitalsAnalyzer, CoreWebVitalsEstimate, PerformanceAnalyzer, VitalRating,
+};
+
+// Re-export types from three_d.rs
+pub use three_d::{
+    R3FAnalysisResult, ReactThreeFiberAnalyzer, ThreeDEvaluator, M2_R3F_INSTANCE_CAPABILITY,
+};
+
+// Re-export types from usability.rs
+pub use usability::{
+    FlowAnalysisResult, FlowStep, FrictionLevel, FrictionPoint, HeuristicEvaluator, HeuristicScore,
+    UsabilityEvaluator, UserFlowAnalyzer,
+};
+
+// Re-export types from vibe_benchmark.rs
+pub use vibe_benchmark::{
+    M2BenchmarkComparison, M2ComparisonResult, M2ComparisonStatus, MultiPlatformVibeEvaluator,
+    VibeBenchmarkEvaluator, VibeInterpretation, VibeRating, VibeScoreInterpreter,
+    VIBE_ANDROID_BENCHMARK, VIBE_IOS_BENCHMARK, VIBE_WEB_BENCHMARK,
+};
+
+// Re-export types from visual_analysis.rs
+pub use visual_analysis::{
+    ColorHarmonyAnalyzer, ConsistencyAnalyzer, HierarchyAnalyzer, LayoutAnalyzer,
+    TypographyAnalyzer, WhiteSpaceAnalyzer,
+};
 
 use crate::error::Error;
 use serde::{Deserialize, Serialize};

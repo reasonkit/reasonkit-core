@@ -301,7 +301,9 @@ mod protocol_and_constraints_tests {
         assert_eq!(phase.name, "analysis");
         assert_eq!(phase.parallel_branches, 2);
         assert_eq!(phase.required_confidence, 0.8);
-        assert!(phase.validation_methods.contains(&ValidationMethod::SelfCheck));
+        assert!(phase
+            .validation_methods
+            .contains(&ValidationMethod::SelfCheck));
         assert!(phase.synthesis_methods.contains(&SynthesisMethod::Ensemble));
     }
 
@@ -810,10 +812,7 @@ mod interleaved_phase_tests {
             name: "analysis".to_string(),
             parallel_branches: 3,
             required_confidence: 0.85,
-            validation_methods: vec![
-                ValidationMethod::SelfCheck,
-                ValidationMethod::PeerReview,
-            ],
+            validation_methods: vec![ValidationMethod::SelfCheck, ValidationMethod::PeerReview],
             synthesis_methods: vec![SynthesisMethod::Ensemble],
             constraints: CompositeConstraints {
                 time_budget_ms: 5000,
@@ -864,8 +863,7 @@ mod interleaved_phase_tests {
         };
 
         let json_str = serde_json::to_string(&phase).expect("Should serialize");
-        let parsed: InterleavedPhase =
-            serde_json::from_str(&json_str).expect("Should deserialize");
+        let parsed: InterleavedPhase = serde_json::from_str(&json_str).expect("Should deserialize");
 
         assert_eq!(phase.name, parsed.name);
         assert_eq!(phase.parallel_branches, parsed.parallel_branches);
@@ -917,8 +915,14 @@ mod interleaved_phase_tests {
         };
 
         assert_eq!(phase1.constraints.dependencies.len(), 0);
-        assert!(phase2.constraints.dependencies.contains(&"gather".to_string()));
-        assert!(phase3.constraints.dependencies.contains(&"analyze".to_string()));
+        assert!(phase2
+            .constraints
+            .dependencies
+            .contains(&"gather".to_string()));
+        assert!(phase3
+            .constraints
+            .dependencies
+            .contains(&"analyze".to_string()));
     }
 }
 
@@ -1370,7 +1374,7 @@ mod edge_case_tests {
         };
 
         let input = json!({
-            "query": "Unicode test: \u4e2d\u6587 \u65e5\u672c\u8a9e \ud55c\uad6d\uc5b4 \u0420\u0443\u0441\u0441\u043a\u0438\u0439"
+            "query": "Unicode test: 中文 日本語 한국어 Русский"
         });
 
         let result = connector
@@ -1621,8 +1625,12 @@ mod framework_compatibility_tests {
             language_support: vec!["rust".to_string(), "python".to_string()],
         };
 
-        assert!(protocol.framework_compatibility.contains(&"claude_code".to_string()));
-        assert!(protocol.framework_compatibility.contains(&"cline".to_string()));
+        assert!(protocol
+            .framework_compatibility
+            .contains(&"claude_code".to_string()));
+        assert!(protocol
+            .framework_compatibility
+            .contains(&"cline".to_string()));
     }
 
     #[test]

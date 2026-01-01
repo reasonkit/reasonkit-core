@@ -46,7 +46,7 @@ use std::sync::Arc;
 use std::time::Duration;
 
 // Import from the traits module
-use reasonkit::traits::web::{
+use reasonkit::traits::{
     CaptureFormat, CaptureOptions, CapturedPage, ClipRect, Cookie, ExtractFormat, ExtractOptions,
     ExtractedContent, Image, Link, NavigateOptions, PageHandle, Viewport, WaitUntil,
     WebAdapterError, WebAdapterResult, WebBrowserAdapter,
@@ -658,7 +658,11 @@ async fn demo_content_extraction(browser: &impl WebBrowserAdapter) -> WebAdapter
     // 4. Structured data extraction
     println!("\n4. Structured data extraction...");
     let structured = browser.extract_structured(&page, ".product-card").await?;
-    println!("   Result: {}", serde_json::to_string_pretty(&structured)?);
+    println!(
+        "   Result: {}",
+        serde_json::to_string_pretty(&structured)
+            .unwrap_or_else(|_| "<failed to serialize structured result>".to_string())
+    );
 
     // 5. Raw HTML
     println!("\n5. Getting raw HTML...");
@@ -810,7 +814,11 @@ async fn demo_javascript(browser: &impl WebBrowserAdapter) -> WebAdapterResult<(
             })"#,
         )
         .await?;
-    println!("   Result: {}", serde_json::to_string_pretty(&result)?);
+    println!(
+        "   Result: {}",
+        serde_json::to_string_pretty(&result)
+            .unwrap_or_else(|_| "<failed to serialize js result>".to_string())
+    );
 
     // 4. Inject script
     println!("\n4. Injecting script...");

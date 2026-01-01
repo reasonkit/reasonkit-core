@@ -1223,11 +1223,11 @@ mod tests {
 
     #[test]
     fn test_profile_from_str() {
-        assert_eq!(Profile::from_str("quick"), Some(Profile::Quick));
-        assert_eq!(Profile::from_str("Q"), Some(Profile::Quick));
-        assert_eq!(Profile::from_str("balanced"), Some(Profile::Balanced));
-        assert_eq!(Profile::from_str("PARANOID"), Some(Profile::Paranoid));
-        assert_eq!(Profile::from_str("invalid"), None);
+        assert_eq!(Profile::parse_profile("quick"), Some(Profile::Quick));
+        assert_eq!(Profile::parse_profile("Q"), Some(Profile::Quick));
+        assert_eq!(Profile::parse_profile("balanced"), Some(Profile::Balanced));
+        assert_eq!(Profile::parse_profile("PARANOID"), Some(Profile::Paranoid));
+        assert_eq!(Profile::parse_profile("invalid"), None);
     }
 
     #[test]
@@ -1283,7 +1283,7 @@ mod tests {
             error: None,
         });
 
-        assert_eq!(session.current_confidence(), 0.85);
+        assert!((session.current_confidence() - 0.85).abs() < 1e-9);
     }
 
     #[test]

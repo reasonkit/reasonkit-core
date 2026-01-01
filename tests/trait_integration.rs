@@ -22,14 +22,14 @@ use uuid::Uuid;
 
 // Import trait definitions from reasonkit-core
 // Note: These are in src/traits/mod.rs
-use reasonkit::traits::memory::{
-    Chunk, ContextWindow, DistanceMetric, Document, HybridConfig, IndexConfig, IndexStats,
-    MemoryConfig, MemoryError, MemoryResult, MemoryService, RetrievalSource, SearchResult,
-};
-use reasonkit::traits::web::{
+use reasonkit::traits::{
     CaptureFormat, CaptureOptions, CapturedPage, ClipRect, Cookie, ExtractFormat, ExtractOptions,
     ExtractedContent, Image, Link, NavigateOptions, PageHandle, Viewport, WaitUntil,
     WebAdapterError, WebAdapterResult, WebBrowserAdapter,
+};
+use reasonkit::traits::{
+    Chunk, ContextWindow, DistanceMetric, Document, HybridConfig, IndexConfig, IndexStats,
+    MemoryConfig, MemoryError, MemoryResult, MemoryService, RetrievalSource, SearchResult,
 };
 
 // ============================================================================

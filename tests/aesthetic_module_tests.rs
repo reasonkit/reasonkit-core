@@ -14,17 +14,19 @@
 //! - All public APIs tested
 //! - Error handling paths covered
 
-use reasonkit_core::aesthetic::*;
-use reasonkit_core::aesthetic::accessibility::*;
-use reasonkit_core::aesthetic::cross_platform::*;
-use reasonkit_core::aesthetic::engine::*;
-use reasonkit_core::aesthetic::performance::*;
-use reasonkit_core::aesthetic::three_d::*;
-use reasonkit_core::aesthetic::usability::*;
-use reasonkit_core::aesthetic::vibe_benchmark::*;
-use reasonkit_core::aesthetic::visual_analysis::*;
-use reasonkit_core::aesthetic::types::ThreeDFramework;
-use reasonkit_core::error::Error;
+#![cfg(feature = "aesthetic")]
+
+use reasonkit::aesthetic::accessibility::*;
+use reasonkit::aesthetic::cross_platform::*;
+use reasonkit::aesthetic::engine::*;
+use reasonkit::aesthetic::performance::*;
+use reasonkit::aesthetic::three_d::*;
+use reasonkit::aesthetic::types::ThreeDFramework;
+use reasonkit::aesthetic::usability::*;
+use reasonkit::aesthetic::vibe_benchmark::*;
+use reasonkit::aesthetic::visual_analysis::*;
+use reasonkit::aesthetic::*;
+use reasonkit::error::Error;
 use std::collections::HashMap;
 
 // =============================================================================
@@ -103,7 +105,8 @@ fn create_shadow_tokens() -> ShadowTokens {
 fn create_3d_input() -> ThreeDDesignInput {
     ThreeDDesignInput {
         framework: ThreeDFramework::ReactThreeFiber,
-        scene_data: ThreeDSceneData::R3FCode(r#"
+        scene_data: ThreeDSceneData::R3FCode(
+            r##"
             import { Canvas } from '@react-three/fiber';
             import { Suspense } from 'react';
             import { OrbitControls } from '@react-three/drei';
@@ -121,7 +124,9 @@ fn create_3d_input() -> ThreeDDesignInput {
                     <OrbitControls />
                 </Suspense>
             </Canvas>
-        "#.to_string()),
+        "##
+            .to_string(),
+        ),
         performance_targets: ThreeDPerformanceTargets::default(),
         platform: Platform::Web,
     }
@@ -469,17 +474,26 @@ mod accessibility_tests {
     fn test_contrast_analyzer_wcag_aa_check() {
         // Black on white passes AAA
         assert!(ContrastAnalyzer::check_wcag_contrast(
-            "#000000", "#ffffff", WcagLevel::AAA, false
+            "#000000",
+            "#ffffff",
+            WcagLevel::AAA,
+            false
         ));
 
         // Gray on gray fails AA for normal text
         assert!(!ContrastAnalyzer::check_wcag_contrast(
-            "#808080", "#c0c0c0", WcagLevel::AA, false
+            "#808080",
+            "#c0c0c0",
+            WcagLevel::AA,
+            false
         ));
 
         // Large text has lower requirements
         assert!(ContrastAnalyzer::check_wcag_contrast(
-            "#666666", "#ffffff", WcagLevel::AA, true
+            "#666666",
+            "#ffffff",
+            WcagLevel::AA,
+            true
         ));
     }
 
@@ -553,7 +567,12 @@ mod cross_platform_tests {
     #[test]
     fn test_cross_platform_all_platforms() {
         let input = create_full_input();
-        let platforms = vec![Platform::Web, Platform::Android, Platform::IOS, Platform::Desktop];
+        let platforms = vec![
+            Platform::Web,
+            Platform::Android,
+            Platform::IOS,
+            Platform::Desktop,
+        ];
         let result = CrossPlatformValidator::validate(&input, &platforms);
 
         assert_eq!(result.platform_results.len(), 4);
@@ -664,8 +683,10 @@ mod performance_tests {
     #[test]
     fn test_performance_analyzer_complex_html() {
         // Create more complex HTML
-        let complex_html = (0..100).map(|i| format!("<div><p>Item {}</p></div>", i))
-            .collect::<Vec<_>>().join("");
+        let complex_html = (0..100)
+            .map(|i| format!("<div><p>Item {}</p></div>", i))
+            .collect::<Vec<_>>()
+            .join("");
 
         let input = DesignInput {
             data: DesignData::Html(complex_html),
@@ -689,7 +710,8 @@ mod performance_tests {
                 css: r#"
                     .test { color: red; transition: all 0.3s; }
                     @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
-                "#.to_string(),
+                "#
+                .to_string(),
             },
             platform: Platform::Web,
             context: None,
@@ -705,7 +727,8 @@ mod performance_tests {
     #[test]
     fn test_performance_analyzer_react_component() {
         let input = DesignInput {
-            data: DesignData::ReactComponent(r#"
+            data: DesignData::ReactComponent(
+                r#"
                 function Card() {
                     return (
                         <div className="card">
@@ -714,7 +737,9 @@ mod performance_tests {
                         </div>
                     );
                 }
-            "#.to_string()),
+            "#
+                .to_string(),
+            ),
             platform: Platform::Web,
             context: None,
             component_type: ComponentType::Card,
@@ -768,8 +793,10 @@ mod performance_tests {
     #[test]
     fn test_performance_recommendations_generation() {
         // Create input that should trigger recommendations
-        let large_html = (0..600).map(|i| format!("<div><p>Item {}</p></div>", i))
-            .collect::<Vec<_>>().join("");
+        let large_html = (0..600)
+            .map(|i| format!("<div><p>Item {}</p></div>", i))
+            .collect::<Vec<_>>()
+            .join("");
 
         let input = DesignInput {
             data: DesignData::Html(large_html),
@@ -1081,10 +1108,13 @@ mod three_d_tests {
         // Input with multiple meshes
         let multi_mesh = ThreeDDesignInput {
             framework: ThreeDFramework::ReactThreeFiber,
-            scene_data: ThreeDSceneData::R3FCode(r#"
+            scene_data: ThreeDSceneData::R3FCode(
+                r#"
                 <mesh /><mesh /><mesh /><mesh /><mesh />
                 <Mesh /><Mesh /><Mesh />
-            "#.to_string()),
+            "#
+                .to_string(),
+            ),
             performance_targets: ThreeDPerformanceTargets::default(),
             platform: Platform::Web,
         };
@@ -1102,12 +1132,15 @@ mod three_d_tests {
         // Input with instancing
         let instanced = ThreeDDesignInput {
             framework: ThreeDFramework::ReactThreeFiber,
-            scene_data: ThreeDSceneData::R3FCode(r#"
+            scene_data: ThreeDSceneData::R3FCode(
+                r#"
                 <instancedMesh>
                     <boxGeometry />
                     <meshStandardMaterial />
                 </instancedMesh>
-            "#.to_string()),
+            "#
+                .to_string(),
+            ),
             performance_targets: ThreeDPerformanceTargets::default(),
             platform: Platform::Web,
         };
@@ -1155,7 +1188,7 @@ mod three_d_tests {
         let complex = ThreeDDesignInput {
             framework: ThreeDFramework::ReactThreeFiber,
             scene_data: ThreeDSceneData::R3FCode(
-                (0..100).map(|_| "<mesh />").collect::<Vec<_>>().join("")
+                (0..100).map(|_| "<mesh />").collect::<Vec<_>>().join(""),
             ),
             performance_targets: ThreeDPerformanceTargets::default(),
             platform: Platform::Web,
@@ -1238,9 +1271,7 @@ mod visual_analysis_tests {
 
     #[test]
     fn test_color_harmony_monochromatic() {
-        let colors = vec![
-            "#0066ff".to_string(),
-        ];
+        let colors = vec!["#0066ff".to_string()];
 
         let result = ColorHarmonyAnalyzer::analyze(&colors);
 
@@ -1276,10 +1307,7 @@ mod visual_analysis_tests {
 
     #[test]
     fn test_color_harmony_issues_low_contrast() {
-        let colors = vec![
-            "#cccccc".to_string(),
-            "#dddddd".to_string(),
-        ];
+        let colors = vec!["#cccccc".to_string(), "#dddddd".to_string()];
 
         let result = ColorHarmonyAnalyzer::analyze(&colors);
 
@@ -1296,7 +1324,10 @@ mod visual_analysis_tests {
         let result = ColorHarmonyAnalyzer::analyze(&colors);
 
         // Should warn about too many colors
-        assert!(result.issues.iter().any(|i| i.description.contains("more than 7")));
+        assert!(result
+            .issues
+            .iter()
+            .any(|i| i.description.contains("more than 7")));
     }
 
     #[test]
@@ -1327,9 +1358,10 @@ mod visual_analysis_tests {
 
         let result = TypographyAnalyzer::analyze(&tokens);
 
-        assert!(result.issues.iter().any(|i|
-            matches!(i.issue_type, TypographyIssueType::LineHeightTooTight)
-        ));
+        assert!(result
+            .issues
+            .iter()
+            .any(|i| matches!(i.issue_type, TypographyIssueType::LineHeightTooTight)));
     }
 
     #[test]
@@ -1553,7 +1585,8 @@ mod service_tests {
     #[tokio::test]
     async fn test_service_creation() {
         let config = AestheticConfig::default();
-        let service: Result<AestheticExpressionService, Error> = AestheticExpressionService::new(config).await;
+        let service: Result<AestheticExpressionService, Error> =
+            AestheticExpressionService::new(config).await;
 
         assert!(service.is_ok());
     }
@@ -1576,7 +1609,7 @@ mod service_tests {
             ios: 0.85,
         };
 
-        let service: Result<AestheticExpressionService, Error> = AestheticServiceBuilder::new()
+        let service = AestheticServiceBuilder::new()
             .with_config(AestheticConfig::default())
             .with_vibe_targets(custom_vibe)
             .build()
@@ -1742,8 +1775,10 @@ mod edge_case_tests {
 
     #[test]
     fn test_very_large_html() {
-        let large_html = (0..10000).map(|i| format!("<div id='{}'>Content</div>", i))
-            .collect::<Vec<_>>().join("");
+        let large_html = (0..10000)
+            .map(|i| format!("<div id='{}'>Content</div>", i))
+            .collect::<Vec<_>>()
+            .join("");
 
         let input = DesignInput {
             data: DesignData::Html(large_html),

@@ -34,7 +34,7 @@ Before submitting ANY code, verify:
 ## RESPONSIBILITIES
 
 - Implementing RAG pipelines in `reasonkit-core`.
-- Building MCP sidecars in `reasonkit-web-rs`.
+- Building MCP sidecars in `reasonkit-web`.
 - Optimizing vector search algorithms.
 - Writing FFI bindings for Python using `maturin`.
 

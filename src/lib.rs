@@ -118,12 +118,12 @@
 //! - [`thinktool`] - Core ThinkTool protocols and execution engine
 //! - [`engine`] - High-level async reasoning loop with streaming
 //! - [`orchestration`] - Long-horizon task orchestration (100+ tool calls)
-//! - [`bindings`] - Python bindings via PyO3
 //! - [`error`] - Error types and result aliases
 //! - [`telemetry`] - Metrics and observability
 //!
 //! ## Optional Modules (Feature-Gated)
 //!
+//! - \[`bindings`\] - Python bindings via PyO3 (requires `python`)
 //! - \[`rag`\] - Full RAG engine with LLM integration (requires `memory`)
 //! - \[`aesthetic`\] - UI/UX assessment system (requires `aesthetic`)
 //! - \[`vibe`\] - VIBE protocol validation (requires `vibe`)
@@ -145,6 +145,7 @@
 /// `maturin build --release` for distribution.
 ///
 /// See module documentation for Python usage examples.
+#[cfg(feature = "python")]
 pub mod bindings;
 
 /// Global constants and configuration defaults.
@@ -231,6 +232,13 @@ pub mod web;
 /// Web interface handlers and routes.
 pub mod web_interface;
 
+/// Core trait definitions for cross-crate integration.
+///
+/// Provides trait contracts used by optional companion crates:
+/// - reasonkit-mem
+/// - reasonkit-web
+pub mod traits;
+
 /// Aesthetic Expression Mastery System - M2-Enhanced UI/UX Assessment.
 ///
 /// Leverages VIBE Benchmark Excellence (91.5% Web, 89.7% Android, 88.0% iOS)
@@ -313,62 +321,69 @@ pub use engine::{
 };
 
 // Re-export Python bindings types for convenience
+#[cfg(feature = "python")]
 pub use bindings::{
     Profile as PyProfile, Reasoner as PyReasoner, ThinkToolOutput as PyThinkToolOutput,
 };
 
 use chrono::{DateTime, Utc};
-use pyo3::prelude::*;
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
-/// Python module entry point for ReasonKit.
-///
-/// This is the main entry point for the Python bindings, automatically
-/// called when the module is imported in Python.
-///
-/// # Building
-///
-/// ```bash
-/// cd reasonkit-core
-/// maturin develop --release   # Development install
-/// maturin build --release     # Build wheel for distribution
-/// ```
-///
-/// # Python Usage
-///
-/// ```python
-/// from reasonkit import Reasoner, Profile, ReasonerError
-/// from reasonkit import run_gigathink, run_laserlogic, run_bedrock
-/// from reasonkit import run_proofguard, run_brutalhonesty
-/// from reasonkit import quick_think, balanced_think, deep_think, paranoid_think
-/// from reasonkit import version
-///
-/// # Check version
-/// print(f"ReasonKit v{version()}")
-///
-/// # Create reasoner (auto-detects LLM from environment)
-/// r = Reasoner(use_mock=False)
-///
-/// # Run individual ThinkTools
-/// result = r.run_gigathink("What factors drive startup success?")
-/// for perspective in result.perspectives():
-///     print(f"- {perspective}")
-///
-/// # Run with profile for comprehensive analysis
-/// result = r.think_with_profile(Profile.Balanced, "Should we use microservices?")
-/// print(f"Confidence: {result.confidence:.1%}")
-///
-/// # Convenience functions (no Reasoner instantiation needed)
-/// result = run_gigathink("Analyze market trends", use_mock=True)
-/// result = balanced_think("Complex decision to make")
-/// ```
-#[pymodule]
-#[pyo3(name = "reasonkit")]
-fn reasonkit(_py: Python, m: &Bound<'_, PyModule>) -> PyResult<()> {
-    // Register all bindings (classes, functions, exceptions)
-    bindings::register_bindings(m)?;
-    Ok(())
+// Python module entry point (only when python feature is enabled)
+#[cfg(feature = "python")]
+mod python_module {
+    use super::*;
+    use pyo3::prelude::*;
+
+    /// Python module entry point for ReasonKit.
+    ///
+    /// This is the main entry point for the Python bindings, automatically
+    /// called when the module is imported in Python.
+    ///
+    /// # Building
+    ///
+    /// ```bash
+    /// cd reasonkit-core
+    /// maturin develop --release   # Development install
+    /// maturin build --release     # Build wheel for distribution
+    /// ```
+    ///
+    /// # Python Usage
+    ///
+    /// ```python
+    /// from reasonkit import Reasoner, Profile, ReasonerError
+    /// from reasonkit import run_gigathink, run_laserlogic, run_bedrock
+    /// from reasonkit import run_proofguard, run_brutalhonesty
+    /// from reasonkit import quick_think, balanced_think, deep_think, paranoid_think
+    /// from reasonkit import version
+    ///
+    /// # Check version
+    /// print(f"ReasonKit v{version()}")
+    ///
+    /// # Create reasoner (auto-detects LLM from environment)
+    /// r = Reasoner(use_mock=False)
+    ///
+    /// # Run individual ThinkTools
+    /// result = r.run_gigathink("What factors drive startup success?")
+    /// for perspective in result.perspectives():
+    ///     print(f"- {perspective}")
+    ///
+    /// # Run with profile for comprehensive analysis
+    /// result = r.think_with_profile(Profile.Balanced, "Should we use microservices?")
+    /// print(f"Confidence: {result.confidence:.1%}")
+    ///
+    /// # Convenience functions (no Reasoner instantiation needed)
+    /// result = run_gigathink("Analyze market trends", use_mock=True)
+    /// result = balanced_think("Complex decision to make")
+    /// ```
+    #[pymodule]
+    #[pyo3(name = "reasonkit")]
+    fn reasonkit(_py: Python, m: &Bound<'_, PyModule>) -> PyResult<()> {
+        // Register all bindings (classes, functions, exceptions)
+        crate::bindings::register_bindings(m)?;
+        Ok(())
+    }
 }
 
 // ============================================================================
@@ -1167,8 +1182,8 @@ mod tests {
             retrieved_at: Utc::now(),
             version: None,
         };
-        let doc = Document::new(DocumentType::Note, source)
-            .with_content("Hello world test".to_string());
+        let doc =
+            Document::new(DocumentType::Note, source).with_content("Hello world test".to_string());
 
         assert_eq!(doc.content.word_count, 3);
         assert_eq!(doc.content.char_count, 16);

@@ -259,18 +259,10 @@ pub trait WebBrowserAdapter: Send + Sync {
     // ─────────────────────────────────────────────────────────────────────────
 
     /// Navigate to a URL and return a handle to the loaded page.
-    async fn navigate(
-        &self,
-        url: &str,
-        options: NavigateOptions,
-    ) -> WebAdapterResult<PageHandle>;
+    async fn navigate(&self, url: &str, options: NavigateOptions) -> WebAdapterResult<PageHandle>;
 
     /// Wait for the page to finish loading.
-    async fn wait_for_load(
-        &self,
-        handle: &PageHandle,
-        timeout: Duration,
-    ) -> WebAdapterResult<()>;
+    async fn wait_for_load(&self, handle: &PageHandle, timeout: Duration) -> WebAdapterResult<()>;
 
     /// Go back in browser history.
     async fn go_back(&self, handle: &PageHandle) -> WebAdapterResult<()>;
@@ -343,12 +335,7 @@ pub trait WebBrowserAdapter: Send + Sync {
     ) -> WebAdapterResult<()>;
 
     /// Scroll the page.
-    async fn scroll(
-        &self,
-        handle: &PageHandle,
-        x: f64,
-        y: f64,
-    ) -> WebAdapterResult<()>;
+    async fn scroll(&self, handle: &PageHandle, x: f64, y: f64) -> WebAdapterResult<()>;
 
     /// Wait for an element to appear.
     async fn wait_for_selector(
@@ -363,18 +350,10 @@ pub trait WebBrowserAdapter: Send + Sync {
     // ─────────────────────────────────────────────────────────────────────────
 
     /// Evaluate JavaScript and return the result.
-    async fn evaluate_js(
-        &self,
-        handle: &PageHandle,
-        script: &str,
-    ) -> WebAdapterResult<Value>;
+    async fn evaluate_js(&self, handle: &PageHandle, script: &str) -> WebAdapterResult<Value>;
 
     /// Inject a script into the page.
-    async fn inject_script(
-        &self,
-        handle: &PageHandle,
-        script: &str,
-    ) -> WebAdapterResult<()>;
+    async fn inject_script(&self, handle: &PageHandle, script: &str) -> WebAdapterResult<()>;
 
     // ─────────────────────────────────────────────────────────────────────────
     // Cookies & Storage

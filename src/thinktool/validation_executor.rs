@@ -392,9 +392,15 @@ mod tests {
         assert!(config.enable_validation);
         assert_eq!(config.validation_level, ValidationLevel::Rigorous);
         assert!((config.min_confidence_threshold - 0.80).abs() < f64::EPSILON);
-        assert!(config.validate_protocols.contains(&"proofguard".to_string()));
-        assert!(config.validate_protocols.contains(&"brutalhonesty".to_string()));
-        assert!(config.validate_protocols.contains(&"laserlogic".to_string()));
+        assert!(config
+            .validate_protocols
+            .contains(&"proofguard".to_string()));
+        assert!(config
+            .validate_protocols
+            .contains(&"brutalhonesty".to_string()));
+        assert!(config
+            .validate_protocols
+            .contains(&"laserlogic".to_string()));
         assert!(config.skip_protocols.is_empty());
     }
 
@@ -406,7 +412,9 @@ mod tests {
         assert_eq!(config.validation_level, ValidationLevel::Paranoid);
         assert!((config.min_confidence_threshold - 0.90).abs() < f64::EPSILON);
         assert!(config.validate_protocols.contains(&"gigathink".to_string()));
-        assert!(config.validate_protocols.contains(&"scientific".to_string()));
+        assert!(config
+            .validate_protocols
+            .contains(&"scientific".to_string()));
     }
 
     #[test]
@@ -427,8 +435,12 @@ mod tests {
         assert!(config.enable_validation);
         assert_eq!(config.validation_level, ValidationLevel::Rigorous);
         assert!((config.min_confidence_threshold - 0.85).abs() < f64::EPSILON);
-        assert!(config.validate_protocols.contains(&"proofguard".to_string()));
-        assert!(config.validate_protocols.contains(&"brutalhonesty".to_string()));
+        assert!(config
+            .validate_protocols
+            .contains(&"proofguard".to_string()));
+        assert!(config
+            .validate_protocols
+            .contains(&"brutalhonesty".to_string()));
         assert!(config.skip_protocols.contains(&"gigathink".to_string()));
         assert!(config.skip_protocols.contains(&"quick".to_string()));
     }
