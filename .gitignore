@@ -172,3 +172,4 @@ demo_outputs/
 
 #Ignore insiders AI rules
 .github/instructions/codacy.instructions.md
+TASKS/
