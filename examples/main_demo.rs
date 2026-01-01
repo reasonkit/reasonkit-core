@@ -8,7 +8,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .build();
 
     // 2. Define a query
-    let query = "Explain the relationship between quantum entanglement and information transfer speed.";
+    let query =
+        "Explain the relationship between quantum entanglement and information transfer speed.";
 
     // 3. Execute reasoning chain
     let analysis = engine.analyze(query).await?;

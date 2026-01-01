@@ -166,6 +166,9 @@ pub mod error;
 /// Evaluation and benchmarking utilities.
 pub mod evaluation;
 
+/// Provider-neutral LLM clients (e.g. Ollama `/api/chat`).
+pub mod llm;
+
 /// Document ingestion and processing pipeline.
 pub mod ingestion;
 
