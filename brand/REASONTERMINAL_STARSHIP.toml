@@ -1,0 +1,155 @@
+# =============================================================================
+# ReasonKit "Operator" Terminal Theme
+# =============================================================================
+# Starship prompt configuration for ReasonKit brand identity
+# 
+# Installation:
+#   1. Install Starship: curl -sS https://starship.rs/install.sh | sh
+#   2. Copy this file to ~/.config/starship.toml
+#   3. Add to your shell config: eval "$(starship init zsh)"
+#
+# Philosophy: "Write code in the Void" - Industrial, precise, minimal
+# =============================================================================
+
+# Main format string
+format = """
+[┌─](bold #06b6d4)$directory$rust$git_branch$git_status$cmd_duration
+[└─>](bold #06b6d4) """
+
+# Directory module
+[directory]
+style = "bold #f9fafb"
+truncation_length = 3
+truncate_to_repo = false
+truncation_symbol = "…/"
+format = "[$path]($style)"
+
+# Rust module
+[rust]
+symbol = "RUST_CORE::"
+style = "bold #f97316"  # Orange for Rust
+format = "[$symbol$version]($style) "
+
+# Git branch
+[git_branch]
+symbol = "☍ "  # Branching logic symbol
+style = "bold #a855f7"  # Purple for branching logic
+format = "[$symbol$branch]($style) "
+
+# Git status
+[git_status]
+style = "bold #ec4899"  # Pink for status
+format = "[$all_status$ahead_behind]($style) "
+conflicted = "GLITCH::"
+up_to_date = "✓ SYNC"
+ahead = "▲"
+behind = "▼"
+diverged = "⚠ DIVERGENCE"
+untracked = "?"
+stashed = "$"
+modified = "!"
+staged = "+"
+renamed = "»"
+deleted = "✘"
+
+# Command duration
+[cmd_duration]
+min_time = 2_000  # Show if command takes > 2 seconds
+format = "took [$duration]($style) "
+style = "bold #10b981"  # Green for completion
+
+# Python (if using)
+[python]
+symbol = "PY::"
+style = "bold #06b6d4"
+format = "[$symbol$version]($style) "
+
+# Node.js (if using)
+[nodejs]
+symbol = "NODE::"
+style = "bold #10b981"
+format = "[$symbol$version]($style) "
+
+# Package version (cargo, npm, etc.)
+[package]
+symbol = "PKG::"
+style = "bold #a855f7"
+format = "[$symbol$version]($style) "
+
+# Time
+[time]
+format = "[$time]($style) "
+style = "bold #1f2937"  # Muted gray
+time_format = "%H:%M:%S"
+disabled = false
+
+# Character (custom prompt)
+[character]
+success_symbol = "[└─>](bold #06b6d4)"
+error_symbol = "[└─>](bold #f97316)"
+vimcmd_symbol = "[└─V](bold #a855f7)"
+
+# Battery (if on laptop)
+[battery]
+full_symbol = "●"
+charging_symbol = "↑"
+discharging_symbol = "↓"
+unknown_symbol = "?"
+empty_symbol = "○"
+format = "[$symbol$percentage]($style) "
+style = "bold #10b981"
+
+# Memory usage
+[memory_usage]
+symbol = "RAM::"
+format = "[$symbol$percentage]($style) "
+style = "bold #ec4899"
+threshold = 75
+
+# Jobs
+[jobs]
+symbol = "JOBS::"
+format = "[$symbol$number]($style) "
+style = "bold #f97316"
+number_threshold = 1
+
+# Kubernetes (if using)
+[kubernetes]
+symbol = "K8S::"
+format = "[$symbol$context]($style) "
+style = "bold #06b6d4"
+
+# Docker (if using)
+[docker_context]
+symbol = "DOCKER::"
+format = "[$symbol$context]($style) "
+style = "bold #06b6d4"
+
+# AWS (if using)
+[aws]
+symbol = "AWS::"
+format = "[$symbol$profile]($style) "
+style = "bold #f97316"
+
+# Terraform (if using)
+[terraform]
+symbol = "TF::"
+format = "[$symbol$workspace]($style) "
+style = "bold #a855f7"
+
+# Custom modules for ReasonKit
+[custom.reasonkit]
+command = "if [ -f Cargo.toml ] && grep -q 'reasonkit' Cargo.toml; then echo 'REASONKIT_PROJECT'; fi"
+when = "test -f Cargo.toml"
+format = "[$output]($style) "
+style = "bold #06b6d4"
+symbol = "RK::"
+
+# Custom modules for protocol files
+[custom.protocol]
+command = "if [ -f '*.protocol.yml' ] || [ -f '*.protocol.toml' ]; then echo 'PROTOCOL_MODE'; fi"
+when = "test -f *.protocol.yml || test -f *.protocol.toml"
+format = "[$output]($style) "
+style = "bold #a855f7"
+symbol = "PROTOCOL::"
+

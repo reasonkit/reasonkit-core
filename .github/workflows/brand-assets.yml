@@ -1,0 +1,329 @@
+# =============================================================================
+# ReasonKit Brand Assets CI/CD Pipeline
+# =============================================================================
+# Automated "Brand-to-Web" pipeline that ensures reasonkit-site instantly
+# reflects brand updates without manual sync.
+#
+# Workflow:
+#   1. Monitor reasonkit-core/brand/* for changes
+#   2. Package and optimize assets (SVGs, compress PNGs)
+#   3. Push to versioned artifact bucket (GitHub Releases or S3)
+#   4. Trigger webhook in reasonkit-site to rebuild
+#
+# Triggers:
+#   - Push to reasonkit-core/brand/* (any branch)
+#   - Manual dispatch
+#
+# Required Secrets (optional for S3):
+#   - AWS_ACCESS_KEY_ID: AWS access key for S3 upload
+#   - AWS_SECRET_ACCESS_KEY: AWS secret key
+#   - S3_BUCKET: S3 bucket name (e.g., s3://assets.reasonkit.sh)
+#   - REASONKIT_SITE_WEBHOOK: Webhook URL for reasonkit-site rebuild
+# =============================================================================
+
+name: Brand Assets Pipeline
+
+on:
+  push:
+    paths:
+      - 'reasonkit-core/brand/**'
+      - '.github/workflows/brand-assets.yml'
+  workflow_dispatch:
+    inputs:
+      force_rebuild:
+        description: "Force rebuild even if no changes detected"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+  actions: write
+
+env:
+  BRAND_DIR: reasonkit-core/brand
+  ASSETS_VERSION: ${{ github.sha }}
+
+jobs:
+  # ===========================================================================
+  # JOB 1: Detect Changes and Package Assets
+  # ===========================================================================
+  package-assets:
+    name: Package & Optimize Assets
+    runs-on: ubuntu-latest
+    outputs:
+      has_changes: ${{ steps.changes.outputs.brand }}
+      asset_version: ${{ steps.version.outputs.version }}
+      asset_archive: ${{ steps.package.outputs.archive }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Full history for change detection
+
+      - name: Detect brand asset changes
+        id: changes
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]] && [[ "${{ inputs.force_rebuild }}" == "true" ]]; then
+            echo "brand=true" >> $GITHUB_OUTPUT
+            echo "Force rebuild requested"
+          elif [[ "${{ github.event_name }}" == "push" ]]; then
+            # Check if brand files changed
+            if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -q "^reasonkit-core/brand/"; then
+              echo "brand=true" >> $GITHUB_OUTPUT
+              echo "Brand assets changed"
+            else
+              echo "brand=false" >> $GITHUB_OUTPUT
+              echo "No brand asset changes detected"
+            fi
+          else
+            echo "brand=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Determine asset version
+        id: version
+        run: |
+          # Use commit SHA for unique versioning
+          VERSION="${GITHUB_SHA:0:12}"
+          echo "version=${VERSION}" >> $GITHUB_OUTPUT
+          echo "Asset version: ${VERSION}"
+
+      - name: Install optimization tools
+        if: steps.changes.outputs.brand == 'true'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            optipng \
+            jpegoptim \
+            imagemagick \
+            svgo
+
+      - name: Package and optimize assets
+        id: package
+        if: steps.changes.outputs.brand == 'true'
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          ARCHIVE_NAME="reasonkit-brand-assets-${VERSION}"
+          ARCHIVE_PATH="dist/${ARCHIVE_NAME}.tar.gz"
+
+          mkdir -p dist staging/${ARCHIVE_NAME}
+
+          echo "::group::Asset Inventory"
+          find "${{ env.BRAND_DIR }}" -type f \( -name "*.svg" -o -name "*.png" -o -name "*.jpg" -o -name "*.jpeg" \) | head -20
+          echo "::endgroup::"
+
+          echo "::group::Optimize SVGs"
+          find "${{ env.BRAND_DIR }}" -name "*.svg" -type f | while read svg; do
+            echo "Optimizing: $svg"
+            svgo --multipass --precision=2 "$svg" -o "$svg.optimized" 2>/dev/null || cp "$svg" "$svg.optimized"
+            mv "$svg.optimized" "$svg"
+          done
+          echo "::endgroup::"
+
+          echo "::group::Optimize PNGs"
+          find "${{ env.BRAND_DIR }}" -name "*.png" -type f | while read png; do
+            echo "Optimizing: $png"
+            optipng -quiet -o2 "$png" 2>/dev/null || true
+          done
+          echo "::endgroup::"
+
+          echo "::group::Copy assets to staging"
+          cp -r "${{ env.BRAND_DIR }}"/* staging/${ARCHIVE_NAME}/ 2>/dev/null || true
+          
+          # Include BRAND_PLAYBOOK.md if it exists
+          if [[ -f "${{ env.BRAND_DIR }}/BRAND_PLAYBOOK.md" ]]; then
+            cp "${{ env.BRAND_DIR }}/BRAND_PLAYBOOK.md" staging/${ARCHIVE_NAME}/
+          fi
+
+          # Create manifest
+          cat > staging/${ARCHIVE_NAME}/MANIFEST.txt << EOF
+          ReasonKit Brand Assets
+          Version: ${VERSION}
+          Commit: ${GITHUB_SHA}
+          Date: $(date -u +"%Y-%m-%dT%H:%M:%SZ")
+          Repository: ${GITHUB_REPOSITORY}
+          Workflow: ${GITHUB_WORKFLOW}
+          Run ID: ${GITHUB_RUN_ID}
+          
+          Asset Count:
+          - SVGs: $(find staging/${ARCHIVE_NAME} -name "*.svg" | wc -l)
+          - PNGs: $(find staging/${ARCHIVE_NAME} -name "*.png" | wc -l)
+          - JPGs: $(find staging/${ARCHIVE_NAME} -name "*.jpg" -o -name "*.jpeg" | wc -l)
+          EOF
+          echo "::endgroup::"
+
+          echo "::group::Create archive"
+          cd staging
+          tar czf "../${ARCHIVE_PATH}" "${ARCHIVE_NAME}"
+          cd ..
+          
+          # Generate checksum
+          sha256sum "${ARCHIVE_PATH}" > "${ARCHIVE_PATH}.sha256"
+          
+          echo "archive=${ARCHIVE_PATH}" >> $GITHUB_OUTPUT
+          echo "Created: ${ARCHIVE_PATH}"
+          ls -lh "${ARCHIVE_PATH}"
+          cat "${ARCHIVE_PATH}.sha256"
+          echo "::endgroup::"
+
+      - name: Upload artifact
+        if: steps.changes.outputs.brand == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: brand-assets-${{ steps.version.outputs.version }}
+          path: |
+            dist/*.tar.gz
+            dist/*.sha256
+          retention-days: 90
+
+  # ===========================================================================
+  # JOB 2: Upload to Versioned Artifact Bucket
+  # ===========================================================================
+  upload-artifacts:
+    name: Upload to Artifact Bucket
+    needs: package-assets
+    if: needs.package-assets.outputs.has_changes == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          pattern: brand-assets-*
+          path: artifacts
+          merge-multiple: true
+
+      - name: Upload to GitHub Releases (Draft)
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: brand-assets-${{ needs.package-assets.outputs.asset_version }}
+          name: Brand Assets v${{ needs.package-assets.outputs.asset_version }}
+          body: |
+            ## ReasonKit Brand Assets
+
+            Automated brand asset package from commit `${GITHUB_SHA}`.
+
+            **Version:** `${{ needs.package-assets.outputs.asset_version }}`
+            **Date:** $(date -u +"%Y-%m-%d %H:%M:%S UTC")
+
+            ### Installation
+
+            Extract to `reasonkit-site/assets/brand/`:
+
+            ```bash
+            tar xzf reasonkit-brand-assets-*.tar.gz -C reasonkit-site/assets/brand/
+            ```
+
+            ### Verification
+
+            Checksums included in release assets.
+
+            ---
+            *"Designed, Not Dreamed" - Turn Prompts into Protocols*
+          files: |
+            artifacts/*.tar.gz
+            artifacts/*.sha256
+          draft: true
+          prerelease: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload to S3 (if configured)
+        if: ${{ secrets.AWS_ACCESS_KEY_ID != '' && secrets.S3_BUCKET != '' }}
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          S3_BUCKET: ${{ secrets.S3_BUCKET }}
+        run: |
+          VERSION="${{ needs.package-assets.outputs.asset_version }}"
+          
+          # Install AWS CLI
+          sudo apt-get update
+          sudo apt-get install -y awscli
+
+          # Upload to versioned path
+          S3_PATH="${S3_BUCKET}/v${VERSION}/"
+          
+          echo "Uploading to S3: ${S3_PATH}"
+          aws s3 cp artifacts/ "${S3_PATH}" --recursive --exclude "*" --include "*.tar.gz" --include "*.sha256"
+          
+          # Also upload to latest
+          aws s3 cp artifacts/ "${S3_BUCKET}/latest/" --recursive --exclude "*" --include "*.tar.gz" --include "*.sha256"
+          
+          echo "Assets available at:"
+          echo "  Versioned: ${S3_PATH}"
+          echo "  Latest: ${S3_BUCKET}/latest/"
+
+  # ===========================================================================
+  # JOB 3: Trigger reasonkit-site Rebuild
+  # ===========================================================================
+  trigger-site-rebuild:
+    name: Trigger Site Rebuild
+    needs: [package-assets, upload-artifacts]
+    if: needs.package-assets.outputs.has_changes == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger reasonkit-site webhook
+        if: ${{ secrets.REASONKIT_SITE_WEBHOOK != '' }}
+        env:
+          WEBHOOK_URL: ${{ secrets.REASONKIT_SITE_WEBHOOK }}
+        run: |
+          VERSION="${{ needs.package-assets.outputs.asset_version }}"
+          
+          echo "Triggering reasonkit-site rebuild..."
+          
+          curl -X POST "${WEBHOOK_URL}" \
+            -H "Content-Type: application/json" \
+            -H "X-GitHub-Event: brand-assets-updated" \
+            -d "{
+              \"version\": \"${VERSION}\",
+              \"commit\": \"${GITHUB_SHA}\",
+              \"repository\": \"${GITHUB_REPOSITORY}\",
+              \"workflow_run\": \"${GITHUB_RUN_ID}\",
+              \"timestamp\": \"$(date -u +"%Y-%m-%dT%H:%M:%SZ")\"
+            }" || echo "Webhook call failed (non-fatal)"
+
+      - name: Create dispatch event (alternative)
+        if: ${{ secrets.REASONKIT_SITE_WEBHOOK == '' }}
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository_owner }}/reasonkit-site
+          event-type: brand-assets-updated
+          client-payload: |
+            {
+              "version": "${{ needs.package-assets.outputs.asset_version }}",
+              "commit": "${{ GITHUB_SHA }}",
+              "repository": "${{ github.repository }}",
+              "workflow_run": "${{ GITHUB_RUN_ID }}"
+            }
+
+  # ===========================================================================
+  # JOB 4: Summary
+  # ===========================================================================
+  summary:
+    name: Pipeline Summary
+    needs: [package-assets, upload-artifacts, trigger-site-rebuild]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Generate summary
+        run: |
+          echo "## Brand Assets Pipeline Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Step | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Package Assets | ${{ needs.package-assets.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Upload Artifacts | ${{ needs.upload-artifacts.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Trigger Rebuild | ${{ needs.trigger-site-rebuild.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          if [[ "${{ needs.package-assets.outputs.has_changes }}" == "true" ]]; then
+            echo "### Asset Version" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "**Version:** \`${{ needs.package-assets.outputs.asset_version }}\`" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "### Links" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "- [GitHub Release](https://github.com/${{ github.repository }}/releases/tag/brand-assets-${{ needs.package-assets.outputs.asset_version }})" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "**No brand asset changes detected. Pipeline skipped.**" >> $GITHUB_STEP_SUMMARY
+          fi

@@ -2,104 +2,37 @@
 
 # ReasonKit
 
-### **The Reasoning Engine**
+### **The AI Reasoning Engine**
 
-> *"From Prompt to Cognitive Engineering."* -- Turn Prompts into Protocols.
+> _"From Prompt to Cognitive Engineering."_ — Turn Prompts into Protocols.
 
 **Auditable Reasoning for Production AI | Rust-Native | SSR/SSG Compatible**
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="./brand/readme/reasonkit-core_hero.png">
-  <source media="(prefers-color-scheme: light)" srcset="./brand/readme/reasonkit-core_hero.png">
-  <img src="./brand/readme/reasonkit-core_hero.png" alt="ReasonKit - Auditable Reasoning for Production AI" width="100%">
+  <source media="(prefers-color-scheme: dark)" srcset="./assets/img/reasonkit-core_hero.png">
+  <source media="(prefers-color-scheme: light)" srcset="./assets/img/reasonkit-core_hero.png">
+  <img src="./assets/img/reasonkit-core_hero.png" alt="ReasonKit - Auditable Reasoning for Production AI" width="100%">
 </picture>
 
 [![CI](https://img.shields.io/github/actions/workflow/status/reasonkit/reasonkit-core/ci.yml?branch=main&style=flat-square&logo=github&label=CI&color=06b6d4&logoColor=06b6d4)](https://github.com/reasonkit/reasonkit-core/actions)
 [![Crates.io](https://img.shields.io/crates/v/reasonkit-core?style=flat-square&logo=rust&color=10b981&logoColor=f9fafb)](https://crates.io/crates/reasonkit-core)
-[![Docs](https://img.shields.io/badge/docs-docs.rs-06b6d4?style=flat-square&logo=rust&logoColor=f9fafb)](https://docs.rs/reasonkit-core)
-[![License](https://img.shields.io/badge/license-Apache%202.0-a855f7?style=flat-square&labelColor=030508)](https://github.com/reasonkit/reasonkit-core/blob/main/LICENSE)
+[![Docs](https://img.shields.io/badge/docs-reasonkit.sh-06b6d4?style=flat-square&logo=readme&logoColor=f9fafb)](https://docs.reasonkit.sh)
+[![License](https://img.shields.io/badge/license-Apache%202.0-a855f7?style=flat-square&labelColor=030508)](LICENSE)
 [![Architecture](https://img.shields.io/badge/stack-Rust%E2%80%A2MCP%E2%80%A2LLMs-f97316?style=flat-square&labelColor=030508)](https://reasonkit.sh)
 
-[Website](https://reasonkit.sh) | [Docs](https://docs.rs/reasonkit-core) | [GitHub](https://github.com/reasonkit/reasonkit-core)
+[Website](https://reasonkit.sh) | [Documentation](https://docs.reasonkit.sh) | [GitHub](https://github.com/reasonkit/reasonkit-core)
 
 </div>
 
 ---
 
-## TL;DR (30 Seconds)
-
-- What: Deterministic reasoning engine built in Rust; protocols turn LLM outputs into auditable, repeatable decisions.
-- Who: Teams that need traceable AI decisions, low latency (<10ms orchestration target), and zero hardcoded secrets.
-- Why: Variance-reducing ThinkTool chain + deterministic protocol engine + SQLite traces.
-- Proof: Benchmarked ~7ms orchestration; variance reduction from 85% to ~28% after chain; 5 mandatory quality gates.
-- Start: `curl -fsSL https://reasonkit.sh/install | bash` then `rk-core think --profile balanced "Should we migrate to microservices?"`
-
-## Jump To
-
-- [Full Documentation](./docs/README.md)
-- Quick Start and Verify
-- Hello, World (CLI + Rust)
-- Who This Is For (and Not)
-- Deterministic Protocol Engine
-- ThinkTools & Profiles
-- Auditability & Traces
-- Benchmarks & Methodology
-- Security & Compliance
-- Features & Integrations
-- Contribution & Quality Gates
-
-## Quick Start and Verify
-
-```bash
-# Install (universal)
-curl -fsSL https://reasonkit.sh/install | bash
-
-# Or via Cargo
-cargo install reasonkit-core
-
-# First run (balanced profile)
-rk-core think --profile balanced "Should we migrate to microservices?"
-
-# Quick verify (all quality gates)
-cargo build --release && cargo test --all-features && \
-  cargo clippy -- -D warnings && cargo fmt --check
-```
-
-> Commands `trace`, `web`, `verify`, `stats`, and `metrics` are scaffolded in v0.1.0 and return "not yet implemented". Core MCP (`mcp`, `serve-mcp`, `completions`) is implemented.
-
-## Hello, World (CLI + Rust)
-
-**CLI**
-
-```bash
-rk-core think --profile quick "Is this email phishing?"
-```
-
-**Library (Rust)**
-
-```rust
-use reasonkit_core::{ThinkClient, Profile};
-
-fn main() -> anyhow::Result<()> {
-    let client = ThinkClient::default();
-    let verdict = client.think(Profile::Balanced, "Should we migrate to microservices?")?;
-    println!("{:?}", verdict);
-    Ok(())
-}
-```
-
-**Deterministic run options**
-
-- Use the same profile + input to reproduce the protocol path; traces persist in local SQLite.
-- Configure provider routing with environment variables (no hardcoded secrets). Seed control is applied at the provider layer when supported.
-
 ## The Problem We Solve
 
-**Most AI is a slot machine.** Insert prompt -> pull lever -> hope for coherence.
+**Most AI is a slot machine.** Insert prompt → pull lever → hope for coherence.
 
-**ReasonKit is a factory.** Input data -> execute protocol -> get deterministic, auditable output.
+**ReasonKit is a factory.** Input data → execute protocol → get deterministic, auditable output.
 
-LLMs are fundamentally **probabilistic**. Same prompt -> different outputs. This creates critical failures:
+LLMs are fundamentally **probabilistic**. Same prompt → different outputs. This creates critical failures:
 
 | Failure           | Impact                    | Our Solution                                      |
 | ----------------- | ------------------------- | ------------------------------------------------- |
@@ -111,11 +44,24 @@ LLMs are fundamentally **probabilistic**. Same prompt -> different outputs. This
 
 ---
 
-## Deterministic Protocol Engine
+## Quick Start
 
-- State machine wraps probabilistic LLM calls; each transition is schema-validated.
-- Variance is reduced by forcing outputs through the ThinkTool chain and rejecting invalid states.
-- Traces persist locally in SQLite for audit, replay, and diff between runs.
+```bash
+# Install (Universal)
+curl -fsSL https://reasonkit.sh/install | bash
+
+# Or via Cargo
+cargo install reasonkit-core
+
+# Run your first analysis
+rk-core think --profile balanced "Should we migrate to microservices?"
+```
+
+> **Note:** In v1.0.0, CLI commands other than `mcp`, `serve-mcp`, and `completions` are scaffolded. The examples below describe the planned interface.
+
+**30 seconds to structured reasoning.**
+
+---
 
 ## ThinkTools: The 5-Step Reasoning Chain
 
@@ -124,74 +70,73 @@ Each ThinkTool acts as a **variance reduction filter**, transforming probabilist
 <div align="center">
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="./brand/readme/powercombo_process.png">
-  <source media="(prefers-color-scheme: light)" srcset="./brand/readme/powercombo_process.png">
-  <img src="./brand/readme/powercombo_process.png" alt="PowerCombo Process: GigaThink (Diverge) -> LaserLogic (Converge) -> BedRock (Ground) -> ProofGuard (Verify) -> BrutalHonesty (Critique)" width="900">
+  <source media="(prefers-color-scheme: dark)" srcset="./assets/img/powercombo_process.png">
+  <source media="(prefers-color-scheme: light)" srcset="./assets/img/powercombo_process.png">
+  <img src="./assets/img/powercombo_process.png" alt="PowerCombo Process: GigaThink (Diverge) → LaserLogic (Converge) → BedRock (Ground) → ProofGuard (Verify) → BrutalHonesty (Critique)" width="900">
 </picture>
 
 <sub><b>The PowerCombo Process:</b> Five cognitive operations that systematically reduce variance from raw LLM output (~85%) to protocol-constrained reasoning (~28%)</sub>
 
 </div>
 
-| ThinkTool         | Operation    | What It Does                                    | Catches / Rejects                        | Output Format |
-| ----------------- | ------------ | ----------------------------------------------- | ---------------------------------------- | ------------- |
-| **GigaThink**     | `Diverge()`  | Generate 10+ perspectives, explore widely       | Shallow framing, missing alternatives    | Ranked list   |
-| **LaserLogic**    | `Converge()` | Detect fallacies, validate logic, find gaps     | Logical gaps, hidden assumptions         | Gap report    |
-| **BedRock**       | `Ground()`   | First principles decomposition, identify axioms | Unstated axioms, non-falsifiable claims  | Axiom table   |
-| **ProofGuard**    | `Verify()`   | Multi-source triangulation, require 3+ sources  | Unverified claims, insufficient evidence | Evidence set  |
-| **BrutalHonesty** | `Critique()` | Adversarial red team, attack your own reasoning | Overconfidence, brittle conclusions      | Critique note |
+| ThinkTool         | Operation    | What It Does                                    |
+| ----------------- | ------------ | ----------------------------------------------- |
+| **GigaThink**     | `Diverge()`  | Generate 10+ perspectives, explore widely       |
+| **LaserLogic**    | `Converge()` | Detect fallacies, validate logic, find gaps     |
+| **BedRock**       | `Ground()`   | First principles decomposition, identify axioms |
+| **ProofGuard**    | `Verify()`   | Multi-source triangulation, require 3+ sources  |
+| **BrutalHonesty** | `Critique()` | Adversarial red team, attack your own reasoning |
 
 ### Variance Reduction: The Chain Effect
 
 <div align="center">
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="./brand/readme/chart_variance_reduction.png">
-  <source media="(prefers-color-scheme: light)" srcset="./brand/readme/chart_variance_reduction.png">
-  <img src="./brand/readme/chart_variance_reduction.png" alt="Variance Reduction Concept: Each stage constrains output variance" width="800">
+  <source media="(prefers-color-scheme: dark)" srcset="./assets/img/chart_variance_reduction.png">
+  <source media="(prefers-color-scheme: light)" srcset="./assets/img/chart_variance_reduction.png">
+  <img src="./assets/img/chart_variance_reduction.png" alt="Variance Reduction Chart: Raw LLM 85% → GigaThink 72% → LaserLogic 58% → BedRock 42% → ProofGuard 28%" width="800">
 </picture>
 
-<sub><b>Conceptual Model:</b> Each ThinkTool stage applies constraints that reduce output variability</sub>
+<sub><b>Quantified Uncertainty Reduction:</b> Each ThinkTool stage measurably constrains probabilistic variance</sub>
 
 </div>
 
-The core insight: **structured protocols reduce variance**. By forcing LLM outputs through multiple validation stages, we constrain the space of possible outputs.
+| Stage          | Variance | Reduction |
+| -------------- | -------- | --------- |
+| Raw LLM Output | 85%      | —         |
+| + GigaThink    | 72%      | -13%      |
+| + LaserLogic   | 58%      | -14%      |
+| + BedRock      | 42%      | -16%      |
+| + ProofGuard   | 28%      | -14%      |
 
-**Measured Results** ([benchmark reports](./benchmarks/results/)):
-
-| Metric                 | Raw Prompts | Structured | Improvement |
-| ---------------------- | ----------- | ---------- | ----------- |
-| Inconsistency Rate     | 4.0%        | 2.0%       | **-50%**    |
-| Complex Task Agreement | 80%         | 100%       | **+20 pp**  |
-
-> Benchmark: Claude CLI, 5 runs per question, 10 questions across factual/math/logic/decision/complex categories.
-
-**Result:** Structured prompting demonstrably reduces output variance on real tasks
+**Result:** Raw LLM variance ~85% → Protocol-constrained variance ~28%
 
 ---
 
-## Reasoning Profiles (Latency Targets)
+## Reasoning Profiles
+
+Pre-configured chains for different rigor levels:
 
 ```bash
-# Quick
+# Fast analysis (70% confidence target)
 rk-core think --profile quick "Is this email phishing?"
 
-# Balanced
+# Standard analysis (80% confidence target)
 rk-core think --profile balanced "Should we use microservices?"
 
-# Deep
+# Thorough analysis (85% confidence target)
 rk-core think --profile deep "Design A/B test for feature X"
 
-# Paranoid
-rk-core think --profile paranoid "Validate this cryptographic implementation"
+# Maximum rigor (95% confidence target)
+rk-core think --profile paranoid "Validate cryptographic implementation"
 ```
 
-| Profile      | Chain                                  | Confidence Target | Latency Target | Best Use Case          |
-| ------------ | -------------------------------------- | ----------------- | -------------- | ---------------------- |
-| `--quick`    | GigaThink -> LaserLogic                | ~70%              | Sub-2s         | Fast triage            |
-| `--balanced` | All 5 ThinkTools                       | ~80%              | <5s            | Standard decisions     |
-| `--deep`     | All 5 + meta-cognition                 | ~85%              | <8s            | Complex problems       |
-| `--paranoid` | All 5 + validation + stronger critique | ~95%              | <12s           | High-stakes validation |
+| Profile      | Chain                   | Confidence | Use Case           |
+| ------------ | ----------------------- | ---------- | ------------------ |
+| `--quick`    | GigaThink → LaserLogic  | 70%        | Fast sanity checks |
+| `--balanced` | All 5 ThinkTools        | 80%        | Standard decisions |
+| `--deep`     | All 5 + meta-cognition  | 85%        | Complex problems   |
+| `--paranoid` | All 5 + validation pass | 95%        | Critical decisions |
 
 ---
 
@@ -200,50 +145,59 @@ rk-core think --profile paranoid "Validate this cryptographic implementation"
 <div align="center">
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="./brand/readme/terminal_mockup.png">
-  <source media="(prefers-color-scheme: light)" srcset="./brand/readme/terminal_mockup.png">
-  <img src="./brand/readme/terminal_mockup.png" alt="ReasonKit Terminal Demo" width="100%">
+  <source media="(prefers-color-scheme: dark)" srcset="./assets/img/terminal_mockup.png">
+  <source media="(prefers-color-scheme: light)" srcset="./assets/img/terminal_mockup.png">
+  <img src="./assets/img/terminal_mockup.png" alt="ReasonKit Terminal showing execution trace with variance reduction at each ThinkTool stage" width="850">
 </picture>
 
-<sub><b>Execution Trace:</b> Every reasoning step logged with confidence scores</sub>
+<sub><b>Live Execution Trace:</b> Every reasoning step logged with confidence scores and variance metrics</sub>
 
 </div>
 
-```text
+```
 $ rk-core think --profile balanced "Should we migrate to microservices?"
 
-ThinkTool Chain: GigaThink -> LaserLogic -> BedRock -> ProofGuard
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ThinkTool Chain: GigaThink → LaserLogic → BedRock → ProofGuard
+Variance:        85% → 72% → 58% → 42% → 28%
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-[GigaThink] 10 PERSPECTIVES GENERATED
+[GigaThink] 10 PERSPECTIVES GENERATED                         Variance: 85%
   1. OPERATIONAL: Maintenance overhead +40% initially
   2. TEAM TOPOLOGY: Conway's Law - do we have the teams?
   3. COST ANALYSIS: Infrastructure scales non-linearly
   ...
+  → Variance after exploration: 72% (-13%)
 
-[LaserLogic] HIDDEN ASSUMPTIONS DETECTED
-  ! Assuming network latency is negligible
-  ! Assuming team has distributed tracing expertise
-  ! Logical gap: No evidence microservices solve stated problem
+[LaserLogic] HIDDEN ASSUMPTIONS DETECTED                      Variance: 72%
+  ⚠ Assuming network latency is negligible
+  ⚠ Assuming team has distributed tracing expertise
+  ⚠ Logical gap: No evidence microservices solve stated problem
+  → Variance after validation: 58% (-14%)
 
-[BedRock] FIRST PRINCIPLES DECOMPOSITION
-  * Axiom: Monoliths are simpler to reason about (empirical)
-  * Axiom: Distributed systems introduce partitions (CAP theorem)
-  * Gap: Cannot prove maintainability improvement without data
+[BedRock] FIRST PRINCIPLES DECOMPOSITION                      Variance: 58%
+  • Axiom: Monoliths are simpler to reason about (empirical)
+  • Axiom: Distributed systems introduce partitions (CAP theorem)
+  • Gap: Cannot prove maintainability improvement without data
+  → Variance after grounding: 42% (-16%)
 
-[ProofGuard] TRIANGULATION RESULT
-  * 3/5 sources: Microservices increase complexity initially
-  * 2/5 sources: Some teams report success
-  * Confidence: 0.72 (MEDIUM) - Mixed evidence
+[ProofGuard] TRIANGULATION RESULT                             Variance: 42%
+  • 3/5 sources: Microservices increase complexity initially
+  • 2/5 sources: Some teams report success
+  • Confidence: 0.72 (MEDIUM) - Mixed evidence
+  → Variance after verification: 28% (-14%)
 
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 VERDICT: conditional_yes | Confidence: 87% | Duration: 2.3s
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 
 **What This Shows:**
 
 - **Transparency:** See exactly where confidence comes from
 - **Auditability:** Every step logged and verifiable
-- **Deterministic Path:** Same protocol -> same execution flow
-- **Structured Output:** Consistent format for every analysis
+- **Deterministic Path:** Same protocol → same execution flow
+- **Variance Reduction:** Quantified uncertainty reduction at each stage
 
 ---
 
@@ -252,9 +206,9 @@ VERDICT: conditional_yes | Confidence: 87% | Duration: 2.3s
 <div align="center">
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="./brand/readme/architecture_diagram.png">
-  <source media="(prefers-color-scheme: light)" srcset="./brand/readme/architecture_diagram.png">
-  <img src="./brand/readme/architecture_diagram.png" alt="ReasonKit Architecture: CLI -> Protocol Engine -> ThinkTools -> LLM Layer with SQLite trace storage" width="900">
+  <source media="(prefers-color-scheme: dark)" srcset="./assets/img/architecture_diagram.png">
+  <source media="(prefers-color-scheme: light)" srcset="./assets/img/architecture_diagram.png">
+  <img src="./assets/img/architecture_diagram.png" alt="ReasonKit Architecture: CLI → Protocol Engine → ThinkTools → LLM Layer with SQLite trace storage" width="900">
 </picture>
 
 <sub><b>Three-Layer Architecture:</b> Deterministic protocol engine wrapping probabilistic LLM layer with full execution tracing</sub>
@@ -265,7 +219,7 @@ VERDICT: conditional_yes | Confidence: 87% | Duration: 2.3s
 
 1. **Probabilistic LLM** (Unavoidable)
    - LLMs generate tokens probabilistically
-   - Same prompt -> different outputs
+   - Same prompt → different outputs
    - We **cannot eliminate** this
 
 2. **Deterministic Protocol Engine** (Our Innovation)
@@ -306,7 +260,7 @@ flowchart LR
       C2[Claude / GPT / Gemini / ...]
     end
 
-    subgraph TOOLS["ThinkTools - Variance Reduction"]
+    subgraph TOOLS["ThinkTools · Variance Reduction"]
       G["GigaThink<br/>Diverge()"]
       LZ["LaserLogic<br/>Converge()"]
       BR["BedRock<br/>Ground()"]
@@ -330,95 +284,32 @@ flowchart LR
 
 ---
 
-## Auditability & Traces
-
-- Local-first: traces stored in SQLite; provider keys set via environment variables (no hardcoded secrets).
-- Repeat runs with the same profile + input reproduce the protocol path; compare traces to spot drift.
-- Commands:
-
-```bash
-rk-core trace list
-rk-core trace view <id>
-```
-
-**Sample trace shape:**
-
-```json
-{
-  "id": "trace_2025-12-31T23:59:59Z",
-  "profile": "balanced",
-  "steps": [
-    { "tool": "GigaThink", "status": "ok", "outputs": 10 },
-    { "tool": "LaserLogic", "status": "ok", "gaps": 2 },
-    { "tool": "ProofGuard", "status": "ok", "sources": 3 }
-  ],
-  "confidence": 0.87
-}
-```
-
----
-
 ## Built for Production
 
 ReasonKit is written in Rust because reasoning infrastructure demands reliability.
 
 | Capability               | What It Means For You                               |
 | ------------------------ | --------------------------------------------------- |
-| **Predictable Latency**  | <10ms orchestration overhead, no GC pauses          |
+| **Predictable Latency**  | <5ms orchestration overhead, no GC pauses           |
 | **Memory Safety**        | Zero crashes from null pointers or buffer overflows |
 | **Single Binary**        | Deploy anywhere, no Python environment required     |
 | **Fearless Concurrency** | Run 100+ reasoning chains in parallel safely        |
 | **Type Safety**          | Errors caught at compile time, not runtime          |
 
-**Benchmarked Performance:**
+**Benchmarked Performance** ([view full report](./docs/PERFORMANCE_BASELINE.md)):
 
-| Operation                      | Time | Target |
-| ------------------------------ | ---- | ------ |
-| Protocol orchestration         | ~7ms | <10ms  |
-| Concurrent chains (8 parallel) | ~7ms | <10ms  |
-
-> Run `cargo bench` to reproduce these measurements on your hardware.
+| Operation | Time | Target |
+|-----------|------|--------|
+| Protocol orchestration | 4.4ms | <10ms |
+| RRF Fusion (100 elements) | 33μs | <5ms |
+| Document chunking (10KB) | 27μs | <5ms |
+| RAPTOR tree traversal (1000 nodes) | 33μs | <5ms |
 
 **Why This Matters:**
 
 Your AI reasoning shouldn't crash in production. It shouldn't pause for garbage collection during critical decisions. It shouldn't require complex environment management to deploy.
 
-ReasonKit's Rust foundation ensures deterministic, auditable execution every time--the same engineering choice trusted by Linux, Cloudflare, Discord, and AWS for their most critical infrastructure.
-
----
-
-## Benchmarks & Methodology
-
-- Method: `cargo bench` on balanced profile orchestration; repeated runs; measure p50/p95.
-- Targets: <10ms orchestration overhead; <5% regression permitted per CONS-009 gate.
-- Inspect results: see `./benchmarks/results/` for raw data and reports.
-
-## Security & Compliance
-
-- No hardcoded secrets; configure providers via environment variables only.
-- GDPR-by-default posture; keep data local unless explicitly routed to providers.
-- Rust for performance paths (CONS-005); Node.js backends disallowed (CONS-001).
-- Python usage limited to bindings; use `uv` for Python package operations (CONS-010).
-
-## Features & Integrations
-
-| Feature flag | Adds                      | Use When                 | Perf/Footprint Impact |
-| ------------ | ------------------------- | ------------------------ | --------------------- |
-| `memory`     | ReasonKit-mem integration | You need retrieval + RAG | Higher memory/CPU     |
-| `qdrant`     | Embedded Qdrant           | Local vector search      | Adds storage engine   |
-| `onnx`       | Local embeddings (BGE-M3) | Offline embeddings       | Adds ONNX runtime     |
-
-**MCP quick start**
-
-```bash
-rk-core serve-mcp --port 8000
-# then point your MCP client at localhost:8000
-```
-
-**Provider routing**
-
-- Configure via environment variables; never commit keys.
-- Unified router supports multiple LLM providers; fails closed when keys are absent.
+ReasonKit's Rust foundation ensures deterministic, auditable execution every time—the same engineering choice trusted by Linux, Cloudflare, Discord, and AWS for their most critical infrastructure.
 
 ---
 
@@ -430,7 +321,7 @@ Enable the `memory` feature to use these modules:
 
 ```toml
 [dependencies]
-reasonkit-core = { version = "0.1", features = ["memory"] }
+reasonkit-core = { version = "1.0", features = ["memory"] }
 ```
 
 **Features:**
@@ -458,10 +349,11 @@ curl -fsSL https://reasonkit.sh/install | bash
 # Cargo (Rust) - Recommended for Developers
 cargo install reasonkit-core
 
-# Build from source
-git clone https://github.com/reasonkit/reasonkit-core
-cd reasonkit-core
-cargo build --release
+# npm (Node.js) - CLI Wrapper
+npm install -g @reasonkit/cli
+
+# uv (Python) - Bindings Only
+uv pip install reasonkit
 ```
 
 </details>
@@ -486,15 +378,19 @@ rk-core think --profile paranoid "Validate this cryptographic implementation"
 rk-core think --profile scientific "Design A/B test for feature X"
 ```
 
-**Execution Traces:**
+**With Memory (RAG):**
 
 ```bash
+# Ingest documents
+rk-core ingest document.pdf
+
+# Query with RAG
+rk-core query "What are the key findings in the research papers?"
+
 # View execution traces
 rk-core trace list
-rk-core trace view <id>
+rk-core trace export <id>
 ```
-
-> **Note:** Document ingestion and RAG queries require the [`reasonkit-mem`](https://crates.io/crates/reasonkit-mem) crate. See Memory Infrastructure section above.
 
 ---
 
@@ -521,6 +417,28 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for complete guidelines.
 
 ---
 
+## 🏷️ Community Badge
+
+If you use ReasonKit in your project, add our badge:
+
+```markdown
+[![Reasoned By ReasonKit](https://raw.githubusercontent.com/reasonkit/reasonkit-core/main/brand/badges/reasoned-by.svg)](https://reasonkit.sh)
+```
+
+See [Community Badges](brand/COMMUNITY_BADGES.md) for all variants and usage guidelines.
+
+---
+
+## 🎨 Branding & Design
+
+- [Brand Playbook](brand/BRAND_PLAYBOOK.md) - Complete brand guidelines
+- [Component Spec](brand/REASONUI_COMPONENT_SPEC.md) - UI component system
+- [Motion Guidelines](brand/MOTION_DESIGN_GUIDELINES.md) - Animation system
+- [3D Assets](brand/3D_ASSET_STRATEGY.md) - WebGL integration guide
+- [Integration Guide](brand/BRANDING_INTEGRATION_GUIDE.md) - Complete integration instructions
+
+---
+
 ## Design Philosophy: Honest Engineering
 
 **We don't claim to eliminate probability.** That's impossible. LLMs are probabilistic by design.
@@ -538,7 +456,7 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for complete guidelines.
 
 ## License
 
-**Apache 2.0** - See [LICENSE](https://github.com/reasonkit/reasonkit-core/blob/main/LICENSE)
+**Apache 2.0** - See [LICENSE](LICENSE)
 
 **Open Source Core:** All core reasoning protocols and ThinkTools are open source under Apache 2.0.
 
@@ -546,12 +464,10 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for complete guidelines.
 
 <div align="center">
 
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="./brand/readme/designed_not_dreamed.png">
-  <source media="(prefers-color-scheme: light)" srcset="./brand/readme/designed_not_dreamed.png">
-  <img src="./brand/readme/designed_not_dreamed.png" alt="ReasonKit -- Turn Prompts into Protocols | Designed, Not Dreamed" width="100%">
-</picture>
+**ReasonKit** — Turn Prompts into Protocols
 
-[Website](https://reasonkit.sh) | [Docs](https://docs.rs/reasonkit-core) | [GitHub](https://github.com/reasonkit/reasonkit-core)
+_Designed, Not Dreamed_
+
+[Website](https://reasonkit.sh) | [Documentation](https://docs.reasonkit.sh) | [GitHub](https://github.com/reasonkit/reasonkit-core)
 
 </div>
