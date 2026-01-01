@@ -221,7 +221,7 @@ fn bench_protocol_execution(c: &mut Criterion) {
             BenchmarkId::new("single_protocol", protocol_id),
             &input,
             |b, input| {
-                b.to_async(&rt).iter(|| async {
+                b.to_async(rt).iter(|| async {
                     let result = executor.execute(protocol_id, input.clone()).await;
                     black_box(result)
                 });
@@ -237,7 +237,7 @@ fn bench_protocol_execution(c: &mut Criterion) {
             BenchmarkId::new("gigathink_complexity", name),
             &input,
             |b, input| {
-                b.to_async(&rt).iter(|| async {
+                b.to_async(rt).iter(|| async {
                     let result = executor.execute("gigathink", input.clone()).await;
                     black_box(result)
                 });
@@ -610,7 +610,7 @@ fn bench_concurrent_execution(c: &mut Criterion) {
             BenchmarkId::new("sequential_executor", concurrency),
             &concurrency,
             |b, &n| {
-                b.to_async(&rt).iter(|| async {
+                b.to_async(rt).iter(|| async {
                     let executor = executor.clone();
                     let futures: Vec<_> = (0..n)
                         .map(|i| {
@@ -643,7 +643,7 @@ fn bench_concurrent_execution(c: &mut Criterion) {
             BenchmarkId::new("parallel_executor", concurrency),
             &concurrency,
             |b, &n| {
-                b.to_async(&rt).iter(|| async {
+                b.to_async(rt).iter(|| async {
                     let executor = parallel_executor.clone();
                     let futures: Vec<_> = (0..n)
                         .map(|i| {
@@ -663,7 +663,7 @@ fn bench_concurrent_execution(c: &mut Criterion) {
     // Benchmark mixed protocol execution (realistic workload)
     let protocols = vec!["gigathink", "laserlogic", "bedrock"];
     group.bench_function("mixed_protocols_3", |b| {
-        b.to_async(&rt).iter(|| async {
+        b.to_async(rt).iter(|| async {
             let executor = executor.clone();
             let futures: Vec<_> = protocols
                 .iter()
@@ -709,7 +709,7 @@ fn bench_profile_chains(c: &mut Criterion) {
 
     // quick = GigaThink -> LaserLogic (2 protocols)
     group.bench_function("quick_profile_2_steps", |b| {
-        b.to_async(&rt).iter(|| async {
+        b.to_async(rt).iter(|| async {
             let result = executor.execute_profile("quick", input.clone()).await;
             black_box(result)
         });
@@ -717,7 +717,7 @@ fn bench_profile_chains(c: &mut Criterion) {
 
     // balanced = GigaThink -> LaserLogic -> BedRock -> ProofGuard (4 protocols)
     group.bench_function("balanced_profile_4_steps", |b| {
-        b.to_async(&rt).iter(|| async {
+        b.to_async(rt).iter(|| async {
             let result = executor.execute_profile("balanced", input.clone()).await;
             black_box(result)
         });
@@ -725,7 +725,7 @@ fn bench_profile_chains(c: &mut Criterion) {
 
     // deep = All 5 protocols (conditional)
     group.bench_function("deep_profile_5_steps", |b| {
-        b.to_async(&rt).iter(|| async {
+        b.to_async(rt).iter(|| async {
             let result = executor.execute_profile("deep", input.clone()).await;
             black_box(result)
         });
@@ -733,7 +733,7 @@ fn bench_profile_chains(c: &mut Criterion) {
 
     // paranoid = All 5 + validation pass (6 protocols)
     group.bench_function("paranoid_profile_6_steps", |b| {
-        b.to_async(&rt).iter(|| async {
+        b.to_async(rt).iter(|| async {
             let result = executor.execute_profile("paranoid", input.clone()).await;
             black_box(result)
         });
@@ -741,7 +741,7 @@ fn bench_profile_chains(c: &mut Criterion) {
 
     // powercombo = Maximum rigor
     group.bench_function("powercombo_profile_max", |b| {
-        b.to_async(&rt).iter(|| async {
+        b.to_async(rt).iter(|| async {
             let result = executor.execute_profile("powercombo", input.clone()).await;
             black_box(result)
         });
@@ -791,7 +791,7 @@ fn bench_step_overhead(c: &mut Criterion) {
             ),
             &input,
             |b, input| {
-                b.to_async(&rt).iter(|| async {
+                b.to_async(rt).iter(|| async {
                     let result = executor.execute(protocol, input.clone()).await;
                     black_box(result)
                 });
@@ -1011,11 +1011,11 @@ fn bench_token_usage(c: &mut Criterion) {
 
     // Single addition
     group.bench_function("add_single_usage", |b| {
-        let mut base = TokenUsage::default();
         let other = TokenUsage::new(100, 50, 0.001);
         b.iter(|| {
+            let mut base = TokenUsage::default();
             base.add(&other);
-            black_box(&base)
+            black_box(base)
         });
     });
 
@@ -1030,7 +1030,7 @@ fn bench_token_usage(c: &mut Criterion) {
             |b, samples| {
                 b.iter(|| {
                     let mut total = TokenUsage::default();
-                    for usage in *samples {
+                    for usage in samples.iter() {
                         total.add(usage);
                     }
                     black_box(total)
