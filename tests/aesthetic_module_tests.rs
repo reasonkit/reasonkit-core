@@ -1058,7 +1058,7 @@ mod three_d_tests {
         };
 
         let webgl_input = ThreeDDesignInput {
-            framework: ThreeDFramework::WebGL,
+            framework: reasonkit_core::aesthetic::ThreeDFramework::WebGL,
             scene_data: ThreeDSceneData::ThreeJsCode("new Mesh()".to_string()),
             performance_targets: targets.clone(),
             platform: Platform::Web,
