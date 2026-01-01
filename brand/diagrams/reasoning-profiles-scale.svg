@@ -1,52 +1,67 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 200" fill="none">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 280" fill="none">
   <defs>
     <linearGradient id="heroGrad" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#06b6d4"/>
       <stop offset="50%" stop-color="#a855f7"/>
       <stop offset="100%" stop-color="#ec4899"/>
     </linearGradient>
-    <filter id="softGlow" x="-30%" y="-30%" width="160%" height="160%">
-      <feGaussianBlur in="SourceGraphic" stdDeviation="2" result="blur"/>
+    <filter id="softGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="blur"/>
       <feMerge>
         <feMergeNode in="blur"/>
         <feMergeNode in="SourceGraphic"/>
       </feMerge>
     </filter>
   </defs>
-  <rect width="800" height="200" fill="#030508"/>
 
-  <text x="400" y="30" fill="#f9fafb" font-family="Inter, sans-serif" font-size="24" font-weight="700" text-anchor="middle">Reasoning Profiles & Confidence</text>
+  <!-- Background -->
+  <rect width="1000" height="280" fill="#030508"/>
 
-  <line x1="100" y1="100" x2="700" y2="100" stroke="#1f2937" stroke-width="4" stroke-linecap="round"/>
+  <!-- Title with generous top margin -->
+  <text x="500" y="42" fill="#f9fafb" font-family="Inter, sans-serif" font-size="24" font-weight="700" text-anchor="middle">Reasoning Profiles &amp; Confidence Targets</text>
 
-  <g transform="translate(100, 100)">
-    <circle cx="0" cy="0" r="15" fill="#06b6d4"/>
-    <text x="0" y="-25" fill="#06b6d4" font-family="Inter, sans-serif" font-size="14" font-weight="700" text-anchor="middle">Quick</text>
-    <text x="0" y="35" fill="#f9fafb" font-family="JetBrains Mono, monospace" font-size="14" font-weight="700" text-anchor="middle">70%</text>
-    <text x="0" y="55" fill="#9ca3af" font-family="Inter, sans-serif" font-size="10" text-anchor="middle">GigaThink → LaserLogic</text>
+  <!-- Scale line - with margins -->
+  <line x1="100" y1="130" x2="900" y2="130" stroke="#1f2937" stroke-width="8" stroke-linecap="round"/>
+
+  <!-- Gradient overlay on line -->
+  <line x1="100" y1="130" x2="900" y2="130" stroke="url(#heroGrad)" stroke-width="5" stroke-linecap="round" opacity="0.35"/>
+
+  <!-- Profile nodes - evenly distributed -->
+  <!-- 4 nodes across 800px (100 to 900), positions: 100, 366, 633, 900 -->
+
+  <!-- Quick -->
+  <g transform="translate(100, 130)">
+    <circle cx="0" cy="0" r="22" fill="#06b6d4" filter="url(#softGlow)"/>
+    <text x="0" y="-40" fill="#06b6d4" font-family="Inter, sans-serif" font-size="17" font-weight="700" text-anchor="middle">Quick</text>
+    <text x="0" y="50" fill="#f9fafb" font-family="JetBrains Mono, monospace" font-size="18" font-weight="700" text-anchor="middle">70%</text>
+    <text x="0" y="75" fill="#9ca3af" font-family="Inter, sans-serif" font-size="12" text-anchor="middle">gt → ll</text>
   </g>
 
-  <g transform="translate(300, 100)">
-    <circle cx="0" cy="0" r="15" fill="#10b981"/>
-    <text x="0" y="-25" fill="#10b981" font-family="Inter, sans-serif" font-size="14" font-weight="700" text-anchor="middle">Balanced</text>
-    <text x="0" y="35" fill="#f9fafb" font-family="JetBrains Mono, monospace" font-size="14" font-weight="700" text-anchor="middle">80%</text>
-    <text x="0" y="55" fill="#9ca3af" font-family="Inter, sans-serif" font-size="10" text-anchor="middle">All 5 ThinkTools</text>
+  <!-- Balanced -->
+  <g transform="translate(366, 130)">
+    <circle cx="0" cy="0" r="22" fill="#10b981" filter="url(#softGlow)"/>
+    <text x="0" y="-40" fill="#10b981" font-family="Inter, sans-serif" font-size="17" font-weight="700" text-anchor="middle">Balanced</text>
+    <text x="0" y="50" fill="#f9fafb" font-family="JetBrains Mono, monospace" font-size="18" font-weight="700" text-anchor="middle">80%</text>
+    <text x="0" y="75" fill="#9ca3af" font-family="Inter, sans-serif" font-size="12" text-anchor="middle">gt → ll → br → pg</text>
   </g>
 
-  <g transform="translate(500, 100)">
-    <circle cx="0" cy="0" r="15" fill="#a855f7"/>
-    <text x="0" y="-25" fill="#a855f7" font-family="Inter, sans-serif" font-size="14" font-weight="700" text-anchor="middle">Deep</text>
-    <text x="0" y="35" fill="#f9fafb" font-family="JetBrains Mono, monospace" font-size="14" font-weight="700" text-anchor="middle">85%</text>
-    <text x="0" y="55" fill="#9ca3af" font-family="Inter, sans-serif" font-size="10" text-anchor="middle">+ Meta-cognition</text>
+  <!-- Deep -->
+  <g transform="translate(633, 130)">
+    <circle cx="0" cy="0" r="22" fill="#a855f7" filter="url(#softGlow)"/>
+    <text x="0" y="-40" fill="#a855f7" font-family="Inter, sans-serif" font-size="17" font-weight="700" text-anchor="middle">Deep</text>
+    <text x="0" y="50" fill="#f9fafb" font-family="JetBrains Mono, monospace" font-size="18" font-weight="700" text-anchor="middle">85%</text>
+    <text x="0" y="75" fill="#9ca3af" font-family="Inter, sans-serif" font-size="12" text-anchor="middle">All 5 + meta</text>
   </g>
 
-  <g transform="translate(700, 100)">
-    <circle cx="0" cy="0" r="15" fill="url(#heroGrad)" filter="url(#softGlow)"/>
-    <text x="0" y="-25" fill="#ec4899" font-family="Inter, sans-serif" font-size="14" font-weight="700" text-anchor="middle">Paranoid</text>
-    <text x="0" y="35" fill="#f9fafb" font-family="JetBrains Mono, monospace" font-size="14" font-weight="700" text-anchor="middle">95%</text>
-    <text x="0" y="55" fill="#9ca3af" font-family="Inter, sans-serif" font-size="10" text-anchor="middle">+ Validation pass</text>
+  <!-- Paranoid -->
+  <g transform="translate(900, 130)">
+    <circle cx="0" cy="0" r="25" fill="url(#heroGrad)" filter="url(#softGlow)"/>
+    <text x="0" y="-42" fill="#ec4899" font-family="Inter, sans-serif" font-size="17" font-weight="700" text-anchor="middle">Paranoid</text>
+    <text x="0" y="52" fill="#f9fafb" font-family="JetBrains Mono, monospace" font-size="18" font-weight="700" text-anchor="middle">95%</text>
+    <text x="0" y="77" fill="#9ca3af" font-family="Inter, sans-serif" font-size="12" text-anchor="middle">All 5 + validation</text>
   </g>
 
-  <text x="400" y="180" fill="#9ca3af" font-family="JetBrains Mono, monospace" font-size="12" text-anchor="middle">Confidence Target = Probability of Correctness based on Protocol Rigor</text>
+  <!-- Footer with proper spacing -->
+  <text x="500" y="235" fill="#9ca3af" font-family="JetBrains Mono, monospace" font-size="13" text-anchor="middle">Confidence Target = Probability of Correctness based on Protocol Rigor</text>
+  <text x="500" y="260" fill="#6b7280" font-family="Inter, sans-serif" font-size="12" text-anchor="middle">Higher rigor → More ThinkTools → Higher confidence guarantee</text>
 </svg>
-

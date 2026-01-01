@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 220" fill="none">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 260" fill="none">
   <defs>
     <linearGradient id="heroGrad" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#06b6d4"/>
@@ -6,36 +6,50 @@
       <stop offset="100%" stop-color="#ec4899"/>
     </linearGradient>
     <filter id="softGlow" x="-30%" y="-30%" width="160%" height="160%">
-      <feGaussianBlur in="SourceGraphic" stdDeviation="2" result="blur"/>
+      <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur"/>
       <feMerge>
         <feMergeNode in="blur"/>
         <feMergeNode in="SourceGraphic"/>
       </feMerge>
     </filter>
   </defs>
-  <rect width="800" height="220" fill="#030508"/>
 
-  <g transform="translate(50, 40)" filter="url(#softGlow)">
-    <path d="M10 0 L30 0 L40 10 L40 30 L30 40 L10 40 L0 30 L0 10 Z" fill="url(#heroGrad)" opacity="0.8"/>
-    <path d="M15 15 L35 15 M15 25 L25 25 M15 15 L15 35 M35 15 L35 25 L25 25 L35 35" stroke="#06b6d4" stroke-width="3" fill="none"/>
-    <text x="55" y="32" fill="#f9fafb" font-family="Inter, sans-serif" font-size="32" font-weight="700" letter-spacing="1">ReasonKit</text>
+  <!-- Background -->
+  <rect width="900" height="260" fill="#030508"/>
+
+  <!-- Logo and title with generous left padding -->
+  <g transform="translate(50, 45)" filter="url(#softGlow)">
+    <!-- Crystalline logo icon -->
+    <path d="M15 0 L40 0 L55 15 L55 40 L40 55 L15 55 L0 40 L0 15 Z" fill="url(#heroGrad)" opacity="0.85"/>
+    <path d="M22 22 L48 22 M22 33 L36 33 M22 22 L22 48 M48 22 L48 33 L36 33 L48 48" stroke="#06b6d4" stroke-width="4" fill="none"/>
+
+    <!-- ReasonKit text with proper spacing from icon -->
+    <text x="75" y="40" fill="#f9fafb" font-family="Inter, sans-serif" font-size="36" font-weight="700" letter-spacing="1">ReasonKit</text>
   </g>
 
-  <text x="50" y="100" fill="#f9fafb" font-family="Inter, sans-serif" font-size="24" font-weight="600">Turn Prompts into Protocols</text>
+  <!-- Tagline with generous vertical spacing -->
+  <text x="50" y="125" fill="#f9fafb" font-family="Inter, sans-serif" font-size="26" font-weight="600">Turn Prompts into Protocols</text>
 
-  <text x="50" y="135" fill="#9ca3af" font-family="Inter, sans-serif" font-size="16" font-style="italic">"Designed, Not Dreamed." — Structure beats intelligence. Engineering over hope.</text>
+  <!-- Philosophy quote with proper line height -->
+  <text x="50" y="165" fill="#9ca3af" font-family="Inter, sans-serif" font-size="17" font-style="italic">"Designed, Not Dreamed." — Structure beats intelligence. Engineering over hope.</text>
 
-  <text x="50" y="170" fill="#06b6d4" font-family="JetBrains Mono, monospace" font-size="14" font-weight="600">Industrial-Grade Reasoning Infrastructure | Rust-Native | Zero-Trust Logic</text>
+  <!-- Description with generous spacing -->
+  <text x="50" y="205" fill="#06b6d4" font-family="JetBrains Mono, monospace" font-size="15" font-weight="600">Industrial-Grade Reasoning Infrastructure | Rust-Native | Zero-Trust Logic</text>
 
-  <g transform="translate(50, 195)">
-    <rect x="0" y="0" width="90" height="20" rx="3" fill="#111827" stroke="#06b6d4" stroke-width="1"/>
-    <text x="45" y="14" fill="#06b6d4" font-family="JetBrains Mono, monospace" font-size="10" text-anchor="middle">CI: passing</text>
+  <!-- Badges - evenly distributed with generous spacing -->
+  <!-- 3 badges: 110px, 135px, 145px = 390px total, gaps = 25px × 2 = 50px, total = 440px -->
+  <!-- Starting at x=50, positions: 50, 185, 345 -->
+  <g transform="translate(50, 230)">
+    <!-- Badge 1: CI passing -->
+    <rect x="0" y="0" width="110" height="26" rx="6" fill="#111827" stroke="#06b6d4" stroke-width="1.5"/>
+    <text x="55" y="18" fill="#06b6d4" font-family="JetBrains Mono, monospace" font-size="11" text-anchor="middle" font-weight="500">CI: passing</text>
 
-    <rect x="100" y="0" width="110" height="20" rx="3" fill="#111827" stroke="#06b6d4" stroke-width="1"/>
-    <text x="155" y="14" fill="#06b6d4" font-family="JetBrains Mono, monospace" font-size="10" text-anchor="middle">crates.io: v1.0.0</text>
+    <!-- Badge 2: crates.io version -->
+    <rect x="135" y="0" width="135" height="26" rx="6" fill="#111827" stroke="#06b6d4" stroke-width="1.5"/>
+    <text x="202" y="18" fill="#06b6d4" font-family="JetBrains Mono, monospace" font-size="11" text-anchor="middle" font-weight="500">crates.io: v1.0.0</text>
 
-    <rect x="220" y="0" width="120" height="20" rx="3" fill="#111827" stroke="#06b6d4" stroke-width="1"/>
-    <text x="280" y="14" fill="#06b6d4" font-family="JetBrains Mono, monospace" font-size="10" text-anchor="middle">license: Apache 2.0</text>
+    <!-- Badge 3: license -->
+    <rect x="295" y="0" width="145" height="26" rx="6" fill="#111827" stroke="#06b6d4" stroke-width="1.5"/>
+    <text x="367" y="18" fill="#06b6d4" font-family="JetBrains Mono, monospace" font-size="11" text-anchor="middle" font-weight="500">license: Apache 2.0</text>
   </g>
 </svg>
-

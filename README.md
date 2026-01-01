@@ -16,11 +16,11 @@
 
 [![CI](https://img.shields.io/github/actions/workflow/status/reasonkit/reasonkit-core/ci.yml?branch=main&style=flat-square&logo=github&label=CI&color=06b6d4&logoColor=06b6d4)](https://github.com/reasonkit/reasonkit-core/actions)
 [![Crates.io](https://img.shields.io/crates/v/reasonkit-core?style=flat-square&logo=rust&color=10b981&logoColor=f9fafb)](https://crates.io/crates/reasonkit-core)
-[![Docs](https://img.shields.io/badge/docs-reasonkit.sh-06b6d4?style=flat-square&logo=readme&logoColor=f9fafb)](https://docs.reasonkit.sh)
+[![Docs](https://img.shields.io/badge/docs-docs.rs-06b6d4?style=flat-square&logo=rust&logoColor=f9fafb)](https://docs.rs/reasonkit-core)
 [![License](https://img.shields.io/badge/license-Apache%202.0-a855f7?style=flat-square&labelColor=030508)](LICENSE)
 [![Architecture](https://img.shields.io/badge/stack-Rust%E2%80%A2MCP%E2%80%A2LLMs-f97316?style=flat-square&labelColor=030508)](https://reasonkit.sh)
 
-[Website](https://reasonkit.sh) | [Documentation](https://docs.reasonkit.sh) | [GitHub](https://github.com/reasonkit/reasonkit-core)
+[Website](https://reasonkit.sh) | [Docs](https://docs.rs/reasonkit-core) | [GitHub](https://github.com/reasonkit/reasonkit-core)
 
 </div>
 
@@ -94,22 +94,24 @@ Each ThinkTool acts as a **variance reduction filter**, transforming probabilist
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="./brand/readme/chart_variance_reduction.png">
   <source media="(prefers-color-scheme: light)" srcset="./brand/readme/chart_variance_reduction.png">
-  <img src="./brand/readme/chart_variance_reduction.png" alt="Variance Reduction Chart: Raw LLM 85% -> GigaThink 72% -> LaserLogic 58% -> BedRock 42% -> ProofGuard 28%" width="800">
+  <img src="./brand/readme/chart_variance_reduction.png" alt="Variance Reduction Concept: Each stage constrains output variance" width="800">
 </picture>
 
-<sub><b>Quantified Uncertainty Reduction:</b> Each ThinkTool stage measurably constrains probabilistic variance</sub>
+<sub><b>Conceptual Model:</b> Each ThinkTool stage applies constraints that reduce output variability</sub>
 
 </div>
 
-| Stage          | Variance | Reduction |
-| -------------- | -------- | --------- |
-| Raw LLM Output | 85%      | --        |
-| + GigaThink    | 72%      | -13%      |
-| + LaserLogic   | 58%      | -14%      |
-| + BedRock      | 42%      | -16%      |
-| + ProofGuard   | 28%      | -14%      |
+The core insight: **structured protocols reduce variance**. By forcing LLM outputs through multiple validation stages, we constrain the space of possible outputs:
 
-**Result:** Raw LLM variance ~85% -> Protocol-constrained variance ~28%
+| Stage          | Effect                              |
+| -------------- | ----------------------------------- |
+| Raw LLM Output | High variance (unconstrained)       |
+| + GigaThink    | Explores solution space explicitly  |
+| + LaserLogic   | Filters logically invalid paths     |
+| + BedRock      | Grounds claims in first principles  |
+| + ProofGuard   | Requires multi-source verification  |
+
+**Result:** Each stage narrows the output distribution toward higher-quality reasoning
 
 ---
 
@@ -147,10 +149,10 @@ rk-core think --profile paranoid "Validate cryptographic implementation"
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="./brand/readme/terminal_mockup.png">
   <source media="(prefers-color-scheme: light)" srcset="./brand/readme/terminal_mockup.png">
-  <img src="./brand/readme/terminal_mockup.png" alt="ReasonKit Terminal showing execution trace with variance reduction at each ThinkTool stage" width="850">
+  <img src="./brand/readme/terminal_mockup.png" alt="ReasonKit Terminal showing execution trace" width="850">
 </picture>
 
-<sub><b>Live Execution Trace:</b> Every reasoning step logged with confidence scores and variance metrics</sub>
+<sub><b>Execution Trace:</b> Every reasoning step logged with confidence scores</sub>
 
 </div>
 
@@ -158,32 +160,27 @@ rk-core think --profile paranoid "Validate cryptographic implementation"
 $ rk-core think --profile balanced "Should we migrate to microservices?"
 
 ThinkTool Chain: GigaThink -> LaserLogic -> BedRock -> ProofGuard
-Variance:        85% -> 72% -> 58% -> 42% -> 28%
 
-[GigaThink] 10 PERSPECTIVES GENERATED                         Variance: 85%
+[GigaThink] 10 PERSPECTIVES GENERATED
   1. OPERATIONAL: Maintenance overhead +40% initially
   2. TEAM TOPOLOGY: Conway's Law - do we have the teams?
   3. COST ANALYSIS: Infrastructure scales non-linearly
   ...
-  -> Variance after exploration: 72% (-13%)
 
-[LaserLogic] HIDDEN ASSUMPTIONS DETECTED                      Variance: 72%
+[LaserLogic] HIDDEN ASSUMPTIONS DETECTED
   ! Assuming network latency is negligible
   ! Assuming team has distributed tracing expertise
   ! Logical gap: No evidence microservices solve stated problem
-  -> Variance after validation: 58% (-14%)
 
-[BedRock] FIRST PRINCIPLES DECOMPOSITION                      Variance: 58%
+[BedRock] FIRST PRINCIPLES DECOMPOSITION
   * Axiom: Monoliths are simpler to reason about (empirical)
   * Axiom: Distributed systems introduce partitions (CAP theorem)
   * Gap: Cannot prove maintainability improvement without data
-  -> Variance after grounding: 42% (-16%)
 
-[ProofGuard] TRIANGULATION RESULT                             Variance: 42%
+[ProofGuard] TRIANGULATION RESULT
   * 3/5 sources: Microservices increase complexity initially
   * 2/5 sources: Some teams report success
   * Confidence: 0.72 (MEDIUM) - Mixed evidence
-  -> Variance after verification: 28% (-14%)
 
 VERDICT: conditional_yes | Confidence: 87% | Duration: 2.3s
 ```
@@ -193,7 +190,7 @@ VERDICT: conditional_yes | Confidence: 87% | Duration: 2.3s
 - **Transparency:** See exactly where confidence comes from
 - **Auditability:** Every step logged and verifiable
 - **Deterministic Path:** Same protocol -> same execution flow
-- **Variance Reduction:** Quantified uncertainty reduction at each stage
+- **Structured Output:** Consistent format for every analysis
 
 ---
 
@@ -286,20 +283,20 @@ ReasonKit is written in Rust because reasoning infrastructure demands reliabilit
 
 | Capability               | What It Means For You                               |
 | ------------------------ | --------------------------------------------------- |
-| **Predictable Latency**  | <5ms orchestration overhead, no GC pauses           |
+| **Predictable Latency**  | <10ms orchestration overhead, no GC pauses          |
 | **Memory Safety**        | Zero crashes from null pointers or buffer overflows |
 | **Single Binary**        | Deploy anywhere, no Python environment required     |
 | **Fearless Concurrency** | Run 100+ reasoning chains in parallel safely        |
 | **Type Safety**          | Errors caught at compile time, not runtime          |
 
-**Benchmarked Performance** ([view full report](./docs/PERFORMANCE_BASELINE.md)):
+**Benchmarked Performance:**
 
 | Operation                          | Time  | Target |
 | ---------------------------------- | ----- | ------ |
-| Protocol orchestration             | 4.4ms | <10ms  |
-| RRF Fusion (100 elements)          | 33us  | <5ms   |
-| Document chunking (10KB)           | 27us  | <5ms   |
-| RAPTOR tree traversal (1000 nodes) | 33us  | <5ms   |
+| Protocol orchestration             | ~7ms  | <10ms  |
+| Concurrent chains (8 parallel)     | ~7ms  | <10ms  |
+
+> Run `cargo bench` to reproduce these measurements on your hardware.
 
 **Why This Matters:**
 
@@ -345,11 +342,10 @@ curl -fsSL https://reasonkit.sh/install | bash
 # Cargo (Rust) - Recommended for Developers
 cargo install reasonkit-core
 
-# npm (Node.js) - CLI Wrapper
-npm install -g @reasonkit/cli
-
-# uv (Python) - Bindings Only
-uv pip install reasonkit
+# Build from source
+git clone https://github.com/reasonkit/reasonkit-core
+cd reasonkit-core
+cargo build --release
 ```
 
 </details>
@@ -374,19 +370,15 @@ rk-core think --profile paranoid "Validate this cryptographic implementation"
 rk-core think --profile scientific "Design A/B test for feature X"
 ```
 
-**With Memory (RAG):**
+**Execution Traces:**
 
 ```bash
-# Ingest documents
-rk-core ingest document.pdf
-
-# Query with RAG
-rk-core query "What are the key findings in the research papers?"
-
 # View execution traces
 rk-core trace list
-rk-core trace export <id>
+rk-core trace view <id>
 ```
+
+> **Note:** Document ingestion and RAG queries require the [`reasonkit-mem`](https://crates.io/crates/reasonkit-mem) crate. See Memory Infrastructure section above.
 
 ---
 
@@ -444,6 +436,6 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for complete guidelines.
   <img src="./brand/readme/designed_not_dreamed.png" alt="ReasonKit -- Turn Prompts into Protocols | Designed, Not Dreamed" width="100%">
 </picture>
 
-[Website](https://reasonkit.sh) | [Documentation](https://docs.reasonkit.sh) | [GitHub](https://github.com/reasonkit/reasonkit-core)
+[Website](https://reasonkit.sh) | [Docs](https://docs.rs/reasonkit-core) | [GitHub](https://github.com/reasonkit/reasonkit-core)
 
 </div>
