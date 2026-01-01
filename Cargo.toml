@@ -96,7 +96,7 @@ required-features = ["minimax"]
 
 [dependencies]
 # Python Integration (0.24+ supports Python 3.13)
-pyo3 = { version = "0.24", features = ["extension-module"] }
+pyo3 = { version = "0.24.1", features = ["extension-module"] }
 
 # Serialization
 serde = { version = "1.0", features = ["derive"] }
@@ -198,7 +198,7 @@ ndarray = { version = "0.15", optional = true }
 
 # ARF Module dependencies (optional feature)
 sled = { version = "0.34", optional = true }
-wasmtime = { version = "24", optional = true }
+wasmtime = { version = "24.0.5", optional = true }
 sysinfo = { version = "0.30", optional = true }
 petgraph = { version = "0.6", optional = true, features = ["serde-1"] }
 rust-bert = { version = "0.23", optional = true, features = ["download-libtorch"] }
