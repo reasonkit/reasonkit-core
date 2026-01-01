@@ -31,6 +31,7 @@
 //! ```
 
 #![allow(clippy::useless_conversion)]
+#![allow(unexpected_cfgs)]
 
 use crate::thinktool::executor::{ExecutorConfig, ProtocolExecutor, ProtocolInput};
 use pyo3::exceptions::{PyKeyError, PyRuntimeError, PyTimeoutError, PyValueError};
@@ -191,8 +192,7 @@ impl ThinkToolOutput {
             .map_err(|e| PyValueError::new_err(e.to_string()))?;
 
         json_to_pyobject(py, &data).and_then(|obj| {
-            obj.downcast::<PyDict>()
-                .map(|d| d.clone())
+            obj.downcast::<PyDict>().cloned()
                 .map_err(|_| PyValueError::new_err("Output is not a dict"))
         })
     }

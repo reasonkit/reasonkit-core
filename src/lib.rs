@@ -361,6 +361,7 @@ use uuid::Uuid;
 /// result = balanced_think("Complex decision to make")
 /// ```
 #[pymodule]
+#[pyo3(name = "reasonkit")]
 fn reasonkit(_py: Python, m: &Bound<'_, PyModule>) -> PyResult<()> {
     // Register all bindings (classes, functions, exceptions)
     bindings::register_bindings(m)?;

@@ -141,7 +141,7 @@ impl Profile {
     }
 
     /// Parse profile from string
-    pub fn from_str(s: &str) -> Option<Self> {
+    pub fn parse_profile(s: &str) -> Option<Self> {
         match s.to_lowercase().as_str() {
             "quick" | "q" => Some(Profile::Quick),
             "balanced" | "b" => Some(Profile::Balanced),
