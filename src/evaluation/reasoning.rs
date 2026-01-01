@@ -8,21 +8,45 @@
 use std::collections::HashMap;
 
 /// ReasonKit profiles (ThinkTool chains)
+///
+/// Profiles define which ThinkTools are used and in what order.
+/// See `thinktool::profiles::ReasoningProfile` for the full chain configuration
+/// including conditional execution and validation passes.
+///
+/// # Confidence Thresholds (per ORCHESTRATOR.md spec)
+///
+/// | Profile  | Min Confidence | Modules |
+/// |----------|----------------|---------|
+/// | Quick    | 70%            | gt, ll  |
+/// | Balanced | 80%            | gt, ll, br, pg |
+/// | Deep     | 85%            | All 5   |
+/// | Paranoid | 95%            | All 5 + validation |
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Profile {
-    /// No ThinkTools (baseline)
+    /// No ThinkTools (baseline for A/B comparison)
     None,
-    /// GigaThink → LaserLogic
+    /// Quick: GigaThink -> LaserLogic (70% confidence target)
+    /// Fast 2-step analysis for rapid insights
     Quick,
-    /// GigaThink → LaserLogic → BedRock → ProofGuard
+    /// Balanced: GigaThink -> LaserLogic -> BedRock -> ProofGuard (80% confidence target)
+    /// Standard 4-module chain for thorough but efficient analysis
     Balanced,
-    /// All 5 + extra iterations
+    /// Deep: All 5 ThinkTools (85% confidence target)
+    /// GigaThink -> LaserLogic -> BedRock -> ProofGuard -> BrutalHonesty (conditional)
+    /// BrutalHonesty runs if confidence < 85%
     Deep,
-    /// All 5 + BrutalHonesty loop
+    /// Paranoid: All 5 ThinkTools + validation pass (95% confidence target)
+    /// GigaThink -> LaserLogic -> BedRock -> ProofGuard -> BrutalHonesty -> ProofGuard
+    /// Maximum rigor with adversarial critique and second verification pass
     Paranoid,
 }
 
 impl Profile {
+    /// Get the list of ThinkTools for this profile
+    ///
+    /// Note: This returns the *unique* tools used, not the full execution chain.
+    /// For the actual execution chain (including conditional steps and validation passes),
+    /// see `thinktool::profiles::ReasoningProfile`.
     pub fn thinktools(&self) -> Vec<ThinkTool> {
         match self {
             Profile::None => vec![],
@@ -47,6 +71,60 @@ impl Profile {
                 ThinkTool::ProofGuard,
                 ThinkTool::BrutalHonesty,
             ],
+        }
+    }
+
+    /// Get the minimum confidence threshold for this profile
+    ///
+    /// Returns the confidence level required for the profile to be considered successful.
+    /// Per ORCHESTRATOR.md specification:
+    /// - Quick: 70%
+    /// - Balanced: 80%
+    /// - Deep: 85%
+    /// - Paranoid: 95%
+    pub fn min_confidence(&self) -> f64 {
+        match self {
+            Profile::None => 0.0,
+            Profile::Quick => 0.70,
+            Profile::Balanced => 0.80,
+            Profile::Deep => 0.85,
+            Profile::Paranoid => 0.95,
+        }
+    }
+
+    /// Get the number of steps in the execution chain
+    ///
+    /// Note: Paranoid has 6 steps (includes 2nd ProofGuard validation pass)
+    pub fn chain_length(&self) -> usize {
+        match self {
+            Profile::None => 0,
+            Profile::Quick => 2,
+            Profile::Balanced => 4,
+            Profile::Deep => 5,
+            Profile::Paranoid => 6, // Includes 2nd ProofGuard pass
+        }
+    }
+
+    /// Convert from profile ID string
+    pub fn from_id(id: &str) -> Option<Self> {
+        match id.to_lowercase().as_str() {
+            "none" | "baseline" => Some(Profile::None),
+            "quick" => Some(Profile::Quick),
+            "balanced" => Some(Profile::Balanced),
+            "deep" => Some(Profile::Deep),
+            "paranoid" => Some(Profile::Paranoid),
+            _ => None,
+        }
+    }
+
+    /// Get the profile ID string
+    pub fn id(&self) -> &'static str {
+        match self {
+            Profile::None => "none",
+            Profile::Quick => "quick",
+            Profile::Balanced => "balanced",
+            Profile::Deep => "deep",
+            Profile::Paranoid => "paranoid",
         }
     }
 }
@@ -370,7 +448,43 @@ mod tests {
         assert!(Profile::None.thinktools().is_empty());
         assert_eq!(Profile::Quick.thinktools().len(), 2);
         assert_eq!(Profile::Balanced.thinktools().len(), 4);
-        assert_eq!(Profile::Paranoid.thinktools().len(), 5);
+        assert_eq!(Profile::Deep.thinktools().len(), 5);
+        assert_eq!(Profile::Paranoid.thinktools().len(), 5); // Unique tools (not chain length)
+    }
+
+    #[test]
+    fn test_profile_min_confidence() {
+        assert_eq!(Profile::None.min_confidence(), 0.0);
+        assert_eq!(Profile::Quick.min_confidence(), 0.70);
+        assert_eq!(Profile::Balanced.min_confidence(), 0.80);
+        assert_eq!(Profile::Deep.min_confidence(), 0.85);
+        assert_eq!(Profile::Paranoid.min_confidence(), 0.95);
+    }
+
+    #[test]
+    fn test_profile_chain_length() {
+        assert_eq!(Profile::None.chain_length(), 0);
+        assert_eq!(Profile::Quick.chain_length(), 2);
+        assert_eq!(Profile::Balanced.chain_length(), 4);
+        assert_eq!(Profile::Deep.chain_length(), 5);
+        assert_eq!(Profile::Paranoid.chain_length(), 6); // Includes 2nd ProofGuard pass
+    }
+
+    #[test]
+    fn test_profile_from_id() {
+        assert_eq!(Profile::from_id("quick"), Some(Profile::Quick));
+        assert_eq!(Profile::from_id("BALANCED"), Some(Profile::Balanced));
+        assert_eq!(Profile::from_id("paranoid"), Some(Profile::Paranoid));
+        assert_eq!(Profile::from_id("baseline"), Some(Profile::None));
+        assert_eq!(Profile::from_id("invalid"), None);
+    }
+
+    #[test]
+    fn test_profile_id() {
+        assert_eq!(Profile::Quick.id(), "quick");
+        assert_eq!(Profile::Balanced.id(), "balanced");
+        assert_eq!(Profile::Deep.id(), "deep");
+        assert_eq!(Profile::Paranoid.id(), "paranoid");
     }
 
     #[test]

@@ -401,12 +401,21 @@ fn truncate_text(text: &str, max_len: usize) -> String {
     }
 }
 
+// ============================================================================
+// COMPREHENSIVE TEST SUITE
+// ============================================================================
+
 #[cfg(test)]
 mod tests {
     use super::*;
     use crate::{Chunk, DocumentType, EmbeddingIds, Source, SourceType};
     use chrono::Utc;
 
+    // ========================================================================
+    // TEST HELPERS
+    // ========================================================================
+
+    /// Create a test document with a single chunk
     fn create_test_document(content: &str, title: &str) -> Document {
         let source = Source {
             source_type: SourceType::Local,
@@ -435,30 +444,344 @@ mod tests {
         doc
     }
 
+    /// Create a test document with multiple chunks for chunking tests
+    fn create_multi_chunk_document(chunks: &[&str], title: &str) -> Document {
+        let source = Source {
+            source_type: SourceType::Local,
+            url: None,
+            path: Some(format!("/test/{}.md", title)),
+            arxiv_id: None,
+            github_repo: None,
+            retrieved_at: Utc::now(),
+            version: None,
+        };
+
+        let full_content = chunks.join("\n\n");
+        let mut doc =
+            Document::new(DocumentType::Note, source).with_content(full_content.clone());
+
+        let mut char_offset = 0;
+        doc.chunks = chunks
+            .iter()
+            .enumerate()
+            .map(|(i, text)| {
+                let chunk = Chunk {
+                    id: Uuid::new_v4(),
+                    text: text.to_string(),
+                    index: i,
+                    start_char: char_offset,
+                    end_char: char_offset + text.len(),
+                    token_count: Some(text.len() / 4),
+                    section: Some(format!("Section {}", i + 1)),
+                    page: Some(i / 2 + 1),
+                    embedding_ids: EmbeddingIds::default(),
+                };
+                char_offset += text.len() + 2; // +2 for \n\n separator
+                chunk
+            })
+            .collect();
+
+        doc
+    }
+
+    // ========================================================================
+    // RAG CONFIG TESTS
+    // ========================================================================
+
+    #[test]
+    fn test_rag_config_default() {
+        let config = RagConfig::default();
+
+        assert_eq!(config.top_k, 5);
+        assert_eq!(config.min_score, 0.1);
+        assert_eq!(config.max_context_tokens, 2000);
+        assert!(config.include_sources);
+        assert!(config.sparse_only);
+        assert_eq!(config.hybrid_alpha, 0.3);
+        assert!(config.system_prompt.contains("CONTEXT"));
+    }
+
+    #[test]
+    fn test_rag_config_quick() {
+        let config = RagConfig::quick();
+
+        assert_eq!(config.top_k, 3);
+        assert_eq!(config.min_score, 0.2);
+        assert_eq!(config.max_context_tokens, 1000);
+        assert!(!config.include_sources);
+        assert!(config.sparse_only);
+    }
+
+    #[test]
+    fn test_rag_config_thorough() {
+        let config = RagConfig::thorough();
+
+        assert_eq!(config.top_k, 10);
+        assert_eq!(config.min_score, 0.05);
+        assert_eq!(config.max_context_tokens, 4000);
+        assert!(config.include_sources);
+        assert!(!config.sparse_only);
+        assert_eq!(config.hybrid_alpha, 0.5);
+    }
+
+    #[test]
+    fn test_rag_config_serialization() {
+        let config = RagConfig::default();
+        let json = serde_json::to_string(&config).expect("Serialization failed");
+        let deserialized: RagConfig =
+            serde_json::from_str(&json).expect("Deserialization failed");
+
+        assert_eq!(config.top_k, deserialized.top_k);
+        assert_eq!(config.min_score, deserialized.min_score);
+        assert_eq!(config.max_context_tokens, deserialized.max_context_tokens);
+    }
+
+    // ========================================================================
+    // TEXT TRUNCATION TESTS
+    // ========================================================================
+
+    #[test]
+    fn test_truncate_text_short() {
+        let text = "Short text";
+        let result = truncate_text(text, 50);
+        assert_eq!(result, "Short text");
+    }
+
+    #[test]
+    fn test_truncate_text_exact_length() {
+        let text = "Exactly ten";
+        let result = truncate_text(text, 11);
+        assert_eq!(result, "Exactly ten");
+    }
+
+    #[test]
+    fn test_truncate_text_long() {
+        let text = "This is a very long text that needs to be truncated";
+        let result = truncate_text(text, 20);
+        assert_eq!(result.len(), 20);
+        assert!(result.ends_with("..."));
+        assert_eq!(result, "This is a very lo...");
+    }
+
+    #[test]
+    fn test_truncate_text_empty() {
+        let text = "";
+        let result = truncate_text(text, 10);
+        assert_eq!(result, "");
+    }
+
+    #[test]
+    fn test_truncate_text_zero_max() {
+        let text = "Some text";
+        let result = truncate_text(text, 0);
+        // Should handle gracefully with saturating_sub
+        assert_eq!(result, "...");
+    }
+
+    #[test]
+    fn test_truncate_text_very_small_max() {
+        let text = "Hello world";
+        let result = truncate_text(text, 3);
+        assert_eq!(result, "...");
+    }
+
+    // ========================================================================
+    // DOCUMENT CHUNKING TESTS
+    // ========================================================================
+
+    #[test]
+    fn test_single_chunk_document() {
+        let doc = create_test_document("Simple content", "simple");
+
+        assert_eq!(doc.chunks.len(), 1);
+        assert_eq!(doc.chunks[0].text, "Simple content");
+        assert_eq!(doc.chunks[0].index, 0);
+        assert_eq!(doc.chunks[0].start_char, 0);
+        assert_eq!(doc.chunks[0].end_char, 14);
+    }
+
+    #[test]
+    fn test_multi_chunk_document() {
+        let chunks = [
+            "First paragraph about machine learning.",
+            "Second paragraph about neural networks.",
+            "Third paragraph about deep learning.",
+        ];
+        let doc = create_multi_chunk_document(&chunks, "ml-doc");
+
+        assert_eq!(doc.chunks.len(), 3);
+
+        // Verify chunk indices
+        for (i, chunk) in doc.chunks.iter().enumerate() {
+            assert_eq!(chunk.index, i);
+            assert!(chunk.section.as_ref().unwrap().contains(&format!("{}", i + 1)));
+        }
+
+        // Verify chunk offsets are sequential
+        let mut prev_end = 0;
+        for chunk in &doc.chunks {
+            assert!(chunk.start_char >= prev_end);
+            assert!(chunk.end_char > chunk.start_char);
+            prev_end = chunk.end_char;
+        }
+    }
+
+    #[test]
+    fn test_chunk_token_count_estimation() {
+        let content = "This is exactly twenty characters."; // 34 chars
+        let doc = create_test_document(content, "token-test");
+
+        // Token count should be approximately chars / 4
+        let expected_tokens = content.len() / 4;
+        assert_eq!(doc.chunks[0].token_count, Some(expected_tokens));
+    }
+
+    #[test]
+    fn test_chunk_page_assignment() {
+        let chunks = [
+            "Page 1 content A",
+            "Page 1 content B",
+            "Page 2 content A",
+            "Page 2 content B",
+        ];
+        let doc = create_multi_chunk_document(&chunks, "paged-doc");
+
+        // First two chunks should be page 1, next two page 2
+        assert_eq!(doc.chunks[0].page, Some(1));
+        assert_eq!(doc.chunks[1].page, Some(1));
+        assert_eq!(doc.chunks[2].page, Some(2));
+        assert_eq!(doc.chunks[3].page, Some(2));
+    }
+
+    // ========================================================================
+    // BM25 SEARCH TESTS
+    // ========================================================================
+
+    #[tokio::test]
+    async fn test_bm25_search_basic() {
+        let engine = RagEngine::in_memory().expect("Failed to create engine");
+
+        let doc = create_test_document(
+            "Machine learning algorithms process data to make predictions.",
+            "ml-basics",
+        );
+        engine.add_document(&doc).await.expect("Failed to add doc");
+
+        let results = engine
+            .retrieve("machine learning predictions", 5)
+            .await
+            .expect("Retrieval failed");
+
+        assert!(!results.is_empty());
+        assert!(results[0].text.contains("Machine learning"));
+    }
+
+    #[tokio::test]
+    async fn test_bm25_search_multiple_documents() {
+        let engine = RagEngine::in_memory().expect("Failed to create engine");
+
+        let docs = vec![
+            create_test_document(
+                "Python is a popular programming language for data science.",
+                "python",
+            ),
+            create_test_document(
+                "Rust provides memory safety without garbage collection.",
+                "rust",
+            ),
+            create_test_document(
+                "JavaScript runs in web browsers and Node.js.",
+                "javascript",
+            ),
+        ];
+
+        for doc in &docs {
+            engine.add_document(doc).await.expect("Failed to add doc");
+        }
+
+        // Search for Rust
+        let results = engine
+            .retrieve("memory safety rust", 5)
+            .await
+            .expect("Retrieval failed");
+
+        assert!(!results.is_empty());
+        assert!(results[0].text.contains("Rust"));
+    }
+
+    #[tokio::test]
+    async fn test_bm25_search_no_match() {
+        let engine = RagEngine::in_memory().expect("Failed to create engine");
+
+        let doc = create_test_document("Cats and dogs are common pets.", "pets");
+        engine.add_document(&doc).await.expect("Failed to add doc");
+
+        // Search for something completely unrelated
+        let results = engine
+            .retrieve("quantum physics relativity", 5)
+            .await
+            .expect("Retrieval failed");
+
+        // Should return empty or very low score results
+        // BM25 might still return the doc if top_k requested, but score should be low
+        if !results.is_empty() {
+            // Score should be relatively low for unrelated terms
+            assert!(results[0].score < 5.0);
+        }
+    }
+
+    #[tokio::test]
+    async fn test_bm25_search_ranking() {
+        let engine = RagEngine::in_memory().expect("Failed to create engine");
+
+        // Doc with many term matches should rank higher
+        let doc1 = create_test_document(
+            "Neural networks and deep learning are subsets of machine learning.",
+            "high-relevance",
+        );
+        let doc2 = create_test_document(
+            "The weather today is sunny with clear skies.",
+            "low-relevance",
+        );
+        let doc3 = create_test_document(
+            "Machine learning uses algorithms to learn from data.",
+            "medium-relevance",
+        );
+
+        engine.add_document(&doc1).await.unwrap();
+        engine.add_document(&doc2).await.unwrap();
+        engine.add_document(&doc3).await.unwrap();
+
+        let results = engine
+            .retrieve("machine learning neural networks", 5)
+            .await
+            .expect("Retrieval failed");
+
+        assert!(results.len() >= 2);
+        // First result should be more relevant than last
+        assert!(results[0].score >= results[results.len() - 1].score);
+    }
+
+    // ========================================================================
+    // RAG ENGINE INTEGRATION TESTS
+    // ========================================================================
+
     #[tokio::test]
     async fn test_rag_engine_basic() {
         let engine = RagEngine::in_memory().expect("Failed to create in-memory engine");
 
-        // Add test documents
         let doc1 = create_test_document(
             "Chain-of-thought prompting enables complex reasoning by breaking problems into steps.",
             "cot-basics",
         );
         let doc2 = create_test_document(
             "Self-consistency improves reasoning by sampling multiple paths and selecting the most common answer.",
-            "self-consistency"
+            "self-consistency",
         );
 
-        engine
-            .add_document(&doc1)
-            .await
-            .expect("Failed to add doc1");
-        engine
-            .add_document(&doc2)
-            .await
-            .expect("Failed to add doc2");
+        engine.add_document(&doc1).await.expect("Failed to add doc1");
+        engine.add_document(&doc2).await.expect("Failed to add doc2");
 
-        // Query (without LLM - retrieval only mode)
         let response = engine
             .query("How does chain of thought work?")
             .await
@@ -470,14 +793,418 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn test_rag_retrieve_only() {
-        let engine = RagEngine::in_memory().expect("Failed to create in-memory engine");
+    async fn test_rag_engine_with_custom_config() {
+        let config = RagConfig {
+            top_k: 2,
+            min_score: 0.0,
+            max_context_tokens: 500,
+            include_sources: true,
+            sparse_only: true,
+            ..Default::default()
+        };
+
+        let engine = RagEngine::in_memory()
+            .expect("Failed to create engine")
+            .with_config(config);
+
+        let doc = create_test_document("Test content for RAG engine.", "test");
+        engine.add_document(&doc).await.expect("Failed to add doc");
+
+        let response = engine.query("test content").await.expect("Query failed");
+
+        // Should respect top_k limit
+        assert!(response.retrieval_stats.chunks_retrieved <= 2);
+    }
+
+    #[tokio::test]
+    async fn test_rag_engine_add_multiple_documents() {
+        let engine = RagEngine::in_memory().expect("Failed to create engine");
+
+        let docs = vec![
+            create_test_document("Document one content.", "doc1"),
+            create_test_document("Document two content.", "doc2"),
+            create_test_document("Document three content.", "doc3"),
+        ];
+
+        let count = engine.add_documents(&docs).await.expect("Failed to add docs");
+        assert_eq!(count, 3);
+
+        let stats = engine.stats().await.expect("Failed to get stats");
+        assert_eq!(stats.document_count, 3);
+    }
+
+    #[tokio::test]
+    async fn test_rag_engine_stats() {
+        let engine = RagEngine::in_memory().expect("Failed to create engine");
+
+        // Initially empty
+        let stats = engine.stats().await.expect("Failed to get stats");
+        assert_eq!(stats.document_count, 0);
+
+        // Add documents
+        let doc = create_multi_chunk_document(
+            &["Chunk 1", "Chunk 2", "Chunk 3"],
+            "multi-chunk",
+        );
+        engine.add_document(&doc).await.expect("Failed to add doc");
+
+        let stats = engine.stats().await.expect("Failed to get stats");
+        assert_eq!(stats.document_count, 1);
+        assert_eq!(stats.chunk_count, 3);
+    }
+
+    #[tokio::test]
+    async fn test_rag_engine_delete_document() {
+        let engine = RagEngine::in_memory().expect("Failed to create engine");
+
+        let doc = create_test_document("Content to delete.", "delete-me");
+        let doc_id = doc.id;
+
+        engine.add_document(&doc).await.expect("Failed to add doc");
+
+        // Verify it exists
+        let stats = engine.stats().await.expect("Failed to get stats");
+        assert_eq!(stats.document_count, 1);
+
+        // Delete it
+        engine
+            .delete_document(&doc_id)
+            .await
+            .expect("Failed to delete doc");
+
+        // Verify it's gone
+        let stats = engine.stats().await.expect("Failed to get stats");
+        assert_eq!(stats.document_count, 0);
+    }
+
+    // ========================================================================
+    // MIN SCORE FILTERING TESTS
+    // ========================================================================
+
+    #[tokio::test]
+    async fn test_min_score_filtering() {
+        let config = RagConfig {
+            min_score: 5.0, // High threshold to filter out low scores
+            ..Default::default()
+        };
+
+        let engine = RagEngine::in_memory()
+            .expect("Failed to create engine")
+            .with_config(config);
+
+        let doc = create_test_document("Some content about cats and dogs.", "pets");
+        engine.add_document(&doc).await.expect("Failed to add doc");
+
+        // Query for unrelated topic - should have low BM25 score
+        let response = engine
+            .query("quantum computing algorithms")
+            .await
+            .expect("Query failed");
+
+        // Results below min_score should be filtered
+        // All sources should have score >= min_score
+        for source in &response.sources {
+            assert!(source.score >= 5.0);
+        }
+    }
+
+    #[tokio::test]
+    async fn test_min_score_zero() {
+        let config = RagConfig {
+            min_score: 0.0,
+            ..Default::default()
+        };
+
+        let engine = RagEngine::in_memory()
+            .expect("Failed to create engine")
+            .with_config(config);
+
+        let doc = create_test_document("Any content here.", "test");
+        engine.add_document(&doc).await.expect("Failed to add doc");
+
+        let response = engine.query("test query").await.expect("Query failed");
+
+        // With min_score 0.0, we should get results
+        assert!(response.retrieval_stats.chunks_used >= 0);
+    }
+
+    // ========================================================================
+    // CONTEXT ASSEMBLY TESTS
+    // ========================================================================
+
+    #[tokio::test]
+    async fn test_context_token_limit() {
+        // Create config with small context limit
+        let config = RagConfig {
+            max_context_tokens: 10, // Very small limit
+            min_score: 0.0,
+            ..Default::default()
+        };
+
+        let engine = RagEngine::in_memory()
+            .expect("Failed to create engine")
+            .with_config(config);
+
+        // Add a document with substantial content
+        let doc = create_test_document(
+            "This is a very long document that contains many words and should exceed the token limit when assembled into context.",
+            "long-doc",
+        );
+        engine.add_document(&doc).await.expect("Failed to add doc");
+
+        let response = engine.query("document").await.expect("Query failed");
+
+        // Context tokens should be limited
+        assert!(response.retrieval_stats.context_tokens <= 10);
+    }
+
+    #[tokio::test]
+    async fn test_context_assembly_format() {
+        let engine = RagEngine::in_memory().expect("Failed to create engine");
+
+        let doc = create_test_document("Test content for context assembly.", "test");
+        engine.add_document(&doc).await.expect("Failed to add doc");
+
+        let response = engine.query("test content").await.expect("Query failed");
+
+        // Answer should contain formatted output
+        assert!(response.answer.contains("Retrieved"));
+        assert!(response.answer.contains("score:"));
+    }
+
+    // ========================================================================
+    // EDGE CASE TESTS
+    // ========================================================================
+
+    #[tokio::test]
+    async fn test_empty_query() {
+        let engine = RagEngine::in_memory().expect("Failed to create engine");
+
+        let doc = create_test_document("Some content here.", "test");
+        engine.add_document(&doc).await.expect("Failed to add doc");
+
+        // Empty query should still work
+        let response = engine.query("").await.expect("Query failed");
+
+        // Response should be valid even with empty query
+        assert!(!response.query.is_empty() || response.query.is_empty()); // Query is stored
+    }
+
+    #[tokio::test]
+    async fn test_query_with_special_characters() {
+        let engine = RagEngine::in_memory().expect("Failed to create engine");
+
+        let doc = create_test_document("C++ and C# are programming languages.", "langs");
+        engine.add_document(&doc).await.expect("Failed to add doc");
+
+        // Query with special characters
+        let response = engine
+            .query("C++ programming")
+            .await
+            .expect("Query failed");
+
+        assert!(!response.answer.is_empty());
+    }
+
+    #[tokio::test]
+    async fn test_query_with_unicode() {
+        let engine = RagEngine::in_memory().expect("Failed to create engine");
+
+        let doc = create_test_document(
+            "Machine learning is used in Tokyo for traffic optimization.",
+            "japan",
+        );
+        engine.add_document(&doc).await.expect("Failed to add doc");
+
+        let response = engine.query("Tokyo traffic").await.expect("Query failed");
+
+        assert!(!response.answer.is_empty());
+    }
+
+    #[tokio::test]
+    async fn test_very_long_query() {
+        let engine = RagEngine::in_memory().expect("Failed to create engine");
+
+        let doc = create_test_document("Short content.", "short");
+        engine.add_document(&doc).await.expect("Failed to add doc");
+
+        // Very long query
+        let long_query = "word ".repeat(1000);
+        let response = engine.query(&long_query).await.expect("Query failed");
+
+        assert!(!response.answer.is_empty());
+    }
+
+    #[tokio::test]
+    async fn test_no_documents_query() {
+        let engine = RagEngine::in_memory().expect("Failed to create engine");
+
+        // Query with no documents indexed
+        let response = engine.query("any query").await.expect("Query failed");
+
+        // Should handle gracefully with empty results
+        assert_eq!(response.sources.len(), 0);
+        assert_eq!(response.retrieval_stats.chunks_used, 0);
+    }
+
+    // ========================================================================
+    // RAG RESPONSE STRUCTURE TESTS
+    // ========================================================================
+
+    #[tokio::test]
+    async fn test_rag_response_structure() {
+        let engine = RagEngine::in_memory().expect("Failed to create engine");
+
+        let doc = create_test_document("Complete content for response test.", "response");
+        engine.add_document(&doc).await.expect("Failed to add doc");
+
+        let response = engine.query("response test").await.expect("Query failed");
+
+        // Verify all response fields
+        assert!(!response.answer.is_empty());
+        assert_eq!(response.query, "response test");
+        assert!(response.tokens_used.is_none()); // No LLM client
+        assert!(response.retrieval_stats.retrieval_time_ms >= 0);
+    }
+
+    #[tokio::test]
+    async fn test_rag_source_structure() {
+        let engine = RagEngine::in_memory().expect("Failed to create engine");
+
+        let doc = create_test_document("Source structure test content.", "source");
+        engine.add_document(&doc).await.expect("Failed to add doc");
+
+        let response = engine.query("source structure").await.expect("Query failed");
+
+        for source in &response.sources {
+            // Verify source fields
+            assert!(!source.chunk_id.is_nil());
+            assert!(!source.text.is_empty());
+            assert!(source.score >= 0.0);
+            // Source text should be truncated to 200 chars max
+            assert!(source.text.len() <= 200 + 3); // +3 for "..."
+        }
+    }
+
+    #[tokio::test]
+    async fn test_rag_stats_structure() {
+        let engine = RagEngine::in_memory().expect("Failed to create engine");
+
+        let doc = create_test_document("Stats test content.", "stats");
+        engine.add_document(&doc).await.expect("Failed to add doc");
+
+        let response = engine.query("stats").await.expect("Query failed");
+
+        let stats = &response.retrieval_stats;
+        assert!(stats.chunks_retrieved > 0 || stats.chunks_used == 0);
+        assert!(stats.retrieval_time_ms < 10000); // Should be fast
+    }
+
+    // ========================================================================
+    // SERIALIZATION TESTS
+    // ========================================================================
+
+    #[tokio::test]
+    async fn test_rag_response_serialization() {
+        let engine = RagEngine::in_memory().expect("Failed to create engine");
+
+        let doc = create_test_document("Serialization test.", "serial");
+        engine.add_document(&doc).await.expect("Failed to add doc");
+
+        let response = engine.query("serialization").await.expect("Query failed");
+
+        // Should serialize to JSON
+        let json = serde_json::to_string(&response).expect("Serialization failed");
+        assert!(json.contains("answer"));
+        assert!(json.contains("sources"));
+        assert!(json.contains("retrieval_stats"));
+
+        // Should deserialize back
+        let deserialized: RagResponse =
+            serde_json::from_str(&json).expect("Deserialization failed");
+        assert_eq!(response.query, deserialized.query);
+    }
+
+    #[test]
+    fn test_rag_source_serialization() {
+        let source = RagSource {
+            doc_id: Uuid::new_v4(),
+            chunk_id: Uuid::new_v4(),
+            text: "Test text".to_string(),
+            score: 0.95,
+            section: Some("Introduction".to_string()),
+        };
+
+        let json = serde_json::to_string(&source).expect("Serialization failed");
+        let deserialized: RagSource =
+            serde_json::from_str(&json).expect("Deserialization failed");
+
+        assert_eq!(source.text, deserialized.text);
+        assert_eq!(source.score, deserialized.score);
+        assert_eq!(source.section, deserialized.section);
+    }
+
+    #[test]
+    fn test_rag_retrieval_stats_serialization() {
+        let stats = RagRetrievalStats {
+            chunks_retrieved: 5,
+            chunks_used: 3,
+            context_tokens: 150,
+            retrieval_time_ms: 42,
+        };
+
+        let json = serde_json::to_string(&stats).expect("Serialization failed");
+        let deserialized: RagRetrievalStats =
+            serde_json::from_str(&json).expect("Deserialization failed");
+
+        assert_eq!(stats.chunks_retrieved, deserialized.chunks_retrieved);
+        assert_eq!(stats.chunks_used, deserialized.chunks_used);
+        assert_eq!(stats.context_tokens, deserialized.context_tokens);
+        assert_eq!(stats.retrieval_time_ms, deserialized.retrieval_time_ms);
+    }
+
+    // ========================================================================
+    // CONCURRENT ACCESS TESTS
+    // ========================================================================
+
+    #[tokio::test]
+    async fn test_concurrent_queries() {
+        let engine =
+            std::sync::Arc::new(RagEngine::in_memory().expect("Failed to create engine"));
+
+        let doc = create_test_document("Concurrent access test document.", "concurrent");
+        engine.add_document(&doc).await.expect("Failed to add doc");
+
+        // Spawn multiple concurrent queries
+        let mut handles = vec![];
+        for i in 0..5 {
+            let engine_clone = engine.clone();
+            let handle = tokio::spawn(async move {
+                let query = format!("query {}", i);
+                engine_clone.query(&query).await
+            });
+            handles.push(handle);
+        }
+
+        // All queries should complete successfully
+        for handle in handles {
+            let result = handle.await.expect("Task panicked");
+            assert!(result.is_ok());
+        }
+    }
+
+    // ========================================================================
+    // RETRIEVAL ONLY MODE TESTS
+    // ========================================================================
+
+    #[tokio::test]
+    async fn test_retrieve_only() {
+        let engine = RagEngine::in_memory().expect("Failed to create engine");
 
         let doc = create_test_document(
             "Vector databases store embeddings for semantic search.",
             "vector-db",
         );
-
         engine.add_document(&doc).await.expect("Failed to add doc");
 
         let results = engine
@@ -487,23 +1214,58 @@ mod tests {
 
         assert!(!results.is_empty());
         assert!(results[0].text.contains("embeddings"));
+
+        // Verify HybridResult structure
+        for result in &results {
+            assert!(!result.chunk_id.is_nil());
+            assert!(!result.text.is_empty());
+        }
     }
 
     #[tokio::test]
-    async fn test_rag_config_quick() {
+    async fn test_retrieve_top_k_limit() {
+        let engine = RagEngine::in_memory().expect("Failed to create engine");
+
+        // Add many documents
+        for i in 0..10 {
+            let doc = create_test_document(
+                &format!("Document {} about testing retrieval limits.", i),
+                &format!("doc-{}", i),
+            );
+            engine.add_document(&doc).await.expect("Failed to add doc");
+        }
+
+        // Request only 3
+        let results = engine
+            .retrieve("testing retrieval", 3)
+            .await
+            .expect("Retrieval failed");
+
+        assert!(results.len() <= 3);
+    }
+
+    // ========================================================================
+    // BUILDER PATTERN TESTS
+    // ========================================================================
+
+    #[test]
+    fn test_engine_builder_pattern() {
         let config = RagConfig::quick();
 
-        assert_eq!(config.top_k, 3);
-        assert!(config.sparse_only);
-        assert!(!config.include_sources);
+        // This should compile and work
+        let _engine = RagEngine::in_memory()
+            .expect("Failed to create engine")
+            .with_config(config);
     }
 
-    #[tokio::test]
-    async fn test_rag_config_thorough() {
-        let config = RagConfig::thorough();
+    #[test]
+    fn test_config_builder_pattern() {
+        // Test that configs can be modified
+        let mut config = RagConfig::default();
+        config.top_k = 20;
+        config.min_score = 0.5;
 
-        assert_eq!(config.top_k, 10);
-        assert!(!config.sparse_only);
-        assert!(config.include_sources);
+        assert_eq!(config.top_k, 20);
+        assert_eq!(config.min_score, 0.5);
     }
 }

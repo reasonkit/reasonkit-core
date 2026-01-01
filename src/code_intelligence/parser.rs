@@ -998,14 +998,21 @@ impl Default for ComplexityMetrics {
     }
 }
 
+// ============================================================================
+// COMPREHENSIVE TEST SUITE
+// ============================================================================
+
 #[cfg(test)]
 mod tests {
     use super::*;
 
-    #[tokio::test]
-    async fn test_rust_parser() {
-        let parser = RustParser::new();
-        let code = r#"
+    // ========================================================================
+    // TEST FIXTURES
+    // ========================================================================
+
+    mod fixtures {
+        /// Rust code fixture: simple function with variable
+        pub const RUST_SIMPLE: &str = r#"
 fn main() {
     let mut x = 42;
     if x > 0 {
@@ -1014,54 +1021,1579 @@ fn main() {
 }
 "#;
 
-        let ast = parser.parse(code).await;
-        assert!(ast.is_ok());
-        let ast = ast.unwrap();
-        assert_eq!(ast.language, ProgrammingLanguage::Rust);
-        assert!(!ast.functions.is_empty());
+        /// Rust code fixture: multiple functions with imports
+        pub const RUST_COMPLEX: &str = r#"
+use std::collections::HashMap;
+use crate::error::Error;
+
+// This is a comment
+fn calculate_sum(a: i32, b: i32) -> i32 {
+    a + b
+}
+
+fn process_data(data: &[u8]) -> Result<(), Error> {
+    let mut buffer = Vec::new();
+    for byte in data {
+        if *byte > 0 {
+            buffer.push(*byte);
+        }
+    }
+    Ok(())
+}
+
+/* Multi-line comment */
+fn main() {
+    let result = calculate_sum(1, 2);
+    println!("{}", result);
+}
+"#;
+
+        /// Rust code fixture: async function
+        pub const RUST_ASYNC: &str = r#"
+use tokio;
+
+async fn fetch_data() -> Result<String, Error> {
+    let response = reqwest::get("https://example.com").await?;
+    Ok(response.text().await?)
+}
+
+async fn main() {
+    let data = fetch_data().await.unwrap();
+}
+"#;
+
+        /// Rust code fixture: struct with impl
+        pub const RUST_STRUCT: &str = r#"
+struct Calculator {
+    value: i32,
+}
+
+impl Calculator {
+    fn new() -> Self {
+        Self { value: 0 }
     }
 
-    #[test]
-    fn test_rust_language_detection() {
-        let parser = RustParser::new();
-        let rust_code = "fn main() { let x = 42; }";
-        let java_code = "public class Test { }";
+    fn add(&mut self, n: i32) {
+        self.value += n;
+    }
+}
+"#;
 
-        let rust_score = parser.detect_language(rust_code);
-        let java_score = parser.detect_language(java_code);
+        /// Java code fixture: simple class
+        pub const JAVA_SIMPLE: &str = r#"
+public class Calculator {
+    public int add(int a, int b) {
+        return a + b;
+    }
+}
+"#;
 
-        assert!(rust_score > java_score);
+        /// Java code fixture: complex class with inheritance
+        pub const JAVA_COMPLEX: &str = r#"
+import java.util.List;
+import java.util.ArrayList;
+
+// Calculator class
+public class Calculator extends BaseCalculator {
+    private int value;
+    protected String name;
+
+    public Calculator() {
+        this.value = 0;
     }
 
-    #[tokio::test]
-    async fn test_java_parser() {
-        let parser = JavaParser::new();
-        let code = r#"
-public class Test {
-    public void method() {
-        int x = 42;
-        if (x > 0) {
-            System.out.println("Positive");
+    public int add(int a, int b) {
+        return a + b;
+    }
+
+    private void reset() {
+        this.value = 0;
+    }
+
+    /* Multi-line comment */
+    protected int getValue() {
+        return this.value;
+    }
+}
+"#;
+
+        /// Java code fixture: main method
+        pub const JAVA_MAIN: &str = r#"
+public class Main {
+    public static void main(String[] args) {
+        System.out.println("Hello, World!");
+        for (int i = 0; i < 10; i++) {
+            if (i % 2 == 0) {
+                System.out.println(i);
+            }
         }
     }
 }
 "#;
 
-        let ast = parser.parse(code).await;
-        assert!(ast.is_ok());
-        let ast = ast.unwrap();
-        assert_eq!(ast.language, ProgrammingLanguage::Java);
-        assert!(!ast.classes.is_empty());
+        /// Python code fixture
+        pub const PYTHON_SIMPLE: &str = r#"
+def calculate_sum(a, b):
+    return a + b
+
+class Calculator:
+    def __init__(self):
+        self.value = 0
+
+    def add(self, n):
+        self.value += n
+
+if __name__ == "__main__":
+    calc = Calculator()
+    calc.add(5)
+"#;
+
+        /// JavaScript code fixture
+        pub const JAVASCRIPT_SIMPLE: &str = r#"
+function calculateSum(a, b) {
+    return a + b;
+}
+
+const calculator = {
+    value: 0,
+    add(n) {
+        this.value += n;
+    }
+};
+
+async function fetchData() {
+    const response = await fetch('https://api.example.com');
+    return response.json();
+}
+"#;
+
+        /// Empty code fixture
+        pub const EMPTY_CODE: &str = "";
+
+        /// Whitespace-only code fixture
+        pub const WHITESPACE_ONLY: &str = "   \n\t\n   ";
+
+        /// Malformed Rust code fixture
+        pub const RUST_MALFORMED: &str = r#"
+fn incomplete {
+    let x =
+    if {
+}
+"#;
+
+        /// Deeply nested code fixture
+        pub const DEEPLY_NESTED: &str = r#"
+fn deeply_nested() {
+    if true {
+        if true {
+            if true {
+                if true {
+                    if true {
+                        println!("Deep!");
+                    }
+                }
+            }
+        }
+    }
+}
+"#;
+
+        /// Code with many control flow statements
+        pub const HIGH_COMPLEXITY: &str = r#"
+fn complex_function(x: i32, y: i32) -> i32 {
+    if x > 0 && y > 0 {
+        if x > y {
+            return x;
+        } else if y > x {
+            return y;
+        } else {
+            return x + y;
+        }
+    } else if x < 0 || y < 0 {
+        for i in 0..10 {
+            if i == 5 {
+                break;
+            }
+            match i {
+                0 => println!("zero"),
+                1 => println!("one"),
+                _ => println!("other"),
+            }
+        }
+        return -1;
+    }
+    0
+}
+"#;
     }
 
-    #[test]
-    fn test_language_features() {
-        let rust_parser = RustParser::new();
-        let rust_features = rust_parser.get_language_features();
+    // ========================================================================
+    // RUST PARSER TESTS
+    // ========================================================================
 
-        assert_eq!(rust_features.language, ProgrammingLanguage::Rust);
-        assert!(rust_features.supports_generics);
-        assert!(rust_features.supports_async);
-        assert_eq!(rust_features.type_system, TypeSystem::Static);
+    mod rust_parser_tests {
+        use super::*;
+
+        #[tokio::test]
+        async fn test_parse_simple_rust_code() {
+            // Arrange
+            let parser = RustParser::new();
+
+            // Act
+            let result = parser.parse(fixtures::RUST_SIMPLE).await;
+
+            // Assert
+            assert!(result.is_ok());
+            let ast = result.unwrap();
+            assert_eq!(ast.language, ProgrammingLanguage::Rust);
+            assert!(!ast.functions.is_empty());
+        }
+
+        #[tokio::test]
+        async fn test_parse_complex_rust_code() {
+            // Arrange
+            let parser = RustParser::new();
+
+            // Act
+            let result = parser.parse(fixtures::RUST_COMPLEX).await;
+
+            // Assert
+            assert!(result.is_ok());
+            let ast = result.unwrap();
+            assert_eq!(ast.language, ProgrammingLanguage::Rust);
+            assert_eq!(ast.functions.len(), 3); // calculate_sum, process_data, main
+        }
+
+        #[tokio::test]
+        async fn test_extract_rust_functions() {
+            // Arrange
+            let parser = RustParser::new();
+
+            // Act
+            let result = parser.parse(fixtures::RUST_COMPLEX).await.unwrap();
+
+            // Assert
+            let function_names: Vec<&str> =
+                result.functions.iter().map(|f| f.name.as_str()).collect();
+            assert!(function_names.contains(&"calculate_sum"));
+            assert!(function_names.contains(&"process_data"));
+            assert!(function_names.contains(&"main"));
+        }
+
+        #[tokio::test]
+        async fn test_extract_rust_function_line_numbers() {
+            // Arrange
+            let parser = RustParser::new();
+
+            // Act
+            let result = parser.parse(fixtures::RUST_COMPLEX).await.unwrap();
+
+            // Assert
+            let main_fn = result.functions.iter().find(|f| f.name == "main").unwrap();
+            assert!(main_fn.line_number > 0);
+        }
+
+        #[tokio::test]
+        async fn test_extract_rust_variables() {
+            // Arrange
+            let parser = RustParser::new();
+
+            // Act
+            let result = parser.parse(fixtures::RUST_SIMPLE).await.unwrap();
+
+            // Assert
+            assert!(!result.variables.is_empty());
+            let var_x = result.variables.iter().find(|v| v.name == "x");
+            assert!(var_x.is_some());
+            assert!(var_x.unwrap().is_mutable);
+        }
+
+        #[tokio::test]
+        async fn test_extract_rust_mutable_vs_immutable() {
+            // Arrange
+            let parser = RustParser::new();
+            let code = r#"
+fn test() {
+    let immutable = 1;
+    let mut mutable = 2;
+}
+"#;
+
+            // Act
+            let result = parser.parse(code).await.unwrap();
+
+            // Assert
+            let immutable_var = result.variables.iter().find(|v| v.name == "immutable");
+            let mutable_var = result.variables.iter().find(|v| v.name == "mutable");
+
+            assert!(immutable_var.is_some());
+            assert!(!immutable_var.unwrap().is_mutable);
+            assert!(mutable_var.is_some());
+            assert!(mutable_var.unwrap().is_mutable);
+        }
+
+        #[tokio::test]
+        async fn test_extract_rust_imports() {
+            // Arrange
+            let parser = RustParser::new();
+
+            // Act
+            let result = parser.parse(fixtures::RUST_COMPLEX).await.unwrap();
+
+            // Assert
+            assert!(!result.imports.is_empty());
+            let import_modules: Vec<&str> =
+                result.imports.iter().map(|i| i.module.as_str()).collect();
+            assert!(import_modules.iter().any(|m| m.contains("HashMap")));
+            assert!(import_modules.iter().any(|m| m.contains("Error")));
+        }
+
+        #[tokio::test]
+        async fn test_extract_rust_single_line_comments() {
+            // Arrange
+            let parser = RustParser::new();
+
+            // Act
+            let result = parser.parse(fixtures::RUST_COMPLEX).await.unwrap();
+
+            // Assert
+            let single_line_comments: Vec<&CommentNode> = result
+                .comments
+                .iter()
+                .filter(|c| c.comment_type == CommentType::SingleLine)
+                .collect();
+            assert!(!single_line_comments.is_empty());
+            assert!(single_line_comments
+                .iter()
+                .any(|c| c.content.contains("comment")));
+        }
+
+        #[tokio::test]
+        async fn test_extract_rust_multiline_comments() {
+            // Arrange
+            let parser = RustParser::new();
+
+            // Act
+            let result = parser.parse(fixtures::RUST_COMPLEX).await.unwrap();
+
+            // Assert
+            let multiline_comments: Vec<&CommentNode> = result
+                .comments
+                .iter()
+                .filter(|c| c.comment_type == CommentType::MultiLine)
+                .collect();
+            assert!(!multiline_comments.is_empty());
+        }
+
+        #[tokio::test]
+        async fn test_parse_empty_code() {
+            // Arrange
+            let parser = RustParser::new();
+
+            // Act
+            let result = parser.parse(fixtures::EMPTY_CODE).await;
+
+            // Assert
+            assert!(result.is_ok());
+            let ast = result.unwrap();
+            assert!(ast.functions.is_empty());
+            assert!(ast.variables.is_empty());
+            assert!(ast.imports.is_empty());
+        }
+
+        #[tokio::test]
+        async fn test_parse_whitespace_only() {
+            // Arrange
+            let parser = RustParser::new();
+
+            // Act
+            let result = parser.parse(fixtures::WHITESPACE_ONLY).await;
+
+            // Assert
+            assert!(result.is_ok());
+            let ast = result.unwrap();
+            assert!(ast.functions.is_empty());
+        }
+
+        #[tokio::test]
+        async fn test_parse_malformed_rust_code() {
+            // Arrange
+            let parser = RustParser::new();
+
+            // Act - parser should handle malformed code gracefully
+            let result = parser.parse(fixtures::RUST_MALFORMED).await;
+
+            // Assert - should not panic, may return partial results
+            assert!(result.is_ok());
+        }
+
+        #[test]
+        fn test_rust_language_detection_high_confidence() {
+            // Arrange
+            let parser = RustParser::new();
+
+            // Act
+            let score = parser.detect_language(fixtures::RUST_COMPLEX);
+
+            // Assert - Rust code should have high detection score
+            assert!(score >= 0.5);
+        }
+
+        #[test]
+        fn test_rust_language_detection_low_for_java() {
+            // Arrange
+            let parser = RustParser::new();
+
+            // Act
+            let rust_score = parser.detect_language(fixtures::RUST_SIMPLE);
+            let java_score = parser.detect_language(fixtures::JAVA_SIMPLE);
+
+            // Assert
+            assert!(rust_score > java_score);
+        }
+
+        #[test]
+        fn test_rust_language_features() {
+            // Arrange
+            let parser = RustParser::new();
+
+            // Act
+            let features = parser.get_language_features();
+
+            // Assert
+            assert_eq!(features.language, ProgrammingLanguage::Rust);
+            assert!(!features.supports_oop); // Rust uses traits, not OOP
+            assert!(features.supports_generics);
+            assert!(features.supports_async);
+            assert!(features.supports_patterns);
+            assert_eq!(features.type_system, TypeSystem::Static);
+            assert_eq!(features.memory_management, MemoryManagement::Manual);
+            assert_eq!(features.concurrency_model, ConcurrencyModel::AsyncAwait);
+        }
+
+        #[test]
+        fn test_rust_parser_default() {
+            // Arrange & Act
+            let parser = RustParser::default();
+
+            // Assert
+            let features = parser.get_language_features();
+            assert_eq!(features.language, ProgrammingLanguage::Rust);
+        }
+    }
+
+    // ========================================================================
+    // JAVA PARSER TESTS
+    // ========================================================================
+
+    mod java_parser_tests {
+        use super::*;
+
+        #[tokio::test]
+        async fn test_parse_simple_java_code() {
+            // Arrange
+            let parser = JavaParser::new();
+
+            // Act
+            let result = parser.parse(fixtures::JAVA_SIMPLE).await;
+
+            // Assert
+            assert!(result.is_ok());
+            let ast = result.unwrap();
+            assert_eq!(ast.language, ProgrammingLanguage::Java);
+        }
+
+        #[tokio::test]
+        async fn test_parse_complex_java_code() {
+            // Arrange
+            let parser = JavaParser::new();
+
+            // Act
+            let result = parser.parse(fixtures::JAVA_COMPLEX).await;
+
+            // Assert
+            assert!(result.is_ok());
+            let ast = result.unwrap();
+            assert!(!ast.classes.is_empty());
+            assert!(!ast.functions.is_empty());
+        }
+
+        #[tokio::test]
+        async fn test_extract_java_classes() {
+            // Arrange
+            let parser = JavaParser::new();
+
+            // Act
+            let result = parser.parse(fixtures::JAVA_COMPLEX).await.unwrap();
+
+            // Assert
+            assert_eq!(result.classes.len(), 1);
+            let calc_class = &result.classes[0];
+            assert_eq!(calc_class.name, "Calculator");
+            assert_eq!(calc_class.visibility, Visibility::Public);
+        }
+
+        #[tokio::test]
+        async fn test_extract_java_methods() {
+            // Arrange
+            let parser = JavaParser::new();
+
+            // Act
+            let result = parser.parse(fixtures::JAVA_COMPLEX).await.unwrap();
+
+            // Assert
+            let method_names: Vec<&str> =
+                result.functions.iter().map(|f| f.name.as_str()).collect();
+            assert!(method_names.contains(&"add"));
+            assert!(method_names.contains(&"reset"));
+            assert!(method_names.contains(&"getValue"));
+        }
+
+        #[tokio::test]
+        async fn test_extract_java_method_visibility() {
+            // Arrange
+            let parser = JavaParser::new();
+
+            // Act
+            let result = parser.parse(fixtures::JAVA_COMPLEX).await.unwrap();
+
+            // Assert
+            let add_method = result.functions.iter().find(|f| f.name == "add");
+            let reset_method = result.functions.iter().find(|f| f.name == "reset");
+            let get_value_method = result.functions.iter().find(|f| f.name == "getValue");
+
+            assert!(add_method.is_some());
+            assert_eq!(add_method.unwrap().visibility, Visibility::Public);
+
+            assert!(reset_method.is_some());
+            assert_eq!(reset_method.unwrap().visibility, Visibility::Private);
+
+            assert!(get_value_method.is_some());
+            assert_eq!(get_value_method.unwrap().visibility, Visibility::Protected);
+        }
+
+        #[tokio::test]
+        async fn test_extract_java_method_return_types() {
+            // Arrange
+            let parser = JavaParser::new();
+
+            // Act
+            let result = parser.parse(fixtures::JAVA_COMPLEX).await.unwrap();
+
+            // Assert
+            let add_method = result.functions.iter().find(|f| f.name == "add").unwrap();
+            assert!(add_method.return_type.is_some());
+            assert_eq!(add_method.return_type.as_ref().unwrap(), "int");
+        }
+
+        #[tokio::test]
+        async fn test_extract_java_imports() {
+            // Arrange
+            let parser = JavaParser::new();
+
+            // Act
+            let result = parser.parse(fixtures::JAVA_COMPLEX).await.unwrap();
+
+            // Assert
+            assert!(!result.imports.is_empty());
+            let import_modules: Vec<&str> =
+                result.imports.iter().map(|i| i.module.as_str()).collect();
+            assert!(import_modules.iter().any(|m| m.contains("java.util.List")));
+            assert!(import_modules
+                .iter()
+                .any(|m| m.contains("java.util.ArrayList")));
+        }
+
+        #[tokio::test]
+        async fn test_extract_java_comments() {
+            // Arrange
+            let parser = JavaParser::new();
+
+            // Act
+            let result = parser.parse(fixtures::JAVA_COMPLEX).await.unwrap();
+
+            // Assert
+            assert!(!result.comments.is_empty());
+            let single_line = result
+                .comments
+                .iter()
+                .any(|c| c.comment_type == CommentType::SingleLine);
+            let multi_line = result
+                .comments
+                .iter()
+                .any(|c| c.comment_type == CommentType::MultiLine);
+            assert!(single_line);
+            assert!(multi_line);
+        }
+
+        #[tokio::test]
+        async fn test_parse_java_main_method() {
+            // Arrange
+            let parser = JavaParser::new();
+
+            // Act
+            let result = parser.parse(fixtures::JAVA_MAIN).await.unwrap();
+
+            // Assert
+            let main_method = result.functions.iter().find(|f| f.name == "main");
+            assert!(main_method.is_some());
+        }
+
+        #[test]
+        fn test_java_language_detection_high_confidence() {
+            // Arrange
+            let parser = JavaParser::new();
+
+            // Act
+            let score = parser.detect_language(fixtures::JAVA_MAIN);
+
+            // Assert - Java code with main method should have high score
+            assert!(score >= 0.7);
+        }
+
+        #[test]
+        fn test_java_language_detection_class_pattern() {
+            // Arrange
+            let parser = JavaParser::new();
+
+            // Act
+            let score = parser.detect_language("public class Test { }");
+
+            // Assert
+            assert!(score >= 0.3);
+        }
+
+        #[test]
+        fn test_java_language_features() {
+            // Arrange
+            let parser = JavaParser::new();
+
+            // Act
+            let features = parser.get_language_features();
+
+            // Assert
+            assert_eq!(features.language, ProgrammingLanguage::Java);
+            assert!(features.supports_oop);
+            assert!(features.supports_generics);
+            assert!(!features.supports_async); // Java uses threads, not async/await
+            assert_eq!(features.type_system, TypeSystem::Static);
+            assert_eq!(features.memory_management, MemoryManagement::GarbageCollected);
+            assert_eq!(features.concurrency_model, ConcurrencyModel::Threading);
+        }
+
+        #[test]
+        fn test_java_parser_default() {
+            // Arrange & Act
+            let parser = JavaParser::default();
+
+            // Assert
+            let features = parser.get_language_features();
+            assert_eq!(features.language, ProgrammingLanguage::Java);
+        }
+
+        #[test]
+        fn test_parse_java_visibility() {
+            // Arrange
+            let parser = JavaParser::new();
+
+            // Act & Assert
+            assert_eq!(
+                parser.parse_java_visibility("public"),
+                Visibility::Public
+            );
+            assert_eq!(
+                parser.parse_java_visibility("private"),
+                Visibility::Private
+            );
+            assert_eq!(
+                parser.parse_java_visibility("protected"),
+                Visibility::Protected
+            );
+            assert_eq!(parser.parse_java_visibility(""), Visibility::Package);
+            assert_eq!(
+                parser.parse_java_visibility("unknown"),
+                Visibility::Package
+            );
+        }
+    }
+
+    // ========================================================================
+    // COMPLEXITY METRICS TESTS
+    // ========================================================================
+
+    mod complexity_tests {
+        use super::*;
+
+        #[tokio::test]
+        async fn test_complexity_metrics_simple_code() {
+            // Arrange
+            let parser = RustParser::new();
+
+            // Act
+            let result = parser.parse(fixtures::RUST_SIMPLE).await.unwrap();
+
+            // Assert
+            assert!(result.complexity_metrics.cyclomatic_complexity >= 1.0);
+            assert!(result.complexity_metrics.lines_of_code > 0);
+        }
+
+        #[tokio::test]
+        async fn test_complexity_metrics_high_complexity() {
+            // Arrange
+            let parser = RustParser::new();
+
+            // Act
+            let result = parser.parse(fixtures::HIGH_COMPLEXITY).await.unwrap();
+
+            // Assert - complex code should have higher cyclomatic complexity
+            assert!(result.complexity_metrics.cyclomatic_complexity > 5.0);
+        }
+
+        #[tokio::test]
+        async fn test_nesting_depth_calculation() {
+            // Arrange
+            let parser = RustParser::new();
+
+            // Act
+            let result = parser.parse(fixtures::DEEPLY_NESTED).await.unwrap();
+
+            // Assert - deeply nested code should have high nesting depth
+            assert!(result.complexity_metrics.nesting_depth >= 5);
+        }
+
+        #[tokio::test]
+        async fn test_nesting_depth_simple_code() {
+            // Arrange
+            let parser = RustParser::new();
+
+            // Act
+            let result = parser.parse(fixtures::RUST_SIMPLE).await.unwrap();
+
+            // Assert
+            assert!(result.complexity_metrics.nesting_depth <= 3);
+        }
+
+        #[tokio::test]
+        async fn test_halstead_complexity_metrics() {
+            // Arrange
+            let parser = RustParser::new();
+
+            // Act
+            let result = parser.parse(fixtures::RUST_COMPLEX).await.unwrap();
+
+            // Assert
+            let halstead = &result.complexity_metrics.halstead_complexity;
+            assert!(halstead.vocabulary > 0);
+            assert!(halstead.length > 0);
+            assert!(halstead.volume >= 0.0);
+        }
+
+        #[tokio::test]
+        async fn test_lines_of_code_calculation() {
+            // Arrange
+            let parser = RustParser::new();
+            let code = "fn a() {}\nfn b() {}\nfn c() {}";
+
+            // Act
+            let result = parser.parse(code).await.unwrap();
+
+            // Assert
+            assert_eq!(result.complexity_metrics.lines_of_code, 3);
+        }
+
+        #[test]
+        fn test_complexity_metrics_default() {
+            // Arrange & Act
+            let metrics = ComplexityMetrics::default();
+
+            // Assert
+            assert_eq!(metrics.cyclomatic_complexity, 1.0);
+            assert_eq!(metrics.cognitive_complexity, 1.0);
+            assert_eq!(metrics.nesting_depth, 1);
+            assert_eq!(metrics.lines_of_code, 1);
+            assert!(metrics.halstead_complexity.operators.is_empty());
+            assert!(metrics.halstead_complexity.operands.is_empty());
+        }
+
+        #[tokio::test]
+        async fn test_cognitive_complexity_factor() {
+            // Arrange
+            let parser = RustParser::new();
+
+            // Act
+            let result = parser.parse(fixtures::RUST_COMPLEX).await.unwrap();
+
+            // Assert - cognitive complexity should be derived from cyclomatic
+            let cyclomatic = result.complexity_metrics.cyclomatic_complexity;
+            let cognitive = result.complexity_metrics.cognitive_complexity;
+            assert!((cognitive - cyclomatic * 1.2).abs() < 0.001);
+        }
+    }
+
+    // ========================================================================
+    // PLACEHOLDER PARSER TESTS
+    // ========================================================================
+
+    mod placeholder_parser_tests {
+        use super::*;
+
+        #[tokio::test]
+        async fn test_golang_parser() {
+            // Arrange
+            let parser = GolangParser::new();
+
+            // Act
+            let result = parser.parse("package main\nfunc main() {}").await;
+
+            // Assert
+            assert!(result.is_ok());
+            let ast = result.unwrap();
+            assert_eq!(ast.language, ProgrammingLanguage::Golang);
+        }
+
+        #[tokio::test]
+        async fn test_cpp_parser() {
+            // Arrange
+            let parser = CppParser::new();
+
+            // Act
+            let result = parser.parse("#include <iostream>").await;
+
+            // Assert
+            assert!(result.is_ok());
+            let ast = result.unwrap();
+            assert_eq!(ast.language, ProgrammingLanguage::Cpp);
+        }
+
+        #[tokio::test]
+        async fn test_kotlin_parser() {
+            // Arrange
+            let parser = KotlinParser::new();
+
+            // Act
+            let result = parser.parse("fun main() {}").await;
+
+            // Assert
+            assert!(result.is_ok());
+            let ast = result.unwrap();
+            assert_eq!(ast.language, ProgrammingLanguage::Kotlin);
+        }
+
+        #[tokio::test]
+        async fn test_typescript_parser() {
+            // Arrange
+            let parser = TypeScriptParser::new();
+
+            // Act
+            let result = parser
+                .parse("const x: number = 42;")
+                .await;
+
+            // Assert
+            assert!(result.is_ok());
+            let ast = result.unwrap();
+            assert_eq!(ast.language, ProgrammingLanguage::TypeScript);
+        }
+
+        #[tokio::test]
+        async fn test_javascript_parser() {
+            // Arrange
+            let parser = JavaScriptParser::new();
+
+            // Act
+            let result = parser.parse(fixtures::JAVASCRIPT_SIMPLE).await;
+
+            // Assert
+            assert!(result.is_ok());
+            let ast = result.unwrap();
+            assert_eq!(ast.language, ProgrammingLanguage::JavaScript);
+        }
+
+        #[tokio::test]
+        async fn test_python_parser() {
+            // Arrange
+            let parser = PythonParser::new();
+
+            // Act
+            let result = parser.parse(fixtures::PYTHON_SIMPLE).await;
+
+            // Assert
+            assert!(result.is_ok());
+            let ast = result.unwrap();
+            assert_eq!(ast.language, ProgrammingLanguage::Python);
+        }
+
+        #[tokio::test]
+        async fn test_objectivec_parser() {
+            // Arrange
+            let parser = ObjectiveCParser::new();
+
+            // Act
+            let result = parser.parse("@implementation Test @end").await;
+
+            // Assert
+            assert!(result.is_ok());
+            let ast = result.unwrap();
+            assert_eq!(ast.language, ProgrammingLanguage::ObjectiveC);
+        }
+
+        #[test]
+        fn test_placeholder_parsers_default_detection() {
+            // Arrange
+            let parsers: Vec<Box<dyn LanguageParser>> = vec![
+                Box::new(GolangParser::new()),
+                Box::new(CppParser::new()),
+                Box::new(KotlinParser::new()),
+                Box::new(TypeScriptParser::new()),
+                Box::new(JavaScriptParser::new()),
+                Box::new(PythonParser::new()),
+                Box::new(ObjectiveCParser::new()),
+            ];
+
+            // Act & Assert - placeholder parsers return 0.0 for detection
+            for parser in parsers {
+                let score = parser.detect_language("any code");
+                assert_eq!(score, 0.0);
+            }
+        }
+
+        #[test]
+        fn test_golang_features() {
+            // Arrange
+            let parser = GolangParser::new();
+
+            // Act
+            let features = parser.get_language_features();
+
+            // Assert
+            assert_eq!(features.language, ProgrammingLanguage::Golang);
+            assert!(!features.supports_oop);
+            assert!(features.supports_generics);
+            assert_eq!(features.type_system, TypeSystem::Static);
+        }
+
+        #[test]
+        fn test_cpp_features() {
+            // Arrange
+            let parser = CppParser::new();
+
+            // Act
+            let features = parser.get_language_features();
+
+            // Assert
+            assert_eq!(features.language, ProgrammingLanguage::Cpp);
+            assert!(features.supports_oop);
+            assert_eq!(features.memory_management, MemoryManagement::Manual);
+            assert_eq!(features.concurrency_model, ConcurrencyModel::Threading);
+        }
+
+        #[test]
+        fn test_python_features() {
+            // Arrange
+            let parser = PythonParser::new();
+
+            // Act
+            let features = parser.get_language_features();
+
+            // Assert
+            assert_eq!(features.language, ProgrammingLanguage::Python);
+            assert_eq!(features.type_system, TypeSystem::Dynamic);
+            assert_eq!(features.memory_management, MemoryManagement::GarbageCollected);
+        }
+
+        #[test]
+        fn test_javascript_features() {
+            // Arrange
+            let parser = JavaScriptParser::new();
+
+            // Act
+            let features = parser.get_language_features();
+
+            // Assert
+            assert_eq!(features.language, ProgrammingLanguage::JavaScript);
+            assert_eq!(features.type_system, TypeSystem::Dynamic);
+            assert!(!features.supports_generics);
+            assert!(features.supports_async);
+        }
+    }
+
+    // ========================================================================
+    // AST STRUCTURE TESTS
+    // ========================================================================
+
+    mod ast_structure_tests {
+        use super::*;
+
+        #[test]
+        fn test_unified_ast_serialization() {
+            // Arrange
+            let ast = UnifiedAST {
+                language: ProgrammingLanguage::Rust,
+                functions: vec![],
+                classes: vec![],
+                variables: vec![],
+                imports: vec![],
+                comments: vec![],
+                complexity_metrics: ComplexityMetrics::default(),
+            };
+
+            // Act
+            let json = serde_json::to_string(&ast);
+
+            // Assert
+            assert!(json.is_ok());
+        }
+
+        #[test]
+        fn test_unified_ast_deserialization() {
+            // Arrange
+            let json = r#"{"language":"rust","functions":[],"classes":[],"variables":[],"imports":[],"comments":[],"complexity_metrics":{"cyclomatic_complexity":1.0,"cognitive_complexity":1.0,"nesting_depth":1,"lines_of_code":1,"halstead_complexity":{"operators":{},"operands":{},"vocabulary":0,"length":0,"volume":0.0,"difficulty":0.0}}}"#;
+
+            // Act
+            let ast: Result<UnifiedAST, _> = serde_json::from_str(json);
+
+            // Assert
+            assert!(ast.is_ok());
+            assert_eq!(ast.unwrap().language, ProgrammingLanguage::Rust);
+        }
+
+        #[test]
+        fn test_function_node_clone() {
+            // Arrange
+            let node = FunctionNode {
+                name: "test".to_string(),
+                parameters: vec![],
+                return_type: Some("i32".to_string()),
+                body: vec![],
+                visibility: Visibility::Public,
+                is_async: false,
+                line_number: 1,
+                complexity: ComplexityMetrics::default(),
+            };
+
+            // Act
+            let cloned = node.clone();
+
+            // Assert
+            assert_eq!(cloned.name, node.name);
+            assert_eq!(cloned.return_type, node.return_type);
+        }
+
+        #[test]
+        fn test_visibility_enum_variants() {
+            // Assert all variants are accessible
+            let _public = Visibility::Public;
+            let _private = Visibility::Private;
+            let _protected = Visibility::Protected;
+            let _package = Visibility::Package;
+        }
+
+        #[test]
+        fn test_comment_type_enum_variants() {
+            // Assert all variants are accessible
+            let _single = CommentType::SingleLine;
+            let _multi = CommentType::MultiLine;
+            let _doc = CommentType::Documentation;
+        }
+
+        #[test]
+        fn test_statement_type_enum_variants() {
+            // Assert all variants are accessible
+            let variants = vec![
+                StatementType::Assignment,
+                StatementType::Declaration,
+                StatementType::Expression,
+                StatementType::ControlFlow,
+                StatementType::Loop,
+                StatementType::Exception,
+                StatementType::Return,
+                StatementType::Break,
+                StatementType::Continue,
+            ];
+            assert_eq!(variants.len(), 9);
+        }
+
+        #[test]
+        fn test_type_system_enum() {
+            // Assert
+            assert_eq!(TypeSystem::Static, TypeSystem::Static);
+            assert_ne!(TypeSystem::Static, TypeSystem::Dynamic);
+        }
+
+        #[test]
+        fn test_memory_management_enum() {
+            // Assert
+            assert_eq!(MemoryManagement::Manual, MemoryManagement::Manual);
+            assert_ne!(MemoryManagement::Manual, MemoryManagement::GarbageCollected);
+        }
+
+        #[test]
+        fn test_concurrency_model_enum() {
+            // Assert
+            let variants = vec![
+                ConcurrencyModel::Threading,
+                ConcurrencyModel::AsyncAwait,
+                ConcurrencyModel::MessagePassing,
+                ConcurrencyModel::ActorModel,
+            ];
+            assert_eq!(variants.len(), 4);
+        }
+    }
+
+    // ========================================================================
+    // EDGE CASES AND BOUNDARY CONDITIONS
+    // ========================================================================
+
+    mod edge_case_tests {
+        use super::*;
+
+        #[tokio::test]
+        async fn test_parse_unicode_code() {
+            // Arrange
+            let parser = RustParser::new();
+            let code = r#"
+fn greet() {
+    let message = "Hello, World!";
+    let emoji = "Hello, World!";
+    println!("{} {}", message, emoji);
+}
+"#;
+
+            // Act
+            let result = parser.parse(code).await;
+
+            // Assert
+            assert!(result.is_ok());
+        }
+
+        #[tokio::test]
+        async fn test_parse_very_long_function_name() {
+            // Arrange
+            let parser = RustParser::new();
+            let long_name = "a".repeat(1000);
+            let code = format!("fn {}() {{}}", long_name);
+
+            // Act
+            let result = parser.parse(&code).await;
+
+            // Assert
+            assert!(result.is_ok());
+            let ast = result.unwrap();
+            assert_eq!(ast.functions.len(), 1);
+            assert_eq!(ast.functions[0].name, long_name);
+        }
+
+        #[tokio::test]
+        async fn test_parse_many_functions() {
+            // Arrange
+            let parser = RustParser::new();
+            let mut code = String::new();
+            for i in 0..100 {
+                code.push_str(&format!("fn func_{}() {{}}\n", i));
+            }
+
+            // Act
+            let result = parser.parse(&code).await;
+
+            // Assert
+            assert!(result.is_ok());
+            let ast = result.unwrap();
+            assert_eq!(ast.functions.len(), 100);
+        }
+
+        #[tokio::test]
+        async fn test_parse_code_with_special_characters() {
+            // Arrange
+            let parser = RustParser::new();
+            let code = r#"
+fn special() {
+    let s = "test\n\t\r\\";
+    let raw = r#"raw string"#;
+}
+"#;
+
+            // Act
+            let result = parser.parse(code).await;
+
+            // Assert
+            assert!(result.is_ok());
+        }
+
+        #[tokio::test]
+        async fn test_parse_nested_functions() {
+            // Arrange
+            let parser = RustParser::new();
+            let code = r#"
+fn outer() {
+    fn inner() {
+        fn innermost() {}
+    }
+}
+"#;
+
+            // Act
+            let result = parser.parse(code).await;
+
+            // Assert
+            assert!(result.is_ok());
+            let ast = result.unwrap();
+            // All functions should be detected (flat extraction)
+            assert_eq!(ast.functions.len(), 3);
+        }
+
+        #[tokio::test]
+        async fn test_parse_function_like_in_string() {
+            // Arrange
+            let parser = RustParser::new();
+            let code = r#"
+fn real_function() {
+    let s = "fn fake_function() {}";
+}
+"#;
+
+            // Act
+            let result = parser.parse(code).await;
+
+            // Assert
+            assert!(result.is_ok());
+            let ast = result.unwrap();
+            // Note: current simple regex parser will find both
+            // A production parser would handle this correctly
+            assert!(!ast.functions.is_empty());
+        }
+
+        #[tokio::test]
+        async fn test_parse_single_line() {
+            // Arrange
+            let parser = RustParser::new();
+            let code = "fn main() {}";
+
+            // Act
+            let result = parser.parse(code).await;
+
+            // Assert
+            assert!(result.is_ok());
+            let ast = result.unwrap();
+            assert_eq!(ast.functions.len(), 1);
+            assert_eq!(ast.complexity_metrics.lines_of_code, 1);
+        }
+
+        #[test]
+        fn test_halstead_empty_code() {
+            // Arrange
+            let parser = RustParser::new();
+
+            // Act
+            let metrics = parser.calculate_halstead_complexity("");
+
+            // Assert
+            assert_eq!(metrics.vocabulary, 0);
+            assert_eq!(metrics.length, 0);
+            assert_eq!(metrics.volume, 0.0);
+            assert_eq!(metrics.difficulty, 0.0);
+        }
+
+        #[test]
+        fn test_nesting_depth_unbalanced_braces() {
+            // Arrange
+            let parser = RustParser::new();
+            let code = "{ { { }"; // Unbalanced - 3 open, 1 close
+
+            // Act
+            let depth = parser.calculate_nesting_depth(code);
+
+            // Assert - should not panic, uses saturating_sub
+            assert!(depth >= 1);
+        }
+
+        #[test]
+        fn test_cyclomatic_complexity_no_branches() {
+            // Arrange
+            let parser = RustParser::new();
+            let code = "fn simple() { let x = 1; }";
+
+            // Act
+            let complexity = parser.calculate_cyclomatic_complexity(code);
+
+            // Assert - base complexity is 1
+            assert_eq!(complexity, 1.0);
+        }
+
+        #[tokio::test]
+        async fn test_parse_only_comments() {
+            // Arrange
+            let parser = RustParser::new();
+            let code = r#"
+// Comment 1
+// Comment 2
+/* Multi-line */
+"#;
+
+            // Act
+            let result = parser.parse(code).await;
+
+            // Assert
+            assert!(result.is_ok());
+            let ast = result.unwrap();
+            assert!(ast.functions.is_empty());
+            assert!(!ast.comments.is_empty());
+        }
+
+        #[tokio::test]
+        async fn test_parse_only_imports() {
+            // Arrange
+            let parser = RustParser::new();
+            let code = r#"
+use std::collections::HashMap;
+use std::io::Read;
+use crate::module::Type;
+"#;
+
+            // Act
+            let result = parser.parse(code).await;
+
+            // Assert
+            assert!(result.is_ok());
+            let ast = result.unwrap();
+            assert!(ast.functions.is_empty());
+            assert_eq!(ast.imports.len(), 3);
+        }
+    }
+
+    // ========================================================================
+    // LANGUAGE DETECTION TESTS
+    // ========================================================================
+
+    mod language_detection_tests {
+        use super::*;
+
+        #[test]
+        fn test_rust_detection_with_fn_keyword() {
+            let parser = RustParser::new();
+            assert!(parser.detect_language("fn main() {}") > 0.0);
+        }
+
+        #[test]
+        fn test_rust_detection_with_let_keyword() {
+            let parser = RustParser::new();
+            assert!(parser.detect_language("let x = 42;") > 0.0);
+        }
+
+        #[test]
+        fn test_rust_detection_with_mut_keyword() {
+            let parser = RustParser::new();
+            assert!(parser.detect_language("let mut x = 42;") > 0.0);
+        }
+
+        #[test]
+        fn test_rust_detection_with_impl_keyword() {
+            let parser = RustParser::new();
+            assert!(parser.detect_language("impl Trait for Type {}") > 0.0);
+        }
+
+        #[test]
+        fn test_rust_detection_with_struct_keyword() {
+            let parser = RustParser::new();
+            assert!(parser.detect_language("struct Point { x: i32, y: i32 }") > 0.0);
+        }
+
+        #[test]
+        fn test_rust_detection_with_enum_keyword() {
+            let parser = RustParser::new();
+            assert!(parser.detect_language("enum Color { Red, Green, Blue }") > 0.0);
+        }
+
+        #[test]
+        fn test_rust_detection_with_trait_keyword() {
+            let parser = RustParser::new();
+            assert!(parser.detect_language("trait Iterator { fn next(&mut self); }") > 0.0);
+        }
+
+        #[test]
+        fn test_rust_detection_with_path_separator() {
+            let parser = RustParser::new();
+            assert!(parser.detect_language("std::collections::HashMap") > 0.0);
+        }
+
+        #[test]
+        fn test_rust_detection_score_capped_at_1() {
+            let parser = RustParser::new();
+            // Code with all Rust keywords
+            let code = "fn main() { let mut x = impl struct enum trait }";
+            assert!(parser.detect_language(code) <= 1.0);
+        }
+
+        #[test]
+        fn test_java_detection_public_class() {
+            let parser = JavaParser::new();
+            assert!(parser.detect_language("public class Test {}") >= 0.3);
+        }
+
+        #[test]
+        fn test_java_detection_main_method() {
+            let parser = JavaParser::new();
+            let code = "public static void main(String[] args) {}";
+            assert!(parser.detect_language(code) >= 0.4);
+        }
+
+        #[test]
+        fn test_java_detection_import() {
+            let parser = JavaParser::new();
+            assert!(parser.detect_language("import java.util.List;") >= 0.2);
+        }
+
+        #[test]
+        fn test_java_detection_semicolons() {
+            let parser = JavaParser::new();
+            assert!(parser.detect_language("int x = 0;") >= 0.1);
+        }
+
+        #[test]
+        fn test_empty_code_detection() {
+            let rust_parser = RustParser::new();
+            let java_parser = JavaParser::new();
+
+            assert_eq!(rust_parser.detect_language(""), 0.0);
+            assert_eq!(java_parser.detect_language(""), 0.0);
+        }
+    }
+
+    // ========================================================================
+    // SERIALIZATION TESTS
+    // ========================================================================
+
+    mod serialization_tests {
+        use super::*;
+
+        #[test]
+        fn test_visibility_serialization() {
+            // Assert serialized format uses snake_case
+            let json = serde_json::to_string(&Visibility::Public).unwrap();
+            assert_eq!(json, r#""public""#);
+        }
+
+        #[test]
+        fn test_comment_type_serialization() {
+            let json = serde_json::to_string(&CommentType::SingleLine).unwrap();
+            assert_eq!(json, r#""single_line""#);
+        }
+
+        #[test]
+        fn test_type_system_serialization() {
+            let json = serde_json::to_string(&TypeSystem::Static).unwrap();
+            assert_eq!(json, r#""static""#);
+        }
+
+        #[test]
+        fn test_memory_management_serialization() {
+            let json = serde_json::to_string(&MemoryManagement::GarbageCollected).unwrap();
+            assert_eq!(json, r#""garbage_collected""#);
+        }
+
+        #[test]
+        fn test_concurrency_model_serialization() {
+            let json = serde_json::to_string(&ConcurrencyModel::AsyncAwait).unwrap();
+            assert_eq!(json, r#""async_await""#);
+        }
+
+        #[test]
+        fn test_halstead_metrics_serialization() {
+            let metrics = HalsteadMetrics {
+                operators: HashMap::from([("+".to_string(), 5)]),
+                operands: HashMap::from([("x".to_string(), 3)]),
+                vocabulary: 2,
+                length: 8,
+                volume: 24.0,
+                difficulty: 1.5,
+            };
+
+            let json = serde_json::to_string(&metrics).unwrap();
+            assert!(json.contains("operators"));
+            assert!(json.contains("operands"));
+        }
+
+        #[test]
+        fn test_language_features_roundtrip() {
+            let features = LanguageFeatures {
+                language: ProgrammingLanguage::Rust,
+                supports_oop: false,
+                supports_generics: true,
+                supports_async: true,
+                supports_patterns: true,
+                type_system: TypeSystem::Static,
+                memory_management: MemoryManagement::Manual,
+                concurrency_model: ConcurrencyModel::AsyncAwait,
+            };
+
+            let json = serde_json::to_string(&features).unwrap();
+            let parsed: LanguageFeatures = serde_json::from_str(&json).unwrap();
+
+            assert_eq!(parsed.language, features.language);
+            assert_eq!(parsed.supports_oop, features.supports_oop);
+            assert_eq!(parsed.type_system, features.type_system);
+        }
+    }
+
+    // ========================================================================
+    // INTEGRATION TESTS
+    // ========================================================================
+
+    mod integration_tests {
+        use super::*;
+
+        #[tokio::test]
+        async fn test_full_rust_parsing_workflow() {
+            // Arrange
+            let parser = RustParser::new();
+
+            // Act - parse complex code
+            let result = parser.parse(fixtures::RUST_COMPLEX).await.unwrap();
+
+            // Assert - verify all components are extracted
+            assert!(!result.functions.is_empty());
+            assert!(!result.variables.is_empty());
+            assert!(!result.imports.is_empty());
+            assert!(!result.comments.is_empty());
+            assert!(result.complexity_metrics.lines_of_code > 0);
+            assert!(result.complexity_metrics.cyclomatic_complexity > 1.0);
+        }
+
+        #[tokio::test]
+        async fn test_full_java_parsing_workflow() {
+            // Arrange
+            let parser = JavaParser::new();
+
+            // Act
+            let result = parser.parse(fixtures::JAVA_COMPLEX).await.unwrap();
+
+            // Assert
+            assert!(!result.classes.is_empty());
+            assert!(!result.functions.is_empty());
+            assert!(!result.imports.is_empty());
+            assert!(!result.comments.is_empty());
+        }
+
+        #[tokio::test]
+        async fn test_parser_produces_valid_ast_for_analysis() {
+            // Arrange
+            let parser = RustParser::new();
+
+            // Act
+            let result = parser.parse(fixtures::RUST_COMPLEX).await.unwrap();
+
+            // Assert - AST should be suitable for further analysis
+            for function in &result.functions {
+                assert!(!function.name.is_empty());
+                assert!(function.line_number > 0);
+            }
+
+            for import in &result.imports {
+                assert!(!import.module.is_empty());
+            }
+
+            for comment in &result.comments {
+                assert!(comment.line_number > 0);
+            }
+        }
     }
 }

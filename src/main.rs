@@ -9,7 +9,7 @@ use tracing::{info, Level};
 use tracing_subscriber::FmtSubscriber;
 
 use reasonkit::thinktool::llm::LlmProvider;
-use reasonkit::thinktool::{ExecutorConfig, ProtocolExecutor, ProtocolInput};
+use reasonkit::thinktool::{BudgetConfig, ExecutorConfig, ProtocolExecutor, ProtocolInput};
 
 // Import MCP CLI module
 #[path = "bin/mcp_cli.rs"]
@@ -75,7 +75,7 @@ enum Commands {
         #[arg(long, default_value = "2000")]
         max_tokens: u32,
 
-        /// Budget for adaptive compute time
+        /// Budget for adaptive compute time (e.g., "30s", "5m", "1000t", "$0.50")
         #[arg(short, long)]
         budget: Option<String>,
 
@@ -518,6 +518,16 @@ fn unimplemented_command(name: &str) -> anyhow::Result<()> {
     )
 }
 
+/// Parse budget string into BudgetConfig, with user-friendly error handling
+fn parse_budget(budget_str: &str) -> anyhow::Result<BudgetConfig> {
+    BudgetConfig::parse(budget_str).map_err(|e| {
+        anyhow::anyhow!(
+            "Invalid budget format: {}. Use formats like '30s', '5m', '1000t', or '$0.50'",
+            e
+        )
+    })
+}
+
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
     let cli = Cli::parse();
@@ -578,7 +588,7 @@ async fn main() -> anyhow::Result<()> {
             model,
             temperature,
             max_tokens,
-            budget: _, // TODO: Implement budget parsing
+            budget,
             mock,
             save_trace,
             trace_dir,
@@ -598,6 +608,14 @@ async fn main() -> anyhow::Result<()> {
                 config.save_traces = save_trace;
                 config.trace_dir = trace_dir;
                 config.verbose = cli.verbose > 0;
+
+                // Parse and apply budget configuration if provided
+                if let Some(ref budget_str) = budget {
+                    config.budget = parse_budget(budget_str)?;
+                    if cli.verbose > 0 {
+                        info!("Budget configured: {:?}", config.budget);
+                    }
+                }
 
                 ProtocolExecutor::with_config(config)?
             };
@@ -632,6 +650,16 @@ async fn main() -> anyhow::Result<()> {
                         println!("\n[{}] {}", step.step_id, step.as_text().unwrap_or(""));
                     }
                     println!("\nConfidence: {:.2}", output.confidence);
+
+                    // Display budget summary if budget was configured
+                    if let Some(ref summary) = output.budget_summary {
+                        println!("\nBudget Summary:");
+                        println!("  Steps completed: {}", summary.steps_completed);
+                        println!("  Steps skipped: {}", summary.steps_skipped);
+                        println!("  Tokens used: {}", summary.tokens_used);
+                        println!("  Cost incurred: ${:.4}", summary.cost_incurred);
+                        println!("  Time elapsed: {:?}", summary.elapsed);
+                    }
                 }
                 OutputFormat::Json => {
                     println!("{}", serde_json::to_string_pretty(&output)?);

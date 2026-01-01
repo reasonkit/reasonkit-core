@@ -6,14 +6,14 @@
 
 ## Quick Links
 
-| I want to... | Go to... |
-|--------------|----------|
-| **Install and run first command** | [docs/QUICKSTART.md](docs/QUICKSTART.md) |
-| **Step-by-step tutorial** | [examples/tutorial/](examples/tutorial/) |
-| **Troubleshoot an issue** | [docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md) |
-| **See real-world examples** | [docs/USE_CASES.md](docs/USE_CASES.md) |
-| **Full CLI reference** | [docs/CLI_REFERENCE.md](docs/CLI_REFERENCE.md) |
-| **ThinkTool deep dive** | [docs/THINKTOOLS_GUIDE.md](docs/THINKTOOLS_GUIDE.md) |
+| I want to...                      | Go to...                                             |
+| --------------------------------- | ---------------------------------------------------- |
+| **Install and run first command** | [docs/QUICKSTART.md](docs/QUICKSTART.md)             |
+| **Step-by-step tutorial**         | [examples/tutorial/](examples/tutorial/)             |
+| **Troubleshoot an issue**         | [docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md)   |
+| **See real-world examples**       | [docs/USE_CASES.md](docs/USE_CASES.md)               |
+| **Full CLI reference**            | [docs/CLI_REFERENCE.md](docs/CLI_REFERENCE.md)       |
+| **ThinkTool deep dive**           | [docs/THINKTOOLS_GUIDE.md](docs/THINKTOOLS_GUIDE.md) |
 
 ---
 
@@ -46,11 +46,11 @@ This is "structured reasoning" - organized, auditable thinking instead of a wall
 
 ## Choose Your Depth
 
-| Stakes | Use | Time |
-|--------|-----|------|
-| Low (Slack message) | `--profile quick` | 30s |
-| Medium (PR review) | `--profile balanced` | 2min |
-| High (Architecture) | `--profile deep` | 5min |
+| Stakes                | Use                  | Time  |
+| --------------------- | -------------------- | ----- |
+| Low (Slack message)   | `--profile quick`    | 30s   |
+| Medium (PR review)    | `--profile balanced` | 2min  |
+| High (Architecture)   | `--profile deep`     | 5min  |
 | Critical (Production) | `--profile paranoid` | 10min |
 
 ---
@@ -66,4 +66,4 @@ This is "structured reasoning" - organized, auditable thinking instead of a wall
 **Website:** [reasonkit.sh](https://reasonkit.sh)  
 **Questions?** [GitHub Discussions](https://github.com/reasonkit/reasonkit-core/discussions)
 
-*Turn prompts into protocols.*
+_Turn prompts into protocols._

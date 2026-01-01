@@ -1854,9 +1854,34 @@ impl Default for ProtocolExecutor {
     }
 }
 
+// ═══════════════════════════════════════════════════════════════════════════════
+// COMPREHENSIVE TEST SUITE
+// ═══════════════════════════════════════════════════════════════════════════════
+//
+// Test Coverage:
+// 1. Executor Creation and Configuration
+// 2. Single Module Execution (GigaThink, LaserLogic, BedRock, ProofGuard, BrutalHonesty)
+// 3. PowerCombo Chain Execution (all 5 ThinkTools)
+// 4. Timeout Handling
+// 5. Error Recovery
+// 6. Trace Generation
+// 7. Template Rendering
+// 8. Confidence Extraction
+// 9. List Item Parsing
+// 10. Branch Condition Evaluation
+// 11. Dependency Management
+// 12. Budget Tracking
+// 13. Parallel Execution
+// ═══════════════════════════════════════════════════════════════════════════════
+
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::time::Duration;
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // 1. EXECUTOR CREATION AND CONFIGURATION TESTS
+    // ═══════════════════════════════════════════════════════════════════════════
 
     #[test]
     fn test_executor_creation() {
@@ -1866,11 +1891,56 @@ mod tests {
     }
 
     #[test]
+    fn test_executor_config_default() {
+        let config = ExecutorConfig::default();
+        assert_eq!(config.timeout_secs, 120);
+        assert!(!config.use_mock);
+        assert!(!config.save_traces);
+        assert!(config.show_progress);
+        assert!(!config.enable_parallel);
+        assert_eq!(config.max_concurrent_steps, 4);
+    }
+
+    #[test]
+    fn test_executor_config_mock() {
+        let config = ExecutorConfig::mock();
+        assert!(config.use_mock);
+    }
+
+    #[test]
+    fn test_executor_config_parallel() {
+        let config = ExecutorConfig::default().with_parallel();
+        assert!(config.enable_parallel);
+        assert_eq!(config.max_concurrent_steps, 4);
+
+        let config_limited = ExecutorConfig::default().with_parallel_limit(2);
+        assert!(config_limited.enable_parallel);
+        assert_eq!(config_limited.max_concurrent_steps, 2);
+    }
+
+    #[test]
+    fn test_executor_config_self_consistency() {
+        let config = ExecutorConfig::default().with_self_consistency();
+        assert!(config.self_consistency.is_some());
+
+        let config_fast = ExecutorConfig::default().with_self_consistency_fast();
+        assert!(config_fast.self_consistency.is_some());
+        assert_eq!(config_fast.self_consistency.unwrap().num_samples, 3);
+
+        let config_thorough = ExecutorConfig::default().with_self_consistency_thorough();
+        assert!(config_thorough.self_consistency.is_some());
+        assert_eq!(config_thorough.self_consistency.unwrap().num_samples, 10);
+    }
+
+    #[test]
     fn test_list_protocols() {
         let executor = ProtocolExecutor::mock().unwrap();
         let protocols = executor.list_protocols();
         assert!(protocols.contains(&"gigathink"));
         assert!(protocols.contains(&"laserlogic"));
+        assert!(protocols.contains(&"bedrock"));
+        assert!(protocols.contains(&"proofguard"));
+        assert!(protocols.contains(&"brutalhonesty"));
     }
 
     #[test]
@@ -1879,19 +1949,90 @@ mod tests {
         let profiles = executor.list_profiles();
         assert!(profiles.contains(&"quick"));
         assert!(profiles.contains(&"balanced"));
+        assert!(profiles.contains(&"deep"));
         assert!(profiles.contains(&"paranoid"));
+        assert!(profiles.contains(&"powercombo"));
     }
 
     #[test]
-    fn test_protocol_input() {
-        let input = ProtocolInput::query("Test query").with_field("context", "Some context");
+    fn test_get_protocol() {
+        let executor = ProtocolExecutor::mock().unwrap();
+        let gigathink = executor.get_protocol("gigathink");
+        assert!(gigathink.is_some());
+        assert_eq!(gigathink.unwrap().id, "gigathink");
+
+        let nonexistent = executor.get_protocol("nonexistent_protocol");
+        assert!(nonexistent.is_none());
+    }
+
+    #[test]
+    fn test_get_profile() {
+        let executor = ProtocolExecutor::mock().unwrap();
+        let quick = executor.get_profile("quick");
+        assert!(quick.is_some());
+        assert_eq!(quick.unwrap().id, "quick");
+
+        let nonexistent = executor.get_profile("nonexistent_profile");
+        assert!(nonexistent.is_none());
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // 2. PROTOCOL INPUT TESTS
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    #[test]
+    fn test_protocol_input_query() {
+        let input = ProtocolInput::query("Test query");
+        assert_eq!(input.get_str("query"), Some("Test query"));
+    }
+
+    #[test]
+    fn test_protocol_input_argument() {
+        let input = ProtocolInput::argument("Test argument");
+        assert_eq!(input.get_str("argument"), Some("Test argument"));
+    }
+
+    #[test]
+    fn test_protocol_input_statement() {
+        let input = ProtocolInput::statement("Test statement");
+        assert_eq!(input.get_str("statement"), Some("Test statement"));
+    }
+
+    #[test]
+    fn test_protocol_input_claim() {
+        let input = ProtocolInput::claim("Test claim");
+        assert_eq!(input.get_str("claim"), Some("Test claim"));
+    }
+
+    #[test]
+    fn test_protocol_input_work() {
+        let input = ProtocolInput::work("Test work");
+        assert_eq!(input.get_str("work"), Some("Test work"));
+    }
+
+    #[test]
+    fn test_protocol_input_with_field() {
+        let input = ProtocolInput::query("Test query")
+            .with_field("context", "Some context")
+            .with_field("domain", "AI");
 
         assert_eq!(input.get_str("query"), Some("Test query"));
         assert_eq!(input.get_str("context"), Some("Some context"));
+        assert_eq!(input.get_str("domain"), Some("AI"));
     }
 
     #[test]
-    fn test_template_rendering() {
+    fn test_protocol_input_missing_field() {
+        let input = ProtocolInput::query("Test query");
+        assert_eq!(input.get_str("nonexistent"), None);
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // 3. TEMPLATE RENDERING TESTS
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    #[test]
+    fn test_template_rendering_simple() {
         let executor = ProtocolExecutor::mock().unwrap();
         let input = ProtocolInput::query("What is AI?");
 
@@ -1902,22 +2043,140 @@ mod tests {
     }
 
     #[test]
-    fn test_extract_confidence() {
+    fn test_template_rendering_multiple_fields() {
+        let executor = ProtocolExecutor::mock().unwrap();
+        let input = ProtocolInput::query("What is AI?").with_field("context", "machine learning");
+
+        let template = "Question: {{query}}\nContext: {{context}}";
+        let rendered = executor.render_template(template, &input, &HashMap::new());
+
+        assert_eq!(rendered, "Question: What is AI?\nContext: machine learning");
+    }
+
+    #[test]
+    fn test_template_rendering_with_previous_outputs() {
+        let executor = ProtocolExecutor::mock().unwrap();
+        let input = ProtocolInput::query("Test");
+
+        let mut previous_outputs = HashMap::new();
+        previous_outputs.insert(
+            "step1".to_string(),
+            StepOutput::Text {
+                content: "Previous output".to_string(),
+            },
+        );
+
+        let template = "Input: {{query}}\nPrevious: {{step1}}";
+        let rendered = executor.render_template(template, &input, &previous_outputs);
+
+        assert_eq!(rendered, "Input: Test\nPrevious: Previous output");
+    }
+
+    #[test]
+    fn test_template_rendering_list_output() {
+        let executor = ProtocolExecutor::mock().unwrap();
+        let input = ProtocolInput::query("Test");
+
+        let mut previous_outputs = HashMap::new();
+        previous_outputs.insert(
+            "ideas".to_string(),
+            StepOutput::List {
+                items: vec![
+                    ListItem::new("Idea 1"),
+                    ListItem::new("Idea 2"),
+                    ListItem::new("Idea 3"),
+                ],
+            },
+        );
+
+        let template = "Ideas:\n{{ideas}}";
+        let rendered = executor.render_template(template, &input, &previous_outputs);
+
+        assert!(rendered.contains("Idea 1"));
+        assert!(rendered.contains("Idea 2"));
+        assert!(rendered.contains("Idea 3"));
+    }
+
+    #[test]
+    fn test_template_rendering_unfilled_placeholders_removed() {
+        let executor = ProtocolExecutor::mock().unwrap();
+        let input = ProtocolInput::query("Test");
+
+        let template = "Question: {{query}}\nOptional: {{optional_field}}";
+        let rendered = executor.render_template(template, &input, &HashMap::new());
+
+        assert_eq!(rendered, "Question: Test\nOptional: ");
+    }
+
+    #[test]
+    fn test_template_static_rendering() {
+        let input = ProtocolInput::query("Test query");
+        let previous_outputs = HashMap::new();
+
+        let template = "Question: {{query}}";
+        let rendered = ProtocolExecutor::render_template_static(template, &input, &previous_outputs);
+
+        assert_eq!(rendered, "Question: Test query");
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // 4. CONFIDENCE EXTRACTION TESTS
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    #[test]
+    fn test_extract_confidence_standard_format() {
         let executor = ProtocolExecutor::mock().unwrap();
 
         assert_eq!(executor.extract_confidence("Confidence: 0.85"), Some(0.85));
         assert_eq!(executor.extract_confidence("confidence: 0.9"), Some(0.9));
-        assert_eq!(
-            executor.extract_confidence("Some text\nConfidence: 0.75"),
-            Some(0.75)
-        );
+        assert_eq!(executor.extract_confidence("Confidence 0.75"), Some(0.75));
     }
 
     #[test]
-    fn test_extract_list_items() {
+    fn test_extract_confidence_multiline() {
         let executor = ProtocolExecutor::mock().unwrap();
 
-        let content = "1. First item\n2. Second item\n- Third item\nConfidence: 0.8";
+        let content = "Some analysis text\nMore text\nConfidence: 0.75";
+        assert_eq!(executor.extract_confidence(content), Some(0.75));
+    }
+
+    #[test]
+    fn test_extract_confidence_integer() {
+        let executor = ProtocolExecutor::mock().unwrap();
+
+        // Integer values should be capped at 1.0
+        assert_eq!(executor.extract_confidence("Confidence: 95"), Some(1.0));
+    }
+
+    #[test]
+    fn test_extract_confidence_missing() {
+        let executor = ProtocolExecutor::mock().unwrap();
+
+        assert_eq!(executor.extract_confidence("No confidence here"), None);
+        assert_eq!(executor.extract_confidence(""), None);
+    }
+
+    #[test]
+    fn test_extract_confidence_static() {
+        assert_eq!(
+            ProtocolExecutor::extract_confidence_static("Confidence: 0.88"),
+            Some(0.88)
+        );
+        assert_eq!(
+            ProtocolExecutor::extract_confidence_static("confidence 0.72"),
+            Some(0.72)
+        );
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // 5. LIST ITEM EXTRACTION TESTS
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    #[test]
+    fn test_extract_list_items_numbered() {
+        let executor = ProtocolExecutor::mock().unwrap();
+
+        let content = "1. First item\n2. Second item\n3. Third item\nConfidence: 0.8";
         let items = executor.extract_list_items(content);
 
         assert_eq!(items.len(), 3);
@@ -1925,6 +2184,63 @@ mod tests {
         assert_eq!(items[1].content, "Second item");
         assert_eq!(items[2].content, "Third item");
     }
+
+    #[test]
+    fn test_extract_list_items_bulleted() {
+        let executor = ProtocolExecutor::mock().unwrap();
+
+        let content = "- First item\n- Second item\n- Third item";
+        let items = executor.extract_list_items(content);
+
+        assert_eq!(items.len(), 3);
+        assert_eq!(items[0].content, "First item");
+    }
+
+    #[test]
+    fn test_extract_list_items_mixed() {
+        let executor = ProtocolExecutor::mock().unwrap();
+
+        let content = "1. First item\n2. Second item\n- Third item\nConfidence: 0.8";
+        let items = executor.extract_list_items(content);
+
+        assert_eq!(items.len(), 3);
+    }
+
+    #[test]
+    fn test_extract_list_items_with_bold() {
+        let executor = ProtocolExecutor::mock().unwrap();
+
+        let content = "**Title**: Description here\n**Another**: More text";
+        let items = executor.extract_list_items(content);
+
+        assert_eq!(items.len(), 2);
+        assert!(items[0].content.contains("Title"));
+    }
+
+    #[test]
+    fn test_extract_list_items_multiline() {
+        let executor = ProtocolExecutor::mock().unwrap();
+
+        let content = "1. First item with\n   continuation on next line\n2. Second item";
+        let items = executor.extract_list_items(content);
+
+        assert_eq!(items.len(), 2);
+        assert!(items[0].content.contains("continuation"));
+    }
+
+    #[test]
+    fn test_extract_list_items_empty() {
+        let executor = ProtocolExecutor::mock().unwrap();
+
+        let content = "No list items here\nJust plain text";
+        let items = executor.extract_list_items(content);
+
+        assert!(items.is_empty());
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // 6. SINGLE MODULE EXECUTION TESTS
+    // ═══════════════════════════════════════════════════════════════════════════
 
     #[tokio::test]
     async fn test_execute_gigathink_mock() {
@@ -1936,10 +2252,61 @@ mod tests {
         assert!(result.success);
         assert!(result.confidence > 0.0);
         assert!(!result.steps.is_empty());
+        assert_eq!(result.protocol_id, "gigathink");
+        assert!(result.duration_ms > 0);
     }
 
     #[tokio::test]
-    async fn test_execute_profile_mock() {
+    async fn test_execute_laserlogic_mock() {
+        let executor = ProtocolExecutor::mock().unwrap();
+        let input = ProtocolInput::argument("All humans are mortal. Socrates is human. Therefore, Socrates is mortal.");
+
+        let result = executor.execute("laserlogic", input).await.unwrap();
+
+        assert!(result.success);
+        assert!(result.confidence > 0.0);
+        assert!(!result.steps.is_empty());
+    }
+
+    #[tokio::test]
+    async fn test_execute_bedrock_mock() {
+        let executor = ProtocolExecutor::mock().unwrap();
+        let input = ProtocolInput::statement("The Earth revolves around the Sun.");
+
+        let result = executor.execute("bedrock", input).await.unwrap();
+
+        assert!(result.success);
+        assert!(!result.steps.is_empty());
+    }
+
+    #[tokio::test]
+    async fn test_execute_proofguard_mock() {
+        let executor = ProtocolExecutor::mock().unwrap();
+        let input = ProtocolInput::claim("Climate change is caused by human activities.");
+
+        let result = executor.execute("proofguard", input).await.unwrap();
+
+        assert!(result.success);
+        assert!(!result.steps.is_empty());
+    }
+
+    #[tokio::test]
+    async fn test_execute_brutalhonesty_mock() {
+        let executor = ProtocolExecutor::mock().unwrap();
+        let input = ProtocolInput::work("My analysis concludes that AI will solve all problems.");
+
+        let result = executor.execute("brutalhonesty", input).await.unwrap();
+
+        assert!(result.success);
+        assert!(!result.steps.is_empty());
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // 7. POWERCOMBO CHAIN EXECUTION TESTS
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    #[tokio::test]
+    async fn test_execute_profile_quick_mock() {
         let executor = ProtocolExecutor::mock().unwrap();
         let input = ProtocolInput::query("Should we adopt microservices?");
 
@@ -1947,5 +2314,722 @@ mod tests {
 
         assert!(result.success);
         assert!(result.confidence > 0.0);
+        assert!(!result.steps.is_empty());
+    }
+
+    #[tokio::test]
+    async fn test_execute_profile_balanced_mock() {
+        let executor = ProtocolExecutor::mock().unwrap();
+        let input = ProtocolInput::query("What is the future of AI in healthcare?");
+
+        let result = executor.execute_profile("balanced", input).await.unwrap();
+
+        assert!(result.success);
+        assert!(result.confidence > 0.0);
+    }
+
+    #[tokio::test]
+    async fn test_execute_profile_powercombo_mock() {
+        let executor = ProtocolExecutor::mock().unwrap();
+        let input = ProtocolInput::query("Analyze the impact of quantum computing on cryptography.");
+
+        let result = executor.execute_profile("powercombo", input).await.unwrap();
+
+        assert!(result.success);
+        assert!(result.confidence > 0.0);
+        // PowerCombo should produce many steps from all 5 ThinkTools
+        assert!(result.steps.len() >= 5);
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // 8. ERROR HANDLING AND RECOVERY TESTS
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    #[tokio::test]
+    async fn test_execute_nonexistent_protocol() {
+        let executor = ProtocolExecutor::mock().unwrap();
+        let input = ProtocolInput::query("Test");
+
+        let result = executor.execute("nonexistent_protocol", input).await;
+
+        assert!(result.is_err());
+        let err = result.unwrap_err();
+        assert!(matches!(err, Error::NotFound { .. }));
+    }
+
+    #[tokio::test]
+    async fn test_execute_nonexistent_profile() {
+        let executor = ProtocolExecutor::mock().unwrap();
+        let input = ProtocolInput::query("Test");
+
+        let result = executor.execute_profile("nonexistent_profile", input).await;
+
+        assert!(result.is_err());
+    }
+
+    #[tokio::test]
+    async fn test_execute_missing_required_input() {
+        let executor = ProtocolExecutor::mock().unwrap();
+        // GigaThink requires "query" field, but we provide "argument"
+        let input = ProtocolInput::argument("Wrong field type");
+
+        let result = executor.execute("gigathink", input).await;
+
+        assert!(result.is_err());
+        let err = result.unwrap_err();
+        assert!(matches!(err, Error::Validation(_)));
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // 9. TRACE GENERATION TESTS
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    #[tokio::test]
+    async fn test_trace_generation_basic() {
+        // Create executor with trace saving enabled (but to temp dir)
+        let config = ExecutorConfig {
+            use_mock: true,
+            save_traces: true,
+            trace_dir: Some(std::env::temp_dir().join("reasonkit_test_traces")),
+            show_progress: false,
+            ..Default::default()
+        };
+        let executor = ProtocolExecutor::with_config(config).unwrap();
+        let input = ProtocolInput::query("Test trace generation");
+
+        let result = executor.execute("gigathink", input).await.unwrap();
+
+        assert!(result.trace_id.is_some());
+    }
+
+    #[test]
+    fn test_execution_trace_creation() {
+        let trace = ExecutionTrace::new("test_protocol", "1.0.0");
+
+        assert_eq!(trace.protocol_id, "test_protocol");
+        assert_eq!(trace.protocol_version, "1.0.0");
+        assert!(trace.steps.is_empty());
+        assert_eq!(trace.status, super::trace::ExecutionStatus::Running);
+    }
+
+    #[test]
+    fn test_step_trace_creation() {
+        let mut step_trace = StepTrace::new("step1", 0);
+
+        assert_eq!(step_trace.step_id, "step1");
+        assert_eq!(step_trace.index, 0);
+        assert_eq!(step_trace.status, StepStatus::Pending);
+
+        step_trace.complete(
+            StepOutput::Text {
+                content: "Output".to_string(),
+            },
+            0.85,
+        );
+
+        assert_eq!(step_trace.status, StepStatus::Completed);
+        assert_eq!(step_trace.confidence, 0.85);
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // 10. BRANCH CONDITION EVALUATION TESTS
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    #[test]
+    fn test_branch_condition_always() {
+        let executor = ProtocolExecutor::mock().unwrap();
+        let condition = BranchCondition::Always;
+        let results: Vec<StepResult> = vec![];
+
+        assert!(executor.evaluate_branch_condition(&condition, &results));
+    }
+
+    #[test]
+    fn test_branch_condition_confidence_below() {
+        let executor = ProtocolExecutor::mock().unwrap();
+        let condition = BranchCondition::ConfidenceBelow { threshold: 0.8 };
+
+        // With empty results, should return true (no confidence to check)
+        let empty_results: Vec<StepResult> = vec![];
+        assert!(executor.evaluate_branch_condition(&condition, &empty_results));
+
+        // With low confidence result, should return true
+        let low_conf_results = vec![StepResult::success(
+            "step1",
+            StepOutput::Text {
+                content: "test".to_string(),
+            },
+            0.5,
+        )];
+        assert!(executor.evaluate_branch_condition(&condition, &low_conf_results));
+
+        // With high confidence result, should return false
+        let high_conf_results = vec![StepResult::success(
+            "step1",
+            StepOutput::Text {
+                content: "test".to_string(),
+            },
+            0.9,
+        )];
+        assert!(!executor.evaluate_branch_condition(&condition, &high_conf_results));
+    }
+
+    #[test]
+    fn test_branch_condition_confidence_above() {
+        let executor = ProtocolExecutor::mock().unwrap();
+        let condition = BranchCondition::ConfidenceAbove { threshold: 0.8 };
+
+        // With high confidence result, should return true
+        let high_conf_results = vec![StepResult::success(
+            "step1",
+            StepOutput::Text {
+                content: "test".to_string(),
+            },
+            0.9,
+        )];
+        assert!(executor.evaluate_branch_condition(&condition, &high_conf_results));
+
+        // With low confidence result, should return false
+        let low_conf_results = vec![StepResult::success(
+            "step1",
+            StepOutput::Text {
+                content: "test".to_string(),
+            },
+            0.5,
+        )];
+        assert!(!executor.evaluate_branch_condition(&condition, &low_conf_results));
+    }
+
+    #[test]
+    fn test_branch_condition_output_equals() {
+        let executor = ProtocolExecutor::mock().unwrap();
+        let condition = BranchCondition::OutputEquals {
+            field: "result".to_string(),
+            value: "PASS".to_string(),
+        };
+
+        // With matching output
+        let matching_results = vec![StepResult::success(
+            "step1",
+            StepOutput::Text {
+                content: "Result: PASS".to_string(),
+            },
+            0.9,
+        )];
+        assert!(executor.evaluate_branch_condition(&condition, &matching_results));
+
+        // With non-matching output
+        let non_matching_results = vec![StepResult::success(
+            "step1",
+            StepOutput::Text {
+                content: "Result: FAIL".to_string(),
+            },
+            0.9,
+        )];
+        assert!(!executor.evaluate_branch_condition(&condition, &non_matching_results));
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // 11. DEPENDENCY MANAGEMENT TESTS
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    #[test]
+    fn test_dependencies_met_empty() {
+        let executor = ProtocolExecutor::mock().unwrap();
+        let deps: Vec<String> = vec![];
+        let results: Vec<StepResult> = vec![];
+
+        assert!(executor.dependencies_met(&deps, &results));
+    }
+
+    #[test]
+    fn test_dependencies_met_satisfied() {
+        let executor = ProtocolExecutor::mock().unwrap();
+        let deps = vec!["step1".to_string(), "step2".to_string()];
+        let results = vec![
+            StepResult::success(
+                "step1",
+                StepOutput::Text {
+                    content: "".to_string(),
+                },
+                0.9,
+            ),
+            StepResult::success(
+                "step2",
+                StepOutput::Text {
+                    content: "".to_string(),
+                },
+                0.8,
+            ),
+        ];
+
+        assert!(executor.dependencies_met(&deps, &results));
+    }
+
+    #[test]
+    fn test_dependencies_met_unsatisfied() {
+        let executor = ProtocolExecutor::mock().unwrap();
+        let deps = vec!["step1".to_string(), "step2".to_string()];
+        let results = vec![StepResult::success(
+            "step1",
+            StepOutput::Text {
+                content: "".to_string(),
+            },
+            0.9,
+        )];
+
+        assert!(!executor.dependencies_met(&deps, &results));
+    }
+
+    #[test]
+    fn test_dependencies_met_failed_step() {
+        let executor = ProtocolExecutor::mock().unwrap();
+        let deps = vec!["step1".to_string()];
+        let results = vec![StepResult::failure("step1", "Some error")];
+
+        assert!(!executor.dependencies_met(&deps, &results));
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // 12. BUDGET TRACKING TESTS
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    #[tokio::test]
+    async fn test_execution_with_token_budget() {
+        let config = ExecutorConfig {
+            use_mock: true,
+            budget: BudgetConfig::with_tokens(10000),
+            show_progress: false,
+            ..Default::default()
+        };
+        let executor = ProtocolExecutor::with_config(config).unwrap();
+        let input = ProtocolInput::query("Test budget tracking");
+
+        let result = executor.execute("gigathink", input).await.unwrap();
+
+        assert!(result.success);
+        assert!(result.budget_summary.is_some());
+        let summary = result.budget_summary.unwrap();
+        assert!(summary.tokens_used > 0);
+    }
+
+    #[tokio::test]
+    async fn test_execution_with_cost_budget() {
+        let config = ExecutorConfig {
+            use_mock: true,
+            budget: BudgetConfig::with_cost(1.0),
+            show_progress: false,
+            ..Default::default()
+        };
+        let executor = ProtocolExecutor::with_config(config).unwrap();
+        let input = ProtocolInput::query("Test cost budget");
+
+        let result = executor.execute("gigathink", input).await.unwrap();
+
+        assert!(result.success);
+        assert!(result.budget_summary.is_some());
+    }
+
+    #[test]
+    fn test_budget_config_parsing() {
+        // Time budget
+        let time_budget = BudgetConfig::parse("30s").unwrap();
+        assert_eq!(time_budget.time_limit, Some(Duration::from_secs(30)));
+
+        let min_budget = BudgetConfig::parse("5m").unwrap();
+        assert_eq!(min_budget.time_limit, Some(Duration::from_secs(300)));
+
+        // Token budget
+        let token_budget = BudgetConfig::parse("1000t").unwrap();
+        assert_eq!(token_budget.token_limit, Some(1000));
+
+        // Cost budget
+        let cost_budget = BudgetConfig::parse("$0.50").unwrap();
+        assert_eq!(cost_budget.cost_limit, Some(0.50));
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // 13. PARALLEL EXECUTION TESTS
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    #[tokio::test]
+    async fn test_parallel_execution_mock() {
+        let config = ExecutorConfig {
+            use_mock: true,
+            enable_parallel: true,
+            max_concurrent_steps: 4,
+            show_progress: false,
+            ..Default::default()
+        };
+        let executor = ProtocolExecutor::with_config(config).unwrap();
+        let input = ProtocolInput::query("Test parallel execution");
+
+        let result = executor.execute("gigathink", input).await.unwrap();
+
+        assert!(result.success);
+        assert!(!result.steps.is_empty());
+    }
+
+    #[tokio::test]
+    async fn test_parallel_execution_with_limit() {
+        let config = ExecutorConfig {
+            use_mock: true,
+            enable_parallel: true,
+            max_concurrent_steps: 2,
+            show_progress: false,
+            ..Default::default()
+        };
+        let executor = ProtocolExecutor::with_config(config).unwrap();
+        let input = ProtocolInput::query("Test parallel with limit");
+
+        let result = executor.execute("gigathink", input).await.unwrap();
+
+        assert!(result.success);
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // 14. CLI TOOL CONFIG TESTS
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    #[test]
+    fn test_cli_tool_config_claude() {
+        let config = CliToolConfig::claude();
+        assert_eq!(config.command, "claude");
+        assert!(config.pre_args.contains(&"-p".to_string()));
+        assert!(!config.interactive);
+    }
+
+    #[test]
+    fn test_cli_tool_config_codex() {
+        let config = CliToolConfig::codex();
+        assert_eq!(config.command, "codex");
+        assert!(config.pre_args.contains(&"-q".to_string()));
+    }
+
+    #[test]
+    fn test_cli_tool_config_gemini() {
+        let config = CliToolConfig::gemini();
+        assert_eq!(config.command, "gemini");
+        assert!(config.pre_args.contains(&"-p".to_string()));
+    }
+
+    #[test]
+    fn test_cli_tool_config_copilot() {
+        let config = CliToolConfig::copilot();
+        assert_eq!(config.command, "gh");
+        assert!(config.pre_args.contains(&"copilot".to_string()));
+        assert!(config.interactive);
+    }
+
+    #[test]
+    fn test_executor_config_cli() {
+        let config = ExecutorConfig::claude_cli();
+        assert!(config.cli_tool.is_some());
+        assert_eq!(config.cli_tool.unwrap().command, "claude");
+
+        let config = ExecutorConfig::gemini_cli();
+        assert!(config.cli_tool.is_some());
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // 15. PROTOCOL OUTPUT TESTS
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    #[test]
+    fn test_protocol_output_get() {
+        let mut data = HashMap::new();
+        data.insert("key1".to_string(), serde_json::json!("value1"));
+        data.insert("key2".to_string(), serde_json::json!(42));
+
+        let output = ProtocolOutput {
+            protocol_id: "test".to_string(),
+            success: true,
+            data,
+            confidence: 0.85,
+            steps: vec![],
+            tokens: TokenUsage::default(),
+            duration_ms: 100,
+            error: None,
+            trace_id: None,
+            budget_summary: None,
+        };
+
+        assert_eq!(output.get("key1"), Some(&serde_json::json!("value1")));
+        assert_eq!(output.get("key2"), Some(&serde_json::json!(42)));
+        assert_eq!(output.get("nonexistent"), None);
+    }
+
+    #[test]
+    fn test_protocol_output_verdict() {
+        let mut data = HashMap::new();
+        data.insert("verdict".to_string(), serde_json::json!("VALID"));
+
+        let output = ProtocolOutput {
+            protocol_id: "test".to_string(),
+            success: true,
+            data,
+            confidence: 0.85,
+            steps: vec![],
+            tokens: TokenUsage::default(),
+            duration_ms: 100,
+            error: None,
+            trace_id: None,
+            budget_summary: None,
+        };
+
+        assert_eq!(output.verdict(), Some("VALID"));
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // 16. CHAIN CONDITION EVALUATION TESTS
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    #[test]
+    fn test_chain_condition_always() {
+        let executor = ProtocolExecutor::mock().unwrap();
+        let condition = ChainCondition::Always;
+        let results: Vec<StepResult> = vec![];
+
+        assert!(executor.evaluate_chain_condition(&condition, &results));
+    }
+
+    #[test]
+    fn test_chain_condition_confidence_below() {
+        let executor = ProtocolExecutor::mock().unwrap();
+        let condition = ChainCondition::ConfidenceBelow { threshold: 0.8 };
+
+        let low_conf_results = vec![StepResult::success(
+            "step1",
+            StepOutput::Text {
+                content: "test".to_string(),
+            },
+            0.5,
+        )];
+        assert!(executor.evaluate_chain_condition(&condition, &low_conf_results));
+    }
+
+    #[test]
+    fn test_chain_condition_output_exists() {
+        let executor = ProtocolExecutor::mock().unwrap();
+        let condition = ChainCondition::OutputExists {
+            step_id: "step1".to_string(),
+            field: "result".to_string(),
+        };
+
+        let results = vec![StepResult::success(
+            "step1",
+            StepOutput::Text {
+                content: "output".to_string(),
+            },
+            0.9,
+        )];
+        assert!(executor.evaluate_chain_condition(&condition, &results));
+
+        let empty_results: Vec<StepResult> = vec![];
+        assert!(!executor.evaluate_chain_condition(&condition, &empty_results));
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // 17. MAPPING RESOLUTION TESTS
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    #[test]
+    fn test_resolve_mapping_input() {
+        let executor = ProtocolExecutor::mock().unwrap();
+        let input = ProtocolInput::query("Test query");
+        let step_outputs: HashMap<String, serde_json::Value> = HashMap::new();
+
+        let result = executor.resolve_mapping("input.query", &step_outputs, &input);
+        assert!(result.is_some());
+        assert_eq!(result.unwrap(), serde_json::json!("Test query"));
+    }
+
+    #[test]
+    fn test_resolve_mapping_missing_input() {
+        let executor = ProtocolExecutor::mock().unwrap();
+        let input = ProtocolInput::query("Test query");
+        let step_outputs: HashMap<String, serde_json::Value> = HashMap::new();
+
+        let result = executor.resolve_mapping("input.nonexistent", &step_outputs, &input);
+        assert!(result.is_none());
+    }
+
+    #[test]
+    fn test_resolve_mapping_step_output() {
+        let executor = ProtocolExecutor::mock().unwrap();
+        let input = ProtocolInput::query("Test");
+        let mut step_outputs: HashMap<String, serde_json::Value> = HashMap::new();
+        step_outputs.insert(
+            "steps.gigathink".to_string(),
+            serde_json::json!({
+                "result": "some output",
+                "confidence": 0.85
+            }),
+        );
+
+        let result = executor.resolve_mapping("steps.gigathink", &step_outputs, &input);
+        assert!(result.is_some());
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // 18. TOKEN USAGE TESTS
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    #[test]
+    fn test_token_usage_creation() {
+        let usage = TokenUsage::new(100, 50, 0.001);
+
+        assert_eq!(usage.input_tokens, 100);
+        assert_eq!(usage.output_tokens, 50);
+        assert_eq!(usage.total_tokens, 150);
+        assert_eq!(usage.cost_usd, 0.001);
+    }
+
+    #[test]
+    fn test_token_usage_add() {
+        let mut usage1 = TokenUsage::new(100, 50, 0.001);
+        let usage2 = TokenUsage::new(200, 100, 0.002);
+
+        usage1.add(&usage2);
+
+        assert_eq!(usage1.input_tokens, 300);
+        assert_eq!(usage1.output_tokens, 150);
+        assert_eq!(usage1.total_tokens, 450);
+        assert_eq!(usage1.cost_usd, 0.003);
+    }
+
+    #[tokio::test]
+    async fn test_execution_accumulates_tokens() {
+        let executor = ProtocolExecutor::mock().unwrap();
+        let input = ProtocolInput::query("Test token accumulation");
+
+        let result = executor.execute("gigathink", input).await.unwrap();
+
+        assert!(result.tokens.total_tokens > 0);
+        assert!(result.tokens.input_tokens > 0);
+        assert!(result.tokens.output_tokens > 0);
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // 19. SYSTEM PROMPT GENERATION TESTS
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    #[test]
+    fn test_build_system_prompt_generate() {
+        let step = ProtocolStep {
+            id: "test".to_string(),
+            action: StepAction::Generate {
+                min_count: 5,
+                max_count: 10,
+            },
+            prompt_template: "".to_string(),
+            output_format: super::protocol::StepOutputFormat::List,
+            min_confidence: 0.7,
+            depends_on: vec![],
+            branch: None,
+        };
+
+        let prompt = ProtocolExecutor::build_system_prompt_static(&step);
+        assert!(prompt.contains("Generate"));
+        assert!(prompt.contains("confidence"));
+    }
+
+    #[test]
+    fn test_build_system_prompt_analyze() {
+        let step = ProtocolStep {
+            id: "test".to_string(),
+            action: StepAction::Analyze {
+                criteria: vec!["accuracy".to_string()],
+            },
+            prompt_template: "".to_string(),
+            output_format: super::protocol::StepOutputFormat::Text,
+            min_confidence: 0.7,
+            depends_on: vec![],
+            branch: None,
+        };
+
+        let prompt = ProtocolExecutor::build_system_prompt_static(&step);
+        assert!(prompt.contains("Analyze"));
+    }
+
+    #[test]
+    fn test_build_system_prompt_validate() {
+        let step = ProtocolStep {
+            id: "test".to_string(),
+            action: StepAction::Validate {
+                rules: vec!["rule1".to_string()],
+            },
+            prompt_template: "".to_string(),
+            output_format: super::protocol::StepOutputFormat::Boolean,
+            min_confidence: 0.7,
+            depends_on: vec![],
+            branch: None,
+        };
+
+        let prompt = ProtocolExecutor::build_system_prompt_static(&step);
+        assert!(prompt.contains("Validate"));
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // 20. EDGE CASES AND STRESS TESTS
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    #[test]
+    fn test_empty_template() {
+        let executor = ProtocolExecutor::mock().unwrap();
+        let input = ProtocolInput::query("Test");
+
+        let rendered = executor.render_template("", &input, &HashMap::new());
+        assert_eq!(rendered, "");
+    }
+
+    #[test]
+    fn test_template_with_special_characters() {
+        let executor = ProtocolExecutor::mock().unwrap();
+        let input = ProtocolInput::query("Test with \"quotes\" and 'apostrophes'");
+
+        let template = "Query: {{query}}";
+        let rendered = executor.render_template(template, &input, &HashMap::new());
+        assert!(rendered.contains("\"quotes\""));
+        assert!(rendered.contains("'apostrophes'"));
+    }
+
+    #[test]
+    fn test_confidence_extraction_edge_cases() {
+        let executor = ProtocolExecutor::mock().unwrap();
+
+        // Very small confidence
+        assert_eq!(
+            executor.extract_confidence("Confidence: 0.001"),
+            Some(0.001)
+        );
+
+        // Confidence at boundary
+        assert_eq!(executor.extract_confidence("Confidence: 1.0"), Some(1.0));
+        assert_eq!(executor.extract_confidence("Confidence: 0.0"), Some(0.0));
+    }
+
+    #[tokio::test]
+    async fn test_execution_with_very_long_input() {
+        let executor = ProtocolExecutor::mock().unwrap();
+        let long_query = "A".repeat(10000);
+        let input = ProtocolInput::query(long_query);
+
+        let result = executor.execute("gigathink", input).await.unwrap();
+        assert!(result.success);
+    }
+
+    #[test]
+    fn test_list_extraction_with_many_items() {
+        let executor = ProtocolExecutor::mock().unwrap();
+
+        let mut content = String::new();
+        for i in 1..=50 {
+            content.push_str(&format!("{}. Item number {}\n", i, i));
+        }
+        content.push_str("Confidence: 0.85");
+
+        let items = executor.extract_list_items(&content);
+        assert_eq!(items.len(), 50);
     }
 }

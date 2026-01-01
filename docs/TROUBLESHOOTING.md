@@ -9,6 +9,7 @@
 ### 1. "command not found: rk-core"
 
 **Fix:**
+
 ```bash
 # Add cargo bin to PATH
 export PATH="$HOME/.cargo/bin:$PATH"
@@ -21,6 +22,7 @@ echo 'export PATH="$HOME/.cargo/bin:$PATH"' >> ~/.zshrc && source ~/.zshrc
 ```
 
 **Still not working?**
+
 ```bash
 # Check if binary exists
 ls -la ~/.cargo/bin/rk-core
@@ -34,6 +36,7 @@ cargo install reasonkit-core --force
 ### 2. "API key not found"
 
 **Fix:**
+
 ```bash
 # Set API key (Anthropic)
 export ANTHROPIC_API_KEY="sk-ant-..."
@@ -46,6 +49,7 @@ echo $ANTHROPIC_API_KEY
 ```
 
 **Make permanent:**
+
 ```bash
 # Add to shell profile
 echo 'export ANTHROPIC_API_KEY="sk-ant-..."' >> ~/.bashrc
@@ -57,6 +61,7 @@ source ~/.bashrc
 ### 3. "Rate limit exceeded (429)"
 
 **Fix:**
+
 ```bash
 # Use budget limit
 rk-core think "query" --budget "$0.10"
@@ -74,6 +79,7 @@ sleep 60 && rk-core think "query" --profile quick
 ### 4. "cargo: command not found" (Rust not installed)
 
 **Fix:**
+
 ```bash
 # Install Rust
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
@@ -135,6 +141,7 @@ sudo pacman -S openssl
 ### 7. "Timeout during analysis"
 
 **Fix:**
+
 ```bash
 # Use faster profile
 rk-core think "query" --profile quick
@@ -151,6 +158,7 @@ rk-core think "query" --provider groq
 ### 8. "Output not JSON-parseable"
 
 **Fix:**
+
 ```bash
 # Ensure JSON format is specified
 rk-core think "query" --format json
@@ -167,6 +175,7 @@ rk-core think "query" --format json 2>&1 | head -50
 ### 9. "Permission denied" during install
 
 **Fix:**
+
 ```bash
 # Don't use sudo with cargo
 # This is correct:
@@ -186,6 +195,7 @@ mkdir -p ~/.cargo/bin
 **This is expected behavior, not an error.**
 
 **Improve confidence:**
+
 ```bash
 # Use higher-rigor profile
 rk-core think "query" --profile deep       # 85% target
@@ -226,38 +236,44 @@ uname -a
 
 ## Quick Reference: Common Fixes
 
-| Problem | Quick Fix |
-|---------|-----------|
-| `rk-core: command not found` | `export PATH="$HOME/.cargo/bin:$PATH"` |
-| `API key not found` | `export ANTHROPIC_API_KEY="sk-ant-..."` |
-| `Rate limit exceeded` | `rk-core think "..." --provider groq` |
-| `cargo not found` | `curl -sSf https://sh.rustup.rs \| sh` |
-| `linker not found` | `xcode-select --install` (macOS) |
-| `OpenSSL not found` | `brew install openssl@3` (macOS) |
-| `Timeout` | `--profile quick` or `--budget "5m"` |
-| `JSON parse error` | `--format json` flag explicitly |
-| `Permission denied` | Don't use `sudo` with cargo |
+| Problem                      | Quick Fix                               |
+| ---------------------------- | --------------------------------------- |
+| `rk-core: command not found` | `export PATH="$HOME/.cargo/bin:$PATH"`  |
+| `API key not found`          | `export ANTHROPIC_API_KEY="sk-ant-..."` |
+| `Rate limit exceeded`        | `rk-core think "..." --provider groq`   |
+| `cargo not found`            | `curl -sSf https://sh.rustup.rs \| sh`  |
+| `linker not found`           | `xcode-select --install` (macOS)        |
+| `OpenSSL not found`          | `brew install openssl@3` (macOS)        |
+| `Timeout`                    | `--profile quick` or `--budget "5m"`    |
+| `JSON parse error`           | `--format json` flag explicitly         |
+| `Permission denied`          | Don't use `sudo` with cargo             |
 
 ---
 
 ## Still Stuck?
 
 ### 1. Check detailed installation docs
+
 [INSTALLATION_TROUBLESHOOTING.md](INSTALLATION_TROUBLESHOOTING.md) - Platform-specific guides
 
 ### 2. Enable debug logging
+
 ```bash
 RUST_LOG=debug rk-core think "query" --profile quick
 ```
 
 ### 3. Search existing issues
+
 [GitHub Issues](https://github.com/reasonkit/reasonkit-core/issues)
 
 ### 4. Ask the community
+
 [GitHub Discussions](https://github.com/reasonkit/reasonkit-core/discussions)
 
 ### 5. Open a new issue
+
 Include:
+
 - OS and version
 - `rk-core --version` output
 - Full error message

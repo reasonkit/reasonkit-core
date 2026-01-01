@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 550" fill="none">
+  <defs>
+    <linearGradient id="heroGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#06b6d4"/>
+      <stop offset="50%" stop-color="#a855f7"/>
+      <stop offset="100%" stop-color="#ec4899"/>
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="8" stdDeviation="16" flood-color="#000" flood-opacity="0.5"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="900" height="550" fill="#030508"/>
+
+  <!-- Terminal window -->
+  <g transform="translate(30, 30)" filter="url(#shadow)">
+    <!-- Window chrome -->
+    <rect width="840" height="490" rx="12" fill="#0a0d14" stroke="#1f2937" stroke-width="1"/>
+
+    <!-- Title bar -->
+    <rect width="840" height="36" rx="12" fill="#111827"/>
+    <rect y="24" width="840" height="12" fill="#111827"/>
+
+    <!-- Traffic lights -->
+    <circle cx="20" cy="18" r="6" fill="#ef4444"/>
+    <circle cx="40" cy="18" r="6" fill="#fbbf24"/>
+    <circle cx="60" cy="18" r="6" fill="#10b981"/>
+
+    <!-- Title -->
+    <text x="420" y="23" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="13" fill="#6b7280">rk-core — bash — 120×40</text>
+
+    <!-- Terminal content -->
+    <g transform="translate(20, 55)" font-family="JetBrains Mono, SF Mono, Consolas, monospace" font-size="13">
+      <!-- Command prompt -->
+      <text y="0" fill="#10b981">$</text>
+      <text x="15" y="0" fill="#f9fafb">rk-core think --profile balanced "Should we migrate to microservices?"</text>
+
+      <!-- Empty line -->
+      <text y="25" fill="#6b7280"></text>
+
+      <!-- Chain header -->
+      <text y="50" fill="#06b6d4">ThinkTool Chain:</text>
+      <text x="120" y="50" fill="#9ca3af">GigaThink → LaserLogic → BedRock → ProofGuard</text>
+
+      <!-- Empty line -->
+      <text y="75" fill="#6b7280"></text>
+
+      <!-- GigaThink section -->
+      <text y="100" fill="#06b6d4">[GigaThink]</text>
+      <text x="100" y="100" fill="#fbbf24">10 PERSPECTIVES GENERATED</text>
+      <text x="30" y="125" fill="#9ca3af">1. OPERATIONAL: Maintenance overhead +40% initially</text>
+      <text x="30" y="150" fill="#9ca3af">2. TEAM TOPOLOGY: Conway's Law - do we have the teams?</text>
+      <text x="30" y="175" fill="#9ca3af">3. COST ANALYSIS: Infrastructure scales non-linearly</text>
+      <text x="30" y="200" fill="#6b7280">   ...</text>
+
+      <!-- LaserLogic section -->
+      <text y="235" fill="#a855f7">[LaserLogic]</text>
+      <text x="105" y="235" fill="#f97316">HIDDEN ASSUMPTIONS DETECTED</text>
+      <text x="30" y="260" fill="#f97316">!</text>
+      <text x="45" y="260" fill="#9ca3af">Assuming network latency is negligible</text>
+      <text x="30" y="285" fill="#f97316">!</text>
+      <text x="45" y="285" fill="#9ca3af">Assuming team has distributed tracing expertise</text>
+
+      <!-- BedRock section -->
+      <text y="320" fill="#10b981">[BedRock]</text>
+      <text x="85" y="320" fill="#10b981">FIRST PRINCIPLES DECOMPOSITION</text>
+      <text x="30" y="345" fill="#10b981">*</text>
+      <text x="45" y="345" fill="#9ca3af">Axiom: Monoliths are simpler to reason about</text>
+      <text x="30" y="370" fill="#10b981">*</text>
+      <text x="45" y="370" fill="#9ca3af">Axiom: Distributed systems introduce partitions (CAP)</text>
+
+      <!-- Verdict -->
+      <text y="410" fill="#f9fafb">VERDICT:</text>
+      <text x="70" y="410" fill="#fbbf24">conditional_yes</text>
+      <text x="195" y="410" fill="#6b7280">|</text>
+      <text x="210" y="410" fill="#9ca3af">Confidence:</text>
+      <text x="305" y="410" fill="#10b981">87%</text>
+      <text x="340" y="410" fill="#6b7280">|</text>
+      <text x="355" y="410" fill="#9ca3af">Duration:</text>
+      <text x="435" y="410" fill="#06b6d4">2.3s</text>
+    </g>
+  </g>
+</svg>

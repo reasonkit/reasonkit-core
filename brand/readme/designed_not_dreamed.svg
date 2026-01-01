@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 250" fill="none">
+  <defs>
+    <linearGradient id="heroGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#06b6d4"/>
+      <stop offset="50%" stop-color="#a855f7"/>
+      <stop offset="100%" stop-color="#ec4899"/>
+    </linearGradient>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#0a0d14"/>
+      <stop offset="100%" stop-color="#030508"/>
+    </linearGradient>
+    <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <pattern id="circuit" width="80" height="80" patternUnits="userSpaceOnUse">
+      <g stroke="#06b6d4" stroke-width="0.4" fill="none" opacity="0.1">
+        <path d="M0 40 H80"/>
+        <path d="M40 0 V80"/>
+        <circle cx="40" cy="40" r="3" fill="#06b6d4" opacity="0.15"/>
+      </g>
+    </pattern>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="250" rx="20" fill="url(#bgGrad)"/>
+  <rect width="1200" height="250" rx="20" fill="url(#circuit)"/>
+
+  <!-- Decorative lines -->
+  <g stroke="url(#heroGrad)" stroke-width="1" opacity="0.3">
+    <line x1="0" y1="125" x2="200" y2="125"/>
+    <line x1="1000" y1="125" x2="1200" y2="125"/>
+  </g>
+
+  <!-- Crystalline icon -->
+  <g transform="translate(100, 125)" filter="url(#glow)">
+    <circle r="50" fill="#030508" stroke="url(#heroGrad)" stroke-width="3"/>
+    <polygon points="-28,0 0,-40 28,0 0,40" fill="url(#heroGrad)" opacity="0.85"/>
+    <polygon points="-28,0 0,-15 28,0 0,15" fill="#030508" opacity="0.8"/>
+  </g>
+
+  <!-- Main title -->
+  <text x="600" y="90" text-anchor="middle" font-family="Inter, -apple-system, sans-serif" font-size="48" font-weight="800" fill="#f9fafb">ReasonKit</text>
+
+  <!-- Tagline -->
+  <text x="600" y="135" text-anchor="middle" font-family="Inter, sans-serif" font-size="24" font-weight="500" fill="url(#heroGrad)">Turn Prompts into Protocols</text>
+
+  <!-- Subtitle -->
+  <text x="600" y="175" text-anchor="middle" font-family="Inter, sans-serif" font-size="18" fill="#9ca3af">Designed, Not Dreamed</text>
+
+  <!-- Links -->
+  <g transform="translate(600, 215)" font-family="JetBrains Mono, monospace" font-size="13" text-anchor="middle">
+    <text fill="#6b7280">reasonkit.sh</text>
+    <text x="-150" fill="#6b7280">docs.rs/reasonkit-core</text>
+    <text x="150" fill="#6b7280">github.com/reasonkit</text>
+  </g>
+
+  <!-- Decorative icon right -->
+  <g transform="translate(1100, 125)" filter="url(#glow)">
+    <circle r="50" fill="#030508" stroke="url(#heroGrad)" stroke-width="3"/>
+    <polygon points="-28,0 0,-40 28,0 0,40" fill="url(#heroGrad)" opacity="0.85"/>
+    <polygon points="-28,0 0,-15 28,0 0,15" fill="#030508" opacity="0.8"/>
+  </g>
+</svg>

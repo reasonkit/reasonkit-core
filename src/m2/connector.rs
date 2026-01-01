@@ -4,7 +4,7 @@ use crate::m2::types::{
     CompositeConstraints, Evidence, ExecutionMetrics, InterleavedProtocol, M2Config, ProtocolInput,
     ProtocolOutput as M2ProtocolOutput,
 };
-use anyhow::{anyhow, Result};
+use anyhow::{Context, Result};
 use reqwest::Client;
 use serde_json::json;
 use tracing::{debug, error, info, instrument};
@@ -75,16 +75,38 @@ impl M2Connector {
             .post(&self.config.endpoint)
             .json(&body)
             .send()
-            .await?;
+            .await
+            .with_context(|| {
+                format!(
+                    "Failed to send request to Ollama endpoint: {}",
+                    self.config.endpoint
+                )
+            })?;
 
         if !response.status().is_success() {
             let status = response.status();
-            let text = response.text().await.unwrap_or_default();
-            return Err(anyhow!("Ollama API error: {} - {}", status, text));
+            let error_body = response
+                .text()
+                .await
+                .unwrap_or_else(|e| format!("<failed to read error body: {}>", e));
+            return Err(anyhow::anyhow!(
+                "Ollama API error: {} - {}",
+                status,
+                error_body
+            ));
         }
 
-        let response_json: serde_json::Value = response.json().await?;
-        let response_text = response_json["response"].as_str().unwrap_or("").to_string();
+        let response_json: serde_json::Value = response
+            .json()
+            .await
+            .context("Failed to parse Ollama response as JSON")?;
+
+        // Safely extract the response text, defaulting to empty string if not present
+        let response_text = response_json
+            .get("response")
+            .and_then(|v| v.as_str())
+            .unwrap_or("")
+            .to_string();
 
         // Basic parsing of response to M2Result
         // In a real implementation, we might parse specific sections or evidence

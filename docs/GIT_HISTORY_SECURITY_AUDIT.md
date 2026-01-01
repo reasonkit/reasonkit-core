@@ -13,16 +13,16 @@ This security audit of the git history reveals **CRITICAL** issues that MUST be 
 
 ### Risk Rating: HIGH
 
-| Category | Finding | Severity |
-|----------|---------|----------|
-| Hardcoded Secrets | Placeholder values only (SAFE) | LOW |
-| API Keys | No real keys found | LOW |
-| Private Keys/Certs | None found | LOW |
-| Business Financial Data | EXPOSED in history | CRITICAL |
-| Internal Research Docs | EXPOSED in history | CRITICAL |
-| rk-research Content | 1,101+ files in history | CRITICAL |
-| Large Binary Files | 46MB+ files present | MEDIUM |
-| Email Addresses | Bot emails only | LOW |
+| Category                | Finding                        | Severity |
+| ----------------------- | ------------------------------ | -------- |
+| Hardcoded Secrets       | Placeholder values only (SAFE) | LOW      |
+| API Keys                | No real keys found             | LOW      |
+| Private Keys/Certs      | None found                     | LOW      |
+| Business Financial Data | EXPOSED in history             | CRITICAL |
+| Internal Research Docs  | EXPOSED in history             | CRITICAL |
+| rk-research Content     | 1,101+ files in history        | CRITICAL |
+| Large Binary Files      | 46MB+ files present            | MEDIUM   |
+| Email Addresses         | Bot emails only                | LOW      |
 
 ---
 
@@ -33,6 +33,7 @@ This security audit of the git history reveals **CRITICAL** issues that MUST be 
 **Finding:** The `rk-research/` directory content has been committed to git history.
 
 **Files Found in History (sample):**
+
 - `rk-research/INVESTOR_PITCH_DECK_CONTENT_2025.md` - Contains valuation targets ($10-12M pre-money), fundraising details ($2.5M Seed)
 - `rk-research/internal-docs/core/checklists/PRE_LAUNCH_SECURITY_CHECKLIST.md`
 - `rk-research/internal-docs/core/checklists/SECURITY_AUDIT_CHECKLIST.md`
@@ -41,6 +42,7 @@ This security audit of the git history reveals **CRITICAL** issues that MUST be 
 - `rk-research/internal-docs/core/research/` (research documents)
 
 **Commits Containing rk-research:**
+
 - `3b1a585` - "chore: finalize launch readiness and update documentation"
 - `3c1caf1` - "chore: prepare all packages for crates.io publication"
 - `83ff8e4` - "chore: synchronize all remaining modified files and assets"
@@ -57,6 +59,7 @@ This security audit of the git history reveals **CRITICAL** issues that MUST be 
 **Finding:** Startup runway analysis and financial projections are in git history.
 
 **Files in History:**
+
 - `startup_runway_analysis.md` - Contains:
   - Initial Runway: $500,000
   - Monthly Burn: $45,000 (+8%/month)
@@ -69,6 +72,7 @@ This security audit of the git history reveals **CRITICAL** issues that MUST be 
 - `SOC2_STRATEGY_2026.md` - SOC 2 compliance costs and timelines
 
 **Commits:**
+
 - `3b1a585`, `3c1caf1`, `4f41ce1`
 
 **Risk:** Competitors and potential partners could access confidential financial information.
@@ -82,6 +86,7 @@ This security audit of the git history reveals **CRITICAL** issues that MUST be 
 **Location:** `rk-research/INVESTOR_PITCH_DECK_CONTENT_2025.md`
 
 **Exposed Information:**
+
 - Seed Round target: $2.5M
 - Valuation target: $10-12M pre-money
 - 18-month runway projections
@@ -121,6 +126,7 @@ This security audit of the git history reveals **CRITICAL** issues that MUST be 
 **File:** `archive/elite_phases/ELITE_PHASE_IX/claude_mcp_config.json` (deleted but in history)
 
 **Content Pattern:**
+
 ```json
 {
   "env": {
@@ -144,6 +150,7 @@ This security audit of the git history reveals **CRITICAL** issues that MUST be 
 **File:** `archive/legacy-reasonkit/.env.example`
 
 **Content:** Template values like:
+
 - `JWT_SECRET_KEY=CHANGE_ME_generate_with_openssl_rand_hex_64`
 - `API_MASTER_KEY=CHANGE_ME_generate_with_openssl_rand_hex_32`
 - `OPENAI_API_KEY=` (empty)
@@ -158,6 +165,7 @@ This security audit of the git history reveals **CRITICAL** issues that MUST be 
 **Finding:** Commits contain automated bot email addresses.
 
 **Emails Found:**
+
 - `bot@reasonkit.sh` (ReasonKit Bot)
 - `noreply@anthropic.com` (Claude Code co-author)
 - `zyxsys@v2-deb-ams-nl.3lh.net` (developer)
@@ -210,6 +218,7 @@ git filter-repo --strip-blobs-bigger-than 10M
 ```
 
 **Consequences:**
+
 - All commit hashes will change
 - Force push required to all remotes
 - All forks/clones will be invalidated
@@ -234,11 +243,13 @@ git commit -m "Initial public release v1.0.0"
 ```
 
 **Advantages:**
+
 - Clean history
 - Smaller repository
 - No risk of missed sensitive data
 
 **Disadvantages:**
+
 - Loss of historical commit context
 - Contributors lose attribution
 
@@ -311,6 +322,7 @@ After remediation, verify:
 **This repository CANNOT be made public in its current state.**
 
 The git history contains:
+
 1. Confidential investor pitch materials with valuation targets
 2. Internal financial data (runway, burn rate, MRR)
 3. 1,101+ internal research documents
@@ -320,12 +332,13 @@ The git history contains:
 **Recommended Action:** Perform Option A (history rewrite) or Option B (fresh repository) before any public release.
 
 **Timeline:** This should be completed BEFORE:
+
 - Publishing to crates.io
 - Making GitHub repository public
 - Sharing repository links externally
 
 ---
 
-*Report generated: 2026-01-01*
-*Auditor: Security Specialist (Claude Opus 4.5)*
-*Classification: INTERNAL USE ONLY*
+_Report generated: 2026-01-01_
+_Auditor: Security Specialist (Claude Opus 4.5)_
+_Classification: INTERNAL USE ONLY_

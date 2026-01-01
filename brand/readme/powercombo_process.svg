@@ -1,0 +1,87 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 300" fill="none">
+  <defs>
+    <linearGradient id="heroGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#06b6d4"/>
+      <stop offset="50%" stop-color="#a855f7"/>
+      <stop offset="100%" stop-color="#ec4899"/>
+    </linearGradient>
+    <marker id="arrow" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto">
+      <path d="M0,0 L0,8 L10,4 z" fill="#06b6d4"/>
+    </marker>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="2"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1000" height="300" fill="#030508"/>
+
+  <!-- Title -->
+  <text x="500" y="40" text-anchor="middle" font-family="Inter, sans-serif" font-size="22" font-weight="700" fill="url(#heroGrad)">THE POWERCOMBO PROCESS</text>
+
+  <!-- 5 ThinkTool boxes -->
+  <!-- Box 1: GigaThink -->
+  <g transform="translate(60, 80)">
+    <rect width="140" height="160" rx="16" fill="#0a0d14" stroke="#06b6d4" stroke-width="2"/>
+    <circle cx="70" cy="45" r="25" fill="#06b6d4" opacity="0.2"/>
+    <text x="70" y="52" text-anchor="middle" font-size="24">💡</text>
+    <text x="70" y="95" text-anchor="middle" font-family="Inter, sans-serif" font-size="16" font-weight="700" fill="#06b6d4">GigaThink</text>
+    <text x="70" y="120" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="12" fill="#9ca3af">Diverge()</text>
+    <text x="70" y="145" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" fill="#6b7280">10+ perspectives</text>
+  </g>
+
+  <!-- Arrow 1 -->
+  <line x1="210" y1="160" x2="235" y2="160" stroke="#06b6d4" stroke-width="3" marker-end="url(#arrow)"/>
+
+  <!-- Box 2: LaserLogic -->
+  <g transform="translate(250, 80)">
+    <rect width="140" height="160" rx="16" fill="#0a0d14" stroke="#a855f7" stroke-width="2"/>
+    <circle cx="70" cy="45" r="25" fill="#a855f7" opacity="0.2"/>
+    <text x="70" y="52" text-anchor="middle" font-size="24">🎯</text>
+    <text x="70" y="95" text-anchor="middle" font-family="Inter, sans-serif" font-size="16" font-weight="700" fill="#a855f7">LaserLogic</text>
+    <text x="70" y="120" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="12" fill="#9ca3af">Converge()</text>
+    <text x="70" y="145" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" fill="#6b7280">Fallacy detection</text>
+  </g>
+
+  <!-- Arrow 2 -->
+  <line x1="400" y1="160" x2="425" y2="160" stroke="#a855f7" stroke-width="3" marker-end="url(#arrow)"/>
+
+  <!-- Box 3: BedRock -->
+  <g transform="translate(440, 80)">
+    <rect width="140" height="160" rx="16" fill="#0a0d14" stroke="#10b981" stroke-width="2"/>
+    <circle cx="70" cy="45" r="25" fill="#10b981" opacity="0.2"/>
+    <text x="70" y="52" text-anchor="middle" font-size="24">🪨</text>
+    <text x="70" y="95" text-anchor="middle" font-family="Inter, sans-serif" font-size="16" font-weight="700" fill="#10b981">BedRock</text>
+    <text x="70" y="120" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="12" fill="#9ca3af">Ground()</text>
+    <text x="70" y="145" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" fill="#6b7280">First principles</text>
+  </g>
+
+  <!-- Arrow 3 -->
+  <line x1="590" y1="160" x2="615" y2="160" stroke="#10b981" stroke-width="3" marker-end="url(#arrow)"/>
+
+  <!-- Box 4: ProofGuard -->
+  <g transform="translate(630, 80)">
+    <rect width="140" height="160" rx="16" fill="#0a0d14" stroke="#f97316" stroke-width="2"/>
+    <circle cx="70" cy="45" r="25" fill="#f97316" opacity="0.2"/>
+    <text x="70" y="52" text-anchor="middle" font-size="24">🛡️</text>
+    <text x="70" y="95" text-anchor="middle" font-family="Inter, sans-serif" font-size="16" font-weight="700" fill="#f97316">ProofGuard</text>
+    <text x="70" y="120" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="12" fill="#9ca3af">Verify()</text>
+    <text x="70" y="145" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" fill="#6b7280">3-source verify</text>
+  </g>
+
+  <!-- Arrow 4 -->
+  <line x1="780" y1="160" x2="805" y2="160" stroke="#f97316" stroke-width="3" marker-end="url(#arrow)"/>
+
+  <!-- Box 5: BrutalHonesty -->
+  <g transform="translate(820, 80)">
+    <rect width="140" height="160" rx="16" fill="#0a0d14" stroke="#ec4899" stroke-width="2"/>
+    <circle cx="70" cy="45" r="25" fill="#ec4899" opacity="0.2"/>
+    <text x="70" y="52" text-anchor="middle" font-size="24">⚔️</text>
+    <text x="70" y="95" text-anchor="middle" font-family="Inter, sans-serif" font-size="16" font-weight="700" fill="#ec4899">BrutalHonesty</text>
+    <text x="70" y="120" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="12" fill="#9ca3af">Critique()</text>
+    <text x="70" y="145" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" fill="#6b7280">Red team attack</text>
+  </g>
+
+  <!-- Footer -->
+  <text x="500" y="275" text-anchor="middle" font-family="Inter, sans-serif" font-size="13" fill="#6b7280">Each stage reduces variance: 85% → 65% → 50% → 35% → 28%</text>
+</svg>

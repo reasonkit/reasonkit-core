@@ -1,0 +1,113 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 400" fill="none">
+  <defs>
+    <linearGradient id="heroGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#06b6d4"/>
+      <stop offset="50%" stop-color="#a855f7"/>
+      <stop offset="100%" stop-color="#ec4899"/>
+    </linearGradient>
+    <linearGradient id="barGrad1" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ef4444"/>
+      <stop offset="100%" stop-color="#dc2626"/>
+    </linearGradient>
+    <linearGradient id="barGrad2" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#06b6d4"/>
+      <stop offset="100%" stop-color="#0891b2"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="900" height="400" fill="#030508"/>
+
+  <!-- Title -->
+  <text x="450" y="40" text-anchor="middle" font-family="Inter, sans-serif" font-size="24" font-weight="700" fill="url(#heroGrad)">VARIANCE REDUCTION BY STAGE</text>
+
+  <!-- Chart area -->
+  <g transform="translate(100, 80)">
+    <!-- Y-axis -->
+    <line x1="0" y1="0" x2="0" y2="250" stroke="#4b5563" stroke-width="2"/>
+    <text x="-15" y="5" text-anchor="end" font-family="JetBrains Mono, monospace" font-size="11" fill="#9ca3af">100%</text>
+    <text x="-15" y="130" text-anchor="end" font-family="JetBrains Mono, monospace" font-size="11" fill="#9ca3af">50%</text>
+    <text x="-15" y="255" text-anchor="end" font-family="JetBrains Mono, monospace" font-size="11" fill="#9ca3af">0%</text>
+
+    <!-- X-axis -->
+    <line x1="0" y1="250" x2="700" y2="250" stroke="#4b5563" stroke-width="2"/>
+
+    <!-- Grid lines -->
+    <g stroke="#1f2937" stroke-width="1" stroke-dasharray="4,4">
+      <line x1="0" y1="50" x2="700" y2="50"/>
+      <line x1="0" y1="100" x2="700" y2="100"/>
+      <line x1="0" y1="150" x2="700" y2="150"/>
+      <line x1="0" y1="200" x2="700" y2="200"/>
+    </g>
+
+    <!-- Bar 1: Raw LLM (85%) -->
+    <g transform="translate(40, 0)">
+      <rect y="37.5" width="80" height="212.5" rx="8" fill="url(#barGrad1)"/>
+      <text x="40" y="25" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="14" font-weight="700" fill="#ef4444">85%</text>
+      <text x="40" y="275" text-anchor="middle" font-family="Inter, sans-serif" font-size="12" fill="#9ca3af">Raw</text>
+      <text x="40" y="290" text-anchor="middle" font-family="Inter, sans-serif" font-size="12" fill="#9ca3af">LLM</text>
+    </g>
+
+    <!-- Bar 2: GigaThink (65%) -->
+    <g transform="translate(160, 0)">
+      <rect y="87.5" width="80" height="162.5" rx="8" fill="#06b6d4"/>
+      <text x="40" y="75" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="14" font-weight="700" fill="#06b6d4">65%</text>
+      <text x="40" y="275" text-anchor="middle" font-family="Inter, sans-serif" font-size="12" fill="#9ca3af">Giga</text>
+      <text x="40" y="290" text-anchor="middle" font-family="Inter, sans-serif" font-size="12" fill="#9ca3af">Think</text>
+    </g>
+
+    <!-- Bar 3: LaserLogic (50%) -->
+    <g transform="translate(280, 0)">
+      <rect y="125" width="80" height="125" rx="8" fill="#a855f7"/>
+      <text x="40" y="113" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="14" font-weight="700" fill="#a855f7">50%</text>
+      <text x="40" y="275" text-anchor="middle" font-family="Inter, sans-serif" font-size="12" fill="#9ca3af">Laser</text>
+      <text x="40" y="290" text-anchor="middle" font-family="Inter, sans-serif" font-size="12" fill="#9ca3af">Logic</text>
+    </g>
+
+    <!-- Bar 4: BedRock (40%) -->
+    <g transform="translate(400, 0)">
+      <rect y="150" width="80" height="100" rx="8" fill="#10b981"/>
+      <text x="40" y="138" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="14" font-weight="700" fill="#10b981">40%</text>
+      <text x="40" y="275" text-anchor="middle" font-family="Inter, sans-serif" font-size="12" fill="#9ca3af">Bed</text>
+      <text x="40" y="290" text-anchor="middle" font-family="Inter, sans-serif" font-size="12" fill="#9ca3af">Rock</text>
+    </g>
+
+    <!-- Bar 5: ProofGuard (32%) -->
+    <g transform="translate(520, 0)">
+      <rect y="170" width="80" height="80" rx="8" fill="#f97316"/>
+      <text x="40" y="158" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="14" font-weight="700" fill="#f97316">32%</text>
+      <text x="40" y="275" text-anchor="middle" font-family="Inter, sans-serif" font-size="12" fill="#9ca3af">Proof</text>
+      <text x="40" y="290" text-anchor="middle" font-family="Inter, sans-serif" font-size="12" fill="#9ca3af">Guard</text>
+    </g>
+
+    <!-- Bar 6: BrutalHonesty (28%) -->
+    <g transform="translate(640, 0)">
+      <rect y="180" width="80" height="70" rx="8" fill="#ec4899"/>
+      <text x="40" y="168" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="14" font-weight="700" fill="#ec4899">28%</text>
+      <text x="40" y="275" text-anchor="middle" font-family="Inter, sans-serif" font-size="12" fill="#9ca3af">Brutal</text>
+      <text x="40" y="290" text-anchor="middle" font-family="Inter, sans-serif" font-size="12" fill="#9ca3af">Honesty</text>
+    </g>
+
+    <!-- Trend line -->
+    <polyline
+      points="80,37 200,87 320,125 440,150 560,170 680,180"
+      stroke="url(#heroGrad)"
+      stroke-width="3"
+      fill="none"
+      stroke-linecap="round"
+      stroke-linejoin="round"/>
+  </g>
+
+  <!-- Legend -->
+  <g transform="translate(100, 370)">
+    <rect width="16" height="16" rx="4" fill="#ef4444"/>
+    <text x="24" y="13" font-family="Inter, sans-serif" font-size="12" fill="#9ca3af">Unstructured</text>
+
+    <g transform="translate(150, 0)">
+      <rect width="16" height="16" rx="4" fill="url(#heroGrad)"/>
+      <text x="24" y="13" font-family="Inter, sans-serif" font-size="12" fill="#9ca3af">Structured Protocol</text>
+    </g>
+
+    <text x="700" y="13" text-anchor="end" font-family="Inter, sans-serif" font-size="12" fill="#6b7280">Variance = Output inconsistency across runs</text>
+  </g>
+</svg>

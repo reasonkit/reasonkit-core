@@ -8,14 +8,14 @@
 
 ## Video Outline
 
-| Time | Section | What's on screen | Narration |
-|------|---------|------------------|-----------|
-| 0:00-0:15 | Hook | Terminal with problem | The problem |
-| 0:15-0:45 | Install | One-liner install | 30-second install |
-| 0:45-1:30 | First Run | Basic command | See the magic |
-| 1:30-2:15 | Profiles | Compare quick vs deep | Choose your rigor |
-| 2:15-2:45 | Real Example | Actual use case | This is useful |
-| 2:45-3:00 | CTA | Website/docs | Get started |
+| Time      | Section      | What's on screen      | Narration         |
+| --------- | ------------ | --------------------- | ----------------- |
+| 0:00-0:15 | Hook         | Terminal with problem | The problem       |
+| 0:15-0:45 | Install      | One-liner install     | 30-second install |
+| 0:45-1:30 | First Run    | Basic command         | See the magic     |
+| 1:30-2:15 | Profiles     | Compare quick vs deep | Choose your rigor |
+| 2:15-2:45 | Real Example | Actual use case       | This is useful    |
+| 2:45-3:00 | CTA          | Website/docs          | Get started       |
 
 ---
 
@@ -26,6 +26,7 @@
 **Screen:** Clean terminal, dark theme
 
 **Type on screen:**
+
 ```
 $ ask-llm "Should I use microservices?"
 ```
@@ -33,6 +34,7 @@ $ ask-llm "Should I use microservices?"
 **Show:** Wall of unstructured text response
 
 **Narration:**
+
 > "You ask an LLM for advice. You get... this. Two thousand words. No structure. No confidence score. No idea if it's right."
 
 **Cut to:** ReasonKit logo flash (0.5s)
@@ -44,9 +46,11 @@ $ ask-llm "Should I use microservices?"
 **Screen:** Clean terminal
 
 **Narration:**
+
 > "There's a better way. ReasonKit. One line to install."
 
 **Type on screen:**
+
 ```bash
 curl -fsSL https://reasonkit.sh/install | bash
 ```
@@ -54,17 +58,20 @@ curl -fsSL https://reasonkit.sh/install | bash
 **Show:** Installation progress (speed up 4x)
 
 **Narration (during install):**
+
 > "ReasonKit is a Rust CLI that turns messy prompts into structured reasoning protocols. Install takes 30 seconds."
 
 **Show:** Installation complete message
 
 **Type on screen:**
+
 ```bash
 rk-core --version
 # reasonkit-core 0.1.0
 ```
 
 **Narration:**
+
 > "Done. Let's use it."
 
 ---
@@ -74,9 +81,11 @@ rk-core --version
 **Screen:** Clean terminal
 
 **Narration:**
+
 > "Same question. Different approach."
 
 **Type on screen:**
+
 ```bash
 export ANTHROPIC_API_KEY="sk-ant-..."
 rk-core think "Should I use microservices?" --profile quick
@@ -102,11 +111,13 @@ VERDICT: Start with monolith | Confidence: 78% | Time: 1.8s
 ```
 
 **Narration:**
+
 > "Ten perspectives. Hidden assumptions detected. A verdict with confidence score. In under 2 seconds."
 
 **Pause on output for 2 seconds**
 
 **Narration:**
+
 > "That's structured reasoning. Not a wall of text. Organized thinking you can audit."
 
 ---
@@ -116,21 +127,25 @@ VERDICT: Start with monolith | Confidence: 78% | Time: 1.8s
 **Screen:** Split view showing profile comparison
 
 **Narration:**
+
 > "ReasonKit has four profiles. Match the rigor to the stakes."
 
 **Type on screen (left side):**
+
 ```bash
 rk-core think "Deploy now?" --profile quick
 # Time: 30s, Confidence: 70%
 ```
 
 **Type on screen (right side):**
+
 ```bash
-rk-core think "Deploy now?" --profile paranoid  
+rk-core think "Deploy now?" --profile paranoid
 # Time: 10min, Confidence: 95%
 ```
 
 **Narration:**
+
 > "Quick for Slack decisions. Paranoid for production deploys. You choose."
 
 **Show:** Quick table of profiles
@@ -143,6 +158,7 @@ rk-core think "Deploy now?" --profile paranoid
 ```
 
 **Narration:**
+
 > "Each profile runs different combinations of ThinkTools - specialized cognitive modules for specific types of analysis."
 
 ---
@@ -152,11 +168,13 @@ rk-core think "Deploy now?" --profile paranoid
 **Screen:** Clean terminal
 
 **Narration:**
+
 > "Here's a real use case. Code review automation."
 
 **Type on screen:**
+
 ```bash
-rk-core think "Review this PR for security issues: 
+rk-core think "Review this PR for security issues:
   - Adds user input to SQL query
   - Uses eval() on user data
   - Logs passwords in debug mode" --profile balanced --format json
@@ -178,6 +196,7 @@ rk-core think "Review this PR for security issues:
 ```
 
 **Narration:**
+
 > "JSON output for CI/CD integration. High confidence. Actionable. You can build this into your pipeline today."
 
 ---
@@ -187,9 +206,11 @@ rk-core think "Review this PR for security issues:
 **Screen:** ReasonKit website hero section or logo
 
 **Narration:**
+
 > "ReasonKit. Turn prompts into protocols."
 
-**Show:** 
+**Show:**
+
 ```
 reasonkit.sh
 
@@ -198,6 +219,7 @@ curl -fsSL https://reasonkit.sh/install | bash
 ```
 
 **Narration:**
+
 > "Open source. Rust-native. Works with any LLM. Get started at reasonkit.sh."
 
 **End card:** ReasonKit logo + "Turn Prompts into Protocols"
@@ -207,22 +229,26 @@ curl -fsSL https://reasonkit.sh/install | bash
 ## Production Notes
 
 ### Visual Style
+
 - **Terminal:** Dark theme (Dracula or similar)
 - **Font:** JetBrains Mono, 18pt
 - **Colors:** Cyan for prompts, Green for success, White for output
 - **Transitions:** Cut (no fades, keep it fast)
 
 ### Audio
+
 - **Music:** Subtle electronic, upbeat but not distracting
 - **Voice:** Professional, confident, fast-paced (not rushed)
 - **Mix:** Voice 80%, Music 20%
 
 ### Pacing
+
 - No pauses longer than 1.5 seconds
 - Speed up installation and long outputs (4x)
 - Keep energy high
 
 ### Key Frames to Capture
+
 1. The messy LLM output (before)
 2. The structured ReasonKit output (after)
 3. The confidence score
@@ -230,6 +256,7 @@ curl -fsSL https://reasonkit.sh/install | bash
 5. The website/installation command
 
 ### Recording Tips
+
 - Pre-record all commands, paste them in
 - Use `asciinema` or screen recording
 - Add subtle cursor animations
@@ -240,12 +267,14 @@ curl -fsSL https://reasonkit.sh/install | bash
 ## Alternate Versions
 
 ### 60-Second Version
+
 - Hook (5s)
 - Install (10s)
 - First run (25s)
 - CTA (20s)
 
 ### 30-Second Version
+
 - Problem + Solution in one (15s)
 - One command demo (10s)
 - CTA (5s)

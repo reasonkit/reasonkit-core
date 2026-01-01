@@ -1,0 +1,124 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 500" fill="none">
+  <defs>
+    <linearGradient id="heroGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#06b6d4"/>
+      <stop offset="50%" stop-color="#a855f7"/>
+      <stop offset="100%" stop-color="#ec4899"/>
+    </linearGradient>
+    <marker id="arrow" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto">
+      <path d="M0,0 L0,8 L10,4 z" fill="#06b6d4"/>
+    </marker>
+    <marker id="arrowPurple" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto">
+      <path d="M0,0 L0,8 L10,4 z" fill="#a855f7"/>
+    </marker>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#000" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1000" height="500" fill="#030508"/>
+
+  <!-- Title -->
+  <text x="500" y="40" text-anchor="middle" font-family="Inter, sans-serif" font-size="26" font-weight="700" fill="url(#heroGrad)">THREE-LAYER ARCHITECTURE</text>
+
+  <!-- Layer 1: CLI Layer -->
+  <g transform="translate(50, 80)" filter="url(#shadow)">
+    <rect width="200" height="120" rx="16" fill="#0a0d14" stroke="#06b6d4" stroke-width="2"/>
+    <text x="100" y="35" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="12" fill="#06b6d4">LAYER 1</text>
+    <text x="100" y="65" text-anchor="middle" font-family="Inter, sans-serif" font-size="18" font-weight="700" fill="#f9fafb">CLI Interface</text>
+    <text x="100" y="90" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="13" fill="#9ca3af">rk-core think</text>
+    <text x="100" y="108" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11" fill="#6b7280">--profile balanced</text>
+  </g>
+
+  <!-- Arrow 1 -->
+  <line x1="260" y1="140" x2="310" y2="140" stroke="#06b6d4" stroke-width="3" marker-end="url(#arrow)"/>
+
+  <!-- Layer 2: Protocol Engine (center, largest) -->
+  <g transform="translate(320, 60)" filter="url(#shadow)">
+    <rect width="360" height="160" rx="20" fill="#0a0d14" stroke="url(#heroGrad)" stroke-width="3"/>
+    <text x="180" y="35" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="12" fill="#a855f7">LAYER 2 — CORE INNOVATION</text>
+    <text x="180" y="65" text-anchor="middle" font-family="Inter, sans-serif" font-size="22" font-weight="700" fill="#f9fafb">Protocol Engine</text>
+    <text x="180" y="95" text-anchor="middle" font-family="Inter, sans-serif" font-size="14" fill="#9ca3af">Deterministic Execution Paths</text>
+
+    <!-- Sub-components -->
+    <g transform="translate(20, 110)">
+      <rect width="100" height="35" rx="8" fill="#111827"/>
+      <text x="50" y="22" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10" fill="#06b6d4">State Machine</text>
+    </g>
+    <g transform="translate(130, 110)">
+      <rect width="100" height="35" rx="8" fill="#111827"/>
+      <text x="50" y="22" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10" fill="#10b981">Orchestrator</text>
+    </g>
+    <g transform="translate(240, 110)">
+      <rect width="100" height="35" rx="8" fill="#111827"/>
+      <text x="50" y="22" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10" fill="#f97316">Validator</text>
+    </g>
+  </g>
+
+  <!-- Arrow 2 -->
+  <line x1="690" y1="140" x2="740" y2="140" stroke="#a855f7" stroke-width="3" marker-end="url(#arrowPurple)"/>
+
+  <!-- Layer 3: LLM Layer -->
+  <g transform="translate(750, 80)" filter="url(#shadow)">
+    <rect width="200" height="120" rx="16" fill="#0a0d14" stroke="#ec4899" stroke-width="2"/>
+    <text x="100" y="35" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="12" fill="#ec4899">LAYER 3</text>
+    <text x="100" y="65" text-anchor="middle" font-family="Inter, sans-serif" font-size="18" font-weight="700" fill="#f9fafb">LLM Layer</text>
+    <text x="100" y="90" text-anchor="middle" font-family="Inter, sans-serif" font-size="13" fill="#9ca3af">Probabilistic</text>
+    <text x="100" y="108" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11" fill="#6b7280">Claude / GPT / Gemini</text>
+  </g>
+
+  <!-- ThinkTools Row -->
+  <g transform="translate(50, 280)">
+    <text x="0" y="0" font-family="Inter, sans-serif" font-size="14" font-weight="600" fill="#9ca3af">THINKTOOLS CHAIN (Variance Reduction)</text>
+
+    <!-- 5 ThinkTool boxes -->
+    <g transform="translate(0, 20)">
+      <rect width="170" height="70" rx="12" fill="#0a0d14" stroke="#06b6d4" stroke-width="1.5"/>
+      <text x="85" y="30" text-anchor="middle" font-family="Inter, sans-serif" font-size="14" font-weight="600" fill="#06b6d4">GigaThink</text>
+      <text x="85" y="50" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11" fill="#6b7280">Diverge() → 85%</text>
+    </g>
+
+    <line x1="180" y1="55" x2="195" y2="55" stroke="#06b6d4" stroke-width="2"/>
+
+    <g transform="translate(200, 20)">
+      <rect width="170" height="70" rx="12" fill="#0a0d14" stroke="#a855f7" stroke-width="1.5"/>
+      <text x="85" y="30" text-anchor="middle" font-family="Inter, sans-serif" font-size="14" font-weight="600" fill="#a855f7">LaserLogic</text>
+      <text x="85" y="50" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11" fill="#6b7280">Converge() → 50%</text>
+    </g>
+
+    <line x1="380" y1="55" x2="395" y2="55" stroke="#a855f7" stroke-width="2"/>
+
+    <g transform="translate(400, 20)">
+      <rect width="170" height="70" rx="12" fill="#0a0d14" stroke="#10b981" stroke-width="1.5"/>
+      <text x="85" y="30" text-anchor="middle" font-family="Inter, sans-serif" font-size="14" font-weight="600" fill="#10b981">BedRock</text>
+      <text x="85" y="50" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11" fill="#6b7280">Ground() → 40%</text>
+    </g>
+
+    <line x1="580" y1="55" x2="595" y2="55" stroke="#10b981" stroke-width="2"/>
+
+    <g transform="translate(600, 20)">
+      <rect width="170" height="70" rx="12" fill="#0a0d14" stroke="#f97316" stroke-width="1.5"/>
+      <text x="85" y="30" text-anchor="middle" font-family="Inter, sans-serif" font-size="14" font-weight="600" fill="#f97316">ProofGuard</text>
+      <text x="85" y="50" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11" fill="#6b7280">Verify() → 32%</text>
+    </g>
+
+    <line x1="780" y1="55" x2="795" y2="55" stroke="#f97316" stroke-width="2"/>
+
+    <g transform="translate(800, 20)">
+      <rect width="150" height="70" rx="12" fill="#0a0d14" stroke="#ec4899" stroke-width="1.5"/>
+      <text x="75" y="30" text-anchor="middle" font-family="Inter, sans-serif" font-size="14" font-weight="600" fill="#ec4899">BrutalHonesty</text>
+      <text x="75" y="50" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11" fill="#6b7280">Critique() → 28%</text>
+    </g>
+  </g>
+
+  <!-- Storage -->
+  <g transform="translate(50, 420)">
+    <rect width="200" height="60" rx="12" fill="#0a0d14" stroke="#6b7280" stroke-width="1.5"/>
+    <text x="100" y="25" text-anchor="middle" font-family="Inter, sans-serif" font-size="14" font-weight="600" fill="#9ca3af">SQLite Trace DB</text>
+    <text x="100" y="45" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11" fill="#6b7280">Execution Audit Trail</text>
+  </g>
+
+  <!-- Footer -->
+  <text x="500" y="480" text-anchor="middle" font-family="Inter, sans-serif" font-size="13" fill="#6b7280">Deterministic protocol wrapping probabilistic LLM → Auditable, reproducible reasoning</text>
+</svg>

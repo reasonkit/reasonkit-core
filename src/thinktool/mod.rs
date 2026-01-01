@@ -162,7 +162,7 @@ pub use llm::{
     ProviderInfo, UnifiedLlmClient,
 };
 pub use llm_cli::{
-    ClusterConfig, ClusterItem, ClusterResult, EmbeddingConfig, LlmCliClient, LlmCliResponse,
+    ClusterConfig, ClusterResult, EmbeddingConfig, LlmCliClient, PromptResult,
 };
 pub use metrics::{
     AggregateStats, ExecutionRecord, ExecutionRecordBuilder, MetricsReport, MetricsTracker,

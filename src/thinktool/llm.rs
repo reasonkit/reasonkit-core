@@ -1221,9 +1221,28 @@ struct OpenAIUsage {
 mod tests {
     use super::*;
 
+    // =========================================================================
+    // PROVIDER ENUMERATION TESTS
+    // =========================================================================
+
     #[test]
     fn test_provider_count() {
         assert_eq!(LlmProvider::all().len(), 19);
+    }
+
+    #[test]
+    fn test_all_providers_unique() {
+        let providers = LlmProvider::all();
+        let mut seen = std::collections::HashSet::new();
+        for p in providers {
+            assert!(seen.insert(p), "Duplicate provider: {:?}", p);
+        }
+    }
+
+    #[test]
+    fn test_provider_default_is_anthropic() {
+        let default = LlmProvider::default();
+        assert_eq!(default, LlmProvider::Anthropic);
     }
 
     #[test]
@@ -1240,6 +1259,10 @@ mod tests {
         assert_eq!(LlmProvider::AlibabaQwen.env_var(), "DASHSCOPE_API_KEY");
         assert_eq!(LlmProvider::OpenRouter.env_var(), "OPENROUTER_API_KEY");
         assert_eq!(LlmProvider::CloudflareAI.env_var(), "CLOUDFLARE_API_KEY");
+        assert_eq!(LlmProvider::Cohere.env_var(), "COHERE_API_KEY");
+        assert_eq!(LlmProvider::Perplexity.env_var(), "PERPLEXITY_API_KEY");
+        assert_eq!(LlmProvider::Cerebras.env_var(), "CEREBRAS_API_KEY");
+        assert_eq!(LlmProvider::Opencode.env_var(), "OPENCODE_API_KEY");
     }
 
     #[test]
@@ -1269,6 +1292,39 @@ mod tests {
             LlmProvider::TogetherAI.default_base_url(),
             "https://api.together.xyz/v1"
         );
+        assert_eq!(
+            LlmProvider::FireworksAI.default_base_url(),
+            "https://api.fireworks.ai/inference/v1"
+        );
+        assert_eq!(
+            LlmProvider::Cohere.default_base_url(),
+            "https://api.cohere.ai/v1"
+        );
+        assert_eq!(
+            LlmProvider::Perplexity.default_base_url(),
+            "https://api.perplexity.ai"
+        );
+        assert_eq!(
+            LlmProvider::Cerebras.default_base_url(),
+            "https://api.cerebras.ai/v1"
+        );
+        assert_eq!(
+            LlmProvider::Opencode.default_base_url(),
+            "https://api.opencode.ai/v1"
+        );
+    }
+
+    #[test]
+    fn test_provider_base_urls_contain_https() {
+        for provider in LlmProvider::all() {
+            let url = provider.default_base_url();
+            assert!(
+                url.starts_with("https://"),
+                "Provider {:?} URL does not start with https://: {}",
+                provider,
+                url
+            );
+        }
     }
 
     #[test]
@@ -1281,6 +1337,11 @@ mod tests {
         assert!(LlmProvider::Groq.is_openai_compatible());
         assert!(LlmProvider::XAI.is_openai_compatible());
         assert!(LlmProvider::GoogleGemini.is_openai_compatible());
+        assert!(LlmProvider::Mistral.is_openai_compatible());
+        assert!(LlmProvider::DeepSeek.is_openai_compatible());
+        assert!(LlmProvider::TogetherAI.is_openai_compatible());
+        assert!(LlmProvider::FireworksAI.is_openai_compatible());
+        assert!(LlmProvider::OpenRouter.is_openai_compatible());
     }
 
     #[test]
@@ -1290,7 +1351,76 @@ mod tests {
         assert!(LlmProvider::GoogleVertex.requires_special_auth());
         assert!(!LlmProvider::OpenAI.requires_special_auth());
         assert!(!LlmProvider::Groq.requires_special_auth());
+        assert!(!LlmProvider::Anthropic.requires_special_auth());
+        assert!(!LlmProvider::DeepSeek.requires_special_auth());
     }
+
+    #[test]
+    fn test_provider_display() {
+        assert_eq!(LlmProvider::Anthropic.to_string(), "Anthropic");
+        assert_eq!(LlmProvider::XAI.to_string(), "xAI (Grok)");
+        assert_eq!(
+            LlmProvider::GoogleGemini.to_string(),
+            "Google Gemini (AI Studio)"
+        );
+        assert_eq!(LlmProvider::Groq.to_string(), "Groq");
+        assert_eq!(LlmProvider::OpenRouter.to_string(), "OpenRouter");
+        assert_eq!(LlmProvider::DeepSeek.to_string(), "DeepSeek");
+    }
+
+    #[test]
+    fn test_provider_display_names_non_empty() {
+        for provider in LlmProvider::all() {
+            let name = provider.display_name();
+            assert!(!name.is_empty(), "Provider {:?} has empty display name", provider);
+        }
+    }
+
+    #[test]
+    fn test_provider_default_models_non_empty() {
+        for provider in LlmProvider::all() {
+            let model = provider.default_model();
+            assert!(!model.is_empty(), "Provider {:?} has empty default model", provider);
+        }
+    }
+
+    // =========================================================================
+    // PROVIDER SERIALIZATION TESTS
+    // =========================================================================
+
+    #[test]
+    fn test_provider_serialization_roundtrip() {
+        for provider in LlmProvider::all() {
+            let json = serde_json::to_string(provider).expect("Serialization failed");
+            let parsed: LlmProvider = serde_json::from_str(&json).expect("Deserialization failed");
+            assert_eq!(*provider, parsed);
+        }
+    }
+
+    #[test]
+    fn test_provider_serialization_snake_case() {
+        let json = serde_json::to_string(&LlmProvider::OpenAI).unwrap();
+        assert_eq!(json, "\"open_ai\"");
+
+        let json = serde_json::to_string(&LlmProvider::GoogleGemini).unwrap();
+        assert_eq!(json, "\"google_gemini\"");
+
+        let json = serde_json::to_string(&LlmProvider::TogetherAI).unwrap();
+        assert_eq!(json, "\"together_ai\"");
+    }
+
+    #[test]
+    fn test_provider_deserialization_from_snake_case() {
+        let provider: LlmProvider = serde_json::from_str("\"open_ai\"").unwrap();
+        assert_eq!(provider, LlmProvider::OpenAI);
+
+        let provider: LlmProvider = serde_json::from_str("\"deep_seek\"").unwrap();
+        assert_eq!(provider, LlmProvider::DeepSeek);
+    }
+
+    // =========================================================================
+    // LLM CONFIG TESTS
+    // =========================================================================
 
     #[test]
     fn test_llm_config_default() {
@@ -1298,6 +1428,20 @@ mod tests {
         assert_eq!(config.provider, LlmProvider::Anthropic);
         assert_eq!(config.model, "claude-opus-4-5");
         assert_eq!(config.temperature, 0.7);
+        assert_eq!(config.max_tokens, 2000);
+        assert_eq!(config.timeout_secs, 60);
+        assert!(config.api_key.is_none());
+        assert!(config.base_url.is_none());
+    }
+
+    #[test]
+    fn test_llm_config_for_provider() {
+        let config = LlmConfig::for_provider(LlmProvider::Groq, "llama-3.3-70b-versatile");
+        assert_eq!(config.provider, LlmProvider::Groq);
+        assert_eq!(config.model, "llama-3.3-70b-versatile");
+        // Should still have defaults for other fields
+        assert_eq!(config.temperature, 0.7);
+        assert_eq!(config.max_tokens, 2000);
     }
 
     #[test]
@@ -1313,6 +1457,34 @@ mod tests {
     }
 
     #[test]
+    fn test_llm_config_with_api_key() {
+        let config = LlmConfig::default().with_api_key("test-key-12345");
+        assert_eq!(config.api_key, Some("test-key-12345".to_string()));
+    }
+
+    #[test]
+    fn test_llm_config_with_base_url() {
+        let config = LlmConfig::default().with_base_url("https://custom.api.com/v1");
+        assert_eq!(config.base_url, Some("https://custom.api.com/v1".to_string()));
+    }
+
+    #[test]
+    fn test_llm_config_chained_builders() {
+        let config = LlmConfig::for_provider(LlmProvider::OpenAI, "gpt-4o")
+            .with_api_key("sk-test")
+            .with_base_url("https://proxy.example.com/v1")
+            .with_temperature(0.3)
+            .with_max_tokens(8000);
+
+        assert_eq!(config.provider, LlmProvider::OpenAI);
+        assert_eq!(config.model, "gpt-4o");
+        assert_eq!(config.api_key, Some("sk-test".to_string()));
+        assert_eq!(config.base_url, Some("https://proxy.example.com/v1".to_string()));
+        assert_eq!(config.temperature, 0.3);
+        assert_eq!(config.max_tokens, 8000);
+    }
+
+    #[test]
     fn test_azure_config() {
         let config = LlmConfig::for_provider(LlmProvider::AzureOpenAI, "gpt-4o")
             .with_azure("my-resource", "my-deployment");
@@ -1325,12 +1497,55 @@ mod tests {
     }
 
     #[test]
+    fn test_gcp_config() {
+        let config = LlmConfig::for_provider(LlmProvider::GoogleVertex, "gemini-3.0-pro")
+            .with_gcp("my-project-123", "us-west1");
+
+        assert_eq!(config.extra.gcp_project, Some("my-project-123".to_string()));
+        assert_eq!(config.extra.gcp_location, Some("us-west1".to_string()));
+    }
+
+    #[test]
+    fn test_aws_region_config() {
+        let config = LlmConfig::for_provider(LlmProvider::AWSBedrock, "anthropic.claude-v2")
+            .with_aws_region("eu-west-1");
+
+        assert_eq!(config.extra.aws_region, Some("eu-west-1".to_string()));
+    }
+
+    #[test]
     fn test_cloudflare_config() {
         let config = LlmConfig::for_provider(LlmProvider::CloudflareAI, "@cf/meta/llama-3.3-70b")
             .with_cloudflare_gateway("account123", "gateway456");
 
         assert_eq!(config.extra.cf_account_id, Some("account123".to_string()));
         assert_eq!(config.extra.cf_gateway_id, Some("gateway456".to_string()));
+    }
+
+    #[test]
+    fn test_llm_config_serialization() {
+        let config = LlmConfig::for_provider(LlmProvider::OpenAI, "gpt-4o")
+            .with_temperature(0.5);
+
+        let json = serde_json::to_string(&config).expect("Serialization failed");
+        let parsed: LlmConfig = serde_json::from_str(&json).expect("Deserialization failed");
+
+        assert_eq!(parsed.provider, LlmProvider::OpenAI);
+        assert_eq!(parsed.model, "gpt-4o");
+        assert_eq!(parsed.temperature, 0.5);
+    }
+
+    // =========================================================================
+    // LLM REQUEST TESTS
+    // =========================================================================
+
+    #[test]
+    fn test_llm_request_new() {
+        let request = LlmRequest::new("Hello, world!");
+        assert_eq!(request.prompt, "Hello, world!");
+        assert!(request.system.is_none());
+        assert!(request.temperature.is_none());
+        assert!(request.max_tokens.is_none());
     }
 
     #[test]
@@ -1347,7 +1562,118 @@ mod tests {
     }
 
     #[test]
-    fn test_cost_calculation() {
+    fn test_llm_request_with_system_only() {
+        let request = LlmRequest::new("Test prompt").with_system("System prompt here");
+        assert_eq!(request.system, Some("System prompt here".to_string()));
+        assert!(request.temperature.is_none());
+        assert!(request.max_tokens.is_none());
+    }
+
+    #[test]
+    fn test_llm_request_with_long_prompt() {
+        let long_prompt = "a".repeat(100_000);
+        let request = LlmRequest::new(&long_prompt);
+        assert_eq!(request.prompt.len(), 100_000);
+    }
+
+    #[test]
+    fn test_llm_request_with_unicode() {
+        let request = LlmRequest::new("Hello world in Japanese: Konnichiwa! Chinese: Ni hao! Emoji: Test");
+        assert!(request.prompt.contains("Konnichiwa"));
+        assert!(request.prompt.contains("Ni hao"));
+    }
+
+    #[test]
+    fn test_llm_request_temperature_boundaries() {
+        // Valid temperatures
+        let request = LlmRequest::new("Test").with_temperature(0.0);
+        assert_eq!(request.temperature, Some(0.0));
+
+        let request = LlmRequest::new("Test").with_temperature(2.0);
+        assert_eq!(request.temperature, Some(2.0));
+
+        let request = LlmRequest::new("Test").with_temperature(1.0);
+        assert_eq!(request.temperature, Some(1.0));
+    }
+
+    // =========================================================================
+    // LLM RESPONSE TESTS
+    // =========================================================================
+
+    #[test]
+    fn test_finish_reason_default() {
+        let reason = FinishReason::default();
+        assert_eq!(reason, FinishReason::Stop);
+    }
+
+    #[test]
+    fn test_finish_reason_serialization() {
+        let reasons = vec![
+            FinishReason::Stop,
+            FinishReason::MaxTokens,
+            FinishReason::ContentFilter,
+            FinishReason::Error,
+        ];
+
+        for reason in reasons {
+            let json = serde_json::to_string(&reason).expect("Serialization failed");
+            let parsed: FinishReason = serde_json::from_str(&json).expect("Deserialization failed");
+            assert_eq!(reason, parsed);
+        }
+    }
+
+    #[test]
+    fn test_llm_response_serialization() {
+        let response = LlmResponse {
+            content: "Test response".to_string(),
+            model: "gpt-4o".to_string(),
+            finish_reason: FinishReason::Stop,
+            usage: LlmUsage {
+                input_tokens: 100,
+                output_tokens: 50,
+                total_tokens: 150,
+            },
+            provider: Some(LlmProvider::OpenAI),
+        };
+
+        let json = serde_json::to_string(&response).expect("Serialization failed");
+        let parsed: LlmResponse = serde_json::from_str(&json).expect("Deserialization failed");
+
+        assert_eq!(parsed.content, "Test response");
+        assert_eq!(parsed.model, "gpt-4o");
+        assert_eq!(parsed.finish_reason, FinishReason::Stop);
+        assert_eq!(parsed.usage.input_tokens, 100);
+        assert_eq!(parsed.provider, Some(LlmProvider::OpenAI));
+    }
+
+    // =========================================================================
+    // TOKEN USAGE & COST CALCULATION TESTS
+    // =========================================================================
+
+    #[test]
+    fn test_llm_usage_default() {
+        let usage = LlmUsage::default();
+        assert_eq!(usage.input_tokens, 0);
+        assert_eq!(usage.output_tokens, 0);
+        assert_eq!(usage.total_tokens, 0);
+    }
+
+    #[test]
+    fn test_cost_calculation_claude() {
+        let usage = LlmUsage {
+            input_tokens: 1000,
+            output_tokens: 500,
+            total_tokens: 1500,
+        };
+
+        // Claude Opus 4.5: $15/1M input, $75/1M output
+        let cost = usage.cost_usd("claude-opus-4-5");
+        let expected = (1000.0 / 1_000_000.0) * 15.0 + (500.0 / 1_000_000.0) * 75.0;
+        assert!((cost - expected).abs() < 0.0001);
+    }
+
+    #[test]
+    fn test_cost_calculation_claude_sonnet() {
         let usage = LlmUsage {
             input_tokens: 1000,
             output_tokens: 500,
@@ -1358,26 +1684,345 @@ mod tests {
         let cost = usage.cost_usd("claude-sonnet-4");
         assert!(cost > 0.0);
         assert!(cost < 0.02);
-
-        // GPT-3.5 should be cheaper
-        let cost_gpt35 = usage.cost_usd("gpt-3.5-turbo");
-        assert!(cost_gpt35 < cost);
-
-        // Groq should be very cheap
-        let cost_groq = usage.cost_usd("llama-groq");
-        assert!(cost_groq < cost_gpt35);
-
-        // DeepSeek should be cheap
-        let cost_deepseek = usage.cost_usd("deepseek-chat");
-        assert!(cost_deepseek < cost);
     }
 
     #[test]
-    fn test_client_creation() {
+    fn test_cost_calculation_gpt35_cheaper_than_sonnet() {
+        let usage = LlmUsage {
+            input_tokens: 1000,
+            output_tokens: 500,
+            total_tokens: 1500,
+        };
+
+        let cost_sonnet = usage.cost_usd("claude-sonnet-4");
+        let cost_gpt35 = usage.cost_usd("gpt-3.5-turbo");
+        assert!(cost_gpt35 < cost_sonnet);
+    }
+
+    #[test]
+    fn test_cost_calculation_groq_very_cheap() {
+        let usage = LlmUsage {
+            input_tokens: 1000,
+            output_tokens: 500,
+            total_tokens: 1500,
+        };
+
+        let cost_gpt35 = usage.cost_usd("gpt-3.5-turbo");
+        let cost_groq = usage.cost_usd("llama-groq");
+        assert!(cost_groq < cost_gpt35);
+    }
+
+    #[test]
+    fn test_cost_calculation_deepseek_cheap() {
+        let usage = LlmUsage {
+            input_tokens: 1000,
+            output_tokens: 500,
+            total_tokens: 1500,
+        };
+
+        let cost_sonnet = usage.cost_usd("claude-sonnet-4");
+        let cost_deepseek = usage.cost_usd("deepseek-chat");
+        assert!(cost_deepseek < cost_sonnet);
+    }
+
+    #[test]
+    fn test_cost_calculation_zero_tokens() {
+        let usage = LlmUsage {
+            input_tokens: 0,
+            output_tokens: 0,
+            total_tokens: 0,
+        };
+
+        let cost = usage.cost_usd("gpt-4o");
+        assert_eq!(cost, 0.0);
+    }
+
+    #[test]
+    fn test_cost_calculation_large_token_count() {
+        let usage = LlmUsage {
+            input_tokens: 1_000_000,
+            output_tokens: 500_000,
+            total_tokens: 1_500_000,
+        };
+
+        // GPT-4o: $2.5/1M input, $10/1M output
+        let cost = usage.cost_usd("gpt-4o");
+        let expected = 2.5 + 5.0; // 2.5 for 1M input, 5.0 for 500k output
+        assert!((cost - expected).abs() < 0.01);
+    }
+
+    #[test]
+    fn test_cost_calculation_various_models() {
+        let usage = LlmUsage {
+            input_tokens: 10000,
+            output_tokens: 5000,
+            total_tokens: 15000,
+        };
+
+        // All these should return valid positive costs
+        let models = vec![
+            "gpt-5.1",
+            "gpt-4o",
+            "gemini-3.0-pro",
+            "grok-4.1",
+            "mistral-large-3",
+            "deepseek-v3.2",
+            "llama-4-scout",
+            "qwen3-max",
+            "command-a",
+            "sonar-pro",
+        ];
+
+        for model in models {
+            let cost = usage.cost_usd(model);
+            assert!(cost > 0.0, "Cost for {} should be positive", model);
+        }
+    }
+
+    #[test]
+    fn test_cost_calculation_unknown_model_uses_default() {
+        let usage = LlmUsage {
+            input_tokens: 1000,
+            output_tokens: 500,
+            total_tokens: 1500,
+        };
+
+        // Unknown model should use default pricing: $1/1M input, $3/1M output
+        let cost = usage.cost_usd("some-unknown-model-xyz");
+        let expected = (1000.0 / 1_000_000.0) * 1.0 + (500.0 / 1_000_000.0) * 3.0;
+        assert!((cost - expected).abs() < 0.0001);
+    }
+
+    // =========================================================================
+    // CLIENT CREATION TESTS
+    // =========================================================================
+
+    #[test]
+    fn test_client_creation_default() {
         let config = LlmConfig::default();
         let client = UnifiedLlmClient::new(config);
         assert!(client.is_ok());
     }
+
+    #[test]
+    fn test_client_creation_for_each_provider() {
+        for provider in LlmProvider::all() {
+            let config = LlmConfig::for_provider(*provider, provider.default_model());
+            let client = UnifiedLlmClient::new(config);
+            assert!(client.is_ok(), "Client creation failed for {:?}", provider);
+        }
+    }
+
+    #[test]
+    fn test_client_provider_method() {
+        let config = LlmConfig::for_provider(LlmProvider::Groq, "llama-3.3-70b-versatile");
+        let client = UnifiedLlmClient::new(config).unwrap();
+        assert_eq!(client.provider(), LlmProvider::Groq);
+    }
+
+    #[test]
+    fn test_client_model_method() {
+        let config = LlmConfig::for_provider(LlmProvider::OpenAI, "gpt-4o-mini");
+        let client = UnifiedLlmClient::new(config).unwrap();
+        assert_eq!(client.model(), "gpt-4o-mini");
+    }
+
+    #[test]
+    fn test_convenience_constructor_openai() {
+        let client = UnifiedLlmClient::openai("gpt-4o");
+        assert!(client.is_ok());
+        assert_eq!(client.unwrap().provider(), LlmProvider::OpenAI);
+    }
+
+    #[test]
+    fn test_convenience_constructor_groq() {
+        let client = UnifiedLlmClient::groq("llama-3.3-70b-versatile");
+        assert!(client.is_ok());
+        assert_eq!(client.unwrap().provider(), LlmProvider::Groq);
+    }
+
+    #[test]
+    fn test_convenience_constructor_deepseek() {
+        let client = UnifiedLlmClient::deepseek("deepseek-v3");
+        assert!(client.is_ok());
+        assert_eq!(client.unwrap().provider(), LlmProvider::DeepSeek);
+    }
+
+    #[test]
+    fn test_convenience_constructor_mistral() {
+        let client = UnifiedLlmClient::mistral("mistral-large");
+        assert!(client.is_ok());
+        assert_eq!(client.unwrap().provider(), LlmProvider::Mistral);
+    }
+
+    #[test]
+    fn test_convenience_constructor_grok() {
+        let client = UnifiedLlmClient::grok("grok-2");
+        assert!(client.is_ok());
+        assert_eq!(client.unwrap().provider(), LlmProvider::XAI);
+    }
+
+    #[test]
+    fn test_convenience_constructor_openrouter() {
+        let client = UnifiedLlmClient::openrouter("anthropic/claude-3.5-sonnet");
+        assert!(client.is_ok());
+        assert_eq!(client.unwrap().provider(), LlmProvider::OpenRouter);
+    }
+
+    // =========================================================================
+    // URL CONSTRUCTION TESTS
+    // =========================================================================
+
+    #[test]
+    fn test_azure_url_construction() {
+        let config = LlmConfig::for_provider(LlmProvider::AzureOpenAI, "gpt-4o")
+            .with_azure("my-resource", "my-deployment")
+            .with_api_key("test-key");
+        let client = UnifiedLlmClient::new(config).unwrap();
+
+        let url = client.get_base_url().unwrap();
+        assert_eq!(
+            url,
+            "https://my-resource.openai.azure.com/openai/deployments/my-deployment"
+        );
+    }
+
+    #[test]
+    fn test_azure_url_missing_resource_error() {
+        let config = LlmConfig::for_provider(LlmProvider::AzureOpenAI, "gpt-4o");
+        let client = UnifiedLlmClient::new(config).unwrap();
+
+        let result = client.get_base_url();
+        assert!(result.is_err());
+        let err = result.unwrap_err().to_string();
+        assert!(err.contains("Azure resource name required"));
+    }
+
+    #[test]
+    fn test_azure_url_missing_deployment_error() {
+        let mut config = LlmConfig::for_provider(LlmProvider::AzureOpenAI, "gpt-4o");
+        config.extra.azure_resource = Some("my-resource".to_string());
+        let client = UnifiedLlmClient::new(config).unwrap();
+
+        let result = client.get_base_url();
+        assert!(result.is_err());
+        let err = result.unwrap_err().to_string();
+        assert!(err.contains("Azure deployment name required"));
+    }
+
+    #[test]
+    fn test_vertex_url_construction() {
+        let config = LlmConfig::for_provider(LlmProvider::GoogleVertex, "gemini-3.0-pro")
+            .with_gcp("my-project", "us-west1");
+        let client = UnifiedLlmClient::new(config).unwrap();
+
+        let url = client.get_base_url().unwrap();
+        assert!(url.contains("us-west1"));
+        assert!(url.contains("my-project"));
+        assert!(url.contains("aiplatform.googleapis.com"));
+    }
+
+    #[test]
+    fn test_vertex_url_default_location() {
+        let mut config = LlmConfig::for_provider(LlmProvider::GoogleVertex, "gemini-3.0-pro");
+        config.extra.gcp_project = Some("my-project".to_string());
+        let client = UnifiedLlmClient::new(config).unwrap();
+
+        let url = client.get_base_url().unwrap();
+        assert!(url.contains("us-central1")); // default location
+    }
+
+    #[test]
+    fn test_vertex_url_missing_project_error() {
+        let config = LlmConfig::for_provider(LlmProvider::GoogleVertex, "gemini-3.0-pro");
+        let client = UnifiedLlmClient::new(config).unwrap();
+
+        let result = client.get_base_url();
+        assert!(result.is_err());
+        let err = result.unwrap_err().to_string();
+        assert!(err.contains("GCP project ID required"));
+    }
+
+    #[test]
+    fn test_bedrock_url_construction() {
+        let config = LlmConfig::for_provider(LlmProvider::AWSBedrock, "anthropic.claude-v2")
+            .with_aws_region("eu-west-1");
+        let client = UnifiedLlmClient::new(config).unwrap();
+
+        let url = client.get_base_url().unwrap();
+        assert_eq!(url, "https://bedrock-runtime.eu-west-1.amazonaws.com");
+    }
+
+    #[test]
+    fn test_bedrock_url_default_region() {
+        let config = LlmConfig::for_provider(LlmProvider::AWSBedrock, "anthropic.claude-v2");
+        let client = UnifiedLlmClient::new(config).unwrap();
+
+        let url = client.get_base_url().unwrap();
+        assert_eq!(url, "https://bedrock-runtime.us-east-1.amazonaws.com");
+    }
+
+    #[test]
+    fn test_cloudflare_url_construction() {
+        let config = LlmConfig::for_provider(LlmProvider::CloudflareAI, "@cf/meta/llama-3")
+            .with_cloudflare_gateway("acc123", "gw456");
+        let client = UnifiedLlmClient::new(config).unwrap();
+
+        let url = client.get_base_url().unwrap();
+        assert_eq!(url, "https://gateway.ai.cloudflare.com/v1/acc123/gw456/openai");
+    }
+
+    #[test]
+    fn test_cloudflare_url_missing_account_error() {
+        let config = LlmConfig::for_provider(LlmProvider::CloudflareAI, "@cf/meta/llama-3");
+        let client = UnifiedLlmClient::new(config).unwrap();
+
+        let result = client.get_base_url();
+        assert!(result.is_err());
+        let err = result.unwrap_err().to_string();
+        assert!(err.contains("Cloudflare account ID required"));
+    }
+
+    #[test]
+    fn test_base_url_override() {
+        let config = LlmConfig::for_provider(LlmProvider::OpenAI, "gpt-4o")
+            .with_base_url("https://custom-proxy.example.com/v1");
+        let client = UnifiedLlmClient::new(config).unwrap();
+
+        let url = client.get_base_url().unwrap();
+        assert_eq!(url, "https://custom-proxy.example.com/v1");
+    }
+
+    // =========================================================================
+    // API KEY RESOLUTION TESTS
+    // =========================================================================
+
+    #[test]
+    fn test_api_key_from_config() {
+        let config = LlmConfig::default().with_api_key("config-key-123");
+        let client = UnifiedLlmClient::new(config).unwrap();
+
+        let key = client.get_api_key().unwrap();
+        assert_eq!(key, "config-key-123");
+    }
+
+    #[test]
+    fn test_api_key_missing_error() {
+        // Ensure env var is not set
+        std::env::remove_var("ANTHROPIC_API_KEY");
+
+        let config = LlmConfig::default();
+        let client = UnifiedLlmClient::new(config).unwrap();
+
+        let result = client.get_api_key();
+        assert!(result.is_err());
+        let err = result.unwrap_err().to_string();
+        assert!(err.contains("ANTHROPIC_API_KEY"));
+    }
+
+    // =========================================================================
+    // PROVIDER INFO TESTS
+    // =========================================================================
 
     #[test]
     fn test_provider_info() {
@@ -1390,15 +2035,556 @@ mod tests {
             .unwrap();
         assert_eq!(anthropic.name, "Anthropic");
         assert_eq!(anthropic.env_var, "ANTHROPIC_API_KEY");
+        assert_eq!(anthropic.default_model, "claude-opus-4-5");
     }
 
     #[test]
-    fn test_provider_display() {
-        assert_eq!(LlmProvider::Anthropic.to_string(), "Anthropic");
-        assert_eq!(LlmProvider::XAI.to_string(), "xAI (Grok)");
-        assert_eq!(
-            LlmProvider::GoogleGemini.to_string(),
-            "Google Gemini (AI Studio)"
-        );
+    fn test_provider_info_all_fields_populated() {
+        let info = get_provider_info();
+
+        for provider_info in info {
+            assert!(!provider_info.name.is_empty());
+            assert!(!provider_info.env_var.is_empty());
+            assert!(!provider_info.default_model.is_empty());
+            assert!(!provider_info.base_url.is_empty());
+        }
+    }
+
+    // =========================================================================
+    // HTTP CLIENT POOLING TESTS
+    // =========================================================================
+
+    #[test]
+    fn test_http_client_pooling_default_timeout() {
+        // Default timeout is 120s
+        let client1 = get_pooled_client(120);
+        let client2 = get_pooled_client(120);
+
+        // These should be the same pooled client (same Arc)
+        // We cannot directly compare reqwest::Client, but we can verify
+        // both return successfully
+        assert!(client1.get("https://example.com").build().is_ok());
+        assert!(client2.get("https://example.com").build().is_ok());
+    }
+
+    #[test]
+    fn test_http_client_pooling_custom_timeout() {
+        let client1 = get_pooled_client(30);
+        let client2 = get_pooled_client(30);
+
+        // These should use the cached client for 30s timeout
+        assert!(client1.get("https://example.com").build().is_ok());
+        assert!(client2.get("https://example.com").build().is_ok());
+    }
+
+    #[test]
+    fn test_http_client_pooling_different_timeouts() {
+        let client_30 = get_pooled_client(30);
+        let client_60 = get_pooled_client(60);
+        let client_90 = get_pooled_client(90);
+
+        // All should work independently
+        assert!(client_30.get("https://example.com").build().is_ok());
+        assert!(client_60.get("https://example.com").build().is_ok());
+        assert!(client_90.get("https://example.com").build().is_ok());
+    }
+
+    // =========================================================================
+    // PROVIDER DISCOVERY TESTS
+    // =========================================================================
+
+    #[test]
+    fn test_discover_providers_filters_special_auth() {
+        let providers = discover_available_providers();
+
+        // Special auth providers should not be in discovered list
+        assert!(!providers.contains(&LlmProvider::AzureOpenAI));
+        assert!(!providers.contains(&LlmProvider::AWSBedrock));
+        assert!(!providers.contains(&LlmProvider::GoogleVertex));
+    }
+
+    // =========================================================================
+    // RESPONSE PARSING MOCK TESTS
+    // =========================================================================
+
+    #[test]
+    fn test_parse_anthropic_response() {
+        let json = r#"{
+            "model": "claude-opus-4-5-20251101",
+            "content": [{"type": "text", "text": "Hello, world!"}],
+            "stop_reason": "end_turn",
+            "usage": {"input_tokens": 10, "output_tokens": 5}
+        }"#;
+
+        let response: AnthropicResponse = serde_json::from_str(json).unwrap();
+
+        assert_eq!(response.model, "claude-opus-4-5-20251101");
+        assert_eq!(response.content.len(), 1);
+        assert_eq!(response.content[0].text, "Hello, world!");
+        assert_eq!(response.stop_reason, Some("end_turn".to_string()));
+        assert_eq!(response.usage.input_tokens, 10);
+        assert_eq!(response.usage.output_tokens, 5);
+    }
+
+    #[test]
+    fn test_parse_openai_response() {
+        let json = r#"{
+            "model": "gpt-4o",
+            "choices": [
+                {
+                    "message": {"content": "Test response"},
+                    "finish_reason": "stop"
+                }
+            ],
+            "usage": {"prompt_tokens": 20, "completion_tokens": 10, "total_tokens": 30}
+        }"#;
+
+        let response: OpenAIResponse = serde_json::from_str(json).unwrap();
+
+        assert_eq!(response.model, "gpt-4o");
+        assert_eq!(response.choices.len(), 1);
+        assert_eq!(response.choices[0].message.content, Some("Test response".to_string()));
+        assert_eq!(response.choices[0].finish_reason, Some("stop".to_string()));
+        assert!(response.usage.is_some());
+        let usage = response.usage.unwrap();
+        assert_eq!(usage.prompt_tokens, 20);
+        assert_eq!(usage.completion_tokens, 10);
+        assert_eq!(usage.total_tokens, 30);
+    }
+
+    #[test]
+    fn test_parse_openai_response_no_usage() {
+        let json = r#"{
+            "model": "gpt-4o",
+            "choices": [
+                {
+                    "message": {"content": "No usage info"},
+                    "finish_reason": "stop"
+                }
+            ]
+        }"#;
+
+        let response: OpenAIResponse = serde_json::from_str(json).unwrap();
+        assert!(response.usage.is_none());
+    }
+
+    #[test]
+    fn test_parse_openai_response_null_content() {
+        let json = r#"{
+            "model": "gpt-4o",
+            "choices": [
+                {
+                    "message": {"content": null},
+                    "finish_reason": "stop"
+                }
+            ]
+        }"#;
+
+        let response: OpenAIResponse = serde_json::from_str(json).unwrap();
+        assert!(response.choices[0].message.content.is_none());
+    }
+
+    #[test]
+    fn test_parse_anthropic_max_tokens_finish() {
+        let json = r#"{
+            "model": "claude-3-sonnet",
+            "content": [{"type": "text", "text": "Truncated..."}],
+            "stop_reason": "max_tokens",
+            "usage": {"input_tokens": 100, "output_tokens": 4000}
+        }"#;
+
+        let response: AnthropicResponse = serde_json::from_str(json).unwrap();
+        assert_eq!(response.stop_reason, Some("max_tokens".to_string()));
+    }
+
+    #[test]
+    fn test_parse_openai_content_filter_finish() {
+        let json = r#"{
+            "model": "gpt-4o",
+            "choices": [
+                {
+                    "message": {"content": ""},
+                    "finish_reason": "content_filter"
+                }
+            ]
+        }"#;
+
+        let response: OpenAIResponse = serde_json::from_str(json).unwrap();
+        assert_eq!(response.choices[0].finish_reason, Some("content_filter".to_string()));
+    }
+
+    // =========================================================================
+    // EDGE CASES & ERROR HANDLING TESTS
+    // =========================================================================
+
+    #[test]
+    fn test_empty_prompt_allowed() {
+        let request = LlmRequest::new("");
+        assert_eq!(request.prompt, "");
+    }
+
+    #[test]
+    fn test_config_temperature_extreme_values() {
+        // Zero temperature (deterministic)
+        let config = LlmConfig::default().with_temperature(0.0);
+        assert_eq!(config.temperature, 0.0);
+
+        // High temperature (creative)
+        let config = LlmConfig::default().with_temperature(2.0);
+        assert_eq!(config.temperature, 2.0);
+    }
+
+    #[test]
+    fn test_config_max_tokens_extreme_values() {
+        let config = LlmConfig::default().with_max_tokens(1);
+        assert_eq!(config.max_tokens, 1);
+
+        let config = LlmConfig::default().with_max_tokens(1_000_000);
+        assert_eq!(config.max_tokens, 1_000_000);
+    }
+
+    #[test]
+    fn test_provider_extra_defaults() {
+        let extra = ProviderExtra::default();
+        assert!(extra.azure_resource.is_none());
+        assert!(extra.azure_deployment.is_none());
+        assert!(extra.aws_region.is_none());
+        assert!(extra.gcp_project.is_none());
+        assert!(extra.gcp_location.is_none());
+        assert!(extra.cf_account_id.is_none());
+        assert!(extra.cf_gateway_id.is_none());
+        assert!(extra.gateway_provider.is_none());
+    }
+
+    // =========================================================================
+    // RATE LIMITING SIMULATION TESTS
+    // =========================================================================
+
+    /// Mock rate limiter for testing
+    struct MockRateLimiter {
+        requests_per_second: u32,
+        current_count: std::sync::atomic::AtomicU32,
+    }
+
+    impl MockRateLimiter {
+        fn new(rps: u32) -> Self {
+            Self {
+                requests_per_second: rps,
+                current_count: std::sync::atomic::AtomicU32::new(0),
+            }
+        }
+
+        fn try_acquire(&self) -> bool {
+            let count = self.current_count.fetch_add(1, std::sync::atomic::Ordering::SeqCst);
+            count < self.requests_per_second
+        }
+
+        fn reset(&self) {
+            self.current_count.store(0, std::sync::atomic::Ordering::SeqCst);
+        }
+    }
+
+    #[test]
+    fn test_rate_limiter_allows_within_limit() {
+        let limiter = MockRateLimiter::new(10);
+
+        for _ in 0..10 {
+            assert!(limiter.try_acquire());
+        }
+    }
+
+    #[test]
+    fn test_rate_limiter_blocks_over_limit() {
+        let limiter = MockRateLimiter::new(5);
+
+        for _ in 0..5 {
+            assert!(limiter.try_acquire());
+        }
+
+        // 6th request should be blocked
+        assert!(!limiter.try_acquire());
+    }
+
+    #[test]
+    fn test_rate_limiter_reset() {
+        let limiter = MockRateLimiter::new(3);
+
+        for _ in 0..3 {
+            limiter.try_acquire();
+        }
+        assert!(!limiter.try_acquire());
+
+        limiter.reset();
+        assert!(limiter.try_acquire());
+    }
+
+    // =========================================================================
+    // MOCK LLM CLIENT FOR TESTING
+    // =========================================================================
+
+    /// Mock LLM client for testing without network calls
+    struct MockLlmClient {
+        provider: LlmProvider,
+        model: String,
+        response: LlmResponse,
+    }
+
+    impl MockLlmClient {
+        fn new(provider: LlmProvider, model: impl Into<String>) -> Self {
+            Self {
+                provider,
+                model: model.into(),
+                response: LlmResponse {
+                    content: "Mock response".to_string(),
+                    model: "mock-model".to_string(),
+                    finish_reason: FinishReason::Stop,
+                    usage: LlmUsage {
+                        input_tokens: 10,
+                        output_tokens: 5,
+                        total_tokens: 15,
+                    },
+                    provider: Some(provider),
+                },
+            }
+        }
+
+        fn with_response(mut self, content: impl Into<String>) -> Self {
+            self.response.content = content.into();
+            self
+        }
+
+        fn with_finish_reason(mut self, reason: FinishReason) -> Self {
+            self.response.finish_reason = reason;
+            self
+        }
+
+        fn with_usage(mut self, input: u32, output: u32) -> Self {
+            self.response.usage = LlmUsage {
+                input_tokens: input,
+                output_tokens: output,
+                total_tokens: input + output,
+            };
+            self
+        }
+    }
+
+    #[async_trait]
+    impl LlmClient for MockLlmClient {
+        async fn complete(&self, _request: LlmRequest) -> Result<LlmResponse> {
+            Ok(self.response.clone())
+        }
+
+        fn provider(&self) -> LlmProvider {
+            self.provider
+        }
+
+        fn model(&self) -> &str {
+            &self.model
+        }
+    }
+
+    #[tokio::test]
+    async fn test_mock_client_returns_configured_response() {
+        let client = MockLlmClient::new(LlmProvider::OpenAI, "gpt-4o")
+            .with_response("Custom test response")
+            .with_usage(100, 50);
+
+        let request = LlmRequest::new("Test prompt");
+        let response = client.complete(request).await.unwrap();
+
+        assert_eq!(response.content, "Custom test response");
+        assert_eq!(response.usage.input_tokens, 100);
+        assert_eq!(response.usage.output_tokens, 50);
+        assert_eq!(response.provider, Some(LlmProvider::OpenAI));
+    }
+
+    #[tokio::test]
+    async fn test_mock_client_finish_reason() {
+        let client = MockLlmClient::new(LlmProvider::Anthropic, "claude-3")
+            .with_finish_reason(FinishReason::MaxTokens);
+
+        let response = client.complete(LlmRequest::new("Test")).await.unwrap();
+        assert_eq!(response.finish_reason, FinishReason::MaxTokens);
+    }
+
+    #[test]
+    fn test_mock_client_provider_and_model() {
+        let client = MockLlmClient::new(LlmProvider::Groq, "llama-3.3-70b");
+
+        assert_eq!(client.provider(), LlmProvider::Groq);
+        assert_eq!(client.model(), "llama-3.3-70b");
+    }
+
+    // =========================================================================
+    // STREAMING SIMULATION TESTS
+    // =========================================================================
+
+    /// Simulated streaming chunk for testing
+    #[derive(Debug, Clone)]
+    struct StreamChunk {
+        content: String,
+        is_final: bool,
+    }
+
+    /// Mock streaming response for testing
+    struct MockStreamingResponse {
+        chunks: Vec<StreamChunk>,
+    }
+
+    impl MockStreamingResponse {
+        fn new(chunks: Vec<&str>) -> Self {
+            let mut stream_chunks: Vec<StreamChunk> = chunks
+                .into_iter()
+                .map(|c| StreamChunk {
+                    content: c.to_string(),
+                    is_final: false,
+                })
+                .collect();
+
+            if let Some(last) = stream_chunks.last_mut() {
+                last.is_final = true;
+            }
+
+            Self { chunks: stream_chunks }
+        }
+
+        fn collect_content(&self) -> String {
+            self.chunks.iter().map(|c| c.content.as_str()).collect()
+        }
+    }
+
+    #[test]
+    fn test_streaming_chunks_collection() {
+        let stream = MockStreamingResponse::new(vec!["Hello", " ", "world", "!"]);
+
+        assert_eq!(stream.chunks.len(), 4);
+        assert_eq!(stream.collect_content(), "Hello world!");
+    }
+
+    #[test]
+    fn test_streaming_final_flag() {
+        let stream = MockStreamingResponse::new(vec!["Part 1", "Part 2", "Part 3"]);
+
+        assert!(!stream.chunks[0].is_final);
+        assert!(!stream.chunks[1].is_final);
+        assert!(stream.chunks[2].is_final);
+    }
+
+    #[test]
+    fn test_streaming_empty() {
+        let stream = MockStreamingResponse::new(vec![]);
+
+        assert!(stream.chunks.is_empty());
+        assert_eq!(stream.collect_content(), "");
+    }
+
+    #[test]
+    fn test_streaming_single_chunk() {
+        let stream = MockStreamingResponse::new(vec!["Complete response in one chunk"]);
+
+        assert_eq!(stream.chunks.len(), 1);
+        assert!(stream.chunks[0].is_final);
+    }
+
+    // =========================================================================
+    // INTEGRATION-STYLE TESTS (NO NETWORK)
+    // =========================================================================
+
+    #[tokio::test]
+    async fn test_full_request_response_cycle_mock() {
+        let client = MockLlmClient::new(LlmProvider::OpenAI, "gpt-4o")
+            .with_response("This is a comprehensive analysis of your question.")
+            .with_usage(150, 75);
+
+        let request = LlmRequest::new("Analyze the impact of AI on healthcare")
+            .with_system("You are a medical AI expert")
+            .with_temperature(0.3)
+            .with_max_tokens(500);
+
+        let response = client.complete(request).await.unwrap();
+
+        assert_eq!(response.content, "This is a comprehensive analysis of your question.");
+        assert_eq!(response.finish_reason, FinishReason::Stop);
+        assert_eq!(response.usage.total_tokens, 225);
+    }
+
+    #[tokio::test]
+    async fn test_multiple_providers_mock() {
+        let providers_and_models = vec![
+            (LlmProvider::OpenAI, "gpt-4o"),
+            (LlmProvider::Anthropic, "claude-3-sonnet"),
+            (LlmProvider::Groq, "llama-3.3-70b"),
+            (LlmProvider::DeepSeek, "deepseek-v3"),
+            (LlmProvider::Mistral, "mistral-large"),
+        ];
+
+        for (provider, model) in providers_and_models {
+            let client = MockLlmClient::new(provider, model)
+                .with_response(format!("Response from {}", provider.display_name()));
+
+            let response = client.complete(LlmRequest::new("Test")).await.unwrap();
+
+            assert!(response.content.contains(provider.display_name()));
+            assert_eq!(response.provider, Some(provider));
+        }
+    }
+
+    // =========================================================================
+    // CONCURRENCY SAFETY TESTS
+    // =========================================================================
+
+    #[tokio::test]
+    async fn test_concurrent_client_creation() {
+        use std::sync::Arc;
+        use tokio::task::JoinSet;
+
+        let mut tasks = JoinSet::new();
+
+        for i in 0..10 {
+            tasks.spawn(async move {
+                let config = LlmConfig::for_provider(
+                    LlmProvider::OpenAI,
+                    format!("gpt-4o-{}", i),
+                );
+                UnifiedLlmClient::new(config)
+            });
+        }
+
+        let mut success_count = 0;
+        while let Some(result) = tasks.join_next().await {
+            if result.unwrap().is_ok() {
+                success_count += 1;
+            }
+        }
+
+        assert_eq!(success_count, 10);
+    }
+
+    #[tokio::test]
+    async fn test_concurrent_mock_requests() {
+        use std::sync::Arc;
+        use tokio::task::JoinSet;
+
+        let client = Arc::new(MockLlmClient::new(LlmProvider::OpenAI, "gpt-4o")
+            .with_response("Concurrent response"));
+
+        let mut tasks = JoinSet::new();
+
+        for i in 0..20 {
+            let client = Arc::clone(&client);
+            tasks.spawn(async move {
+                let request = LlmRequest::new(format!("Request {}", i));
+                client.complete(request).await
+            });
+        }
+
+        let mut success_count = 0;
+        while let Some(result) = tasks.join_next().await {
+            if result.unwrap().is_ok() {
+                success_count += 1;
+            }
+        }
+
+        assert_eq!(success_count, 20);
     }
 }

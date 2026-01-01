@@ -9,12 +9,14 @@
 **One sentence:** ReasonKit turns messy LLM prompts into structured, auditable reasoning chains.
 
 **Before ReasonKit:**
+
 ```
 You: "Should I use microservices?"
 LLM: [2000 words of maybe-correct rambling]
 ```
 
 **After ReasonKit:**
+
 ```
 You: rk-core think "Should I use microservices?" --profile balanced
 Output: 10 perspectives analyzed, 3 hidden assumptions found, verdict with 82% confidence
@@ -106,31 +108,35 @@ VERDICT: Start with monolith | Confidence: 78% | Time: 1.8s
 
 ### Profile Selection
 
-| Use Case | Command | Time |
-|----------|---------|------|
-| Quick sanity check | `--profile quick` | ~30s |
-| Important decision | `--profile balanced` | ~2min |
-| Major architecture | `--profile deep` | ~5min |
+| Use Case           | Command              | Time   |
+| ------------------ | -------------------- | ------ |
+| Quick sanity check | `--profile quick`    | ~30s   |
+| Important decision | `--profile balanced` | ~2min  |
+| Major architecture | `--profile deep`     | ~5min  |
 | Production release | `--profile paranoid` | ~10min |
 
 ### Real Examples (Copy-Paste Ready)
 
 **Code review:**
+
 ```bash
 rk-core think "Review this PR: https://github.com/org/repo/pull/123" --profile balanced
 ```
 
 **Architecture decision:**
+
 ```bash
 rk-core think "GraphQL vs REST for a mobile banking app" --profile deep
 ```
 
 **Risk assessment:**
+
 ```bash
 rk-core think "What could go wrong with this deployment plan?" --profile paranoid
 ```
 
 **Debug assistance:**
+
 ```bash
 rk-core think "Why might a React component re-render infinitely?" --profile quick
 ```
@@ -201,13 +207,13 @@ See [INSTALLATION_TROUBLESHOOTING.md](INSTALLATION_TROUBLESHOOTING.md) for platf
 
 ## What's Next?
 
-| Goal | Resource |
-|------|----------|
-| Full CLI options | [CLI_REFERENCE.md](CLI_REFERENCE.md) |
-| ThinkTool deep dive | [THINKTOOLS_GUIDE.md](THINKTOOLS_GUIDE.md) |
-| Provider setup | [integrations/](integrations/) |
-| Real-world use cases | [USE_CASES.md](USE_CASES.md) |
-| Rust API | [API_REFERENCE.md](API_REFERENCE.md) |
+| Goal                 | Resource                                   |
+| -------------------- | ------------------------------------------ |
+| Full CLI options     | [CLI_REFERENCE.md](CLI_REFERENCE.md)       |
+| ThinkTool deep dive  | [THINKTOOLS_GUIDE.md](THINKTOOLS_GUIDE.md) |
+| Provider setup       | [integrations/](integrations/)             |
+| Real-world use cases | [USE_CASES.md](USE_CASES.md)               |
+| Rust API             | [API_REFERENCE.md](API_REFERENCE.md)       |
 
 ---
 
@@ -221,7 +227,7 @@ API KEY:     export ANTHROPIC_API_KEY="sk-ant-..."
 PROFILES:
   --profile quick      Fast (30s, 70% confidence)
   --profile balanced   Standard (2min, 80% confidence)
-  --profile deep       Thorough (5min, 85% confidence)  
+  --profile deep       Thorough (5min, 85% confidence)
   --profile paranoid   Maximum (10min, 95% confidence)
 
 THINKTOOLS:

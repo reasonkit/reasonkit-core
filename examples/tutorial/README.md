@@ -8,13 +8,13 @@ This tutorial takes you from zero to confidently using ReasonKit for AI reasonin
 
 ## Tutorial Structure
 
-| Step | File | What You Learn | Time |
-|------|------|----------------|------|
-| 1 | [step1_basic.sh](step1_basic.sh) | Basic ThinkTool usage | 60s |
-| 2 | [step2_profiles.sh](step2_profiles.sh) | Choosing the right profile | 60s |
-| 3 | [step3_individual_tools.sh](step3_individual_tools.sh) | Individual ThinkTools | 90s |
-| 4 | [step4_json_output.sh](step4_json_output.sh) | Machine-readable output | 60s |
-| 5 | [step5_audit_trail.sh](step5_audit_trail.sh) | Execution traces | 90s |
+| Step | File                                                   | What You Learn             | Time |
+| ---- | ------------------------------------------------------ | -------------------------- | ---- |
+| 1    | [step1_basic.sh](step1_basic.sh)                       | Basic ThinkTool usage      | 60s  |
+| 2    | [step2_profiles.sh](step2_profiles.sh)                 | Choosing the right profile | 60s  |
+| 3    | [step3_individual_tools.sh](step3_individual_tools.sh) | Individual ThinkTools      | 90s  |
+| 4    | [step4_json_output.sh](step4_json_output.sh)           | Machine-readable output    | 60s  |
+| 5    | [step5_audit_trail.sh](step5_audit_trail.sh)           | Execution traces           | 90s  |
 
 ---
 

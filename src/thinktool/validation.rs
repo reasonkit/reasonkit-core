@@ -903,27 +903,1238 @@ impl Default for DeepSeekValidationEngine {
     }
 }
 
-// Simplified implementation for testing and demonstration
+// ═══════════════════════════════════════════════════════════════════════════════════════════════
+// COMPREHENSIVE TEST SUITE
+// ═══════════════════════════════════════════════════════════════════════════════════════════════
+
 #[cfg(test)]
 mod tests {
     use super::*;
+    use proptest::prelude::*;
 
-    #[tokio::test]
-    async fn test_validation_engine_creation() {
-        // Mock test - in production would use proper mocking
-        let engine = DeepSeekValidationEngine::new().unwrap();
-        assert_eq!(engine.config.model, "deepseek-chat");
+    // ─────────────────────────────────────────────────────────────────────────────────────────────
+    // CONFIGURATION TESTS
+    // ─────────────────────────────────────────────────────────────────────────────────────────────
+
+    mod config_tests {
+        use super::*;
+
+        #[test]
+        fn test_default_config_values() {
+            let config = DeepSeekValidationConfig::default();
+
+            assert_eq!(config.model, "deepseek-chat");
+            assert!((config.temperature - 0.1).abs() < f32::EPSILON);
+            assert_eq!(config.max_tokens, 4000);
+            assert!(!config.enable_statistical_testing);
+            assert!((config.alpha - 0.05).abs() < f64::EPSILON);
+            assert!(config.enable_compliance_validation);
+            assert!(!config.enable_meta_cognition);
+            assert!((config.min_confidence - 0.70).abs() < f64::EPSILON);
+            assert_eq!(config.max_chain_length, 20);
+        }
+
+        #[test]
+        fn test_rigorous_config() {
+            let config = DeepSeekValidationConfig::rigorous();
+
+            assert!(config.enable_statistical_testing);
+            assert!(config.enable_compliance_validation);
+            assert!(config.enable_meta_cognition);
+            assert!((config.temperature - 0.05).abs() < f32::EPSILON);
+            assert!((config.min_confidence - 0.85).abs() < f64::EPSILON);
+        }
+
+        #[test]
+        fn test_performance_config() {
+            let config = DeepSeekValidationConfig::performance();
+
+            assert!(!config.enable_statistical_testing);
+            assert!(config.enable_compliance_validation);
+            assert!(!config.enable_meta_cognition);
+            assert!((config.temperature - 0.2).abs() < f32::EPSILON);
+            assert_eq!(config.max_tokens, 2000);
+        }
+
+        #[test]
+        fn test_config_serialization_roundtrip() {
+            let config = DeepSeekValidationConfig::rigorous();
+            let json = serde_json::to_string(&config).unwrap();
+            let deserialized: DeepSeekValidationConfig = serde_json::from_str(&json).unwrap();
+
+            assert_eq!(config.model, deserialized.model);
+            assert!((config.temperature - deserialized.temperature).abs() < f32::EPSILON);
+            assert_eq!(
+                config.enable_statistical_testing,
+                deserialized.enable_statistical_testing
+            );
+        }
+
+        #[test]
+        fn test_config_deserialization_with_defaults() {
+            // Minimal JSON - should use defaults for missing fields
+            let json = r#"{"model": "custom-model"}"#;
+            let config: DeepSeekValidationConfig = serde_json::from_str(json).unwrap();
+
+            assert_eq!(config.model, "custom-model");
+            // All other fields should have defaults
+            assert!((config.temperature - 0.1).abs() < f32::EPSILON);
+            assert_eq!(config.max_tokens, 4000);
+        }
     }
 
-    #[test]
-    fn test_configuration_options() {
-        let config = DeepSeekValidationConfig::rigorous();
-        assert!(config.enable_statistical_testing);
-        assert!(config.enable_compliance_validation);
-        assert!(config.enable_meta_cognition);
+    // ─────────────────────────────────────────────────────────────────────────────────────────────
+    // TOKEN USAGE TESTS
+    // ─────────────────────────────────────────────────────────────────────────────────────────────
 
-        let perf_config = DeepSeekValidationConfig::performance();
-        assert!(!perf_config.enable_statistical_testing);
-        assert!(perf_config.enable_compliance_validation);
+    mod token_usage_tests {
+        use super::*;
+
+        #[test]
+        fn test_token_usage_new() {
+            let usage = TokenUsage::new(100, 50, 0.01);
+
+            assert_eq!(usage.input_tokens, 100);
+            assert_eq!(usage.output_tokens, 50);
+            assert_eq!(usage.total_tokens, 150);
+            assert!((usage.cost_usd - 0.01).abs() < f64::EPSILON);
+        }
+
+        #[test]
+        fn test_token_usage_default() {
+            let usage = TokenUsage::default();
+
+            assert_eq!(usage.input_tokens, 0);
+            assert_eq!(usage.output_tokens, 0);
+            assert_eq!(usage.total_tokens, 0);
+            assert!((usage.cost_usd - 0.0).abs() < f64::EPSILON);
+        }
+
+        #[test]
+        fn test_token_usage_add() {
+            let mut usage1 = TokenUsage::new(100, 50, 0.01);
+            let usage2 = TokenUsage::new(200, 100, 0.02);
+
+            usage1.add(&usage2);
+
+            assert_eq!(usage1.input_tokens, 300);
+            assert_eq!(usage1.output_tokens, 150);
+            assert_eq!(usage1.total_tokens, 450);
+            assert!((usage1.cost_usd - 0.03).abs() < f64::EPSILON);
+        }
+
+        #[test]
+        fn test_token_usage_add_to_zero() {
+            let mut usage = TokenUsage::default();
+            let other = TokenUsage::new(500, 250, 0.05);
+
+            usage.add(&other);
+
+            assert_eq!(usage.input_tokens, 500);
+            assert_eq!(usage.output_tokens, 250);
+            assert_eq!(usage.total_tokens, 750);
+        }
+
+        #[test]
+        fn test_token_usage_boundary_max_u32() {
+            let usage = TokenUsage::new(u32::MAX - 10, 5, 0.0);
+            assert_eq!(usage.total_tokens, u32::MAX - 5);
+        }
+
+        #[test]
+        fn test_token_usage_serialization() {
+            let usage = TokenUsage::new(1000, 500, 0.123);
+            let json = serde_json::to_string(&usage).unwrap();
+            let deserialized: TokenUsage = serde_json::from_str(&json).unwrap();
+
+            assert_eq!(usage.input_tokens, deserialized.input_tokens);
+            assert_eq!(usage.output_tokens, deserialized.output_tokens);
+            assert_eq!(usage.total_tokens, deserialized.total_tokens);
+            assert!((usage.cost_usd - deserialized.cost_usd).abs() < 0.0001);
+        }
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────────────────────────
+    // CHAIN INTEGRITY RESULT ARITHMETIC TESTS
+    // ─────────────────────────────────────────────────────────────────────────────────────────────
+
+    mod chain_integrity_arithmetic_tests {
+        use super::*;
+
+        fn create_chain_integrity(continuity_score: f64) -> ChainIntegrityResult {
+            ChainIntegrityResult {
+                logical_flow: LogicalFlowStatus::Good,
+                step_dependencies: DependencyStatus::FullySatisfied,
+                confidence_progression: ProgressionStatus::Monotonic,
+                gaps_detected: vec![],
+                continuity_score,
+            }
+        }
+
+        #[test]
+        fn test_chain_integrity_add_f32() {
+            let result = create_chain_integrity(0.85);
+            let sum = result + 0.15f32;
+            assert!((sum - 1.0).abs() < 0.0001);
+        }
+
+        #[test]
+        fn test_chain_integrity_sub_f32_ref() {
+            let result = create_chain_integrity(0.85);
+            let diff = result - &0.35f32;
+            assert!((diff - 0.5).abs() < 0.0001);
+        }
+
+        #[test]
+        fn test_chain_integrity_mul_f64() {
+            let result = create_chain_integrity(0.5);
+            let product = result * 2.0f64;
+            assert!((product - 1.0).abs() < f64::EPSILON);
+        }
+
+        #[test]
+        fn test_chain_integrity_mul_f32() {
+            let result = create_chain_integrity(0.5);
+            let product = result * 4.0f32;
+            assert!((product - 2.0).abs() < 0.0001);
+        }
+
+        #[test]
+        fn test_chain_integrity_boundary_zero() {
+            let result = create_chain_integrity(0.0);
+            let product = result * 100.0f64;
+            assert!((product - 0.0).abs() < f64::EPSILON);
+        }
+
+        #[test]
+        fn test_chain_integrity_boundary_one() {
+            let result = create_chain_integrity(1.0);
+            let product = result * 0.5f64;
+            assert!((product - 0.5).abs() < f64::EPSILON);
+        }
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────────────────────────
+    // VALIDATION PERFORMANCE TESTS
+    // ─────────────────────────────────────────────────────────────────────────────────────────────
+
+    mod validation_performance_tests {
+        use super::*;
+
+        #[test]
+        fn test_validation_performance_new() {
+            let perf = ValidationPerformance::new(1000, 500.0, 128.5);
+
+            assert_eq!(perf.duration_ms, 1000);
+            assert!((perf.tokens_per_second - 500.0).abs() < f64::EPSILON);
+            assert!((perf.memory_usage_mb - 128.5).abs() < f64::EPSILON);
+        }
+
+        #[test]
+        fn test_validation_performance_default() {
+            let perf = ValidationPerformance::default();
+
+            assert_eq!(perf.duration_ms, 0);
+            assert!((perf.tokens_per_second - 0.0).abs() < f64::EPSILON);
+            assert!((perf.memory_usage_mb - 0.0).abs() < f64::EPSILON);
+        }
+
+        #[test]
+        fn test_validation_performance_serialization() {
+            let perf = ValidationPerformance::new(5000, 1200.5, 256.0);
+            let json = serde_json::to_string(&perf).unwrap();
+            let deserialized: ValidationPerformance = serde_json::from_str(&json).unwrap();
+
+            assert_eq!(perf.duration_ms, deserialized.duration_ms);
+        }
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────────────────────────
+    // ENUM SERIALIZATION TESTS
+    // ─────────────────────────────────────────────────────────────────────────────────────────────
+
+    mod enum_serialization_tests {
+        use super::*;
+
+        #[test]
+        fn test_validation_verdict_serialization() {
+            let cases = [
+                (ValidationVerdict::Validated, "\"validated\""),
+                (ValidationVerdict::PartiallyValidated, "\"partially_validated\""),
+                (ValidationVerdict::NeedsImprovement, "\"needs_improvement\""),
+                (ValidationVerdict::Invalid, "\"invalid\""),
+                (ValidationVerdict::CriticalIssues, "\"critical_issues\""),
+            ];
+
+            for (verdict, expected_json) in cases {
+                let json = serde_json::to_string(&verdict).unwrap();
+                assert_eq!(json, expected_json);
+
+                let deserialized: ValidationVerdict = serde_json::from_str(&json).unwrap();
+                assert_eq!(verdict, deserialized);
+            }
+        }
+
+        #[test]
+        fn test_severity_serialization() {
+            let cases = [
+                (Severity::Critical, "\"critical\""),
+                (Severity::High, "\"high\""),
+                (Severity::Medium, "\"medium\""),
+                (Severity::Low, "\"low\""),
+                (Severity::Info, "\"info\""),
+            ];
+
+            for (severity, expected_json) in cases {
+                let json = serde_json::to_string(&severity).unwrap();
+                assert_eq!(json, expected_json);
+
+                let deserialized: Severity = serde_json::from_str(&json).unwrap();
+                assert_eq!(severity, deserialized);
+            }
+        }
+
+        #[test]
+        fn test_bias_level_serialization() {
+            let cases = [
+                (BiasLevel::Minimal, "\"minimal\""),
+                (BiasLevel::Low, "\"low\""),
+                (BiasLevel::Moderate, "\"moderate\""),
+                (BiasLevel::High, "\"high\""),
+                (BiasLevel::Severe, "\"severe\""),
+            ];
+
+            for (level, expected_json) in cases {
+                let json = serde_json::to_string(&level).unwrap();
+                assert_eq!(json, expected_json);
+            }
+        }
+
+        #[test]
+        fn test_logical_flow_status_serialization() {
+            let status = LogicalFlowStatus::Excellent;
+            let json = serde_json::to_string(&status).unwrap();
+            assert_eq!(json, "\"excellent\"");
+        }
+
+        #[test]
+        fn test_dependency_status_serialization() {
+            let status = DependencyStatus::PartiallySatisfied;
+            let json = serde_json::to_string(&status).unwrap();
+            assert_eq!(json, "\"partially_satisfied\"");
+        }
+
+        #[test]
+        fn test_progression_status_serialization() {
+            let status = ProgressionStatus::SlowlyDecaying;
+            let json = serde_json::to_string(&status).unwrap();
+            assert_eq!(json, "\"slowly_decaying\"");
+        }
+
+        #[test]
+        fn test_compliance_status_serialization() {
+            let status = ComplianceStatus::CriticalNonCompliance;
+            let json = serde_json::to_string(&status).unwrap();
+            assert_eq!(json, "\"critical_non_compliance\"");
+        }
+
+        #[test]
+        fn test_regulatory_status_serialization() {
+            let status = RegulatoryStatus::NeedsValidation;
+            let json = serde_json::to_string(&status).unwrap();
+            assert_eq!(json, "\"needs_validation\"");
+        }
+
+        #[test]
+        fn test_methodology_status_serialization() {
+            let status = MethodologyStatus::NeedsImprovement;
+            let json = serde_json::to_string(&status).unwrap();
+            assert_eq!(json, "\"needs_improvement\"");
+        }
+
+        #[test]
+        fn test_validation_category_serialization() {
+            let category = ValidationCategory::EnterpriseCompliance;
+            let json = serde_json::to_string(&category).unwrap();
+            assert_eq!(json, "\"enterprise_compliance\"");
+        }
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────────────────────────
+    // STATISTICAL RESULT TESTS
+    // ─────────────────────────────────────────────────────────────────────────────────────────────
+
+    mod statistical_result_tests {
+        use super::*;
+
+        #[test]
+        fn test_statistical_result_significant() {
+            let result = StatisticalResult {
+                significant: true,
+                p_value: Some(0.01),
+                confidence_interval: Some((0.80, 0.95)),
+                sample_size: Some(1000),
+            };
+
+            assert!(result.significant);
+            assert!(result.p_value.unwrap() < 0.05);
+        }
+
+        #[test]
+        fn test_statistical_result_not_significant() {
+            let result = StatisticalResult {
+                significant: false,
+                p_value: Some(0.15),
+                confidence_interval: None,
+                sample_size: Some(50),
+            };
+
+            assert!(!result.significant);
+            assert!(result.p_value.unwrap() > 0.05);
+        }
+
+        #[test]
+        fn test_statistical_result_serialization() {
+            let result = StatisticalResult {
+                significant: true,
+                p_value: Some(0.03),
+                confidence_interval: Some((0.75, 0.95)),
+                sample_size: Some(500),
+            };
+
+            let json = serde_json::to_string(&result).unwrap();
+            let deserialized: StatisticalResult = serde_json::from_str(&json).unwrap();
+
+            assert_eq!(result.significant, deserialized.significant);
+            assert_eq!(result.p_value, deserialized.p_value);
+            assert_eq!(result.confidence_interval, deserialized.confidence_interval);
+        }
+
+        #[test]
+        fn test_statistical_result_boundary_p_value() {
+            // Test boundary at alpha = 0.05
+            let exactly_significant = StatisticalResult {
+                significant: true,
+                p_value: Some(0.049),
+                confidence_interval: None,
+                sample_size: None,
+            };
+            assert!(exactly_significant.p_value.unwrap() < 0.05);
+
+            let not_significant = StatisticalResult {
+                significant: false,
+                p_value: Some(0.051),
+                confidence_interval: None,
+                sample_size: None,
+            };
+            assert!(not_significant.p_value.unwrap() > 0.05);
+        }
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────────────────────────
+    // VALIDATION FINDING TESTS
+    // ─────────────────────────────────────────────────────────────────────────────────────────────
+
+    mod validation_finding_tests {
+        use super::*;
+
+        #[test]
+        fn test_validation_finding_creation() {
+            let finding = ValidationFinding {
+                category: ValidationCategory::LogicalFlow,
+                severity: Severity::High,
+                description: "Gap detected between steps 2 and 3".to_string(),
+                affected_steps: vec!["step_2".to_string(), "step_3".to_string()],
+                evidence: vec!["Missing intermediate reasoning".to_string()],
+                recommendations: vec!["Add bridging step".to_string()],
+            };
+
+            assert_eq!(finding.category, ValidationCategory::LogicalFlow);
+            assert_eq!(finding.severity, Severity::High);
+            assert_eq!(finding.affected_steps.len(), 2);
+        }
+
+        #[test]
+        fn test_validation_finding_with_unicode() {
+            let finding = ValidationFinding {
+                category: ValidationCategory::BiasDetection,
+                severity: Severity::Medium,
+                description: "Unicode test: \u{1F4A1} \u{1F4CA} \u{2705}".to_string(),
+                affected_steps: vec!["step_\u{03B1}".to_string()],
+                evidence: vec!["Evidence with emoji: \u{1F914}".to_string()],
+                recommendations: vec!["\u{2728} Improve coverage".to_string()],
+            };
+
+            let json = serde_json::to_string(&finding).unwrap();
+            let deserialized: ValidationFinding = serde_json::from_str(&json).unwrap();
+
+            assert!(deserialized.description.contains('\u{1F4A1}'));
+        }
+
+        #[test]
+        fn test_validation_finding_empty_vectors() {
+            let finding = ValidationFinding {
+                category: ValidationCategory::Methodology,
+                severity: Severity::Info,
+                description: "Minor observation".to_string(),
+                affected_steps: vec![],
+                evidence: vec![],
+                recommendations: vec![],
+            };
+
+            assert!(finding.affected_steps.is_empty());
+            assert!(finding.evidence.is_empty());
+            assert!(finding.recommendations.is_empty());
+        }
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────────────────────────
+    // DETECTED BIAS TESTS
+    // ─────────────────────────────────────────────────────────────────────────────────────────────
+
+    mod detected_bias_tests {
+        use super::*;
+
+        #[test]
+        fn test_detected_bias_creation() {
+            let bias = DetectedBias {
+                bias_type: "confirmation_bias".to_string(),
+                evidence: "Selectively interpreting data".to_string(),
+                severity: Severity::Medium,
+                detection_confidence: 0.85,
+            };
+
+            assert_eq!(bias.bias_type, "confirmation_bias");
+            assert!((bias.detection_confidence - 0.85).abs() < f64::EPSILON);
+        }
+
+        #[test]
+        fn test_detected_bias_confidence_boundaries() {
+            let low_confidence = DetectedBias {
+                bias_type: "anchoring".to_string(),
+                evidence: "Weak signal".to_string(),
+                severity: Severity::Low,
+                detection_confidence: 0.0,
+            };
+            assert!((low_confidence.detection_confidence - 0.0).abs() < f64::EPSILON);
+
+            let high_confidence = DetectedBias {
+                bias_type: "anchoring".to_string(),
+                evidence: "Strong signal".to_string(),
+                severity: Severity::Critical,
+                detection_confidence: 1.0,
+            };
+            assert!((high_confidence.detection_confidence - 1.0).abs() < f64::EPSILON);
+        }
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────────────────────────
+    // COMPLIANCE VIOLATION TESTS
+    // ─────────────────────────────────────────────────────────────────────────────────────────────
+
+    mod compliance_violation_tests {
+        use super::*;
+
+        #[test]
+        fn test_compliance_violation_creation() {
+            let violation = ComplianceViolation {
+                violation_type: "GDPR_ARTICLE_17".to_string(),
+                severity: Severity::Critical,
+                description: "Right to erasure not implemented".to_string(),
+                remediation: vec![
+                    "Implement data deletion endpoint".to_string(),
+                    "Add audit logging".to_string(),
+                ],
+            };
+
+            assert_eq!(violation.violation_type, "GDPR_ARTICLE_17");
+            assert_eq!(violation.remediation.len(), 2);
+        }
+
+        #[test]
+        fn test_compliance_violation_serialization() {
+            let violation = ComplianceViolation {
+                violation_type: "SOX_COMPLIANCE".to_string(),
+                severity: Severity::High,
+                description: "Audit trail incomplete".to_string(),
+                remediation: vec!["Add comprehensive logging".to_string()],
+            };
+
+            let json = serde_json::to_string(&violation).unwrap();
+            assert!(json.contains("SOX_COMPLIANCE"));
+
+            let deserialized: ComplianceViolation = serde_json::from_str(&json).unwrap();
+            assert_eq!(violation.violation_type, deserialized.violation_type);
+        }
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────────────────────────
+    // BIAS DETECTION RESULT TESTS
+    // ─────────────────────────────────────────────────────────────────────────────────────────────
+
+    mod bias_detection_result_tests {
+        use super::*;
+
+        #[test]
+        fn test_bias_detection_result_no_biases() {
+            let result = BiasDetectionResult {
+                overall_bias: BiasLevel::Minimal,
+                detected_biases: vec![],
+                mitigation_recommendations: vec![],
+            };
+
+            assert_eq!(result.overall_bias, BiasLevel::Minimal);
+            assert!(result.detected_biases.is_empty());
+        }
+
+        #[test]
+        fn test_bias_detection_result_multiple_biases() {
+            let result = BiasDetectionResult {
+                overall_bias: BiasLevel::Moderate,
+                detected_biases: vec![
+                    DetectedBias {
+                        bias_type: "confirmation".to_string(),
+                        evidence: "Evidence 1".to_string(),
+                        severity: Severity::Medium,
+                        detection_confidence: 0.7,
+                    },
+                    DetectedBias {
+                        bias_type: "availability".to_string(),
+                        evidence: "Evidence 2".to_string(),
+                        severity: Severity::Low,
+                        detection_confidence: 0.6,
+                    },
+                ],
+                mitigation_recommendations: vec![
+                    "Consider alternative perspectives".to_string(),
+                    "Use structured decision frameworks".to_string(),
+                ],
+            };
+
+            assert_eq!(result.detected_biases.len(), 2);
+            assert_eq!(result.mitigation_recommendations.len(), 2);
+        }
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────────────────────────
+    // META-COGNITIVE RESULT TESTS
+    // ─────────────────────────────────────────────────────────────────────────────────────────────
+
+    mod meta_cognitive_result_tests {
+        use super::*;
+
+        #[test]
+        fn test_meta_cognitive_result_creation() {
+            let result = MetaCognitiveResult {
+                reasoning_quality: 85.5,
+                methodology_quality: MethodologyStatus::Good,
+                cognitive_biases: vec!["overconfidence".to_string()],
+                recommendations: vec!["Seek external validation".to_string()],
+            };
+
+            assert!((result.reasoning_quality - 85.5).abs() < f64::EPSILON);
+            assert_eq!(result.methodology_quality, MethodologyStatus::Good);
+        }
+
+        #[test]
+        fn test_meta_cognitive_result_boundary_scores() {
+            let min_score = MetaCognitiveResult {
+                reasoning_quality: 0.0,
+                methodology_quality: MethodologyStatus::Poor,
+                cognitive_biases: vec![],
+                recommendations: vec![],
+            };
+            assert!((min_score.reasoning_quality - 0.0).abs() < f64::EPSILON);
+
+            let max_score = MetaCognitiveResult {
+                reasoning_quality: 100.0,
+                methodology_quality: MethodologyStatus::Excellent,
+                cognitive_biases: vec![],
+                recommendations: vec![],
+            };
+            assert!((max_score.reasoning_quality - 100.0).abs() < f64::EPSILON);
+        }
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────────────────────────
+    // CHAIN INTEGRITY RESULT TESTS
+    // ─────────────────────────────────────────────────────────────────────────────────────────────
+
+    mod chain_integrity_result_tests {
+        use super::*;
+
+        #[test]
+        fn test_chain_integrity_result_creation() {
+            let result = ChainIntegrityResult {
+                logical_flow: LogicalFlowStatus::Excellent,
+                step_dependencies: DependencyStatus::FullySatisfied,
+                confidence_progression: ProgressionStatus::Monotonic,
+                gaps_detected: vec![],
+                continuity_score: 0.95,
+            };
+
+            assert_eq!(result.logical_flow, LogicalFlowStatus::Excellent);
+            assert!((result.continuity_score - 0.95).abs() < f64::EPSILON);
+        }
+
+        #[test]
+        fn test_chain_integrity_result_with_gaps() {
+            let result = ChainIntegrityResult {
+                logical_flow: LogicalFlowStatus::NeedsImprovement,
+                step_dependencies: DependencyStatus::PartiallySatisfied,
+                confidence_progression: ProgressionStatus::Erratic,
+                gaps_detected: vec![
+                    "Missing justification between step 1 and 2".to_string(),
+                    "Unexplained confidence drop at step 4".to_string(),
+                ],
+                continuity_score: 0.45,
+            };
+
+            assert_eq!(result.gaps_detected.len(), 2);
+            assert!(result.continuity_score < 0.5);
+        }
+
+        #[test]
+        fn test_chain_integrity_continuity_score_boundaries() {
+            let zero_score = ChainIntegrityResult {
+                logical_flow: LogicalFlowStatus::Poor,
+                step_dependencies: DependencyStatus::Unsatisfied,
+                confidence_progression: ProgressionStatus::Unstable,
+                gaps_detected: vec![],
+                continuity_score: 0.0,
+            };
+            assert!((zero_score.continuity_score - 0.0).abs() < f64::EPSILON);
+
+            let perfect_score = ChainIntegrityResult {
+                logical_flow: LogicalFlowStatus::Excellent,
+                step_dependencies: DependencyStatus::FullySatisfied,
+                confidence_progression: ProgressionStatus::Monotonic,
+                gaps_detected: vec![],
+                continuity_score: 1.0,
+            };
+            assert!((perfect_score.continuity_score - 1.0).abs() < f64::EPSILON);
+        }
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────────────────────────
+    // DEEPSEEK VALIDATION RESULT TESTS
+    // ─────────────────────────────────────────────────────────────────────────────────────────────
+
+    mod deepseek_validation_result_tests {
+        use super::*;
+
+        fn create_minimal_result() -> DeepSeekValidationResult {
+            DeepSeekValidationResult {
+                verdict: ValidationVerdict::Validated,
+                chain_integrity: ChainIntegrityResult {
+                    logical_flow: LogicalFlowStatus::Good,
+                    step_dependencies: DependencyStatus::FullySatisfied,
+                    confidence_progression: ProgressionStatus::Monotonic,
+                    gaps_detected: vec![],
+                    continuity_score: 0.85,
+                },
+                statistical_results: None,
+                compliance_results: None,
+                meta_cognitive_results: None,
+                validation_confidence: 0.90,
+                findings: vec![],
+                tokens_used: TokenUsage::default(),
+                performance: ValidationPerformance::default(),
+            }
+        }
+
+        #[test]
+        fn test_validation_result_minimal() {
+            let result = create_minimal_result();
+
+            assert_eq!(result.verdict, ValidationVerdict::Validated);
+            assert!(result.statistical_results.is_none());
+            assert!(result.compliance_results.is_none());
+            assert!(result.meta_cognitive_results.is_none());
+        }
+
+        #[test]
+        fn test_validation_result_serialization_skip_none() {
+            let result = create_minimal_result();
+            let json = serde_json::to_string(&result).unwrap();
+
+            // Optional None fields should be skipped due to skip_serializing_if
+            assert!(!json.contains("statistical_results"));
+            assert!(!json.contains("compliance_results"));
+            assert!(!json.contains("meta_cognitive_results"));
+        }
+
+        #[test]
+        fn test_validation_result_with_all_options() {
+            let result = DeepSeekValidationResult {
+                verdict: ValidationVerdict::PartiallyValidated,
+                chain_integrity: ChainIntegrityResult {
+                    logical_flow: LogicalFlowStatus::Satisfactory,
+                    step_dependencies: DependencyStatus::MostlySatisfied,
+                    confidence_progression: ProgressionStatus::SlowlyDecaying,
+                    gaps_detected: vec!["Minor gap".to_string()],
+                    continuity_score: 0.75,
+                },
+                statistical_results: Some(StatisticalResult {
+                    significant: true,
+                    p_value: Some(0.02),
+                    confidence_interval: Some((0.70, 0.90)),
+                    sample_size: Some(100),
+                }),
+                compliance_results: Some(ComplianceResult {
+                    gdpr_compliance: ComplianceStatus::MinorIssues,
+                    bias_detection: BiasDetectionResult {
+                        overall_bias: BiasLevel::Low,
+                        detected_biases: vec![],
+                        mitigation_recommendations: vec![],
+                    },
+                    regulatory_alignment: RegulatoryStatus::NeedsValidation,
+                    violations: vec![],
+                }),
+                meta_cognitive_results: Some(MetaCognitiveResult {
+                    reasoning_quality: 78.0,
+                    methodology_quality: MethodologyStatus::Good,
+                    cognitive_biases: vec![],
+                    recommendations: vec![],
+                }),
+                validation_confidence: 0.80,
+                findings: vec![ValidationFinding {
+                    category: ValidationCategory::LogicalFlow,
+                    severity: Severity::Low,
+                    description: "Minor observation".to_string(),
+                    affected_steps: vec![],
+                    evidence: vec![],
+                    recommendations: vec![],
+                }],
+                tokens_used: TokenUsage::new(1000, 500, 0.05),
+                performance: ValidationPerformance::new(2000, 750.0, 64.0),
+            };
+
+            let json = serde_json::to_string(&result).unwrap();
+            let deserialized: DeepSeekValidationResult = serde_json::from_str(&json).unwrap();
+
+            assert_eq!(result.verdict, deserialized.verdict);
+            assert!(deserialized.statistical_results.is_some());
+            assert!(deserialized.compliance_results.is_some());
+            assert!(deserialized.meta_cognitive_results.is_some());
+        }
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────────────────────────
+    // COMPLIANCE RESULT TESTS
+    // ─────────────────────────────────────────────────────────────────────────────────────────────
+
+    mod compliance_result_tests {
+        use super::*;
+
+        #[test]
+        fn test_compliance_result_fully_compliant() {
+            let result = ComplianceResult {
+                gdpr_compliance: ComplianceStatus::Compliant,
+                bias_detection: BiasDetectionResult {
+                    overall_bias: BiasLevel::Minimal,
+                    detected_biases: vec![],
+                    mitigation_recommendations: vec![],
+                },
+                regulatory_alignment: RegulatoryStatus::FullyCompliant,
+                violations: vec![],
+            };
+
+            assert_eq!(result.gdpr_compliance, ComplianceStatus::Compliant);
+            assert!(result.violations.is_empty());
+        }
+
+        #[test]
+        fn test_compliance_result_with_violations() {
+            let result = ComplianceResult {
+                gdpr_compliance: ComplianceStatus::NonCompliant,
+                bias_detection: BiasDetectionResult {
+                    overall_bias: BiasLevel::High,
+                    detected_biases: vec![DetectedBias {
+                        bias_type: "demographic".to_string(),
+                        evidence: "Unequal treatment detected".to_string(),
+                        severity: Severity::High,
+                        detection_confidence: 0.9,
+                    }],
+                    mitigation_recommendations: vec!["Implement fairness constraints".to_string()],
+                },
+                regulatory_alignment: RegulatoryStatus::NonCompliant,
+                violations: vec![
+                    ComplianceViolation {
+                        violation_type: "GDPR_CONSENT".to_string(),
+                        severity: Severity::Critical,
+                        description: "Missing consent mechanism".to_string(),
+                        remediation: vec!["Add consent UI".to_string()],
+                    },
+                    ComplianceViolation {
+                        violation_type: "GDPR_DATA_RETENTION".to_string(),
+                        severity: Severity::High,
+                        description: "Data retained beyond policy".to_string(),
+                        remediation: vec!["Implement data lifecycle management".to_string()],
+                    },
+                ],
+            };
+
+            assert_eq!(result.violations.len(), 2);
+            assert_eq!(result.bias_detection.detected_biases.len(), 1);
+        }
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────────────────────────
+    // UNICODE AND SPECIAL CHARACTER TESTS
+    // ─────────────────────────────────────────────────────────────────────────────────────────────
+
+    mod unicode_tests {
+        use super::*;
+
+        #[test]
+        fn test_unicode_in_chain_integrity_gaps() {
+            let result = ChainIntegrityResult {
+                logical_flow: LogicalFlowStatus::Satisfactory,
+                step_dependencies: DependencyStatus::MostlySatisfied,
+                confidence_progression: ProgressionStatus::SlowlyDecaying,
+                gaps_detected: vec![
+                    "\u{4E2D}\u{6587}\u{6D4B}\u{8BD5}".to_string(), // Chinese: "Chinese test"
+                    "\u{65E5}\u{672C}\u{8A9E}".to_string(),         // Japanese: "Japanese"
+                    "\u{D55C}\u{AD6D}\u{C5B4}".to_string(),         // Korean: "Korean"
+                    "\u{0410}\u{0411}\u{0412}".to_string(),         // Russian: "ABV"
+                    "\u{05D0}\u{05D1}\u{05D2}".to_string(),         // Hebrew: "Alef Bet Gimel"
+                    "\u{0627}\u{0628}\u{062A}".to_string(),         // Arabic: letters
+                ],
+                continuity_score: 0.7,
+            };
+
+            let json = serde_json::to_string(&result).unwrap();
+            let deserialized: ChainIntegrityResult = serde_json::from_str(&json).unwrap();
+
+            assert_eq!(result.gaps_detected.len(), deserialized.gaps_detected.len());
+            for (original, parsed) in result.gaps_detected.iter().zip(deserialized.gaps_detected.iter())
+            {
+                assert_eq!(original, parsed);
+            }
+        }
+
+        #[test]
+        fn test_unicode_emoji_in_descriptions() {
+            let finding = ValidationFinding {
+                category: ValidationCategory::Methodology,
+                severity: Severity::Info,
+                description: "Status: \u{2705} Pass \u{274C} Fail \u{26A0} Warning".to_string(),
+                affected_steps: vec!["\u{1F3AF} Target Step".to_string()],
+                evidence: vec!["\u{1F4CA} Chart data shows trend".to_string()],
+                recommendations: vec!["\u{1F4A1} Consider improvement".to_string()],
+            };
+
+            let json = serde_json::to_string(&finding).unwrap();
+            let deserialized: ValidationFinding = serde_json::from_str(&json).unwrap();
+
+            assert!(deserialized.description.contains('\u{2705}'));
+            assert!(deserialized.description.contains('\u{274C}'));
+        }
+
+        #[test]
+        fn test_special_characters_in_strings() {
+            let violation = ComplianceViolation {
+                violation_type: "TEST_<>\"'&".to_string(),
+                severity: Severity::Low,
+                description: "Special chars: <script>alert('xss')</script>".to_string(),
+                remediation: vec!["Use proper escaping: &amp; &lt; &gt;".to_string()],
+            };
+
+            let json = serde_json::to_string(&violation).unwrap();
+            let deserialized: ComplianceViolation = serde_json::from_str(&json).unwrap();
+
+            assert!(deserialized.violation_type.contains('<'));
+            assert!(deserialized.violation_type.contains('>'));
+        }
+
+        #[test]
+        fn test_empty_strings() {
+            let bias = DetectedBias {
+                bias_type: "".to_string(),
+                evidence: "".to_string(),
+                severity: Severity::Info,
+                detection_confidence: 0.0,
+            };
+
+            let json = serde_json::to_string(&bias).unwrap();
+            let deserialized: DetectedBias = serde_json::from_str(&json).unwrap();
+
+            assert!(deserialized.bias_type.is_empty());
+            assert!(deserialized.evidence.is_empty());
+        }
+
+        #[test]
+        fn test_very_long_strings() {
+            let long_string = "A".repeat(100_000);
+
+            let finding = ValidationFinding {
+                category: ValidationCategory::TokenEfficiency,
+                severity: Severity::Low,
+                description: long_string.clone(),
+                affected_steps: vec![],
+                evidence: vec![],
+                recommendations: vec![],
+            };
+
+            let json = serde_json::to_string(&finding).unwrap();
+            let deserialized: ValidationFinding = serde_json::from_str(&json).unwrap();
+
+            assert_eq!(deserialized.description.len(), 100_000);
+        }
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────────────────────────
+    // PROPERTY-BASED TESTS (using proptest)
+    // ─────────────────────────────────────────────────────────────────────────────────────────────
+
+    mod property_tests {
+        use super::*;
+
+        proptest! {
+            #[test]
+            fn test_token_usage_add_is_associative(
+                input1 in 0u32..1000,
+                output1 in 0u32..1000,
+                cost1 in 0.0f64..10.0,
+                input2 in 0u32..1000,
+                output2 in 0u32..1000,
+                cost2 in 0.0f64..10.0,
+            ) {
+                let mut usage1 = TokenUsage::new(input1, output1, cost1);
+                let usage2 = TokenUsage::new(input2, output2, cost2);
+
+                usage1.add(&usage2);
+
+                prop_assert_eq!(usage1.input_tokens, input1 + input2);
+                prop_assert_eq!(usage1.output_tokens, output1 + output2);
+                prop_assert_eq!(usage1.total_tokens, input1 + output1 + input2 + output2);
+                prop_assert!((usage1.cost_usd - (cost1 + cost2)).abs() < 0.0001);
+            }
+
+            #[test]
+            fn test_token_usage_new_total_is_sum(input in 0u32..u32::MAX/2, output in 0u32..u32::MAX/2) {
+                let usage = TokenUsage::new(input, output, 0.0);
+                prop_assert_eq!(usage.total_tokens, input + output);
+            }
+
+            #[test]
+            fn test_chain_integrity_mul_f64_preserves_zero(rhs in -1000.0f64..1000.0) {
+                let result = ChainIntegrityResult {
+                    logical_flow: LogicalFlowStatus::Good,
+                    step_dependencies: DependencyStatus::FullySatisfied,
+                    confidence_progression: ProgressionStatus::Monotonic,
+                    gaps_detected: vec![],
+                    continuity_score: 0.0,
+                };
+
+                let product = result * rhs;
+                prop_assert!((product - 0.0).abs() < f64::EPSILON);
+            }
+
+            #[test]
+            fn test_chain_integrity_mul_identity(score in 0.0f64..1.0) {
+                let result = ChainIntegrityResult {
+                    logical_flow: LogicalFlowStatus::Good,
+                    step_dependencies: DependencyStatus::FullySatisfied,
+                    confidence_progression: ProgressionStatus::Monotonic,
+                    gaps_detected: vec![],
+                    continuity_score: score,
+                };
+
+                let product = result * 1.0f64;
+                prop_assert!((product - score).abs() < f64::EPSILON);
+            }
+
+            #[test]
+            fn test_validation_performance_serialization_roundtrip(
+                duration in 0u64..u64::MAX,
+                tps in 0.0f64..10000.0,
+                memory in 0.0f64..10000.0,
+            ) {
+                let perf = ValidationPerformance::new(duration, tps, memory);
+                let json = serde_json::to_string(&perf).unwrap();
+                let deserialized: ValidationPerformance = serde_json::from_str(&json).unwrap();
+
+                prop_assert_eq!(perf.duration_ms, deserialized.duration_ms);
+                // Floating point comparison with tolerance
+                prop_assert!((perf.tokens_per_second - deserialized.tokens_per_second).abs() < 0.0001);
+            }
+
+            #[test]
+            fn test_config_temperature_in_valid_range(temp in 0.0f32..2.0) {
+                // Temperature should be preserved through serialization
+                let config = DeepSeekValidationConfig {
+                    temperature: temp,
+                    ..Default::default()
+                };
+
+                let json = serde_json::to_string(&config).unwrap();
+                let deserialized: DeepSeekValidationConfig = serde_json::from_str(&json).unwrap();
+
+                prop_assert!((config.temperature - deserialized.temperature).abs() < 0.0001);
+            }
+
+            #[test]
+            fn test_arbitrary_string_in_gaps(s in "\\PC*") {
+                // Test that any valid UTF-8 string can be stored in gaps
+                let result = ChainIntegrityResult {
+                    logical_flow: LogicalFlowStatus::Good,
+                    step_dependencies: DependencyStatus::FullySatisfied,
+                    confidence_progression: ProgressionStatus::Monotonic,
+                    gaps_detected: vec![s.clone()],
+                    continuity_score: 0.5,
+                };
+
+                let json = serde_json::to_string(&result).unwrap();
+                let deserialized: ChainIntegrityResult = serde_json::from_str(&json).unwrap();
+
+                prop_assert_eq!(result.gaps_detected, deserialized.gaps_detected);
+            }
+        }
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────────────────────────
+    // VALIDATION ENGINE TESTS (Requires API key - skipped in CI)
+    // ─────────────────────────────────────────────────────────────────────────────────────────────
+
+    mod engine_tests {
+        use super::*;
+
+        #[tokio::test]
+        async fn test_validation_engine_creation() {
+            // This test may fail if DEEPSEEK_API_KEY is not set
+            // In production, this would be mocked
+            let result = DeepSeekValidationEngine::new();
+
+            // Engine creation should succeed regardless of API key (key checked on use)
+            assert!(result.is_ok());
+
+            if let Ok(engine) = result {
+                assert_eq!(engine.config.model, "deepseek-chat");
+            }
+        }
+
+        #[test]
+        fn test_configuration_options() {
+            let config = DeepSeekValidationConfig::rigorous();
+            assert!(config.enable_statistical_testing);
+            assert!(config.enable_compliance_validation);
+            assert!(config.enable_meta_cognition);
+
+            let perf_config = DeepSeekValidationConfig::performance();
+            assert!(!perf_config.enable_statistical_testing);
+            assert!(perf_config.enable_compliance_validation);
+        }
+
+        #[test]
+        fn test_validation_engine_with_custom_config() {
+            let config = DeepSeekValidationConfig {
+                model: "deepseek-coder".to_string(),
+                temperature: 0.0,
+                max_tokens: 8000,
+                enable_statistical_testing: true,
+                alpha: 0.01,
+                enable_compliance_validation: true,
+                enable_meta_cognition: true,
+                min_confidence: 0.90,
+                max_chain_length: 50,
+            };
+
+            let result = DeepSeekValidationEngine::with_config(config);
+            assert!(result.is_ok());
+
+            if let Ok(engine) = result {
+                assert_eq!(engine.config.model, "deepseek-coder");
+                assert_eq!(engine.config.max_tokens, 8000);
+                assert!((engine.config.alpha - 0.01).abs() < f64::EPSILON);
+            }
+        }
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────────────────────────
+    // EDGE CASE TESTS
+    // ─────────────────────────────────────────────────────────────────────────────────────────────
+
+    mod edge_case_tests {
+        use super::*;
+
+        #[test]
+        fn test_token_usage_zero_values() {
+            let usage = TokenUsage::new(0, 0, 0.0);
+            assert_eq!(usage.total_tokens, 0);
+            assert!((usage.cost_usd - 0.0).abs() < f64::EPSILON);
+        }
+
+        #[test]
+        fn test_validation_performance_zero_duration() {
+            let perf = ValidationPerformance::new(0, 0.0, 0.0);
+            // Division by zero should be handled gracefully in actual usage
+            assert_eq!(perf.duration_ms, 0);
+        }
+
+        #[test]
+        fn test_continuity_score_exactly_zero() {
+            let result = ChainIntegrityResult {
+                logical_flow: LogicalFlowStatus::Poor,
+                step_dependencies: DependencyStatus::Unsatisfied,
+                confidence_progression: ProgressionStatus::Unstable,
+                gaps_detected: vec![],
+                continuity_score: 0.0,
+            };
+
+            // Multiplying by any value should still be zero
+            let product = result.clone() * 100.0f64;
+            assert!((product - 0.0).abs() < f64::EPSILON);
+        }
+
+        #[test]
+        fn test_continuity_score_exactly_one() {
+            let result = ChainIntegrityResult {
+                logical_flow: LogicalFlowStatus::Excellent,
+                step_dependencies: DependencyStatus::FullySatisfied,
+                confidence_progression: ProgressionStatus::Monotonic,
+                gaps_detected: vec![],
+                continuity_score: 1.0,
+            };
+
+            // Multiplying by identity should preserve value
+            let product = result * 1.0f64;
+            assert!((product - 1.0).abs() < f64::EPSILON);
+        }
+
+        #[test]
+        fn test_negative_cost_handling() {
+            // While unusual, negative cost might be used for credits/refunds
+            let usage = TokenUsage::new(100, 50, -0.01);
+            assert!(usage.cost_usd < 0.0);
+        }
+
+        #[test]
+        fn test_very_small_confidence_values() {
+            let result = StatisticalResult {
+                significant: true,
+                p_value: Some(1e-100),
+                confidence_interval: Some((0.999999, 0.9999999)),
+                sample_size: Some(1_000_000),
+            };
+
+            let json = serde_json::to_string(&result).unwrap();
+            let deserialized: StatisticalResult = serde_json::from_str(&json).unwrap();
+
+            // Very small p-values should be preserved
+            assert!(deserialized.p_value.unwrap() < 1e-50);
+        }
+
+        #[test]
+        fn test_default_function_values() {
+            // Test all default functions directly
+            assert_eq!(default_deepseek_model(), "deepseek-chat");
+            assert!((default_validation_temperature() - 0.1).abs() < f32::EPSILON);
+            assert_eq!(default_max_tokens(), 4000);
+            assert!((default_alpha() - 0.05).abs() < f64::EPSILON);
+            assert!((default_min_confidence() - 0.70).abs() < f64::EPSILON);
+            assert_eq!(default_max_chain_length(), 20);
+        }
     }
 }

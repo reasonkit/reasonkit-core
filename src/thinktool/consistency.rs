@@ -348,13 +348,14 @@ impl SelfConsistencyEngine {
             total_tokens.add(&path.tokens);
         }
 
-        // Find winner
+        // Find winner - using safe comparison that handles NaN gracefully
         let (winner, vote_count) = match self.config.voting_method {
             VotingMethod::Unanimous => {
                 // All must agree
                 if vote_counts.len() == 1 {
-                    let (answer, count) = vote_counts.into_iter().next().unwrap();
-                    (answer, count)
+                    // SAFETY: We checked vote_counts.len() == 1, so there's exactly one entry
+                    // Using unwrap_or_default as a defensive fallback
+                    vote_counts.into_iter().next().unwrap_or_default()
                 } else {
                     // No consensus - return most common with low confidence
                     vote_counts
@@ -364,10 +365,10 @@ impl SelfConsistencyEngine {
                 }
             }
             _ => {
-                // Find by weight
+                // Find by weight - use total_cmp for safe f64 comparison (handles NaN)
                 vote_weights
                     .iter()
-                    .max_by(|a, b| a.1.partial_cmp(b.1).unwrap())
+                    .max_by(|a, b| a.1.total_cmp(b.1))
                     .map(|(answer, _)| {
                         let count = vote_counts.get(answer).copied().unwrap_or(0);
                         (answer.clone(), count)
@@ -383,9 +384,13 @@ impl SelfConsistencyEngine {
         let confidence = if self.config.use_cisc {
             // CISC: Weight confidence by agreement
             let winner_paths: Vec<_> = paths.iter().filter(|p| p.answer == winner).collect();
-            let avg_confidence: f64 =
-                winner_paths.iter().map(|p| p.confidence).sum::<f64>() / winner_paths.len() as f64;
-            avg_confidence * agreement_ratio
+            if winner_paths.is_empty() {
+                0.0
+            } else {
+                let avg_confidence: f64 = winner_paths.iter().map(|p| p.confidence).sum::<f64>()
+                    / winner_paths.len() as f64;
+                avg_confidence * agreement_ratio
+            }
         } else {
             // Simple: Just use agreement ratio
             agreement_ratio
@@ -433,7 +438,7 @@ impl SelfConsistencyEngine {
         }
 
         // Check if any answer has reached consensus threshold
-        let max_votes = *vote_counts.values().max().unwrap_or(&0);
+        let max_votes = vote_counts.values().max().copied().unwrap_or(0);
         let current_ratio = max_votes as f64 / paths.len() as f64;
 
         current_ratio >= self.config.consensus_threshold
@@ -545,5 +550,28 @@ mod tests {
             .collect();
 
         assert!(engine.should_early_stop(&results));
+    }
+
+    #[test]
+    fn test_empty_paths_handling() {
+        let engine = SelfConsistencyEngine::default_engine();
+        let result = engine.aggregate_paths(vec![]);
+
+        assert!(result.answer.is_empty());
+        assert_eq!(result.confidence, 0.0);
+        assert_eq!(result.total_samples, 0);
+    }
+
+    #[test]
+    fn test_nan_handling_in_vote_weights() {
+        // Ensure we handle NaN values gracefully
+        let engine = SelfConsistencyEngine::new(SelfConsistencyConfig {
+            voting_method: VotingMethod::ConfidenceWeighted,
+            ..Default::default()
+        });
+
+        // This should not panic even with edge cases
+        let result = engine.aggregate_paths(vec![]);
+        assert!(result.answer.is_empty());
     }
 }

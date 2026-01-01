@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 400" fill="none">
+  <defs>
+    <linearGradient id="heroGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#06b6d4"/>
+      <stop offset="50%" stop-color="#a855f7"/>
+      <stop offset="100%" stop-color="#ec4899"/>
+    </linearGradient>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#0a0d14"/>
+      <stop offset="100%" stop-color="#030508"/>
+    </linearGradient>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#111827" stroke-width="0.5"/>
+    </pattern>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="400" fill="url(#bgGrad)"/>
+  <rect width="1200" height="400" fill="url(#grid)" opacity="0.3"/>
+
+  <!-- Decorative circuit lines -->
+  <g stroke="#06b6d4" stroke-width="1" opacity="0.15">
+    <path d="M0 100 H400 L450 150 H600"/>
+    <path d="M1200 300 H800 L750 250 H600"/>
+    <circle cx="450" cy="150" r="4" fill="#06b6d4"/>
+    <circle cx="750" cy="250" r="4" fill="#06b6d4"/>
+  </g>
+
+  <!-- Main crystalline icon -->
+  <g transform="translate(200, 200)" filter="url(#glow)">
+    <circle r="80" fill="#030508" stroke="url(#heroGrad)" stroke-width="4"/>
+    <polygon points="-45,0 0,-65 45,0 0,65" fill="url(#heroGrad)" opacity="0.85"/>
+    <polygon points="-45,0 0,-25 45,0 0,25" fill="#030508" opacity="0.8"/>
+    <polygon points="0,-65 25,-12 0,12 -25,-12" fill="#06b6d4" opacity="0.8"/>
+    <polygon points="-25,12 0,65 25,12 0,-12" fill="#10b981" opacity="0.8"/>
+  </g>
+
+  <!-- Title -->
+  <text x="340" y="160" font-family="Inter, -apple-system, BlinkMacSystemFont, sans-serif" font-size="72" font-weight="800" fill="#f9fafb">ReasonKit</text>
+
+  <!-- Tagline -->
+  <text x="340" y="220" font-family="Inter, -apple-system, BlinkMacSystemFont, sans-serif" font-size="28" font-weight="500" fill="url(#heroGrad)">Turn Prompts into Protocols</text>
+
+  <!-- Subtitle -->
+  <text x="340" y="270" font-family="Inter, -apple-system, BlinkMacSystemFont, sans-serif" font-size="18" fill="#9ca3af">Auditable Reasoning for Production AI | Rust-Native | Deterministic Execution</text>
+
+  <!-- Badges row -->
+  <g transform="translate(340, 310)" font-family="JetBrains Mono, SF Mono, monospace" font-size="13">
+    <rect width="140" height="32" rx="16" fill="#111827" stroke="#06b6d4" stroke-width="1.5"/>
+    <text x="70" y="21" text-anchor="middle" fill="#06b6d4" font-weight="500">RUST-NATIVE</text>
+
+    <g transform="translate(160, 0)">
+      <rect width="180" height="32" rx="16" fill="#111827" stroke="#10b981" stroke-width="1.5"/>
+      <text x="90" y="21" text-anchor="middle" fill="#10b981" font-weight="500">ZERO-TRUST LOGIC</text>
+    </g>
+
+    <g transform="translate(360, 0)">
+      <rect width="120" height="32" rx="16" fill="#111827" stroke="#a855f7" stroke-width="1.5"/>
+      <text x="60" y="21" text-anchor="middle" fill="#a855f7" font-weight="500">APACHE 2.0</text>
+    </g>
+  </g>
+
+  <!-- Version badge -->
+  <g transform="translate(1080, 30)">
+    <rect width="90" height="30" rx="15" fill="#111827" stroke="#ec4899" stroke-width="1.5"/>
+    <text x="45" y="20" text-anchor="middle" fill="#ec4899" font-family="JetBrains Mono, monospace" font-size="14" font-weight="600">v0.1.0</text>
+  </g>
+</svg>
