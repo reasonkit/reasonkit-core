@@ -23,6 +23,7 @@ use reasonkit_core::aesthetic::three_d::*;
 use reasonkit_core::aesthetic::usability::*;
 use reasonkit_core::aesthetic::vibe_benchmark::*;
 use reasonkit_core::aesthetic::visual_analysis::*;
+use reasonkit_core::aesthetic::types::ThreeDFramework;
 use reasonkit_core::error::Error;
 use std::collections::HashMap;
 
