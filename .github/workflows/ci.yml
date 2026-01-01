@@ -65,7 +65,7 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Install Rust toolchain (${{ matrix.rust }})
         uses: dtolnay/rust-toolchain@master
@@ -73,7 +73,7 @@ jobs:
           toolchain: ${{ matrix.rust }}
 
       - name: Configure sccache
-        uses: mozilla-actions/sccache-action@v0.0.6
+        uses: mozilla-actions/sccache-action@v0.0.9
 
       - name: Cache Rust artifacts
         uses: Swatinem/rust-cache@v2
@@ -101,7 +101,7 @@ jobs:
 
       - name: Upload binary (Linux)
         if: matrix.os == 'ubuntu-latest' && matrix.rust == 'stable' && matrix.features == 'default'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: rk-core-linux-x86_64
           path: target/release/rk-core
@@ -109,7 +109,7 @@ jobs:
 
       - name: Upload binary (macOS)
         if: matrix.os == 'macos-latest' && matrix.rust == 'stable' && matrix.features == 'default'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: rk-core-macos-x86_64
           path: target/release/rk-core
@@ -117,7 +117,7 @@ jobs:
 
       - name: Upload binary (Windows)
         if: matrix.os == 'windows-latest' && matrix.rust == 'stable' && matrix.features == 'default'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: rk-core-windows-x86_64
           path: target/release/rk-core.exe
@@ -131,7 +131,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Install Rust toolchain
         uses: dtolnay/rust-toolchain@stable
@@ -139,7 +139,7 @@ jobs:
           components: clippy
 
       - name: Configure sccache
-        uses: mozilla-actions/sccache-action@v0.0.6
+        uses: mozilla-actions/sccache-action@v0.0.9
 
       - name: Cache Rust artifacts
         uses: Swatinem/rust-cache@v2
@@ -173,7 +173,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Install Rust toolchain
         uses: dtolnay/rust-toolchain@stable
@@ -201,13 +201,13 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Install Rust toolchain
         uses: dtolnay/rust-toolchain@stable
 
       - name: Configure sccache
-        uses: mozilla-actions/sccache-action@v0.0.6
+        uses: mozilla-actions/sccache-action@v0.0.9
 
       - name: Cache Rust artifacts
         uses: Swatinem/rust-cache@v2
@@ -247,13 +247,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Install Rust toolchain
         uses: dtolnay/rust-toolchain@stable
 
       - name: Configure sccache
-        uses: mozilla-actions/sccache-action@v0.0.6
+        uses: mozilla-actions/sccache-action@v0.0.9
 
       - name: Cache Rust artifacts
         uses: Swatinem/rust-cache@v2
@@ -267,7 +267,7 @@ jobs:
           RUSTDOCFLAGS: "-D warnings --cfg docsrs"
 
       - name: Upload documentation
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: documentation
           path: target/doc
@@ -281,7 +281,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Install Rust toolchain (MSRV)
         uses: dtolnay/rust-toolchain@master
@@ -305,7 +305,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Install Rust toolchain
         uses: dtolnay/rust-toolchain@stable
@@ -318,14 +318,14 @@ jobs:
         continue-on-error: true
 
       - name: Run cargo-deny (advisories)
-        uses: EmbarkStudios/cargo-deny-action@v1
+        uses: EmbarkStudios/cargo-deny-action@v2
         with:
           log-level: warn
           command: check advisories
         continue-on-error: true
 
       - name: Run cargo-deny (licenses)
-        uses: EmbarkStudios/cargo-deny-action@v1
+        uses: EmbarkStudios/cargo-deny-action@v2
         with:
           log-level: warn
           command: check licenses
@@ -354,13 +354,13 @@ jobs:
       contains(github.event.pull_request.labels.*.name, 'performance')
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Install Rust toolchain
         uses: dtolnay/rust-toolchain@stable
 
       - name: Configure sccache
-        uses: mozilla-actions/sccache-action@v0.0.6
+        uses: mozilla-actions/sccache-action@v0.0.9
 
       - name: Cache Rust artifacts
         uses: Swatinem/rust-cache@v2
@@ -369,7 +369,7 @@ jobs:
           cache-on-failure: true
 
       - name: Restore benchmark baseline
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: target/criterion
           key: benchmark-baseline-${{ github.base_ref || 'main' }}
@@ -395,7 +395,7 @@ jobs:
 
       - name: Save benchmark baseline (main only)
         if: github.ref == 'refs/heads/main'
-        uses: actions/cache/save@v4
+        uses: actions/cache/save@v5
         with:
           path: target/criterion
           key: benchmark-baseline-main-${{ github.sha }}
@@ -418,7 +418,7 @@ jobs:
 
       - name: Upload benchmark reports
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: benchmark-reports
           path: target/criterion
@@ -433,7 +433,7 @@ jobs:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Install Rust toolchain
         uses: dtolnay/rust-toolchain@stable
@@ -446,14 +446,14 @@ jobs:
         continue-on-error: true
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v5
         with:
           files: ./cobertura.xml
           fail_ci_if_error: false
         continue-on-error: true
 
       - name: Upload coverage HTML report
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: coverage-report
           path: tarpaulin-report.html
@@ -469,10 +469,10 @@ jobs:
     needs: [build]
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Download Linux binary
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
           name: rk-core-linux-x86_64
           path: ./bin
@@ -487,7 +487,7 @@ jobs:
           ./bin/rk-core completions powershell > completions/rk-core.ps1 2>/dev/null || echo "# PowerShell completions" > completions/rk-core.ps1
 
       - name: Upload completions
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: shell-completions
           path: completions/
@@ -502,7 +502,7 @@ jobs:
     needs: [build, lint, format, test, docs]
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Calculate metrics
         run: |
@@ -557,28 +557,28 @@ jobs:
       contents: write
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Download Linux binary
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
           name: rk-core-linux-x86_64
           path: artifacts/linux
 
       - name: Download macOS binary
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
           name: rk-core-macos-x86_64
           path: artifacts/macos
 
       - name: Download Windows binary
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
           name: rk-core-windows-x86_64
           path: artifacts/windows
 
       - name: Download shell completions
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
           name: shell-completions
           path: artifacts/completions
@@ -616,7 +616,7 @@ jobs:
           sha256sum rk-core-${VERSION}-*.tar.gz rk-core-${VERSION}-*.zip 2>/dev/null > checksums-${VERSION}.txt || true
 
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           draft: false
           prerelease: ${{ contains(github.ref, '-alpha') || contains(github.ref, '-beta') || contains(github.ref, '-rc') }}

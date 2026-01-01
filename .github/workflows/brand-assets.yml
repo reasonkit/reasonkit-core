@@ -56,7 +56,7 @@ jobs:
       asset_archive: ${{ steps.package.outputs.archive }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0  # Full history for change detection
 
@@ -167,7 +167,7 @@ jobs:
 
       - name: Upload artifact
         if: steps.changes.outputs.brand == 'true'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: brand-assets-${{ steps.version.outputs.version }}
           path: |
@@ -185,7 +185,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Download artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
           pattern: brand-assets-*
           path: artifacts
@@ -283,7 +283,7 @@ jobs:
 
       - name: Create dispatch event (alternative)
         if: ${{ secrets.REASONKIT_SITE_WEBHOOK == '' }}
-        uses: peter-evans/repository-dispatch@v3
+        uses: peter-evans/repository-dispatch@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           repository: ${{ github.repository_owner }}/reasonkit-site
