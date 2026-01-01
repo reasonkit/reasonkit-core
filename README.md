@@ -67,6 +67,8 @@ rk-core think --profile balanced "Should we migrate to microservices?"
 
 Each ThinkTool acts as a **variance reduction filter**, transforming probabilistic outputs into increasingly deterministic reasoning paths.
 
+![ReasonKit Protocol Chain - Turn Prompts into Protocols](./brand/readme/powercombo_process.png)
+
 ![ReasonKit ThinkTool Chain - Variance Reduction](./brand/readme/thinktool_cards_deck.svg)
 ![ReasonKit Variance Reduction Chart](./brand/readme/chart_variance_reduction.png)
 
@@ -169,6 +171,8 @@ VERDICT: conditional_yes | Confidence: 87% | Duration: 2.3s
 The ReasonKit architecture uses a **Protocol Engine** wrapper to enforce deterministic execution over probabilistic LLM outputs.
 
 ![ReasonKit Core Architecture Exploded View](./brand/readme/core_architecture_exploded.png)
+
+![ReasonKit ThinkTool Chain Architecture](./brand/readme/architecture_diagram.png)
 
 **Three-Layer Architecture:**
 
@@ -408,6 +412,33 @@ See [Community Badges](brand/COMMUNITY_BADGES.md) for all variants and usage gui
 | **Hallucination** | Multi-source triangulation, adversarial critique | Can't eliminate, but can detect and flag |
 | **Opacity** | Full execution tracing, confidence scoring | Transparency doesn't guarantee correctness |
 | **Uncertainty** | Explicit confidence metrics, variance reduction | We quantify uncertainty, not eliminate it |
+
+---
+
+## Version & Maturity
+
+| Component | Status | Notes |
+|-----------|--------|-------|
+| **ThinkTools Chain** | ✅ Stable | Core reasoning protocols production-ready |
+| **MCP Server** | ✅ Stable | Model Context Protocol integration |
+| **CLI** | 🔶 Scaffolded | `mcp`, `serve-mcp`, `completions` work; others planned |
+| **Memory Features** | ✅ Stable | Via `reasonkit-mem` crate |
+| **Python Bindings** | 🔶 Beta | Build from source with `--features python` |
+
+**Current Version:** v0.1.2 | [CHANGELOG](CHANGELOG.md) | [Releases](https://github.com/reasonkit/reasonkit-core/releases)
+
+### Verify Installation
+
+```bash
+# Check version
+rk-core --version
+
+# Verify MCP server starts
+rk-core serve-mcp --help
+
+# Run a quick test (requires LLM API key)
+OPENAI_API_KEY=your-key rk-core mcp
+```
 
 ---
 
