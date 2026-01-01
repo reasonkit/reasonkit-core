@@ -13,7 +13,6 @@ Need help with ReasonKit Core? Here are your options:
 ### Community Support
 
 - **GitHub Discussions:** [Ask questions & discuss](https://github.com/reasonkit/reasonkit-core/discussions)
-- **Discord:** [Join our community](https://discord.gg/reasonkit)
 
 ### Bug Reports & Feature Requests
 

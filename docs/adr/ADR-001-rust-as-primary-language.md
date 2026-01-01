@@ -77,9 +77,8 @@ Specifically:
 
 ## Related Documents
 
-- `/home/zyxsys/RK-PROJECT/ORCHESTRATOR.md` - The Rust Supremacy section
-- `/home/zyxsys/RK-PROJECT/reasonkit-core/ARCHITECTURE.md` - System architecture
-- `/home/zyxsys/RK-PROJECT/reasonkit-core/Cargo.toml` - Dependency manifest
+- `../../ARCHITECTURE.md` - System architecture
+- `../../Cargo.toml` - Dependency manifest
 
 ## References
 

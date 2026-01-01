@@ -150,10 +150,9 @@ N/A - Initial release
 
 ## Documentation
 
-- [Quick Reference](docs/THINKTOOLS_QUICK_REFERENCE.md)
-- [CLI Workflow Examples](docs/CLI_WORKFLOW_EXAMPLES.md)
-- [Visual Branding Guide](docs/VISUAL_BRANDING_GUIDE.md)
-- [API Reference](docs/API_REFERENCE.md)
+- [Quick Reference](docs/thinktools/THINKTOOLS_QUICK_REFERENCE.md)
+- [CLI Workflow Examples](docs/guides/CLI_WORKFLOW_EXAMPLES.md)
+- [API Reference](docs/reference/API_REFERENCE.md)
 
 ---
 

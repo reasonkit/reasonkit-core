@@ -89,10 +89,10 @@ By the end of this tutorial, you'll be able to:
 
 After completing this tutorial:
 
-- **Real-world examples:** [USE_CASES.md](../../docs/USE_CASES.md)
-- **Full CLI reference:** [CLI_REFERENCE.md](../../docs/CLI_REFERENCE.md)
-- **ThinkTool deep dive:** [THINKTOOLS_GUIDE.md](../../docs/THINKTOOLS_GUIDE.md)
-- **Rust API:** [API_REFERENCE.md](../../docs/API_REFERENCE.md)
+- **Real-world examples:** [USE_CASES.md](../../docs/process/USE_CASES.md)
+- **Full CLI reference:** [CLI_REFERENCE.md](../../docs/reference/CLI_REFERENCE.md)
+- **ThinkTool deep dive:** [THINKTOOLS_GUIDE.md](../../docs/thinktools/THINKTOOLS_GUIDE.md)
+- **Rust API:** [API_REFERENCE.md](../../docs/reference/API_REFERENCE.md)
 
 ---
 

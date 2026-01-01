@@ -79,7 +79,9 @@ cargo run --bin rk-core -- mcp-server
 ### Running from Source
 
 ```bash
-cd /home/zyxsys/RK-PROJECT/reasonkit-core
+# Clone and build from source
+git clone https://github.com/reasonkit/reasonkit-core.git
+cd reasonkit-core
 cargo build --release
 ./target/release/rk-core mcp-server
 ```
@@ -711,8 +713,8 @@ Current MCP protocol version: **2025-11-25**
 - [MCP GitHub](https://github.com/modelcontextprotocol)
 - [JSON-RPC 2.0](https://www.jsonrpc.org/specification)
 - [ReasonKit Documentation](https://reasonkit.sh/docs)
-- [Internal MCP README](/home/zyxsys/RK-PROJECT/reasonkit-core/src/mcp/README.md)
-- [MCP API Reference](/home/zyxsys/RK-PROJECT/reasonkit-core/MCP_API_REFERENCE.md)
+- [Internal MCP README](../../src/mcp/README.md)
+- [MCP API Reference](../../MCP_API_REFERENCE.md)
 
 ---
 

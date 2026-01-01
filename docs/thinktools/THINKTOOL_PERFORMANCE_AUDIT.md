@@ -3,7 +3,7 @@
 > **Date**: 2026-01-01
 > **Auditor**: Performance Engineering Analysis
 > **Target**: < 5ms for core loops (excluding LLM calls)
-> **Codebase**: `/home/zyxsys/RK-PROJECT/reasonkit-core/src/thinktool/`
+> **Codebase**: `src/thinktool/`
 
 ---
 
@@ -29,7 +29,7 @@ The ThinkTool module demonstrates **mature performance engineering** with severa
 
 ### 1.1 File I/O in Async Context
 
-**Location**: `/home/zyxsys/RK-PROJECT/reasonkit-core/src/thinktool/executor.rs:1812-1823`
+**Location**: `src/thinktool/executor.rs:1812-1823`
 
 ```rust
 // BLOCKING: std::fs::write in async context
@@ -54,7 +54,7 @@ async fn save_trace(&self, trace: &ExecutionTrace) -> Result<()> {
 
 ### 1.2 CLI Tool Subprocess
 
-**Location**: `/home/zyxsys/RK-PROJECT/reasonkit-core/src/thinktool/executor.rs:1596`
+**Location**: `src/thinktool/executor.rs:1596`
 
 ```rust
 // BLOCKING: std::process::Command::output()
@@ -85,7 +85,7 @@ async fn cli_tool_call(&self, prompt: &str, system: &str) -> Result<(String, Tok
 
 ### 2.1 Repeated String Cloning in Template Rendering
 
-**Location**: `/home/zyxsys/RK-PROJECT/reasonkit-core/src/thinktool/executor.rs:1420-1493`
+**Location**: `src/thinktool/executor.rs:1420-1493`
 
 ```rust
 fn render_template(...) -> String {
@@ -123,7 +123,7 @@ fn render_template_optimized(...) -> String {
 
 ### 2.2 HashMap Allocation in Hot Path
 
-**Location**: `/home/zyxsys/RK-PROJECT/reasonkit-core/src/thinktool/executor.rs:609-611`
+**Location**: `src/thinktool/executor.rs:609-611`
 
 ```rust
 // Pre-allocation exists but could be improved
@@ -135,7 +135,7 @@ let mut step_outputs: HashMap<String, StepOutput> = HashMap::with_capacity(steps
 
 ### 2.3 Regex Cloning in Cached Pattern Lookup
 
-**Location**: `/home/zyxsys/RK-PROJECT/reasonkit-core/src/thinktool/executor.rs:40-50`
+**Location**: `src/thinktool/executor.rs:40-50`
 
 ```rust
 fn get_nested_regex(key: &str) -> Regex {
@@ -151,7 +151,7 @@ fn get_nested_regex(key: &str) -> Regex {
 
 ### 2.4 Vector Collection in Parallel Execution
 
-**Location**: `/home/zyxsys/RK-PROJECT/reasonkit-core/src/thinktool/executor.rs:912-914`
+**Location**: `src/thinktool/executor.rs:912-914`
 
 ```rust
 step_results_vec.sort_by_key(|(idx, _)| *idx);
@@ -163,7 +163,7 @@ let step_results: Vec<StepResult> = step_results_vec.into_iter().map(|(_, r)| r)
 
 ### 2.5 List Item Parsing Allocations
 
-**Location**: `/home/zyxsys/RK-PROJECT/reasonkit-core/src/thinktool/executor.rs:1700-1802`
+**Location**: `src/thinktool/executor.rs:1700-1802`
 
 ```rust
 fn extract_list_items(&self, content: &str) -> Vec<ListItem> {
@@ -184,7 +184,7 @@ fn extract_list_items_optimized(&self, content: &str) -> Vec<ListItem> {
 
 ### 2.6 JSON Serialization in Trace
 
-**Location**: `/home/zyxsys/RK-PROJECT/reasonkit-core/src/thinktool/trace.rs:254-261`
+**Location**: `src/thinktool/trace.rs:254-261`
 
 ```rust
 pub fn to_json(&self) -> Result<String, serde_json::Error> {
@@ -201,7 +201,7 @@ pub fn to_json(&self) -> Result<String, serde_json::Error> {
 
 ### 3.1 Multiple String Replacements
 
-**Location**: `/home/zyxsys/RK-PROJECT/reasonkit-core/src/thinktool/executor.rs:1429`
+**Location**: `src/thinktool/executor.rs:1429`
 
 ```rust
 result = result.replace(&placeholder, &value_str);
@@ -225,7 +225,7 @@ fn render_template_batch(template: &str, replacements: &[(String, String)]) -> S
 
 ### 3.2 Answer Normalization
 
-**Location**: `/home/zyxsys/RK-PROJECT/reasonkit-core/src/thinktool/consistency.rs:306-314`
+**Location**: `src/thinktool/consistency.rs:306-314`
 
 ```rust
 fn normalize_answer(&self, answer: &str) -> String {
@@ -268,7 +268,7 @@ fn normalize_answer_optimized(&self, answer: &str) -> String {
 
 ### 3.3 Format String Allocation
 
-**Location**: `/home/zyxsys/RK-PROJECT/reasonkit-core/src/thinktool/executor.rs:1424`
+**Location**: `src/thinktool/executor.rs:1424`
 
 ```rust
 let placeholder = format!("{{{{{}}}}}", key);  // Allocation per key
@@ -278,7 +278,7 @@ let placeholder = format!("{{{{{}}}}}", key);  // Allocation per key
 
 ### 3.4 Confidence Extraction Regex
 
-**Location**: `/home/zyxsys/RK-PROJECT/reasonkit-core/src/thinktool/executor.rs:1687-1696`
+**Location**: `src/thinktool/executor.rs:1687-1696`
 
 ```rust
 fn extract_confidence(&self, content: &str) -> Option<f64> {
@@ -313,7 +313,7 @@ fn extract_confidence(&self, content: &str) -> Option<f64> {
 
 ### 4.1 Proper Async Pattern (GOOD)
 
-**Location**: `/home/zyxsys/RK-PROJECT/reasonkit-core/src/thinktool/executor.rs:764-870`
+**Location**: `src/thinktool/executor.rs:764-870`
 
 The parallel execution correctly uses:
 
@@ -323,7 +323,7 @@ The parallel execution correctly uses:
 
 ### 4.2 Missing spawn_blocking for CLI
 
-**Location**: `/home/zyxsys/RK-PROJECT/reasonkit-core/src/thinktool/executor.rs:1552`
+**Location**: `src/thinktool/executor.rs:1552`
 
 ```rust
 async fn cli_tool_call(...) -> Result<(String, TokenUsage)> {
@@ -355,7 +355,7 @@ async fn cli_tool_call(...) -> Result<(String, TokenUsage)> {
 
 ### 5.1 Current Implementation (EXCELLENT)
 
-**Location**: `/home/zyxsys/RK-PROJECT/reasonkit-core/src/thinktool/executor.rs:689-923`
+**Location**: `src/thinktool/executor.rs:689-923`
 
 The `execute_steps_parallel` method correctly implements:
 
@@ -366,7 +366,7 @@ The `execute_steps_parallel` method correctly implements:
 
 ### 5.2 Opportunity: Self-Consistency Parallel Sampling
 
-**Location**: `/home/zyxsys/RK-PROJECT/reasonkit-core/src/thinktool/executor.rs:1139-1161`
+**Location**: `src/thinktool/executor.rs:1139-1161`
 
 ```rust
 // Currently sequential
@@ -399,7 +399,7 @@ async fn execute_with_self_consistency_parallel(...) -> Result<...> {
 
 ### 5.3 Opportunity: Tree-of-Thoughts Parallel Expansion
 
-**Location**: `/home/zyxsys/RK-PROJECT/reasonkit-core/src/thinktool/tot.rs`
+**Location**: `src/thinktool/tot.rs`
 
 The ToT implementation supports parallel expansion conceptually but LLM calls for thought generation could be parallelized per branching factor.
 
@@ -413,7 +413,7 @@ The ToT implementation supports parallel expansion conceptually but LLM calls fo
 
 ### 6.1 Static Regex Patterns
 
-**Location**: `/home/zyxsys/RK-PROJECT/reasonkit-core/src/thinktool/executor.rs:24-31`
+**Location**: `src/thinktool/executor.rs:24-31`
 
 ```rust
 static CONDITIONAL_BLOCK_RE: Lazy<Regex> = Lazy::new(|| { ... });
@@ -424,7 +424,7 @@ static UNFILLED_PLACEHOLDER_RE: Lazy<Regex> = Lazy::new(|| { ... });
 
 ### 6.2 Thread-Local Regex Cache
 
-**Location**: `/home/zyxsys/RK-PROJECT/reasonkit-core/src/thinktool/executor.rs:35-51`
+**Location**: `src/thinktool/executor.rs:35-51`
 
 ```rust
 thread_local! {
@@ -436,7 +436,7 @@ thread_local! {
 
 ### 6.3 HTTP Connection Pooling
 
-**Location**: `/home/zyxsys/RK-PROJECT/reasonkit-core/src/thinktool/llm.rs:37-85`
+**Location**: `src/thinktool/llm.rs:37-85`
 
 ```rust
 static HTTP_CLIENT_POOL: Lazy<RwLock<HashMap<u64, reqwest::Client>>> = Lazy::new(...);
@@ -468,7 +468,7 @@ HashMap::with_capacity(chain_len)
 
 ## 7. Benchmark Analysis
 
-**Location**: `/home/zyxsys/RK-PROJECT/reasonkit-core/benches/thinktool_bench.rs`
+**Location**: `benches/thinktool_bench.rs`
 
 ### Current Benchmark Coverage
 

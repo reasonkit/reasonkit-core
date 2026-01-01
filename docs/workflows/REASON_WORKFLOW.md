@@ -48,7 +48,7 @@ This document traces the complete Query -> Reason -> Response workflow through t
 
 ### 2.1 Entry Point: CLI (main.rs)
 
-**Location**: `/home/zyxsys/RK-PROJECT/reasonkit-core/src/main.rs`
+**Location**: `src/main.rs`
 
 The CLI parses commands and routes to the appropriate handler:
 
@@ -88,7 +88,7 @@ Commands::Think {
 
 ### 2.2 Input Construction: ProtocolInput
 
-**Location**: `/home/zyxsys/RK-PROJECT/reasonkit-core/src/thinktool/executor.rs:306-365`
+**Location**: `src/thinktool/executor.rs:306-365`
 
 ```rust
 pub struct ProtocolInput {
@@ -115,7 +115,7 @@ Input types map to ThinkTools:
 
 ### 2.3 Protocol Executor: Core Orchestration
 
-**Location**: `/home/zyxsys/RK-PROJECT/reasonkit-core/src/thinktool/executor.rs:423-469`
+**Location**: `src/thinktool/executor.rs:423-469`
 
 ```rust
 pub struct ProtocolExecutor {
@@ -128,7 +128,7 @@ pub struct ProtocolExecutor {
 
 #### 2.3.1 Protocol Loading
 
-**Location**: `/home/zyxsys/RK-PROJECT/reasonkit-core/src/thinktool/registry.rs`
+**Location**: `src/thinktool/registry.rs`
 
 Protocols are loaded from:
 
@@ -153,7 +153,7 @@ pub fn register_builtins(&mut self) -> Result<()> {
 
 ### 2.4 ThinkTool Selection
 
-**Location**: `/home/zyxsys/RK-PROJECT/reasonkit-core/src/thinktool/executor.rs:487-595`
+**Location**: `src/thinktool/executor.rs:487-595`
 
 ```rust
 pub async fn execute(&self, protocol_id: &str, input: ProtocolInput) -> Result<ProtocolOutput> {
@@ -185,7 +185,7 @@ pub async fn execute(&self, protocol_id: &str, input: ProtocolInput) -> Result<P
 
 ### 2.5 Profile-Based Execution
 
-**Location**: `/home/zyxsys/RK-PROJECT/reasonkit-core/src/engine/reasoning_loop.rs:82-153`
+**Location**: `src/engine/reasoning_loop.rs:82-153`
 
 ```rust
 pub enum Profile {
@@ -214,7 +214,7 @@ impl Profile {
 
 ### 2.6 Step Execution
 
-**Location**: `/home/zyxsys/RK-PROJECT/reasonkit-core/src/thinktool/executor.rs:598-684`
+**Location**: `src/thinktool/executor.rs:598-684`
 
 Sequential execution flow:
 
@@ -251,7 +251,7 @@ async fn execute_steps_sequential(&self, steps: &[ProtocolStep], ...) -> Result<
 
 ### 2.7 LLM Integration
 
-**Location**: `/home/zyxsys/RK-PROJECT/reasonkit-core/src/thinktool/llm.rs`
+**Location**: `src/thinktool/llm.rs`
 
 ```rust
 pub struct UnifiedLlmClient {
@@ -282,7 +282,7 @@ impl LlmClient for UnifiedLlmClient {
 
 ### 2.8 ThinkTool Modules
 
-**Location**: `/home/zyxsys/RK-PROJECT/reasonkit-core/src/thinktool/modules/`
+**Location**: `src/thinktool/modules/`
 
 | Module                | File                        | Purpose                                |
 | --------------------- | --------------------------- | -------------------------------------- |
@@ -304,7 +304,7 @@ pub trait ThinkToolModule: Send + Sync {
 
 ### 2.9 Trace Capture
 
-**Location**: `/home/zyxsys/RK-PROJECT/reasonkit-core/src/thinktool/trace.rs`
+**Location**: `src/thinktool/trace.rs`
 
 ```rust
 pub struct ExecutionTrace {
@@ -339,7 +339,7 @@ pub struct StepTrace {
 
 ### 2.10 M2 Connector (Experimental)
 
-**Location**: `/home/zyxsys/RK-PROJECT/reasonkit-core/src/m2/`
+**Location**: `src/m2/`
 
 The M2 connector provides integration with MiniMax M2 for interleaved thinking:
 
@@ -365,7 +365,7 @@ impl M2Connector {
 
 ### 2.11 Response Assembly
 
-**Location**: `/home/zyxsys/RK-PROJECT/reasonkit-core/src/thinktool/executor.rs:583-595`
+**Location**: `src/thinktool/executor.rs:583-595`
 
 ```rust
 Ok(ProtocolOutput {
@@ -444,7 +444,7 @@ Query Input
 
 ### 4.1 M2 Integration Not Implemented
 
-**Location**: `/home/zyxsys/RK-PROJECT/reasonkit-core/src/m2/mod.rs:47-57`
+**Location**: `src/m2/mod.rs:47-57`
 
 ```rust
 pub async fn execute_for_use_case(...) -> Result<InterleavedResult, Error> {
@@ -487,7 +487,7 @@ let trace_id = if self.config.save_traces {
 
 ### 4.4 Parallel Execution Error Handling
 
-**Location**: `/home/zyxsys/RK-PROJECT/reasonkit-core/src/thinktool/executor.rs:689-923`
+**Location**: `src/thinktool/executor.rs:689-923`
 
 Parallel execution creates new LLM clients per step:
 

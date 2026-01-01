@@ -172,9 +172,9 @@ impl ModuleRegistry {
 
 ## Related Documents
 
-- `/home/zyxsys/RK-PROJECT/reasonkit-core/docs/THINKTOOLS_ARCHITECTURE.md` - Detailed architecture
-- `/home/zyxsys/RK-PROJECT/reasonkit-core/src/thinktool/mod.rs` - Implementation
-- `/home/zyxsys/RK-PROJECT/reasonkit-core/docs/CUSTOM_THINKTOOLS.md` - Extension guide
+- `../thinktools/THINKTOOLS_ARCHITECTURE.md` - Detailed architecture
+- `../../src/thinktool/mod.rs` - Implementation
+- `../thinktools/CUSTOM_THINKTOOLS.md` - Extension guide
 
 ## References
 

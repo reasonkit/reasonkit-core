@@ -2076,9 +2076,9 @@ docker run -v /tmp/heap:/tmp/heap reasonkit/core:latest \
 
 ### Getting Help
 
-1. Check the [documentation](https://docs.reasonkit.sh)
+1. Check the [documentation](https://docs.rs/reasonkit-core)
 2. Search [GitHub Issues](https://github.com/reasonkit/reasonkit-core/issues)
-3. Join [Discord](https://discord.gg/reasonkit)
+3. Ask in [GitHub Discussions](https://github.com/reasonkit/reasonkit-core/discussions)
 4. Email support: support@reasonkit.sh
 
 ---

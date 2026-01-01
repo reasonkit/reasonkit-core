@@ -1,8 +1,7 @@
 # ReasonKit Core - Knowledge Base Architecture
 
-## Rust-First RAG/Vector System for AI Reasoning Enhancement
+## The Reasoning Engine — Auditable AI Reasoning Architecture
 
-> **STATUS**: DESIGN DRAFT - LOCAL ONLY (Not yet on GitHub)
 > **VERSION**: 1.0.0
 > **DATE**: 2025-12-11
 
@@ -272,65 +271,65 @@ data/
 
 ## 4. ACADEMIC PAPERS TO DOWNLOAD
 
-### 4.1 Core Reasoning Papers (Priority 1)
+### 4.1 Core Reasoning Papers
 
-| Paper                                   | arXiv      | Status  |
-| --------------------------------------- | ---------- | ------- |
-| Chain-of-Thought Prompting (Wei et al.) | 2201.11903 | PENDING |
-| Self-Consistency (Wang et al.)          | 2203.11171 | PENDING |
-| Tree of Thoughts (Yao et al.)           | 2305.10601 | PENDING |
-| RAPTOR (Sarthi et al.)                  | 2401.18059 | PENDING |
-| Let's Verify Step by Step (OpenAI)      | -          | PENDING |
-| Reflexion (Shinn et al.)                | 2303.11366 | PENDING |
-| Constitutional AI (Anthropic)           | 2212.08073 | PENDING |
+| Paper                                   | arXiv      |
+| --------------------------------------- | ---------- |
+| Chain-of-Thought Prompting (Wei et al.) | 2201.11903 |
+| Self-Consistency (Wang et al.)          | 2203.11171 |
+| Tree of Thoughts (Yao et al.)           | 2305.10601 |
+| RAPTOR (Sarthi et al.)                  | 2401.18059 |
+| Let's Verify Step by Step (OpenAI)      | -          |
+| Reflexion (Shinn et al.)                | 2303.11366 |
+| Constitutional AI (Anthropic)           | 2212.08073 |
 
-### 4.2 Retrieval & Embedding Papers (Priority 2)
+### 4.2 Retrieval & Embedding Papers
 
-| Paper                       | arXiv      | Status  |
-| --------------------------- | ---------- | ------- |
-| ColBERT (Khattab & Zaharia) | 2004.12832 | PENDING |
-| E5 Embeddings               | 2212.03533 | PENDING |
-| BGE-M3                      | 2402.03216 | PENDING |
-| Semantic Entropy (Nature)   | -          | PENDING |
+| Paper                       | arXiv      |
+| --------------------------- | ---------- |
+| ColBERT (Khattab & Zaharia) | 2004.12832 |
+| E5 Embeddings               | 2212.03533 |
+| BGE-M3                      | 2402.03216 |
+| Semantic Entropy (Nature)   | -          |
 
-### 4.3 Benchmark Papers (Priority 3)
+### 4.3 Benchmark Papers
 
-| Paper          | arXiv      | Status  |
-| -------------- | ---------- | ------- |
-| GSM8K          | 2110.14168 | PENDING |
-| MATH Benchmark | 2103.03874 | PENDING |
-| MMLU           | 2009.03300 | PENDING |
+| Paper          | arXiv      |
+| -------------- | ---------- |
+| GSM8K          | 2110.14168 |
+| MATH Benchmark | 2103.03874 |
+| MMLU           | 2009.03300 |
 
 ---
 
-## 5. DOCUMENTATION TO INDEX
+## 5. REFERENCE DOCUMENTATION
 
-### 5.1 CLI Tools (Priority 1)
+### 5.1 CLI Tools
 
-| Tool                | Source                                              | Status  |
-| ------------------- | --------------------------------------------------- | ------- |
-| Claude Code         | <https://github.com/anthropics/claude-code>           | PENDING |
-| Gemini CLI          | <https://github.com/google-gemini/gemini-cli>         | PENDING |
-| OpenAI Codex        | <https://github.com/openai/codex>                     | PENDING |
-| MCP Servers         | <https://github.com/modelcontextprotocol/servers>     | PENDING |
-| Sequential Thinking | modelcontextprotocol/servers/src/sequentialthinking | PENDING |
+| Tool                | Source                                              |
+| ------------------- | --------------------------------------------------- |
+| Claude Code         | <https://github.com/anthropics/claude-code>         |
+| Gemini CLI          | <https://github.com/google-gemini/gemini-cli>       |
+| OpenAI Codex        | <https://github.com/openai/codex>                   |
+| MCP Servers         | <https://github.com/modelcontextprotocol/servers>   |
+| Sequential Thinking | modelcontextprotocol/servers/src/sequentialthinking |
 
-### 5.2 APIs & SDKs (Priority 2)
+### 5.2 APIs & SDKs
 
-| API           | Source                           | Status  |
-| ------------- | -------------------------------- | ------- |
-| Anthropic API | <https://docs.anthropic.com>       | PENDING |
-| OpenAI API    | <https://platform.openai.com/docs> | PENDING |
-| Google AI     | <https://ai.google.dev/docs>       | PENDING |
-| OpenRouter    | <https://openrouter.ai/docs>       | PENDING |
+| API           | Source                             |
+| ------------- | ---------------------------------- |
+| Anthropic API | <https://docs.anthropic.com>       |
+| OpenAI API    | <https://platform.openai.com/docs> |
+| Google AI     | <https://ai.google.dev/docs>       |
+| OpenRouter    | <https://openrouter.ai/docs>       |
 
-### 5.3 Frameworks (Priority 3)
+### 5.3 Frameworks
 
-| Framework  | Source                            | Status  |
-| ---------- | --------------------------------- | ------- |
-| LangChain  | <https://python.langchain.com/docs> | PENDING |
-| LlamaIndex | <https://docs.llamaindex.ai>        | PENDING |
-| DSPy       | <https://dspy-docs.vercel.app>      | PENDING |
+| Framework  | Source                              |
+| ---------- | ----------------------------------- |
+| LangChain  | <https://python.langchain.com/docs> |
+| LlamaIndex | <https://docs.llamaindex.ai>        |
+| DSPy       | <https://dspy-docs.vercel.app>      |
 
 ---
 

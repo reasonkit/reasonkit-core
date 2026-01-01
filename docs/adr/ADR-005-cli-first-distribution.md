@@ -193,9 +193,8 @@ Stage 5: Enterprise
 
 ## Related Documents
 
-- `/home/zyxsys/RK-PROJECT/reasonkit-core/docs/CLI_REFERENCE.md` - CLI documentation
-- `/home/zyxsys/RK-PROJECT/reasonkit-core/src/main.rs` - CLI implementation
-- `/home/zyxsys/RK-PROJECT/reasonkit-site/install.sh` - Installation script
+- `../reference/CLI_REFERENCE.md` - CLI documentation
+- `../../src/main.rs` - CLI implementation
 - ADR-001: Rust enables single-binary distribution
 
 ## References

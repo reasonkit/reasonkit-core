@@ -816,7 +816,7 @@ RUST_LOG=reasonkit=trace rk-core query "test"
 
 1. Check the [GitHub Issues](https://github.com/reasonkit/reasonkit-core/issues)
 2. Review [TROUBLESHOOTING.md](./TROUBLESHOOTING.md)
-3. Join the [Discord community](https://discord.gg/reasonkit)
+3. Ask in [GitHub Discussions](https://github.com/reasonkit/reasonkit-core/discussions)
 4. Email: support@reasonkit.sh
 
 ---

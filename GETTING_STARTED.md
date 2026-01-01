@@ -6,14 +6,14 @@
 
 ## Quick Links
 
-| I want to...                      | Go to...                                             |
-| --------------------------------- | ---------------------------------------------------- |
-| **Install and run first command** | [docs/QUICKSTART.md](docs/QUICKSTART.md)             |
-| **Step-by-step tutorial**         | [examples/tutorial/](examples/tutorial/)             |
-| **Troubleshoot an issue**         | [docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md)   |
-| **See real-world examples**       | [docs/USE_CASES.md](docs/USE_CASES.md)               |
-| **Full CLI reference**            | [docs/CLI_REFERENCE.md](docs/CLI_REFERENCE.md)       |
-| **ThinkTool deep dive**           | [docs/THINKTOOLS_GUIDE.md](docs/THINKTOOLS_GUIDE.md) |
+| I want to...                      | Go to...                                                               |
+| --------------------------------- | ---------------------------------------------------------------------- |
+| **Install and run first command** | [docs/getting-started/QUICKSTART.md](docs/getting-started/QUICKSTART.md) |
+| **Step-by-step tutorial**         | [examples/tutorial/](examples/tutorial/)                               |
+| **Troubleshoot an issue**         | [docs/guides/TROUBLESHOOTING.md](docs/guides/TROUBLESHOOTING.md)       |
+| **See real-world examples**       | [docs/process/USE_CASES.md](docs/process/USE_CASES.md)                 |
+| **Full CLI reference**            | [docs/reference/CLI_REFERENCE.md](docs/reference/CLI_REFERENCE.md)     |
+| **ThinkTool deep dive**           | [docs/thinktools/THINKTOOLS_GUIDE.md](docs/thinktools/THINKTOOLS_GUIDE.md) |
 
 ---
 
@@ -58,7 +58,7 @@ This is "structured reasoning" - organized, auditable thinking instead of a wall
 ## Next Steps
 
 1. **[Interactive Tutorial](examples/tutorial/)** - 10 minutes, hands-on
-2. **[Real Examples](docs/USE_CASES.md)** - Code review, architecture, debugging
+2. **[Real Examples](docs/process/USE_CASES.md)** - Code review, architecture, debugging
 3. **[Full Docs](docs/)** - Everything you need
 
 ---

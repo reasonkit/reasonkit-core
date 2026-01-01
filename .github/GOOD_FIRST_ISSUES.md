@@ -1,6 +1,6 @@
 # Good First Issues
 
-> Curated list of beginner-friendly issues perfect for Hacktoberfest and first-time contributors
+> Curated list of beginner-friendly issues perfect for first-time contributors
 
 This document lists issues that are well-suited for new contributors. These issues are:
 
@@ -19,7 +19,6 @@ Look for these labels on GitHub:
 - `documentation` - Documentation improvements
 - `help wanted` - Community help needed
 - `easy` - Quick wins (1-3 hours)
-- `hacktoberfest` - Hacktoberfest-friendly
 
 **Browse on GitHub:** [Good First Issues](https://github.com/reasonkit/reasonkit-core/issues?q=is:open+label:"good+first+issue")
 
@@ -31,7 +30,7 @@ Look for these labels on GitHub:
 
 **Difficulty:** ⭐ Easy  
 **Time:** 15-30 minutes  
-**Labels:** `documentation`, `good first issue`, `hacktoberfest`
+**Labels:** `documentation`, `good first issue`
 
 **Description:**
 Find and fix typos, grammatical errors, and spelling mistakes in documentation files.
@@ -54,7 +53,7 @@ Find and fix typos, grammatical errors, and spelling mistakes in documentation f
 
 **Difficulty:** ⭐ Easy  
 **Time:** 30-60 minutes  
-**Labels:** `documentation`, `good first issue`, `hacktoberfest`
+**Labels:** `documentation`, `good first issue`
 
 **Description:**
 Add code examples to documentation that currently lacks them.
@@ -92,7 +91,7 @@ pub fn from_yaml(yaml: &str) -> Result<Protocol> {
 
 **Difficulty:** ⭐ Easy  
 **Time:** 30-60 minutes  
-**Labels:** `documentation`, `good first issue`, `hacktoberfest`
+**Labels:** `documentation`, `good first issue`
 
 **Description:**
 Find generic error messages and make them more helpful and actionable.
@@ -123,7 +122,7 @@ return Err(anyhow!(
 
 **Difficulty:** ⭐ Easy  
 **Time:** 30-60 minutes  
-**Labels:** `documentation`, `good first issue`, `hacktoberfest`
+**Labels:** `documentation`, `good first issue`
 
 **Description:**
 Find public functions without documentation and add doc comments.
@@ -168,7 +167,7 @@ pub fn function_name(param1: Type) -> Result<ReturnType> {
 
 **Difficulty:** ⭐⭐ Medium  
 **Time:** 1-2 hours  
-**Labels:** `testing`, `good first issue`, `hacktoberfest`
+**Labels:** `testing`, `good first issue`
 
 **Description:**
 Add tests for edge cases that aren't currently covered.
@@ -207,7 +206,7 @@ mod tests {
 
 **Difficulty:** ⭐⭐ Medium  
 **Time:** 1-2 hours  
-**Labels:** `testing`, `good first issue`, `hacktoberfest`
+**Labels:** `testing`, `good first issue`
 
 **Description:**
 Identify modules with low test coverage and add tests.
@@ -236,7 +235,7 @@ cargo tarpaulin --out Html
 
 **Difficulty:** ⭐ Easy  
 **Time:** 15-30 minutes  
-**Labels:** `code quality`, `good first issue`, `hacktoberfest`
+**Labels:** `code quality`, `good first issue`
 
 **Description:**
 Find and remove unused imports flagged by clippy.
@@ -256,7 +255,7 @@ Remove the unused import or add `#[allow(unused_imports)]` if it's needed for do
 
 **Difficulty:** ⭐ Easy  
 **Time:** 30-60 minutes  
-**Labels:** `code quality`, `good first issue`, `hacktoberfest`
+**Labels:** `code quality`, `good first issue`
 
 **Description:**
 Fix clippy warnings to improve code quality.
@@ -280,7 +279,7 @@ cargo clippy -- -D warnings
 
 **Difficulty:** ⭐ Easy  
 **Time:** 30-60 minutes  
-**Labels:** `code quality`, `good first issue`, `hacktoberfest`
+**Labels:** `code quality`, `good first issue`
 
 **Description:**
 Update outdated comments, add missing explanations, or clarify complex logic.
@@ -299,7 +298,7 @@ Update outdated comments, add missing explanations, or clarify complex logic.
 
 **Difficulty:** ⭐⭐ Medium  
 **Time:** 1-2 hours  
-**Labels:** `cli`, `good first issue`, `hacktoberfest`
+**Labels:** `cli`, `good first issue`
 
 **Description:**
 Add command aliases for common commands:
@@ -310,7 +309,7 @@ Add command aliases for common commands:
 
 **Where to implement:**
 
-- `src/bin/rk-core/main.rs`
+- `src/main.rs`
 - CLI argument parsing
 
 ---
@@ -319,14 +318,14 @@ Add command aliases for common commands:
 
 **Difficulty:** ⭐ Easy  
 **Time:** 30-60 minutes  
-**Labels:** `cli`, `good first issue`, `hacktoberfest`
+**Labels:** `cli`, `good first issue`
 
 **Description:**
 Make CLI help text more descriptive and include examples.
 
 **Where to find:**
 
-- `src/bin/rk-core/main.rs`
+- `src/main.rs`
 - Command descriptions
 - Option descriptions
 
@@ -354,7 +353,7 @@ Make CLI help text more descriptive and include examples.
 
 **Difficulty:** ⭐⭐ Medium  
 **Time:** 2-3 hours  
-**Labels:** `examples`, `good first issue`, `hacktoberfest`
+**Labels:** `examples`, `good first issue`
 
 **Description:**
 Create bash scripts demonstrating ReasonKit usage for common scenarios.
@@ -395,7 +394,7 @@ echo "Analysis complete! Results saved to result.json"
 
 **Difficulty:** ⭐⭐⭐ Advanced  
 **Time:** 3-4 hours  
-**Labels:** `examples`, `documentation`, `hacktoberfest`
+**Labels:** `examples`, `documentation`
 
 **Description:**
 Write a step-by-step tutorial for a specific use case.
@@ -418,7 +417,7 @@ Write a step-by-step tutorial for a specific use case.
 
 **Difficulty:** ⭐⭐ Medium  
 **Time:** 1-2 hours  
-**Labels:** `cli`, `ux`, `good first issue`, `hacktoberfest`
+**Labels:** `cli`, `ux`, `good first issue`
 
 **Description:**
 Improve the visual formatting of CLI output for better readability.
@@ -444,7 +443,6 @@ Improve the visual formatting of CLI output for better readability.
 2. **Search by keyword:**
    - `is:issue is:open "good first issue"`
    - `is:issue is:open "documentation"`
-   - `is:issue is:open "hacktoberfest"`
 
 ### In the Codebase
 
@@ -512,8 +510,7 @@ Improve the visual formatting of CLI output for better readability.
 ## 📖 Resources
 
 - [Contributing Guide](CONTRIBUTING.md) - Complete contribution guidelines
-- [Contributor Quick Start](docs/CONTRIBUTOR_QUICKSTART.md) - 30-minute guide
-- [Hacktoberfest Guide](HACKTOBERFEST.md) - Hacktoberfest-specific guide
+- [Contributor Quick Start](docs/getting-started/CONTRIBUTOR_QUICKSTART.md) - 30-minute guide
 - [Architecture](ARCHITECTURE.md) - System design overview
 
 ---

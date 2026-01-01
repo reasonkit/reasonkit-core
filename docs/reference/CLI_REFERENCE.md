@@ -874,10 +874,10 @@ rk-core think "query" --protocol laserlogic --provider groq
 
 ## See Also
 
-- **API Reference**: `reasonkit-core/docs/API_REFERENCE.md`
-- **Architecture**: `reasonkit-core/ARCHITECTURE.md`
-- **ThinkTools**: `reasonkit-core/docs/THINKTOOLS_QUICK_REFERENCE.md`
-- **Project Docs**: `reasonkit-core/CLAUDE.md`
+- **API Reference**: `docs/reference/API_REFERENCE.md`
+- **Architecture**: `ARCHITECTURE.md`
+- **ThinkTools**: `docs/thinktools/THINKTOOLS_QUICK_REFERENCE.md`
+- **Project Docs**: `CLAUDE.md`
 
 ---
 

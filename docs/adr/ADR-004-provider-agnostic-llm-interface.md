@@ -220,9 +220,7 @@ impl LlmManager {
 
 ## Related Documents
 
-- `/home/zyxsys/RK-PROJECT/reasonkit-core/src/thinktool/llm.rs` - LLM interface
-- `/home/zyxsys/RK-PROJECT/ORCHESTRATOR.md` - Agent swarm hierarchy
-- `/home/zyxsys/RK-PROJECT/config/AGENT_DREAM_TEAM.md` - Model selection guide
+- `../../src/thinktool/llm.rs` - LLM interface
 
 ## References
 

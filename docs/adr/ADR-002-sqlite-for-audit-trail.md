@@ -148,8 +148,7 @@ ORDER BY started_at;
 
 ## Related Documents
 
-- `/home/zyxsys/RK-PROJECT/reasonkit-core/docs/LLM_CLI_INTEGRATION.md` - LLM CLI patterns
-- `/home/zyxsys/RK-PROJECT/reasonkit-core/src/storage/mod.rs` - Storage implementation
+- `src/telemetry/storage.rs` - Storage implementation
 
 ## References
 

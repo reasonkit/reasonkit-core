@@ -296,7 +296,7 @@ ReasonKit is written in Rust because reasoning infrastructure demands reliabilit
 | **Fearless Concurrency** | Run 100+ reasoning chains in parallel safely        |
 | **Type Safety**          | Errors caught at compile time, not runtime          |
 
-**Benchmarked Performance** ([view full report](./docs/PERFORMANCE_BASELINE.md)):
+**Benchmarked Performance** ([view full report](./docs/reference/PERFORMANCE.md)):
 
 | Operation | Time | Target |
 |-----------|------|--------|
@@ -463,6 +463,8 @@ See [Community Badges](brand/COMMUNITY_BADGES.md) for all variants and usage gui
 ---
 
 <div align="center">
+
+![ReasonKit Ecosystem Connection](./brand/readme-assets/ecosystem_connection.png)
 
 **ReasonKit** — Turn Prompts into Protocols
 
