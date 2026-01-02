@@ -9,9 +9,9 @@
 **Auditable Reasoning for Production AI | Rust-Native | SSR/SSG Compatible**
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="./assets/img/reasonkit-core_hero.png">
-  <source media="(prefers-color-scheme: light)" srcset="./assets/img/reasonkit-core_hero.png">
-  <img src="./assets/img/reasonkit-core_hero.png" alt="ReasonKit - Auditable Reasoning for Production AI" width="100%">
+  <source media="(prefers-color-scheme: dark)" srcset="https://reasonkit.sh/assets/brand/core/reasonkit-core_hero.png">
+  <source media="(prefers-color-scheme: light)" srcset="https://reasonkit.sh/assets/brand/core/reasonkit-core_hero.png">
+  <img src="https://reasonkit.sh/assets/brand/core/reasonkit-core_hero.png" alt="ReasonKit - Auditable Reasoning for Production AI" width="100%">
 </picture>
 
 [![CI](https://img.shields.io/github/actions/workflow/status/reasonkit/reasonkit-core/ci.yml?branch=main&style=flat-square&logo=github&label=CI&color=06b6d4&logoColor=06b6d4)](https://github.com/reasonkit/reasonkit-core/actions)
@@ -67,10 +67,10 @@ rk-core think --profile balanced "Should we migrate to microservices?"
 
 Each ThinkTool acts as a **variance reduction filter**, transforming probabilistic outputs into increasingly deterministic reasoning paths.
 
-![ReasonKit Protocol Chain - Turn Prompts into Protocols](./brand/readme/powercombo_process.png)
+![ReasonKit Protocol Chain - Turn Prompts into Protocols](https://reasonkit.sh/assets/brand/core/powercombo_process.png)
 
-![ReasonKit ThinkTool Chain - Variance Reduction](./brand/readme/thinktool_cards_deck.svg)
-![ReasonKit Variance Reduction Chart](./brand/readme/chart_variance_reduction.png)
+![ReasonKit ThinkTool Chain - Variance Reduction](https://reasonkit.sh/assets/brand/core/thinktool_cards_deck.svg)
+![ReasonKit Variance Reduction Chart](https://reasonkit.sh/assets/brand/core/chart_variance_reduction.png)
 
 | ThinkTool | Operation | What It Does |
 | --------- | --------- | ------------ |
@@ -90,7 +90,7 @@ Each ThinkTool acts as a **variance reduction filter**, transforming probabilist
 
 Pre-configured chains for different rigor levels:
 
-![Reasoning Profiles Scale](./brand/readme/reasoning_profiles_scale.svg)
+![Reasoning Profiles Scale](https://reasonkit.sh/assets/brand/core/reasoning_profiles_scale.svg)
 
 ```bash
 # Fast analysis (70% confidence target)
@@ -117,7 +117,7 @@ rk-core think --profile paranoid "Validate cryptographic implementation"
 
 ## See It In Action
 
-![ReasonKit Terminal Experience](./brand/readme/terminal_mockup.png)
+![ReasonKit Terminal Experience](https://reasonkit.sh/assets/brand/core/terminal_mockup.png)
 
 ```text
 $ rk-core think --profile balanced "Should we migrate to microservices?"
@@ -170,9 +170,9 @@ VERDICT: conditional_yes | Confidence: 87% | Duration: 2.3s
 
 The ReasonKit architecture uses a **Protocol Engine** wrapper to enforce deterministic execution over probabilistic LLM outputs.
 
-![ReasonKit Core Architecture Exploded View](./brand/readme/core_architecture_exploded.png)
+![ReasonKit Core Architecture Exploded View](https://reasonkit.sh/assets/brand/core/core_architecture_exploded.png)
 
-![ReasonKit ThinkTool Chain Architecture](./brand/readme/architecture_diagram.png)
+![ReasonKit ThinkTool Chain Architecture](https://reasonkit.sh/assets/brand/core/architecture_diagram.png)
 
 **Three-Layer Architecture:**
 
@@ -357,7 +357,7 @@ rk-core trace export <id>
 
 We demand excellence. All contributions must pass **The 5 Gates of Quality**:
 
-![ReasonKit Quality Gates Shield](./brand/readme/quality_gates_shield.png)
+![ReasonKit Quality Gates Shield](https://reasonkit.sh/assets/brand/core/quality_gates_shield.png)
 
 ```bash
 # Clone & Setup
@@ -452,7 +452,7 @@ OPENAI_API_KEY=your-key rk-core mcp
 
 <div align="center">
 
-![ReasonKit Ecosystem Connection](./brand/readme/ecosystem_connection.png)
+![ReasonKit Ecosystem Connection](https://reasonkit.sh/assets/brand/core/ecosystem_connection.png)
 
 **ReasonKit** — Turn Prompts into Protocols
 
