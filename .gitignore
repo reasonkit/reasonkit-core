@@ -11,7 +11,6 @@
 **/*.rmeta
 **/*.d
 **/*.o
-Cargo.lock
 
 # ============================================================
 # PRIVATE/INTERNAL - NEVER COMMIT
