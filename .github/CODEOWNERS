@@ -1,0 +1,20 @@
+# ReasonKit Core - Code Owners
+# These users will be requested for review when someone opens a PR
+
+# Global owners - review all changes
+* @Lenvanderhof
+
+# Rust source code
+/src/ @Lenvanderhof
+
+# CI/CD and workflows
+/.github/ @Lenvanderhof
+
+# Documentation
+/docs/ @Lenvanderhof
+*.md @Lenvanderhof
+
+# Security-sensitive files
+/SECURITY.md @Lenvanderhof
+Cargo.toml @Lenvanderhof
+Cargo.lock @Lenvanderhof

@@ -122,7 +122,7 @@ tantivy = { version = "0.22", optional = true }
 
 # Memory Infrastructure (optional - provides storage, retrieval, embeddings)
 # Version required for crates.io publishing; path used for workspace development
-reasonkit-mem = { version = "0.1.4", optional = true }
+reasonkit-mem = { version = "0.1.0", optional = true }
 
 # Async Runtime
 tokio = { version = "1", features = ["full"] }
