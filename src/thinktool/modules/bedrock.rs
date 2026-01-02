@@ -1165,8 +1165,8 @@ mod tests {
         let result = bedrock.decompose("All birds can fly", &[]);
 
         // Universal claims should generate axioms about universal statements
-        let axioms = result.axioms();
-        let assumptions = result.assumptions();
+        let _axioms = result.axioms();
+        let _assumptions = result.assumptions();
 
         // Check that we can access principles at different depths
         let root_principles = result.at_depth(0);
@@ -1204,7 +1204,9 @@ mod tests {
 
         // Should identify gaps
         // Note: gaps may or may not be found depending on decomposition
-        assert!(result.gaps.len() >= 0); // Gap identification works
+        // Gap identification may or may not find gaps depending on decomposition.
+        // The invariant here is simply that the `gaps` collection is usable.
+        let _ = &result.gaps;
     }
 
     #[test]

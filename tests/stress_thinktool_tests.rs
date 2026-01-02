@@ -23,13 +23,12 @@
 //! 3. **LLM Client Pool**: Connection pool under pressure
 //! 4. **Memory Stability**: Long-running protocol execution
 
-use std::collections::HashMap;
-use std::sync::atomic::{AtomicU64, AtomicUsize, Ordering};
+use std::sync::atomic::{AtomicU64, Ordering};
 use std::sync::Arc;
 use std::time::{Duration, Instant};
 
 use serde::{Deserialize, Serialize};
-use tokio::sync::{Barrier, RwLock, Semaphore};
+use tokio::sync::{Barrier, Semaphore};
 use tokio::time::timeout;
 use uuid::Uuid;
 
@@ -136,6 +135,7 @@ pub struct MockLlmClient {
 }
 
 impl MockLlmClient {
+    #[allow(clippy::new_without_default)]
     pub fn new() -> Self {
         Self {
             response_latency_us: 50_000, // 50ms simulated latency
@@ -783,7 +783,7 @@ async fn stress_step_execution_storm() {
 #[tokio::test(flavor = "multi_thread", worker_threads = 16)]
 async fn stress_llm_client_pool() {
     let llm_client = Arc::new(MockLlmClient::new().with_latency(20_000)); // 20ms to stress pool
-    let metrics = Arc::new(ThinkToolStressMetrics::new());
+    let _metrics = Arc::new(ThinkToolStressMetrics::new());
 
     let concurrent_callers = 200; // More than MAX_CONCURRENT_LLM_CALLS
     let calls_per_caller = 50;

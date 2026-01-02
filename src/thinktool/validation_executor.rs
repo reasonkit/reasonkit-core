@@ -363,7 +363,7 @@ impl ValidationExecutorConfig {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::thinktool::step::{StepOutput, StepResult, TokenUsage};
+    use crate::thinktool::step::TokenUsage;
     use crate::thinktool::validation::{
         ChainIntegrityResult, DependencyStatus, LogicalFlowStatus, ProgressionStatus,
         ValidationPerformance,
@@ -507,8 +507,8 @@ mod tests {
         let executor =
             ValidatingProtocolExecutor::with_configs(executor_config, validation_config).unwrap();
 
-        assert!(executor.list_protocols().len() > 0);
-        assert!(executor.list_profiles().len() > 0);
+        assert!(!executor.list_protocols().is_empty());
+        assert!(!executor.list_profiles().is_empty());
     }
 
     #[tokio::test]
@@ -523,7 +523,7 @@ mod tests {
             ValidatingProtocolExecutor::with_configs(executor_config, validation_config).unwrap();
 
         // Executor should still work, just without validation engine
-        assert!(executor.list_protocols().len() > 0);
+        assert!(!executor.list_protocols().is_empty());
     }
 
     #[test]
@@ -1227,7 +1227,7 @@ mod tests {
     fn test_default_executor_via_default_trait() {
         // Test that Default trait implementation works
         let executor = ValidatingProtocolExecutor::default();
-        assert!(executor.list_protocols().len() > 0);
+        assert!(!executor.list_protocols().is_empty());
     }
 
     #[test]

@@ -780,7 +780,7 @@ mod concurrent_execution_tests {
     async fn test_multiple_profiles_concurrently() {
         // Arrange
         let executor = Arc::new(ProtocolExecutor::mock().expect("Failed to create executor"));
-        let profiles = vec!["quick", "balanced", "scientific"];
+        let profiles = ["quick", "balanced", "scientific"];
 
         // Act
         let handles: Vec<_> = profiles
@@ -1078,7 +1078,7 @@ mod protocol_output_tests {
     async fn test_output_contains_protocol_id() {
         // Arrange
         let executor = ProtocolExecutor::mock().expect("Failed to create executor");
-        let input = ProtocolInput::query("Test");
+        let _input = ProtocolInput::query("Test");
 
         // Act
         let output = executor

@@ -891,7 +891,7 @@ mod tests {
 
     #[test]
     fn test_generator_default() {
-        let generator = ProtocolGenerator::default();
+        let generator = ProtocolGenerator;
         let classification = simple_classification();
 
         let protocol = generator.generate_protocol(&classification, None).unwrap();

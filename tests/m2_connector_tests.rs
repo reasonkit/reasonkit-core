@@ -15,7 +15,7 @@
 //! - Integration-style tests for the connector
 
 use reasonkit::error::Error;
-use reasonkit::m2::connector::{M2Connector, M2Result};
+use reasonkit::m2::connector::M2Connector;
 use reasonkit::m2::types::{
     CompositeConstraints, ContextOptimization, CostOptimization, Evidence, ExecutionMetrics,
     InterleavedPhase, InterleavedProtocol, M2Config, M2Optimizations, OutputOptimization,
@@ -23,7 +23,6 @@ use reasonkit::m2::types::{
     ValidationMethod,
 };
 use serde_json::json;
-use std::time::Duration;
 
 // ============================================================================
 // M2CONFIG CONFIGURATION TESTS

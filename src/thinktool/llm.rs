@@ -648,6 +648,7 @@ impl LlmUsage {
             m if m.contains("claude-opus-4") => (15.0, 75.0),
             m if m.contains("claude-sonnet-4") => (3.0, 15.0),
             m if m.contains("claude-3-5-sonnet") => (3.0, 15.0),
+            m if m.contains("claude-sonnet-4-5") => (3.0, 15.0),
             m if m.contains("claude-3-haiku") => (0.25, 1.25),
 
             // OpenAI (Dec 2025)
@@ -2357,7 +2358,7 @@ mod tests {
     #[test]
     fn test_parse_anthropic_max_tokens_finish() {
         let json = r#"{
-            "model": "claude-3-sonnet",
+            "model": "claude-sonnet-4-5",
             "content": [{"type": "text", "text": "Truncated..."}],
             "stop_reason": "max_tokens",
             "usage": {"input_tokens": 100, "output_tokens": 4000}
@@ -2693,7 +2694,7 @@ mod tests {
     async fn test_multiple_providers_mock() {
         let providers_and_models = vec![
             (LlmProvider::OpenAI, "gpt-4o"),
-            (LlmProvider::Anthropic, "claude-3-sonnet"),
+            (LlmProvider::Anthropic, "claude-sonnet-4-5"),
             (LlmProvider::Groq, "llama-3.3-70b"),
             (LlmProvider::DeepSeek, "deepseek-v3"),
             (LlmProvider::Mistral, "mistral-large"),
@@ -2716,7 +2717,6 @@ mod tests {
 
     #[tokio::test]
     async fn test_concurrent_client_creation() {
-        use std::sync::Arc;
         use tokio::task::JoinSet;
 
         let mut tasks = JoinSet::new();

@@ -979,3 +979,36 @@ jobs:
         if: failure()
         run: |
           echo "::error::Release pipeline failed. Check individual job logs for details."
+
+  # ═══════════════════════════════════════════════════════════════════════════
+  # Stage 10: Notify Meta-Crate
+  # ═══════════════════════════════════════════════════════════════════════════
+  # Triggers the reasonkit meta-crate to update its dependency version
+  # ═══════════════════════════════════════════════════════════════════════════
+  notify-meta-crate:
+    name: "Notify reasonkit Meta-Crate"
+    needs:
+      - validate
+      - publish-crates
+    runs-on: ubuntu-latest
+    if: needs.publish-crates.result == 'success' && github.event.inputs.dry_run != 'true'
+
+    steps:
+      - name: Dispatch to reasonkit meta-crate
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          token: ${{ secrets.REASONKIT_DISPATCH_TOKEN }}
+          repository: reasonkit/reasonkit
+          event-type: component-released
+          client-payload: |
+            {
+              "component": "reasonkit-core",
+              "version": "${{ needs.validate.outputs.version }}",
+              "auto_publish": "false"
+            }
+
+      - name: Log dispatch
+        run: |
+          echo "Dispatched to reasonkit meta-crate"
+          echo "Component: reasonkit-core"
+          echo "Version: ${{ needs.validate.outputs.version }}"

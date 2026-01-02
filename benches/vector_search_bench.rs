@@ -21,7 +21,6 @@
 use criterion::{
     black_box, criterion_group, criterion_main, BenchmarkId, Criterion, SamplingMode, Throughput,
 };
-use std::collections::HashMap;
 use std::time::Duration;
 
 // =============================================================================
@@ -38,21 +37,22 @@ fn generate_embedding(seed: usize, dim: usize) -> Vec<f32> {
 /// Mock vector index for benchmarking (no external dependencies)
 struct MockVectorIndex {
     vectors: Vec<(usize, Vec<f32>)>,
-    dim: usize,
+    _dim: usize,
 }
 
 impl MockVectorIndex {
+    #[allow(dead_code)]
     fn new(dim: usize) -> Self {
         Self {
             vectors: Vec::new(),
-            dim,
+            _dim: dim,
         }
     }
 
     fn with_capacity(dim: usize, capacity: usize) -> Self {
         Self {
             vectors: Vec::with_capacity(capacity),
-            dim,
+            _dim: dim,
         }
     }
 
@@ -621,7 +621,7 @@ fn bench_filtered_search(c: &mut Criterion) {
     });
 
     // Filtered search (multiple categories - 50%)
-    let target_categories = vec![0, 1, 2, 3, 4];
+    let target_categories = [0, 1, 2, 3, 4];
     group.bench_function("filtered_50pct", |b| {
         b.iter(|| {
             let mut scores: Vec<(usize, f32)> = vectors

@@ -19,7 +19,7 @@
 //! ```
 
 use criterion::{black_box, criterion_group, criterion_main, BenchmarkId, Criterion, Throughput};
-use std::collections::{HashMap, HashSet};
+use std::collections::HashMap;
 use std::time::Duration;
 
 // =============================================================================
@@ -29,6 +29,7 @@ use std::time::Duration;
 /// Document with both dense and sparse representations
 struct HybridDocument {
     id: usize,
+    #[allow(dead_code)]
     text: String,
     dense_embedding: Vec<f32>,
     sparse_embedding: HashMap<String, f32>, // term -> tf-idf weight
@@ -38,6 +39,7 @@ struct HybridDocument {
 struct MockHybridRetriever {
     documents: Vec<HybridDocument>,
     inverted_index: HashMap<String, Vec<(usize, f32)>>, // term -> [(doc_id, score)]
+    #[allow(dead_code)]
     dim: usize,
 }
 
@@ -57,7 +59,7 @@ impl MockHybridRetriever {
         for (term, weight) in &doc.sparse_embedding {
             self.inverted_index
                 .entry(term.clone())
-                .or_insert_with(Vec::new)
+                .or_default()
                 .push((doc_id, *weight));
         }
 
@@ -176,6 +178,7 @@ impl MockHybridRetriever {
         results
     }
 
+    #[allow(dead_code)]
     fn len(&self) -> usize {
         self.documents.len()
     }
@@ -231,6 +234,7 @@ fn create_test_retriever(size: usize, dim: usize, vocab_size: usize) -> MockHybr
     retriever
 }
 
+#[allow(dead_code)]
 fn extract_query_terms(query: &str) -> Vec<String> {
     query.split_whitespace().map(|s| s.to_lowercase()).collect()
 }
@@ -579,10 +583,7 @@ fn bench_inverted_index(c: &mut Criterion) {
         for i in 0..corpus_size {
             let sparse = generate_sparse_embedding(i, vocab_size);
             for (term, weight) in sparse {
-                inverted_index
-                    .entry(term)
-                    .or_insert_with(Vec::new)
-                    .push((i, weight));
+                inverted_index.entry(term).or_default().push((i, weight));
             }
         }
 

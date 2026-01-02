@@ -333,6 +333,7 @@ use uuid::Uuid;
 // Python module entry point (only when python feature is enabled)
 #[cfg(feature = "python")]
 mod python_module {
+    #[allow(unused_imports)] // Used when python feature is enabled
     use super::*;
     use pyo3::prelude::*;
 

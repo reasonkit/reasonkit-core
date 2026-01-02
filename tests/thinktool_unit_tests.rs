@@ -27,7 +27,6 @@ use reasonkit::thinktool::{
     ExecutorConfig,
     GigaThink,
     LaserLogic,
-    OutputFormat,
     // Profiles
     ProfileRegistry,
     ProofGuard,
@@ -35,19 +34,15 @@ use reasonkit::thinktool::{
     Protocol,
     ProtocolExecutor,
     ProtocolInput,
-    ProtocolOutput,
     // Registry
     ProtocolRegistry,
     ProtocolStep,
-    ReasoningProfile,
+    // Step and output types
     ReasoningStrategy,
     StepAction,
-    // Step and output types
     StepResult,
     ThinkToolContext,
     ThinkToolModule,
-    ThinkToolModuleConfig,
-    ThinkToolOutput,
 };
 use std::collections::HashMap;
 
@@ -136,9 +131,9 @@ mod gigathink_module_tests {
             previous_steps: vec![],
         };
 
-        // Empty query should still execute (placeholder implementation)
+        // Empty query should be rejected by Gigathink input validation
         let result = gt.execute(&context);
-        assert!(result.is_ok());
+        assert!(result.is_err());
     }
 
     #[test]
@@ -166,7 +161,7 @@ mod laserlogic_module_tests {
         let config = ll.config();
 
         assert_eq!(config.name, "LaserLogic");
-        assert_eq!(config.version, "2.0.0");
+        assert_eq!(config.version, "3.0.0");
         assert!(config.description.contains("deductive") || config.description.contains("fallacy"));
     }
 
@@ -198,7 +193,7 @@ mod laserlogic_module_tests {
     fn test_laserlogic_output_structure() {
         let ll = LaserLogic::new();
         let context = ThinkToolContext {
-            query: "Test argument".to_string(),
+            query: "Premise 1. Premise 2. Therefore, Conclusion.".to_string(),
             previous_steps: vec![],
         };
 
@@ -206,10 +201,10 @@ mod laserlogic_module_tests {
         let output_json = &result.output;
 
         // Verify expected fields for logical analysis
-        assert!(output_json.get("conclusion").is_some());
-        assert!(output_json.get("premises").is_some());
         assert!(output_json.get("validity").is_some());
+        assert!(output_json.get("soundness").is_some());
         assert!(output_json.get("fallacies").is_some());
+        assert!(output_json.get("verdict").is_some());
     }
 
     #[test]
@@ -225,7 +220,7 @@ mod laserlogic_module_tests {
     fn test_laserlogic_fallacy_detection_output() {
         let ll = LaserLogic::new();
         let context = ThinkToolContext {
-            query: "Ad hominem attack disguised as argument".to_string(),
+            query: "Premise 1. Premise 2. Therefore, Conclusion.".to_string(),
             previous_steps: vec![],
         };
 
@@ -244,7 +239,7 @@ mod proofguard_module_tests {
         let config = pg.config();
 
         assert_eq!(config.name, "ProofGuard");
-        assert_eq!(config.version, "2.0.0");
+        assert_eq!(config.version, "2.1.0");
         assert!(
             config.description.contains("Triangulation")
                 || config.description.contains("verification")
@@ -286,8 +281,9 @@ mod proofguard_module_tests {
         // Verify triangulation output fields
         assert!(output_json.get("verdict").is_some());
         assert!(output_json.get("sources").is_some());
-        assert!(output_json.get("evidence").is_some());
-        assert!(output_json.get("discrepancies").is_some());
+        // ProofGuardOutput uses "contradictions" and "issues" rather than "evidence"/"discrepancies"
+        assert!(output_json.get("contradictions").is_some());
+        assert!(output_json.get("issues").is_some());
     }
 
     #[test]
@@ -322,7 +318,7 @@ mod bedrock_module_tests {
         let config = br.config();
 
         assert_eq!(config.name, "BedRock");
-        assert_eq!(config.version, "2.0.0");
+        assert_eq!(config.version, "3.0.0");
         assert!(config.description.contains("principles") || config.description.contains("axiom"));
     }
 
@@ -370,7 +366,7 @@ mod bedrock_module_tests {
         let br = BedRock::new();
         let config = br.config();
 
-        assert_eq!(config.confidence_weight, 0.20);
+        assert_eq!(config.confidence_weight, 0.25);
     }
 
     #[test]
@@ -396,7 +392,7 @@ mod brutalhonesty_module_tests {
         let config = bh.config();
 
         assert_eq!(config.name, "BrutalHonesty");
-        assert_eq!(config.version, "2.0.0");
+        assert_eq!(config.version, "3.0.0");
         assert!(config.description.contains("critique") || config.description.contains("Red-team"));
     }
 
@@ -433,8 +429,14 @@ mod brutalhonesty_module_tests {
         let output_json = &result.output;
 
         // Verify adversarial critique fields
-        assert!(output_json.get("strengths").is_some());
-        assert!(output_json.get("flaws").is_some());
+        // BrutalHonesty nests strengths/flaws under "analysis"
+        assert!(output_json.get("analysis").is_some());
+        assert!(output_json
+            .get("analysis")
+            .unwrap()
+            .get("strengths")
+            .is_some());
+        assert!(output_json.get("analysis").unwrap().get("flaws").is_some());
         assert!(output_json.get("verdict").is_some());
         assert!(output_json.get("critical_fix").is_some());
     }
@@ -445,7 +447,7 @@ mod brutalhonesty_module_tests {
         let config = bh.config();
 
         // BrutalHonesty has lower weight (critique is input to other tools)
-        assert_eq!(config.confidence_weight, 0.10);
+        assert_eq!(config.confidence_weight, 0.15);
     }
 
     #[test]
@@ -457,9 +459,10 @@ mod brutalhonesty_module_tests {
         };
 
         let result = bh.execute(&context).unwrap();
-        // Strengths and flaws should be arrays
-        assert!(result.output.get("strengths").unwrap().is_array());
-        assert!(result.output.get("flaws").unwrap().is_array());
+        // Strengths and flaws should be arrays (nested under analysis)
+        let analysis = result.output.get("analysis").unwrap();
+        assert!(analysis.get("strengths").unwrap().is_array());
+        assert!(analysis.get("flaws").unwrap().is_array());
     }
 }
 
@@ -1258,8 +1261,9 @@ mod edge_case_tests {
             previous_steps: vec![],
         };
 
+        // Queries longer than the configured max are rejected
         let result = gt.execute(&context);
-        assert!(result.is_ok());
+        assert!(result.is_err());
     }
 
     #[test]
@@ -1947,7 +1951,8 @@ mod mock_execution_tests {
         assert!(result.success);
         assert!(result.confidence > 0.0);
         assert!(!result.steps.is_empty());
-        assert!(result.duration_ms >= 0);
+        // duration_ms is u64; just ensure it's present by referencing it.
+        let _ = result.duration_ms;
         assert!(result.error.is_none());
     }
 

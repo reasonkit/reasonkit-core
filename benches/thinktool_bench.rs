@@ -47,10 +47,10 @@ use tokio::runtime::Runtime;
 // Import from the library (lib.name = "reasonkit" in Cargo.toml)
 use reasonkit::thinktool::{
     executor::{ExecutorConfig, ProtocolExecutor, ProtocolInput},
-    profiles::{ProfileRegistry, ReasoningProfile},
-    protocol::{Protocol, ProtocolStep, ReasoningStrategy, StepAction, StepOutputFormat},
+    profiles::ProfileRegistry,
+    protocol::Protocol,
     registry::ProtocolRegistry,
-    step::{ListItem, StepOutput, StepResult, TokenUsage},
+    step::{ListItem, StepOutput, TokenUsage},
 };
 
 // Shared tokio runtime reused across all benchmarks to avoid per-benchmark
@@ -661,14 +661,13 @@ fn bench_concurrent_execution(c: &mut Criterion) {
     }
 
     // Benchmark mixed protocol execution (realistic workload)
-    let protocols = vec!["gigathink", "laserlogic", "bedrock"];
+    let protocols = ["gigathink", "laserlogic", "bedrock"];
     group.bench_function("mixed_protocols_3", |b| {
         b.to_async(rt).iter(|| async {
             let executor = executor.clone();
             let futures: Vec<_> = protocols
                 .iter()
-                .enumerate()
-                .map(|(i, protocol)| {
+                .map(|protocol| {
                     let exec = executor.clone();
                     let input = ProtocolInput::query(format!("Query for {}", protocol));
                     let protocol = protocol.to_string();

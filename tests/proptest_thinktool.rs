@@ -528,7 +528,7 @@ proptest! {
 
     #[test]
     fn prop_confidence_in_valid_range(confidence in 0.0f64..=1.0) {
-        prop_assert!(confidence >= 0.0 && confidence <= 1.0,
+        prop_assert!((0.0..=1.0).contains(&confidence),
             "Confidence must be in [0.0, 1.0], got {}", confidence);
     }
 
@@ -550,10 +550,10 @@ proptest! {
         let above = BranchCondition::ConfidenceAbove { threshold };
 
         if let BranchCondition::ConfidenceBelow { threshold: t } = below {
-            prop_assert!(t >= 0.0 && t <= 1.0);
+            prop_assert!((0.0..=1.0).contains(&t));
         }
         if let BranchCondition::ConfidenceAbove { threshold: t } = above {
-            prop_assert!(t >= 0.0 && t <= 1.0);
+            prop_assert!((0.0..=1.0).contains(&t));
         }
     }
 
@@ -629,7 +629,7 @@ proptest! {
     fn prop_score_output_in_valid_range(value in 0.0f64..=1.0) {
         let output = StepOutput::Score { value };
         if let StepOutput::Score { value: v } = output {
-            prop_assert!(v >= 0.0 && v <= 1.0, "Score must be in [0.0, 1.0]");
+            prop_assert!((0.0..=1.0).contains(&v), "Score must be in [0.0, 1.0]");
         }
     }
 
@@ -646,8 +646,10 @@ proptest! {
         };
 
         if let Some(c) = item.confidence {
-            prop_assert!(c >= 0.0 && c <= 1.0,
-                "ListItem confidence must be in [0.0, 1.0]");
+            prop_assert!(
+                (0.0..=1.0).contains(&c),
+                "ListItem confidence must be in [0.0, 1.0]"
+            );
         }
     }
 
@@ -674,7 +676,6 @@ proptest! {
 #[cfg(test)]
 mod roundtrip_tests {
     use super::*;
-    use serde::{Deserialize, Serialize};
 
     // Note: In actual implementation, these would use the real serde traits
     // from the reasonkit-core crate. These are placeholder implementations.

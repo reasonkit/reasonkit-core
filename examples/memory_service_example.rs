@@ -57,10 +57,11 @@ use reasonkit::traits::{
 /// - Understanding the trait interface
 /// - Prototyping before integration
 struct MockMemoryService {
-    config: MemoryConfig,
     documents: Arc<RwLock<HashMap<Uuid, Document>>>,
     chunks: Arc<RwLock<HashMap<Uuid, Chunk>>>,
+    #[allow(dead_code)]
     embeddings: Arc<RwLock<HashMap<Uuid, Vec<f32>>>>,
+    config: MemoryConfig,
 }
 
 impl MockMemoryService {
@@ -281,8 +282,10 @@ impl MemoryService for MockMemoryService {
                     score += 1.0;
                 }
             }
-            if score > 0.0 && chunk.id.is_some() {
-                bm25_scores.insert(chunk.id.unwrap(), score / query_terms.len() as f32);
+            if score > 0.0 {
+                if let Some(id) = chunk.id {
+                    bm25_scores.insert(id, score / query_terms.len() as f32);
+                }
             }
         }
 
@@ -551,7 +554,7 @@ async fn demo_search_patterns(memory: &impl MemoryService) -> MemoryResult<()> {
     println!("\n--- Search Patterns Demo ---\n");
 
     // Add some documents for searching
-    let documents = vec![
+    let documents = [
         "Machine learning is a subset of artificial intelligence that enables systems to learn from data.",
         "Deep learning uses neural networks with many layers to model complex patterns.",
         "Natural language processing allows computers to understand and generate human language.",
@@ -737,11 +740,13 @@ mod sync_wrapper {
         }
 
         /// Get document by ID synchronously.
+        #[allow(dead_code)]
         pub fn get_by_id(&self, id: Uuid) -> MemoryResult<Option<Document>> {
             self.runtime.block_on(self.inner.get_by_id(id))
         }
 
         /// Embed text synchronously.
+        #[allow(dead_code)]
         pub fn embed(&self, text: &str) -> MemoryResult<Vec<f32>> {
             self.runtime.block_on(self.inner.embed(text))
         }
@@ -806,7 +811,7 @@ async fn main() -> MemoryResult<()> {
         max_context_tokens: 2048,
         storage_path: None,
     };
-    let mut memory = MockMemoryService::with_config(config);
+    let memory = MockMemoryService::with_config(config);
 
     // Run async demos
     demo_document_lifecycle(&memory).await?;

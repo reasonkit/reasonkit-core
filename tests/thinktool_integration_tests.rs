@@ -13,7 +13,7 @@
 //! without requiring API keys or network access.
 
 use async_trait::async_trait;
-use reasonkit::error::{Error, Result};
+use reasonkit::error::Result;
 use reasonkit::mcp::tools::ToolHandler;
 use reasonkit::mcp::tools::ToolResultContent;
 use reasonkit::mcp::{
@@ -348,7 +348,7 @@ mod profile_chaining_tests {
             let result = executor
                 .execute_profile(profile, ProtocolInput::query(query))
                 .await
-                .expect(&format!("{} profile failed", profile));
+                .unwrap_or_else(|_| panic!("{} profile failed", profile));
 
             // Verify each profile produces results
             assert!(
@@ -459,7 +459,7 @@ mod composition_tests {
             .expect("GigaThink failed");
 
         // Use GigaThink output as input for LaserLogic
-        let laserlogic_input = ProtocolInput::argument(&format!(
+        let laserlogic_input = ProtocolInput::argument(format!(
             "Based on analysis: {}",
             gigathink_result
                 .data
@@ -592,7 +592,7 @@ mod composition_tests {
             let critique_result = executor
                 .execute(
                     "brutalhonesty",
-                    ProtocolInput::work(&format!(
+                    ProtocolInput::work(format!(
                         "Previous confidence: {}",
                         initial_result.confidence
                     )),
@@ -898,7 +898,7 @@ mod mcp_tool_tests {
             let result = server
                 .call_tool(tool_name, args)
                 .await
-                .expect(&format!("{} invocation failed", tool_name));
+                .unwrap_or_else(|_| panic!("{} invocation failed", tool_name));
 
             // Extract result for next tool
             if let Some(ToolResultContent::Text { text }) = result.content.first() {
@@ -1262,7 +1262,7 @@ mod edge_case_tests {
         for i in 0..5 {
             let exec_clone = Arc::clone(&executor);
             let handle = tokio::spawn(async move {
-                let input = ProtocolInput::query(&format!("Concurrent query {}", i));
+                let input = ProtocolInput::query(format!("Concurrent query {}", i));
                 exec_clone.execute("gigathink", input).await
             });
             handles.push(handle);

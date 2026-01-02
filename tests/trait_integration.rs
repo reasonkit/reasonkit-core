@@ -23,7 +23,7 @@ use uuid::Uuid;
 // Import trait definitions from reasonkit-core
 // Note: These are in src/traits/mod.rs
 use reasonkit::traits::{
-    CaptureFormat, CaptureOptions, CapturedPage, ClipRect, Cookie, ExtractFormat, ExtractOptions,
+    CaptureFormat, CaptureOptions, CapturedPage, Cookie, ExtractFormat, ExtractOptions,
     ExtractedContent, Image, Link, NavigateOptions, PageHandle, Viewport, WaitUntil,
     WebAdapterError, WebAdapterResult, WebBrowserAdapter,
 };
@@ -61,6 +61,7 @@ impl MockMemoryService {
         }
     }
 
+    #[allow(dead_code)]
     fn with_config(config: MemoryConfig) -> Self {
         let mut service = Self::new();
         service.config = RwLock::new(config);
@@ -349,7 +350,7 @@ impl MemoryService for MockMemoryService {
 
     fn set_config(&mut self, config: MemoryConfig) {
         // Synchronous config update
-        let _ = futures::executor::block_on(async {
+        futures::executor::block_on(async {
             let mut cfg = self.config.write().await;
             *cfg = config;
         });
@@ -1245,7 +1246,7 @@ mod memory_service_tests {
 
         let embedding = service.embed("Test text for embedding").await.unwrap();
         assert_eq!(embedding.len(), 384, "Should have 384 dimensions");
-        assert!(embedding.iter().all(|&v| v >= 0.0 && v <= 1.0));
+        assert!(embedding.iter().all(|&v| (0.0..=1.0).contains(&v)));
     }
 
     #[tokio::test]

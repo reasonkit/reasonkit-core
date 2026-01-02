@@ -34,17 +34,22 @@
 
 LLMs are fundamentally **probabilistic**. Same prompt → different outputs. This creates critical failures:
 
-| Failure | Impact | Our Solution |
-| ------- | ------ | ------------ |
-| **Inconsistency** | Unreliable for production | Deterministic protocol execution |
-| **Hallucination** | Dangerous falsehoods | Multi-source triangulation + adversarial critique |
-| **Opacity** | No audit trail | Complete execution tracing with confidence scores |
+| Failure           | Impact                    | Our Solution                                      |
+| ----------------- | ------------------------- | ------------------------------------------------- |
+| **Inconsistency** | Unreliable for production | Deterministic protocol execution                  |
+| **Hallucination** | Dangerous falsehoods      | Multi-source triangulation + adversarial critique |
+| **Opacity**       | No audit trail            | Complete execution tracing with confidence scores |
 
 **We don't eliminate probability** (impossible). **We constrain it** through structured protocols that force probabilistic outputs into deterministic execution paths.
 
 ---
 
 ## Quick Start
+
+### Prerequisites
+- Rust toolchain installed (`curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh`)
+- API key for your preferred LLM provider (e.g., `OPENAI_API_KEY` for OpenAI)
+- Optional: `uv` for Python bindings (`curl -LsSf https://astral.sh/uv/install.sh | sh`)
 
 ```bash
 # Install (Universal)
@@ -61,6 +66,11 @@ rk-core think --profile balanced "Should we migrate to microservices?"
 
 **30 seconds to structured reasoning.**
 
+### Troubleshooting
+- **Command not found**: Ensure `~/.cargo/bin` is in your PATH.
+- **API errors**: Verify your API key is set and valid.
+- **Performance issues**: Check system resources; ReasonKit targets <5ms latency.
+
 ---
 
 ## ThinkTools: The 5-Step Reasoning Chain
@@ -72,12 +82,12 @@ Each ThinkTool acts as a **variance reduction filter**, transforming probabilist
 ![ReasonKit ThinkTool Chain - Variance Reduction](https://reasonkit.sh/assets/brand/core/thinktool_cards_deck.svg)
 ![ReasonKit Variance Reduction Chart](https://reasonkit.sh/assets/brand/core/chart_variance_reduction.png)
 
-| ThinkTool | Operation | What It Does |
-| --------- | --------- | ------------ |
-| **GigaThink** | `Diverge()` | Generate 10+ perspectives, explore widely |
-| **LaserLogic** | `Converge()` | Detect fallacies, validate logic, find gaps |
-| **BedRock** | `Ground()` | First principles decomposition, identify axioms |
-| **ProofGuard** | `Verify()` | Multi-source triangulation, require 3+ sources |
+| ThinkTool         | Operation    | What It Does                                    |
+| ----------------- | ------------ | ----------------------------------------------- |
+| **GigaThink**     | `Diverge()`  | Generate 10+ perspectives, explore widely       |
+| **LaserLogic**    | `Converge()` | Detect fallacies, validate logic, find gaps     |
+| **BedRock**       | `Ground()`   | First principles decomposition, identify axioms |
+| **ProofGuard**    | `Verify()`   | Multi-source triangulation, require 3+ sources  |
 | **BrutalHonesty** | `Critique()` | Adversarial red team, attack your own reasoning |
 
 ### Variance Reduction: The Chain Effect
@@ -106,12 +116,80 @@ rk-core think --profile deep "Design A/B test for feature X"
 rk-core think --profile paranoid "Validate cryptographic implementation"
 ```
 
-| Profile | Chain | Confidence | Use Case |
-| ------- | ----- | ---------- | -------- |
-| `--quick` | GigaThink → LaserLogic | 70% | Fast sanity checks |
-| `--balanced` | All 5 ThinkTools | 80% | Standard decisions |
-| `--deep` | All 5 + meta-cognition | 85% | Complex problems |
-| `--paranoid` | All 5 + validation pass | 95% | Critical decisions |
+| Profile      | Chain                   | Confidence | Use Case           |
+| ------------ | ----------------------- | ---------- | ------------------ |
+| `--quick`    | GigaThink → LaserLogic  | 70%        | Fast sanity checks |
+| `--balanced` | All 5 ThinkTools        | 80%        | Standard decisions |
+| `--deep`     | All 5 + meta-cognition  | 85%        | Complex problems   |
+| `--paranoid` | All 5 + validation pass | 95%        | Critical decisions |
+
+### Command Flow Diagram
+```mermaid
+flowchart TD
+    A[User Input] --> B[Select Profile]
+    B --> C[Execute ThinkTool Chain]
+    C --> D[Output Result with Confidence]
+    D --> E[Log Trace to SQLite]
+```
+
+**Standard Operations:**
+
+```bash
+# Balanced analysis (5-step protocol)
+rk-core think --profile balanced "Should we migrate our monolith to microservices?"
+
+# Quick sanity check (2-step protocol)
+rk-core think --profile quick "Is this email a phishing attempt?"
+
+# Maximum rigor (paranoid mode)
+rk-core think --profile paranoid "Validate this cryptographic implementation"
+
+# Scientific method (research & experiments)
+rk-core think --profile scientific "Design A/B test for feature X"
+```
+
+**With Memory (RAG):**
+
+```bash
+# Ingest documents
+rk-core ingest document.pdf
+
+# Query with RAG
+rk-core query "What are the key findings in the research papers?"
+
+# View execution traces
+rk-core trace list
+rk-core trace export <id>
+```
+
+---
+
+## Reasoning Profiles
+
+Pre-configured chains for different rigor levels:
+
+![Reasoning Profiles Scale](https://reasonkit.sh/assets/brand/core/reasoning_profiles_scale.svg)
+
+```bash
+# Fast analysis (70% confidence target)
+rk-core think --profile quick "Is this email phishing?"
+
+# Standard analysis (80% confidence target)
+rk-core think --profile balanced "Should we use microservices?"
+
+# Thorough analysis (85% confidence target)
+rk-core think --profile deep "Design A/B test for feature X"
+
+# Maximum rigor (95% confidence target)
+rk-core think --profile paranoid "Validate cryptographic implementation"
+```
+
+| Profile      | Chain                   | Confidence | Use Case           |
+| ------------ | ----------------------- | ---------- | ------------------ |
+| `--quick`    | GigaThink → LaserLogic  | 70%        | Fast sanity checks |
+| `--balanced` | All 5 ThinkTools        | 80%        | Standard decisions |
+| `--deep`     | All 5 + meta-cognition  | 85%        | Complex problems   |
+| `--paranoid` | All 5 + validation pass | 95%        | Critical decisions |
 
 ---
 
@@ -247,22 +325,22 @@ flowchart LR
 
 ReasonKit is written in Rust because reasoning infrastructure demands reliability.
 
-| Capability | What It Means For You |
-| ---------- | --------------------- |
-| **Predictable Latency** | <5ms orchestration overhead, no GC pauses |
-| **Memory Safety** | Zero crashes from null pointers or buffer overflows |
-| **Single Binary** | Deploy anywhere, no Python environment required |
-| **Fearless Concurrency** | Run 100+ reasoning chains in parallel safely |
-| **Type Safety** | Errors caught at compile time, not runtime |
+| Capability               | What It Means for You                               |
+| ------------------------ | --------------------------------------------------- |
+| **Predictable Latency**  | <5ms orchestration overhead, no GC pauses           |
+| **Memory Safety**        | Zero crashes from null pointers or buffer overflows |
+| **Single Binary**        | Deploy anywhere, no Python environment required     |
+| **Fearless Concurrency** | Run 100+ reasoning chains in parallel safely        |
+| **Type Safety**          | Errors caught at compile time, not runtime          |
 
 **Benchmarked Performance** ([view full report](./docs/reference/PERFORMANCE.md)):
 
-| Operation | Time | Target |
-|-----------|------|--------|
-| Protocol orchestration | 4.4ms | <10ms |
-| RRF Fusion (100 elements) | 33μs | <5ms |
-| Document chunking (10KB) | 27μs | <5ms |
-| RAPTOR tree traversal (1000 nodes) | 33μs | <5ms |
+| Operation                          | Time  | Target |
+| ---------------------------------- | ----- | ------ |
+| Protocol orchestration             | 4.4ms | <10ms  |
+| RRF Fusion (100 elements)          | 33μs  | <5ms   |
+| Document chunking (10 KB)          | 27μs  | <5ms   |
+| RAPTOR tree traversal (1000 nodes) | 33μs  | <5ms   |
 
 **Why This Matters:**
 
@@ -320,6 +398,40 @@ Python bindings available via PyO3 (build from source with `--features python`).
 ---
 
 ## Usage Examples
+
+Pre-configured chains for different rigor levels:
+
+![Reasoning Profiles Scale](https://reasonkit.sh/assets/brand/core/reasoning_profiles_scale.svg)
+
+```bash
+# Fast analysis (70% confidence target)
+rk-core think --profile quick "Is this email phishing?"
+
+# Standard analysis (80% confidence target)
+rk-core think --profile balanced "Should we use microservices?"
+
+# Thorough analysis (85% confidence target)
+rk-core think --profile deep "Design A/B test for feature X"
+
+# Maximum rigor (95% confidence target)
+rk-core think --profile paranoid "Validate cryptographic implementation"
+```
+
+| Profile      | Chain                   | Confidence | Use Case           |
+| ------------ | ----------------------- | ---------- | ------------------ |
+| `--quick`    | GigaThink → LaserLogic  | 70%        | Fast sanity checks |
+| `--balanced` | All 5 ThinkTools        | 80%        | Standard decisions |
+| `--deep`     | All 5 + meta-cognition  | 85%        | Complex problems   |
+| `--paranoid` | All 5 + validation pass | 95%        | Critical decisions |
+
+### Command Flow Diagram
+```mermaid
+flowchart TD
+    A[User Input] --> B[Select Profile]
+    B --> C[Execute ThinkTool Chain]
+    C --> D[Output Result with Confidence]
+    D --> E[Log Trace to SQLite]
+```
 
 **Standard Operations:**
 
@@ -406,24 +518,24 @@ See [Community Badges](brand/COMMUNITY_BADGES.md) for all variants and usage gui
 
 **We do claim to constrain it.** Through structured protocols, multi-stage validation, and deterministic execution paths, we transform probabilistic token generation into auditable reasoning chains.
 
-| What We Battle | How We Battle It | What We're Honest About |
-| -------------- | ---------------- | ----------------------- |
-| **Inconsistency** | Deterministic protocol execution | LLM outputs still vary, but execution paths don't |
-| **Hallucination** | Multi-source triangulation, adversarial critique | Can't eliminate, but can detect and flag |
-| **Opacity** | Full execution tracing, confidence scoring | Transparency doesn't guarantee correctness |
-| **Uncertainty** | Explicit confidence metrics, variance reduction | We quantify uncertainty, not eliminate it |
+| What We Battle    | How We Battle It                                 | What We're Honest About                           |
+| ----------------- | ------------------------------------------------ | ------------------------------------------------- |
+| **Inconsistency** | Deterministic protocol execution                 | LLM outputs still vary, but execution paths don't |
+| **Hallucination** | Multi-source triangulation, adversarial critique | Can't eliminate, but can detect and flag          |
+| **Opacity**       | Full execution tracing, confidence scoring       | Transparency doesn't guarantee correctness        |
+| **Uncertainty**   | Explicit confidence metrics, variance reduction  | We quantify uncertainty, not eliminate it         |
 
 ---
 
 ## Version & Maturity
 
-| Component | Status | Notes |
-|-----------|--------|-------|
-| **ThinkTools Chain** | ✅ Stable | Core reasoning protocols production-ready |
-| **MCP Server** | ✅ Stable | Model Context Protocol integration |
-| **CLI** | 🔶 Scaffolded | `mcp`, `serve-mcp`, `completions` work; others planned |
-| **Memory Features** | ✅ Stable | Via `reasonkit-mem` crate |
-| **Python Bindings** | 🔶 Beta | Build from source with `--features python` |
+| Component            | Status        | Notes                                                  |
+| -------------------- | ------------- | ------------------------------------------------------ |
+| **ThinkTools Chain** | ✅ Stable     | Core reasoning protocols production-ready              |
+| **MCP Server**       | ✅ Stable     | Model Context Protocol integration                     |
+| **CLI**              | 🔶 Scaffolded | `mcp`, `serve-mcp`, `completions` work; others planned |
+| **Memory Features**  | ✅ Stable     | Via `reasonkit-mem` crate                              |
+| **Python Bindings**  | 🔶 Beta       | Build from source with `--features python`             |
 
 **Current Version:** v0.1.2 | [CHANGELOG](CHANGELOG.md) | [Releases](https://github.com/reasonkit/reasonkit-core/releases)
 

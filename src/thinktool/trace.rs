@@ -419,8 +419,8 @@ mod tests {
         assert_eq!(step.status, StepStatus::Completed);
         assert_eq!(step.confidence, 0.95);
         assert!(step.completed_at.is_some());
-        // Duration should be recorded
-        assert!(step.duration_ms >= 0);
+        // duration_ms is u64; just ensure it's available.
+        let _ = step.duration_ms;
 
         // Verify output was stored
         if let StepOutput::Text { content } = &step.parsed_output {
@@ -492,7 +492,7 @@ mod tests {
         let mut trace = ExecutionTrace::new("powercombo", "1.0.0");
 
         // Add 5 steps simulating a full ThinkTool pipeline
-        let step_configs = vec![
+        let step_configs = [
             ("gigathink", 200, 150, 0.85),
             ("laserlogic", 180, 120, 0.90),
             ("bedrock", 250, 200, 0.88),
@@ -578,15 +578,16 @@ mod tests {
 
     #[test]
     fn test_trace_metadata_full() {
-        let mut metadata = TraceMetadata::default();
-        metadata.model = Some("claude-3-opus".to_string());
-        metadata.provider = Some("anthropic".to_string());
-        metadata.temperature = Some(0.7);
-        metadata.profile = Some("paranoid".to_string());
-        metadata.tags = vec!["production".to_string(), "critical".to_string()];
-        metadata.environment = Some("aws-us-east-1".to_string());
+        let metadata = TraceMetadata {
+            model: Some("claude-sonnet-4-5".to_string()),
+            provider: Some("anthropic".to_string()),
+            temperature: Some(0.7),
+            profile: Some("paranoid".to_string()),
+            tags: vec!["production".to_string(), "critical".to_string()],
+            environment: Some("aws-us-east-1".to_string()),
+        };
 
-        assert_eq!(metadata.model, Some("claude-3-opus".to_string()));
+        assert_eq!(metadata.model, Some("claude-sonnet-4-5".to_string()));
         assert_eq!(metadata.provider, Some("anthropic".to_string()));
         assert_eq!(metadata.temperature, Some(0.7));
         assert_eq!(metadata.profile, Some("paranoid".to_string()));

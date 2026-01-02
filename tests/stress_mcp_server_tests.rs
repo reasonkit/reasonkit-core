@@ -25,7 +25,7 @@
 //! 4. **Connection Limits**: Maximum connection handling
 
 use std::collections::HashMap;
-use std::sync::atomic::{AtomicU64, AtomicUsize, Ordering};
+use std::sync::atomic::{AtomicU64, Ordering};
 use std::sync::Arc;
 use std::time::{Duration, Instant};
 
@@ -151,6 +151,7 @@ struct MockTool {
 }
 
 impl MockMcpServer {
+    #[allow(clippy::new_without_default)]
     pub fn new() -> Self {
         Self {
             connections: AtomicU64::new(0),
@@ -181,7 +182,7 @@ impl MockMcpServer {
     }
 
     /// Handle an incoming connection
-    pub async fn connect(&self) -> Result<MockMcpConnection, &'static str> {
+    pub async fn connect(&self) -> Result<MockMcpConnection<'_>, &'static str> {
         let current = self.connections.fetch_add(1, Ordering::SeqCst);
         if current as usize >= self.max_connections {
             self.connections.fetch_sub(1, Ordering::SeqCst);
@@ -306,6 +307,7 @@ impl MockMcpServer {
 
 pub struct MockMcpConnection<'a> {
     server: &'a MockMcpServer,
+    #[allow(dead_code)]
     id: Uuid,
 }
 
@@ -566,7 +568,7 @@ async fn stress_concurrent_mcp_requests() {
     let start = Instant::now();
     let mut handles = Vec::new();
 
-    for client_id in 0..CONCURRENT_REQUESTS {
+    for _client_id in 0..CONCURRENT_REQUESTS {
         let server = Arc::clone(&server);
         let metrics = Arc::clone(&metrics);
         let memory_tracker = Arc::clone(&memory_tracker);
@@ -748,7 +750,7 @@ async fn stress_mixed_mcp_workload() {
 
     let mut handles = Vec::new();
 
-    for client_id in 0..concurrent_clients {
+    for _client_id in 0..concurrent_clients {
         let server = Arc::clone(&server);
         let metrics = Arc::clone(&metrics);
         let barrier = Arc::clone(&barrier);

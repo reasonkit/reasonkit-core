@@ -556,7 +556,7 @@ mod tests {
     #[test]
     fn test_benchmark_scenario_enum_variants() {
         // Test all scenario variants can be created
-        let scenarios = vec![
+        let scenarios = [
             BenchmarkScenario::BusinessDecision,
             BenchmarkScenario::TechnicalArchitecture,
             BenchmarkScenario::ComplianceAnalysis,
@@ -1393,8 +1393,8 @@ mod tests {
 
     #[test]
     fn test_empty_scenario_results_summary() {
-        let runner = DeepSeekBenchmarkRunner::default();
-        let scenario_results: HashMap<String, ScenarioResult> = HashMap::new();
+        let _runner = DeepSeekBenchmarkRunner::default();
+        let _scenario_results: HashMap<String, ScenarioResult> = HashMap::new();
 
         // This should not panic even with empty results
         // Note: Division by zero is avoided by checking is_empty in real code
@@ -1410,7 +1410,7 @@ mod tests {
         };
 
         assert_eq!(summary.total_iterations, 0);
-        assert!(summary.recommendations.len() > 0);
+        assert!(!summary.recommendations.is_empty());
     }
 
     #[test]
@@ -1614,7 +1614,7 @@ mod tests {
 
     #[test]
     fn test_validation_level_variants() {
-        let levels = vec![
+        let levels = [
             ValidationLevel::None,
             ValidationLevel::Quick,
             ValidationLevel::Standard,

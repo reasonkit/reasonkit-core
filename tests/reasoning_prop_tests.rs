@@ -82,6 +82,7 @@ fn valid_confidence() -> impl Strategy<Value = f64> {
 }
 
 /// Generate confidence values that may be out of range (for testing clamping)
+#[allow(dead_code)]
 fn any_confidence() -> impl Strategy<Value = f64> {
     prop_oneof![
         // Valid range
@@ -366,7 +367,7 @@ proptest! {
         items in prop::collection::vec(arbitrary_utf8_string(), 0..50)
     ) {
         let list_items: Vec<ListItem> = items.into_iter()
-            .map(|content| ListItem::new(content))
+            .map(ListItem::new)
             .collect();
 
         let output = StepOutput::List { items: list_items };
@@ -653,7 +654,7 @@ proptest! {
     /// Fuzz test: Very long strings (stress test)
     #[test]
     fn fuzz_very_long_strings(length in 10000usize..50000usize) {
-        let long_string: String = std::iter::repeat('x').take(length).collect();
+        let long_string: String = "x".repeat(length);
 
         // Should handle long strings without stack overflow
         let input = ProtocolInput::query(&long_string);

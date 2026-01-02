@@ -11,8 +11,8 @@
 
 use reasonkit::telemetry::{
     ConsentRecord, FeedbackCategory, FeedbackEvent, FeedbackType, PrivacyConfig, QueryEvent,
-    QueryType, TelemetryCollector, TelemetryConfig, TelemetryError, TelemetryResult,
-    TelemetryStorage, TraceEvent, TELEMETRY_SCHEMA_VERSION,
+    QueryType, TelemetryCollector, TelemetryConfig, TelemetryError, TelemetryStorage, TraceEvent,
+    TELEMETRY_SCHEMA_VERSION,
 };
 use tempfile::TempDir;
 use uuid::Uuid;
@@ -387,11 +387,8 @@ mod privacy_tests {
     fn test_dp_noise_never_negative() {
         let filter = PrivacyFilter::new(strict_privacy_config());
         // Even with very small counts, should never go negative
-        let result = filter.add_dp_noise(0);
-        assert!(result >= 0);
-
-        let result = filter.add_dp_noise(1);
-        assert!(result >= 0);
+        let _result = filter.add_dp_noise(0);
+        let _result = filter.add_dp_noise(1);
     }
 }
 
@@ -516,9 +513,7 @@ mod config_tests {
 
 mod event_tests {
     use super::*;
-    use reasonkit::telemetry::{
-        ErrorCategory, QueryError, SessionEvent, ToolCategory, ToolUsageEvent,
-    };
+    use reasonkit::telemetry::{ErrorCategory, QueryError, SessionEvent, ToolCategory};
 
     #[test]
     fn test_query_event_creation() {
@@ -622,8 +617,7 @@ mod event_tests {
         ];
 
         for category in categories {
-            let event =
-                FeedbackEvent::thumbs_up(Uuid::new_v4(), None).with_category(category.clone());
+            let event = FeedbackEvent::thumbs_up(Uuid::new_v4(), None).with_category(category);
             assert_eq!(event.category, Some(category));
         }
     }
@@ -720,7 +714,7 @@ mod event_tests {
 
         for category in categories {
             let error = QueryError {
-                category: category.clone(),
+                category,
                 code: Some("E001".to_string()),
                 recoverable: true,
             };
@@ -1442,7 +1436,7 @@ mod gdpr_tests {
         // Prune with 0 retention effectively deletes all old data
         let deleted = storage.prune_old_data(0).await.unwrap();
         // Data just inserted won't be deleted (timestamp is now), but method works
-        assert!(deleted >= 0, "GDPR: Data deletion must be possible");
+        let _ = deleted; // just ensure call succeeds
     }
 
     #[test]

@@ -752,7 +752,7 @@ mod tests {
             .steps(3, 3)
             .success(true)
             .provider("anthropic")
-            .model("claude-3-opus")
+            .model("claude-sonnet-4-5")
             .build();
 
         tracker.record(record).unwrap();

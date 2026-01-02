@@ -4,7 +4,6 @@
 //! applied across all RK-PROJECT crates for property-based testing.
 
 use proptest::prelude::*;
-use std::collections::HashMap;
 
 // ============================================================================
 // INVARIANT CHECKING PATTERNS
@@ -65,12 +64,9 @@ pub fn check_non_negative<T: PartialOrd + Default + std::fmt::Debug>(
 }
 
 /// Check that a value is positive
-pub fn check_positive<T: PartialOrd + Default + std::fmt::Debug + Copy>(
-    value: T,
-    name: &str,
-) -> Result<(), String>
+pub fn check_positive<T>(value: T, name: &str) -> Result<(), String>
 where
-    T: std::ops::Add<Output = T> + From<u8>,
+    T: PartialOrd + Default + std::fmt::Debug + Copy + std::ops::Add<Output = T> + From<u8>,
 {
     let one: T = T::from(1);
     let min = T::default() + one;
@@ -359,6 +355,7 @@ impl Default for InvariantChecker {
 // ============================================================================
 
 /// Template for testing numeric ranges
+#[allow(unused_macros)]
 macro_rules! prop_test_range {
     ($name:ident, $type:ty, $min:expr, $max:expr) => {
         proptest! {
@@ -371,6 +368,7 @@ macro_rules! prop_test_range {
 }
 
 /// Template for testing non-empty strings
+#[allow(unused_macros)]
 macro_rules! prop_test_non_empty {
     ($name:ident, $pattern:expr) => {
         proptest! {
@@ -383,6 +381,7 @@ macro_rules! prop_test_non_empty {
 }
 
 /// Template for testing serialization roundtrip
+#[allow(unused_macros)]
 macro_rules! prop_test_roundtrip {
     ($name:ident, $type:ty, $strategy:expr) => {
         proptest! {

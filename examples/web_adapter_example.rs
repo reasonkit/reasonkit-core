@@ -714,7 +714,7 @@ async fn demo_capture(browser: &impl WebBrowserAdapter) -> WebAdapterResult<()> 
 
     // 3. Screenshot with clipping
     println!("\n3. Screenshot with clipping...");
-    let screenshot = browser
+    let _screenshot = browser
         .capture_screenshot(
             &page,
             CaptureOptions {
@@ -997,6 +997,7 @@ mod sync_wrapper {
         }
 
         /// Capture screenshot synchronously.
+        #[allow(dead_code)]
         pub fn capture_screenshot(
             &self,
             handle: &PageHandle,

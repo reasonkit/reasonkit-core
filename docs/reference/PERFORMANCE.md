@@ -142,7 +142,7 @@ rerank = false           # Enable for better quality, higher latency
 enabled = false
 max_depth = 3
 cluster_size = 10
-summarizer = "claude-3-haiku"
+summarizer = "claude-sonnet-4-5"
 
 [server]
 host = "127.0.0.1"

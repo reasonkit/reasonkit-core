@@ -1,6 +1,6 @@
 [package]
 name = "reasonkit-core"
-version = "0.1.2"
+version = "0.1.4"
 edition = "2021"
 rust-version = "1.74"
 authors = ["ReasonKit Team <team@reasonkit.sh>"]
@@ -44,7 +44,8 @@ exclude = [
 ]
 
 [package.metadata.docs.rs]
-all-features = true
+# Don't use all-features (python/arf/local-embeddings require system deps not in docs.rs)
+features = ["cli"]
 rustdoc-args = ["--cfg", "docsrs"]
 default-target = "x86_64-unknown-linux-gnu"
 targets = [
@@ -121,7 +122,7 @@ tantivy = { version = "0.22", optional = true }
 
 # Memory Infrastructure (optional - provides storage, retrieval, embeddings)
 # Version required for crates.io publishing; path used for workspace development
-reasonkit-mem = { version = "0.1.2", optional = true }
+reasonkit-mem = { version = "0.1.4", optional = true }
 
 # Async Runtime
 tokio = { version = "1", features = ["full"] }
