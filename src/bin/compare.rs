@@ -4,9 +4,9 @@
 //! Let users SEE the difference (or lack thereof).
 //!
 //! Usage:
-//!   rk-core compare "Should we use microservices?"
-//!   rk-core compare "What causes inflation?" --profile balanced
-//!   rk-core compare "Solve: 2x + 5 = 15" --profile scientific
+//!   rk compare "Should we use microservices?"
+//!   rk compare "What causes inflation?" --profile balanced
+//!   rk compare "Solve: 2x + 5 = 15" --profile scientific
 
 use clap::Parser;
 use std::time::Instant;

@@ -1,6 +1,6 @@
 //! MCP CLI commands
 //!
-//! Implements `rk-core mcp` subcommands for managing MCP servers and tools.
+//! Implements `rk mcp` subcommands for managing MCP servers and tools.
 //!
 //! Note: This is a standalone binary for MCP operations, planned for v1.1.
 

@@ -291,6 +291,10 @@ pub mod rag;
 #[cfg(feature = "arf")]
 pub mod arf;
 
+/// GLM-4.6 model integration for agentic coordination and cost-efficient reasoning.
+#[cfg(feature = "glm46")]
+pub mod glm46;
+
 // ============================================================================
 // RE-EXPORTS
 // ============================================================================

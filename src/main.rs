@@ -17,7 +17,7 @@ mod mcp_cli;
 use mcp_cli::{run_mcp_command, McpCli};
 
 #[derive(Parser)]
-#[command(name = "rk-core")]
+#[command(name = "rk")]
 #[command(author = "ReasonKit Team <for@ReasonKit.sh>")]
 #[command(version)]
 #[command(about = "AI Thinking Enhancement System - Turn Prompts into Protocols")]
@@ -690,7 +690,7 @@ async fn main() -> anyhow::Result<()> {
 
         Commands::Completions { shell } => {
             let mut cmd = Cli::command();
-            generate(shell, &mut cmd, "rk-core", &mut std::io::stdout());
+            generate(shell, &mut cmd, "rk", &mut std::io::stdout());
         }
     }
 
