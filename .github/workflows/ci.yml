@@ -140,8 +140,6 @@ jobs:
         uses: dtolnay/rust-toolchain@f7ccc83f9ed1e5b9c81d8a67d7ad1a747e22a561 # stable
         with:
           toolchain: stable
-        with:
-          toolchain: stable
           components: clippy
 
       - name: Configure sccache
@@ -185,8 +183,6 @@ jobs:
         uses: dtolnay/rust-toolchain@f7ccc83f9ed1e5b9c81d8a67d7ad1a747e22a561 # stable
         with:
           toolchain: stable
-        with:
-          toolchain: stable
           components: rustfmt
 
       - name: Check formatting
@@ -214,8 +210,6 @@ jobs:
 
       - name: Install Rust toolchain
         uses: dtolnay/rust-toolchain@f7ccc83f9ed1e5b9c81d8a67d7ad1a747e22a561 # stable
-        with:
-          toolchain: stable
         with:
           toolchain: stable
 
@@ -264,8 +258,6 @@ jobs:
 
       - name: Install Rust toolchain
         uses: dtolnay/rust-toolchain@f7ccc83f9ed1e5b9c81d8a67d7ad1a747e22a561 # stable
-        with:
-          toolchain: stable
         with:
           toolchain: stable
 
@@ -328,8 +320,6 @@ jobs:
         uses: dtolnay/rust-toolchain@f7ccc83f9ed1e5b9c81d8a67d7ad1a747e22a561 # stable
         with:
           toolchain: stable
-        with:
-          toolchain: stable
 
       - name: Install cargo-audit
         run: cargo install cargo-audit --locked
@@ -379,8 +369,6 @@ jobs:
 
       - name: Install Rust toolchain
         uses: dtolnay/rust-toolchain@f7ccc83f9ed1e5b9c81d8a67d7ad1a747e22a561 # stable
-        with:
-          toolchain: stable
         with:
           toolchain: stable
 
@@ -462,8 +450,6 @@ jobs:
 
       - name: Install Rust toolchain
         uses: dtolnay/rust-toolchain@f7ccc83f9ed1e5b9c81d8a67d7ad1a747e22a561 # stable
-        with:
-          toolchain: stable
         with:
           toolchain: stable
 
