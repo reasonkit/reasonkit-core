@@ -53,7 +53,7 @@ env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
   # Binary name
-  BINARY_NAME: rk-core
+  BINARY_NAME: rk
   # Package names
   CRATE_NAME: reasonkit-core
   NPM_PACKAGE: "@reasonkit/cli"
@@ -207,50 +207,50 @@ jobs:
           # Linux x86_64 (glibc)
           - os: ubuntu-22.04
             target: x86_64-unknown-linux-gnu
-            artifact_name: rk-core
-            asset_name: rk-core-linux-x86_64
+            artifact_name: rk
+            asset_name: rk-linux-x86_64
             cross: false
 
           # Linux x86_64 (musl - static, Alpine compatible)
           - os: ubuntu-22.04
             target: x86_64-unknown-linux-musl
-            artifact_name: rk-core
-            asset_name: rk-core-linux-x86_64-musl
+            artifact_name: rk
+            asset_name: rk-linux-x86_64-musl
             cross: false
 
           # Linux ARM64 (glibc)
           - os: ubuntu-22.04
             target: aarch64-unknown-linux-gnu
-            artifact_name: rk-core
-            asset_name: rk-core-linux-aarch64
+            artifact_name: rk
+            asset_name: rk-linux-aarch64
             cross: true
 
           # Linux ARM64 (musl - static)
           - os: ubuntu-22.04
             target: aarch64-unknown-linux-musl
-            artifact_name: rk-core
-            asset_name: rk-core-linux-aarch64-musl
+            artifact_name: rk
+            asset_name: rk-linux-aarch64-musl
             cross: true
 
           # macOS x86_64 (Intel)
           - os: macos-13
             target: x86_64-apple-darwin
-            artifact_name: rk-core
-            asset_name: rk-core-macos-x86_64
+            artifact_name: rk
+            asset_name: rk-macos-x86_64
             cross: false
 
           # macOS ARM64 (Apple Silicon)
           - os: macos-14
             target: aarch64-apple-darwin
-            artifact_name: rk-core
-            asset_name: rk-core-macos-aarch64
+            artifact_name: rk
+            asset_name: rk-macos-aarch64
             cross: false
 
           # Windows x86_64
           - os: windows-latest
             target: x86_64-pc-windows-msvc
-            artifact_name: rk-core.exe
-            asset_name: rk-core-windows-x86_64
+            artifact_name: rk.exe
+            asset_name: rk-windows-x86_64
             cross: false
 
     runs-on: ${{ matrix.os }}
@@ -481,7 +481,7 @@ jobs:
 
           VERSION="${RK_VERSION:-latest}"
           REPO="reasonkit/reasonkit-core"
-          BINARY="rk-core"
+          BINARY="rk"
 
           # Colors
           RED='\033[0;31m'
@@ -692,8 +692,8 @@ jobs:
             "version": "${{ needs.validate.outputs.version }}",
             "description": "ReasonKit Core - The Reasoning Engine CLI",
             "bin": {
-              "rk-core": "./bin/rk-core",
-              "rk": "./bin/rk-core"
+              "rk": "./bin/rk",
+              "rk": "./bin/rk"
             },
             "scripts": {
               "postinstall": "node scripts/install.js"
@@ -723,7 +723,7 @@ jobs:
           const https = require('https');
 
           const REPO = 'reasonkit/reasonkit-core';
-          const BINARY = 'rk-core';
+          const BINARY = 'rk';
           const VERSION = require('../package.json').version;
 
           function getPlatform() {
@@ -808,8 +808,8 @@ jobs:
           ## Usage
 
           ```bash
-          rk-core --help
-          rk-core think --profile balanced "Your question here"
+          rk --help
+          rk think --profile balanced "Your question here"
           ```
 
           ## Documentation
@@ -960,13 +960,13 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "| Platform | Architecture | Asset |" >> $GITHUB_STEP_SUMMARY
           echo "|----------|--------------|-------|" >> $GITHUB_STEP_SUMMARY
-          echo "| Linux | x86_64 | rk-core-linux-x86_64.tar.gz |" >> $GITHUB_STEP_SUMMARY
-          echo "| Linux | x86_64 (static) | rk-core-linux-x86_64-musl.tar.gz |" >> $GITHUB_STEP_SUMMARY
-          echo "| Linux | ARM64 | rk-core-linux-aarch64.tar.gz |" >> $GITHUB_STEP_SUMMARY
-          echo "| Linux | ARM64 (static) | rk-core-linux-aarch64-musl.tar.gz |" >> $GITHUB_STEP_SUMMARY
-          echo "| macOS | x86_64 (Intel) | rk-core-macos-x86_64.tar.gz |" >> $GITHUB_STEP_SUMMARY
-          echo "| macOS | ARM64 (Apple Silicon) | rk-core-macos-aarch64.tar.gz |" >> $GITHUB_STEP_SUMMARY
-          echo "| Windows | x86_64 | rk-core-windows-x86_64.zip |" >> $GITHUB_STEP_SUMMARY
+          echo "| Linux | x86_64 | rk-linux-x86_64.tar.gz |" >> $GITHUB_STEP_SUMMARY
+          echo "| Linux | x86_64 (static) | rk-linux-x86_64-musl.tar.gz |" >> $GITHUB_STEP_SUMMARY
+          echo "| Linux | ARM64 | rk-linux-aarch64.tar.gz |" >> $GITHUB_STEP_SUMMARY
+          echo "| Linux | ARM64 (static) | rk-linux-aarch64-musl.tar.gz |" >> $GITHUB_STEP_SUMMARY
+          echo "| macOS | x86_64 (Intel) | rk-macos-x86_64.tar.gz |" >> $GITHUB_STEP_SUMMARY
+          echo "| macOS | ARM64 (Apple Silicon) | rk-macos-aarch64.tar.gz |" >> $GITHUB_STEP_SUMMARY
+          echo "| Windows | x86_64 | rk-windows-x86_64.zip |" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
 
           if [ "${{ needs.create-release.result }}" = "success" ]; then

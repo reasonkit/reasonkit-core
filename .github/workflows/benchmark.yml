@@ -143,8 +143,8 @@ jobs:
 
       - name: Measure binary size
         run: |
-          BINARY_SIZE=$(ls -lh target/release/rk-core | awk '{print $5}')
-          BINARY_SIZE_BYTES=$(stat -c%s target/release/rk-core)
+          BINARY_SIZE=$(ls -lh target/release/rk | awk '{print $5}')
+          BINARY_SIZE_BYTES=$(stat -c%s target/release/rk)
 
           echo "Binary size: $BINARY_SIZE ($BINARY_SIZE_BYTES bytes)"
 
