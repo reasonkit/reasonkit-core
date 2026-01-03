@@ -1,6 +1,6 @@
 [package]
 name = "reasonkit-core"
-version = "0.1.0"
+version = "0.1.3"
 edition = "2021"
 rust-version = "1.75"
 authors = ["ReasonKit Team <team@reasonkit.sh>"]
@@ -94,7 +94,7 @@ required-features = ["minimax"]
 [[example]]
 name = "glm46_quick_start"
 path = "examples/glm46_quick_start.rs"
-required-features = []
+required-features = ["glm46"]
 
 # ============================================================================
 # DEPENDENCIES
@@ -267,6 +267,11 @@ name = "harness"
 harness = false
 required-features = ["memory"]
 
+[[bench]]
+name = "glm46_benchmark"
+harness = false
+required-features = ["glm46"]
+
 # ============================================================================
 # FEATURES
 # ============================================================================
@@ -304,6 +309,10 @@ code-intelligence = []
 # EXPERIMENTAL: MiniMax M2 enhanced ThinkTools
 # Status: Incomplete - do not use in production
 minimax = []
+
+# EXPERIMENTAL: GLM-4.6 integration module
+# Status: Incomplete - do not use in production
+glm46 = []
 
 # Aesthetic Expression Mastery System - M2-enhanced UI/UX assessment
 aesthetic = ["md5"]

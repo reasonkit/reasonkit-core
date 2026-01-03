@@ -3,14 +3,17 @@
 //! Local deployment compatibility for GLM-4.6 when cloud API fails.
 //! Uses ollama for local inference with graceful degradation.
 
-use anyhow::{Context, Result};
+// use anyhow::{Context, Result};
 use reqwest::Client;
 use serde::{Deserialize, Serialize};
-use std::time::Duration;
+// use std::time::Duration;
 use tokio::time::timeout;
-use tracing::{debug, warn, info};
+use tracing::{debug, info, warn};
 
-use crate::glm46::types::{ChatMessage, ChatRequest, ChatResponse, TokenUsage, Choice, FinishReason, OllamaConfig, GLM46Result, GLM46Error};
+use crate::glm46::types::{
+    ChatMessage, ChatRequest, ChatResponse, Choice, FinishReason, GLM46Error, GLM46Result,
+    OllamaConfig, TokenUsage,
+};
 
 /// Ollama client for local fallback
 #[derive(Debug, Clone)]
@@ -28,12 +31,16 @@ impl OllamaClient {
             .build()
             .expect("Failed to create HTTP client");
 
-        Self { config, http_client }
+        Self {
+            config,
+            http_client,
+        }
     }
 
     /// Check if Ollama is available
     pub async fn is_available(&self) -> bool {
-        let response = self.http_client
+        let response = self
+            .http_client
             .get(&format!("{}/api/version", self.config.url))
             .send()
             .await;
@@ -47,15 +54,17 @@ impl OllamaClient {
             return Err(GLM46Error::Config("Ollama fallback disabled".to_string()));
         }
 
-        debug!("Executing fallback request via Ollama: {}", self.config.model);
+        debug!(
+            "Executing fallback request via Ollama: {}",
+            self.config.model
+        );
 
         let ollama_request = OllamaRequest::from_chat_request(request, &self.config);
-        
-        let response = timeout(
-            self.config.timeout,
-            self.send_request(&ollama_request)
-        ).await
-        .map_err(|_| GLM46Error::Timeout(self.config.timeout))??;
+
+        let response = timeout(self.config.timeout, self.send_request(&ollama_request))
+            .await
+            .map_err(|_| GLM46Error::Timeout(self.config.timeout))?
+            .map_err(|e| GLM46Error::Network(e))?;
 
         self.parse_response(response).await
     }
@@ -74,7 +83,7 @@ impl OllamaClient {
 
         tokio::spawn(async move {
             let ollama_request = OllamaRequest::from_chat_request(request, &client.config);
-            
+
             match client.send_stream_request(ollama_request, tx).await {
                 Ok(_) => debug!("Ollama stream completed successfully"),
                 Err(e) => warn!("Ollama stream error: {:?}", e),
@@ -85,18 +94,21 @@ impl OllamaClient {
     }
 
     /// Send request to Ollama API
-    async fn send_request(&self, request: &OllamaRequest) -> Result<reqwest::Response> {
+    async fn send_request(
+        &self,
+        request: &OllamaRequest,
+    ) -> std::result::Result<reqwest::Response, reqwest::Error> {
         let url = format!("{}/api/chat", self.config.url);
-        
+
         debug!("Sending request to Ollama at: {}", url);
 
-        let response = self.http_client
+        let response = self
+            .http_client
             .post(&url)
             .header("Content-Type", "application/json")
             .json(request)
             .send()
-            .await
-            .context("Failed to send Ollama request")?;
+            .await?;
 
         Ok(response)
     }
@@ -106,10 +118,11 @@ impl OllamaClient {
         &self,
         request: OllamaRequest,
         tx: tokio::sync::mpsc::UnboundedSender<crate::glm46::types::StreamChunk>,
-    ) -> Result<()> {
+    ) -> GLM46Result<()> {
         let url = format!("{}/api/chat", self.config.url);
-        
-        let mut request_builder = self.http_client
+
+        let request_builder = self
+            .http_client
             .post(&url)
             .header("Content-Type", "application/json");
 
@@ -117,24 +130,24 @@ impl OllamaClient {
         let mut stream_request = request.clone();
         stream_request.stream = true;
 
-        let response = request_builder.json(&stream_request)
-            .send()
-            .await
-            .context("Failed to start Ollama stream")?;
+        let response = request_builder.json(&stream_request).send().await?;
 
         if !response.status().is_success() {
             let status = response.status();
             let body = response.text().await.unwrap_or_default();
-            return Err(anyhow::anyhow!("Ollama API error {}: {}", status, body));
+            return Err(GLM46Error::API {
+                message: format!("Ollama API error {}: {}", status, body),
+                code: Some(status.as_u16().to_string()),
+            });
         }
 
         let mut stream = response.bytes_stream();
         let mut buffer = String::new();
 
         use futures::stream::StreamExt;
-        
+
         while let Some(chunk_result) = stream.next().await {
-            let chunk = chunk_result.context("Stream error")?;
+            let chunk = chunk_result?;
             let chunk_str = String::from_utf8_lossy(&chunk);
             buffer.push_str(&chunk_str);
 
@@ -142,10 +155,10 @@ impl OllamaClient {
             while let Some(end_idx) = buffer.find('}') {
                 if let Some(start_idx) = buffer.rfind('{') {
                     if start_idx < end_idx {
-                        let json_str = &buffer[start_idx..=end_idx];
+                        let json_str = buffer[start_idx..=end_idx].to_string();
                         buffer = buffer[end_idx + 1..].to_string();
 
-                        match serde_json::from_str::<OllamaResponse>(json_str) {
+                        match serde_json::from_str::<OllamaResponse>(&json_str) {
                             Ok(ollama_response) => {
                                 let chunk = crate::glm46::types::StreamChunk {
                                     id: "ollama-stream".to_string(),
@@ -172,11 +185,19 @@ impl OllamaClient {
                                             None
                                         },
                                     }],
-                                    usage: ollama_response.done.then(|| crate::glm46::types::TokenUsage {
-                                        prompt_tokens: ollama_response.prompt_eval_count.unwrap_or(0),
-                                        completion_tokens: ollama_response.eval_count.unwrap_or(0),
-                                        total_tokens: ollama_response.prompt_eval_count.unwrap_or(0) 
-                                            + ollama_response.eval_count.unwrap_or(0),
+                                    usage: ollama_response.done.then(|| {
+                                        crate::glm46::types::TokenUsage {
+                                            prompt_tokens: ollama_response
+                                                .prompt_eval_count
+                                                .unwrap_or(0),
+                                            completion_tokens: ollama_response
+                                                .eval_count
+                                                .unwrap_or(0),
+                                            total_tokens: ollama_response
+                                                .prompt_eval_count
+                                                .unwrap_or(0)
+                                                + ollama_response.eval_count.unwrap_or(0),
+                                        }
                                     }),
                                 };
 
@@ -185,7 +206,10 @@ impl OllamaClient {
                                 }
                             }
                             Err(e) => {
-                                warn!("Failed to parse Ollama stream chunk: {:?}\nData: {}", e, json_str);
+                                warn!(
+                                    "Failed to parse Ollama stream chunk: {:?}\nData: {}",
+                                    e, json_str
+                                );
                             }
                         }
                     }
@@ -201,7 +225,7 @@ impl OllamaClient {
     /// Parse Ollama response
     async fn parse_response(&self, response: reqwest::Response) -> GLM46Result<ChatResponse> {
         let status = response.status();
-        let body = response.text().await.context("Failed to read Ollama response")?;
+        let body = response.text().await?;
 
         if !status.is_success() {
             return Err(GLM46Error::API {
@@ -210,11 +234,14 @@ impl OllamaClient {
             });
         }
 
-        let ollama_response: OllamaResponse = serde_json::from_str(&body)
-            .with_context(|| format!("Failed to parse Ollama response: {}", body))?;
+        let ollama_response: OllamaResponse =
+            serde_json::from_str(&body).map_err(|e| GLM46Error::Json(e))?;
 
-        debug!("Ollama response: done={}, content_length={}", 
-               ollama_response.done, ollama_response.message.content.len());
+        debug!(
+            "Ollama response: done={}, content_length={}",
+            ollama_response.done,
+            ollama_response.message.content.len()
+        );
 
         Ok(ollama_response.into_chat_response())
     }
@@ -321,7 +348,10 @@ impl OllamaResponse {
                 completion_tokens: self.eval_count.unwrap_or(0),
                 total_tokens: self.prompt_eval_count.unwrap_or(0) + self.eval_count.unwrap_or(0),
             },
-            system_fingerprint: Some(format!("{:?}+{:?}", self.total_duration, self.load_duration)),
+            system_fingerprint: Some(format!(
+                "{:?}+{:?}",
+                self.total_duration, self.load_duration
+            )),
         }
     }
 }
@@ -346,31 +376,43 @@ impl FallbackManager {
     }
 
     /// Check if fallback should be used
-    pub fn should_use_fallback(&self) -> bool {
-        self.enabled && 
-        self.ollama_client.is_available().await &&
-        self.consecutive_failures.load(std::sync::atomic::Ordering::Relaxed) >= self.failure_threshold
+    pub async fn should_use_fallback(&self) -> bool {
+        self.enabled
+            && self.ollama_client.is_available().await
+            && self
+                .consecutive_failures
+                .load(std::sync::atomic::Ordering::Relaxed)
+                >= self.failure_threshold
     }
 
     /// Record API failure
     pub fn record_failure(&self) {
-        let failures = self.consecutive_failures.fetch_add(1, std::sync::atomic::Ordering::Relaxed) + 1;
+        let failures = self
+            .consecutive_failures
+            .fetch_add(1, std::sync::atomic::Ordering::Relaxed)
+            + 1;
         warn!("GLM-4.6 API failure #{}", failures);
-        
+
         if failures >= self.failure_threshold {
-            info!("Activating Ollama fallback after {} consecutive failures", failures);
+            info!(
+                "Activating Ollama fallback after {} consecutive failures",
+                failures
+            );
         }
     }
 
     /// Record API success
     pub fn record_success(&self) {
-        self.consecutive_failures.store(0, std::sync::atomic::Ordering::Relaxed);
+        self.consecutive_failures
+            .store(0, std::sync::atomic::Ordering::Relaxed);
     }
 
     /// Execute fallback request
     pub async fn execute_fallback(&self, request: ChatRequest) -> GLM46Result<ChatResponse> {
         if !self.should_use_fallback().await {
-            return Err(GLM46Error::Config("Ollama fallback not available".to_string()));
+            return Err(GLM46Error::Config(
+                "Ollama fallback not available".to_string(),
+            ));
         }
 
         info!("Executing request via Ollama fallback");
@@ -382,7 +424,9 @@ impl FallbackManager {
         FallbackStatus {
             enabled: self.enabled,
             ollama_available: self.ollama_client.is_available().await,
-            consecutive_failures: self.consecutive_failures.load(std::sync::atomic::Ordering::Relaxed),
+            consecutive_failures: self
+                .consecutive_failures
+                .load(std::sync::atomic::Ordering::Relaxed),
             failure_threshold: self.failure_threshold,
             active: self.should_use_fallback().await,
         }
@@ -399,10 +443,11 @@ pub struct FallbackStatus {
     pub active: bool,
 }
 
-#[cfg(test)]
+// Internal tests disabled - see tests/glm46_*.rs
+#[cfg(all(test, feature = "glm46-internal-tests"))]
 mod tests {
     use super::*;
-    
+
     #[test]
     fn test_ollama_message_conversion() {
         let chat_msg = ChatMessage {

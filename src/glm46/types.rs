@@ -4,7 +4,7 @@
 //! Optimized for structured output and agent coordination.
 
 use serde::{Deserialize, Serialize};
-use std::collections::HashMap;
+// use std::collections::HashMap;
 
 /// Chat message for GLM-4.6 API
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
@@ -17,6 +17,48 @@ pub struct ChatMessage {
     /// Optional tool response for tool execution results
     #[serde(skip_serializing_if = "Option::is_none")]
     pub tool_call_id: Option<String>,
+}
+
+impl ChatMessage {
+    /// Create a system message
+    pub fn system(content: impl Into<String>) -> Self {
+        Self {
+            role: MessageRole::System,
+            content: content.into(),
+            tool_calls: None,
+            tool_call_id: None,
+        }
+    }
+
+    /// Create a user message
+    pub fn user(content: impl Into<String>) -> Self {
+        Self {
+            role: MessageRole::User,
+            content: content.into(),
+            tool_calls: None,
+            tool_call_id: None,
+        }
+    }
+
+    /// Create an assistant message
+    pub fn assistant(content: impl Into<String>) -> Self {
+        Self {
+            role: MessageRole::Assistant,
+            content: content.into(),
+            tool_calls: None,
+            tool_call_id: None,
+        }
+    }
+
+    /// Create a tool message (for tool execution results)
+    pub fn tool(content: impl Into<String>, tool_call_id: impl Into<String>) -> Self {
+        Self {
+            role: MessageRole::Tool,
+            content: content.into(),
+            tool_calls: None,
+            tool_call_id: Some(tool_call_id.into()),
+        }
+    }
 }
 
 /// Message role in conversation
@@ -94,7 +136,7 @@ pub struct ToolFunction {
 }
 
 /// Tool call made by the assistant
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct ToolCall {
     pub id: String,
     pub r#type: String, // "function"
@@ -102,7 +144,7 @@ pub struct ToolCall {
 }
 
 /// Tool function call details
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct ToolFunctionCall {
     pub name: String,
     pub arguments: String, // JSON string
@@ -110,11 +152,12 @@ pub struct ToolFunctionCall {
 
 /// Tool choice setting
 #[derive(Debug, Clone, Serialize, Deserialize)]
-#[serde(untagged)]
+#[serde(rename_all = "lowercase")]
 pub enum ToolChoice {
     None,
     Auto,
     Required,
+    #[serde(untagged)]
     Specific(ToolCallChoice),
 }
 
@@ -233,7 +276,7 @@ pub enum HealthStatus {
 }
 
 /// Usage statistics tracking
-#[derive(Debug, Clone, Serialize, Deserialize, Default)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct UsageStats {
     pub total_requests: u64,
     pub total_input_tokens: u64,
