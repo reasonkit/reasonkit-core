@@ -28,13 +28,13 @@ if [[ -d "$RK_PLUGIN_DIR" ]]; then
     fpath=("$RK_PLUGIN_DIR" $fpath)
 fi
 
-# Generate completions if rk-core is available
-if command -v rk-core &> /dev/null; then
+# Generate completions if rk is available
+if command -v rk &> /dev/null; then
     # Cache completions for faster loading
     if [[ ! -f "$RK_PLUGIN_DIR/_rk-core" ]] || \
-       [[ "$(rk-core --version 2>/dev/null)" != "$(cat $RK_PLUGIN_DIR/.rk-version 2>/dev/null)" ]]; then
-        rk-core completions zsh > "$RK_PLUGIN_DIR/_rk-core" 2>/dev/null
-        rk-core --version > "$RK_PLUGIN_DIR/.rk-version" 2>/dev/null
+       [[ "$(rk --version 2>/dev/null)" != "$(cat $RK_PLUGIN_DIR/.rk-version 2>/dev/null)" ]]; then
+        rk completions zsh > "$RK_PLUGIN_DIR/_rk-core" 2>/dev/null
+        rk --version > "$RK_PLUGIN_DIR/.rk-version" 2>/dev/null
     fi
 fi
 
@@ -53,22 +53,22 @@ fi
 
 # Core command aliases
 alias rk='rk-core'
-alias rkq='rk-core think --profile quick'
-alias rkb='rk-core think --profile balanced'
-alias rkd='rk-core think --profile deep'
-alias rkp='rk-core think --profile paranoid'
-alias rkpc='rk-core think --profile powercombo'
-alias rks='rk-core think --profile scientific'
+alias rkq='rk think --profile quick'
+alias rkb='rk think --profile balanced'
+alias rkd='rk think --profile deep'
+alias rkp='rk think --profile paranoid'
+alias rkpc='rk think --profile powercombo'
+alias rks='rk think --profile scientific'
 
 # Subcommand aliases
-alias rkw='rk-core web'
-alias rkv='rk-core verify'
-alias rkm='rk-core metrics report'
+alias rkw='rk web'
+alias rkv='rk verify'
+alias rkm='rk metrics report'
 alias rkc='rk-compare'
 
 # Quick actions
-alias rk-deep='rk-core web --depth deep'
-alias rk-exhaust='rk-core web --depth exhaustive'
+alias rk-deep='rk web --depth deep'
+alias rk-exhaust='rk web --depth exhaustive'
 
 # ============================================================================
 # ENVIRONMENT VARIABLES
@@ -79,9 +79,9 @@ export RK_DEFAULT_PROVIDER="${RK_DEFAULT_PROVIDER:-anthropic}"
 export RK_DEFAULT_PROFILE="${RK_DEFAULT_PROFILE:-balanced}"
 export RK_KEYBINDS_ENABLED="${RK_KEYBINDS_ENABLED:-true}"
 
-# Auto-detect rk-core binary
+# Auto-detect rk binary
 if [[ -z "$RK_CORE" ]]; then
-    if command -v rk-core &> /dev/null; then
+    if command -v rk &> /dev/null; then
         export RK_CORE="rk-core"
     elif [[ -x "$HOME/.cargo/bin/rk-core" ]]; then
         export RK_CORE="$HOME/.cargo/bin/rk-core"
@@ -94,39 +94,39 @@ fi
 
 # Quick think shorthand
 think() {
-    rk-core think --profile "${RK_DEFAULT_PROFILE:-balanced}" "$@"
+    rk think --profile "${RK_DEFAULT_PROFILE:-balanced}" "$@"
 }
 
 # Deep research shorthand
 research() {
-    rk-core web --depth deep "$@"
+    rk web --depth deep "$@"
 }
 
 # Verify a claim
 verify() {
-    rk-core verify "$@"
+    rk verify "$@"
 }
 
 # Explain something
 explain() {
-    rk-core think --profile quick "Explain in simple terms: $*"
+    rk think --profile quick "Explain in simple terms: $*"
 }
 
 # Debug current directory's code
 debug-here() {
     local pattern="${1:-*.rs}"
     find . -name "$pattern" -type f | head -5 | xargs cat | \
-        rk-core think --profile deep "Debug this code and find issues:"
+        rk think --profile deep "Debug this code and find issues:"
 }
 
 # Review staged git changes
 review-staged() {
-    git diff --cached | rk-core think --profile paranoid "Code review these changes:"
+    git diff --cached | rk think --profile paranoid "Code review these changes:"
 }
 
 # Generate commit message for staged changes
 commit-msg() {
-    git diff --cached | rk-core think --profile quick \
+    git diff --cached | rk think --profile quick \
         "Generate a conventional commit message (type: description format) for these changes:"
 }
 
@@ -165,7 +165,7 @@ _rk_startup_message() {
         echo "\033[38;5;201mReasonKit\033[0m loaded ($version)"
         echo "  \033[2mType 'rk --help' for commands or use Ctrl+R keybindings\033[0m"
     else
-        echo "\033[33mReasonKit plugin loaded but rk-core not found\033[0m"
+        echo "\033[33mReasonKit plugin loaded but rk not found\033[0m"
         echo "  \033[2mInstall: cargo install reasonkit\033[0m"
     fi
 }
@@ -200,10 +200,10 @@ rk-keys() {
     echo ""
     echo "\033[1mAliases:\033[0m"
     echo "  \033[36mrk\033[0m        rk-core"
-    echo "  \033[36mrkq\033[0m       rk-core think --profile quick"
-    echo "  \033[36mrkd\033[0m       rk-core think --profile deep"
-    echo "  \033[36mrkp\033[0m       rk-core think --profile paranoid"
-    echo "  \033[36mrkpc\033[0m      rk-core think --profile powercombo"
+    echo "  \033[36mrkq\033[0m       rk think --profile quick"
+    echo "  \033[36mrkd\033[0m       rk think --profile deep"
+    echo "  \033[36mrkp\033[0m       rk think --profile paranoid"
+    echo "  \033[36mrkpc\033[0m      rk think --profile powercombo"
     echo ""
     echo "\033[1mFunctions:\033[0m"
     echo "  \033[36mthink\033[0m     Quick reasoning on any topic"

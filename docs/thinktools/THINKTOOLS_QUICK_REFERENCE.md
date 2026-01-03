@@ -121,11 +121,11 @@ ReasonKit supports intuitive aliases for all commands:
 **Examples:**
 
 ```bash
-rk-core think --protocol rainbow "Brainstorm ideas"       # → GigaThink
-rk-core think --protocol verify "Check this claim"        # → ProofGuard
-rk-core think --protocol brutal "Find flaws"              # → BrutalHonesty
-rk-core think --protocol roots "Break down assumptions"   # → BedRock
-rk-core think --protocol logic "Validate this argument"   # → LaserLogic
+rk think --protocol rainbow "Brainstorm ideas"       # → GigaThink
+rk think --protocol verify "Check this claim"        # → ProofGuard
+rk think --protocol brutal "Find flaws"              # → BrutalHonesty
+rk think --protocol roots "Break down assumptions"   # → BedRock
+rk think --protocol logic "Validate this argument"   # → LaserLogic
 ```
 
 ---
@@ -134,26 +134,26 @@ rk-core think --protocol logic "Validate this argument"   # → LaserLogic
 
 ```bash
 # Quick analysis
-rk-core think --profile quick "Query"
+rk think --profile quick "Query"
 
 # Balanced (default)
-rk-core think "Query"
-rk-core think --profile balanced "Query"
+rk think "Query"
+rk think --profile balanced "Query"
 
 # Deep analysis with verbose logs
-rk-core think --profile deep --verbose "Query"
+rk think --profile deep --verbose "Query"
 
 # Paranoid verification
-rk-core think --profile paranoid "Query"
+rk think --profile paranoid "Query"
 
 # Custom modules
-rk-core think --modules gt,pg,bh "Query"
+rk think --modules gt,pg,bh "Query"
 
 # JSON output
-rk-core think --output-format json "Query" > output.json
+rk think --output-format json "Query" > output.json
 
 # Set confidence target
-rk-core think --confidence-target 0.90 "Query"
+rk think --confidence-target 0.90 "Query"
 ```
 
 ---
@@ -177,7 +177,9 @@ println!("Confidence: {:.1}%", result.confidence.overall * 100.0);
 
 ---
 
-## 🐍 Python API
+## 🐍 Python API (Beta - Build from Source)
+
+> **Note:** Python bindings require building from source with `maturin develop --release --features python`
 
 ```python
 from reasonkit import ThinkToolOrchestrator, ReasoningProfile

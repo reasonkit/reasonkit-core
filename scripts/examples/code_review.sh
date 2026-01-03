@@ -39,14 +39,14 @@ echo "Target: $TARGET"
 echo "Output: $OUTPUT_DIR"
 echo ""
 
-# Find rk-core
-RK_CORE="${RK_CORE:-rk-core}"
+# Find rk
+RK_CORE="${RK_CORE:-rk}"
 if ! command -v "$RK_CORE" &> /dev/null; then
     SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-    if [[ -f "$SCRIPT_DIR/../../target/release/rk-core" ]]; then
-        RK_CORE="$SCRIPT_DIR/../../target/release/rk-core"
+    if [[ -f "$SCRIPT_DIR/../../target/release/rk" ]]; then
+        RK_CORE="$SCRIPT_DIR/../../target/release/rk"
     else
-        echo "Error: rk-core not found. Build with: cargo build --release"
+        echo "Error: rk not found. Build with: cargo build --release"
         exit 1
     fi
 fi

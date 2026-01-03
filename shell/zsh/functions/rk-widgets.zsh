@@ -278,7 +278,7 @@ rk-command-builder() {
 
     if [[ -n "$selected" ]]; then
         local cmd_name=$(echo "$selected" | cut -d: -f1)
-        BUFFER="rk-core $cmd_name "
+        BUFFER="rk $cmd_name "
         CURSOR=${#BUFFER}
         zle redisplay
     fi

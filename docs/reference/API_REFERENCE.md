@@ -12,7 +12,7 @@ ReasonKit Core is a Rust-based structured reasoning infrastructure with CLI, lib
 
 1. [CLI Reference](#cli-reference)
 2. [Library API (Rust)](#library-api-rust)
-3. [Python Bindings](#python-bindings)
+3. [Python Bindings (Beta)](#python-bindings)
 4. [MCP Server API](#mcp-server-api)
 5. [SQLite Schema](#sqlite-schema)
 6. [Configuration](#configuration)
@@ -22,7 +22,7 @@ ReasonKit Core is a Rust-based structured reasoning infrastructure with CLI, lib
 
 ## CLI Reference
 
-The `rk-core` binary provides the command-line interface for ReasonKit.
+The `rk` binary provides the command-line interface for ReasonKit.
 
 ### Global Options
 
@@ -34,12 +34,12 @@ The `rk-core` binary provides the command-line interface for ReasonKit.
 
 ### Commands
 
-#### `rk-core think` - Execute ThinkTools
+#### `rk think` - Execute ThinkTools
 
 Execute structured reasoning protocols (ThinkTools).
 
 ```bash
-rk-core think [OPTIONS] <QUERY>
+rk think [OPTIONS] <QUERY>
 ```
 
 **Arguments:**
@@ -69,33 +69,33 @@ rk-core think [OPTIONS] <QUERY>
 
 ```bash
 # Quick analysis with default provider
-rk-core think "What are the pros and cons of microservices?"
+rk think "What are the pros and cons of microservices?"
 
 # Use a specific protocol
-rk-core think -p gigathink "Explore startup success factors"
+rk think -p gigathink "Explore startup success factors"
 
 # Use a profile chain
-rk-core think --profile paranoid "Is this investment safe?"
+rk think --profile paranoid "Is this investment safe?"
 
 # Use OpenRouter with specific model
-rk-core think --provider openrouter --model anthropic/claude-sonnet-4 "Analyze this code"
+rk think --provider openrouter --model anthropic/claude-sonnet-4 "Analyze this code"
 
 # Budget-constrained execution
-rk-core think --budget "30s" "Quick analysis needed"
+rk think --budget "30s" "Quick analysis needed"
 
 # JSON output with trace
-rk-core think -f json --save-trace "Complex question" > result.json
+rk think -f json --save-trace "Complex question" > result.json
 
 # List available protocols
-rk-core think --list
+rk think --list
 ```
 
-#### `rk-core web` - Deep Research
+#### `rk web` - Deep Research
 
 Combines web search, knowledge base retrieval, and ThinkTool protocols.
 
 ```bash
-rk-core web [OPTIONS] <QUERY>
+rk web [OPTIONS] <QUERY>
 ```
 
 **Aliases:** `dive`, `research`, `deep`, `d`
@@ -124,21 +124,21 @@ rk-core web [OPTIONS] <QUERY>
 
 ```bash
 # Standard research
-rk-core web "Latest developments in quantum computing"
+rk web "Latest developments in quantum computing"
 
 # Deep research with markdown output
-rk-core web --depth deep -f markdown -o report.md "AI safety research"
+rk web --depth deep -f markdown -o report.md "AI safety research"
 
 # Quick exploration without web search
-rk-core web --depth quick --no-web "Explain transformer architecture"
+rk web --depth quick --no-web "Explain transformer architecture"
 ```
 
-#### `rk-core verify` - Triangulation
+#### `rk verify` - Triangulation
 
 Verify claims using the three-source rule.
 
 ```bash
-rk-core verify [OPTIONS] <CLAIM>
+rk verify [OPTIONS] <CLAIM>
 ```
 
 **Aliases:** `v`, `triangulate`
@@ -158,21 +158,21 @@ rk-core verify [OPTIONS] <CLAIM>
 
 ```bash
 # Verify a claim
-rk-core verify "GPT-4 has 1.8 trillion parameters"
+rk verify "GPT-4 has 1.8 trillion parameters"
 
 # Anchor verified claims
-rk-core verify --anchor "Einstein published relativity in 1905"
+rk verify --anchor "Einstein published relativity in 1905"
 
 # Require more sources
-rk-core verify -s 5 "This medication is safe for long-term use"
+rk verify -s 5 "This medication is safe for long-term use"
 ```
 
-#### `rk-core trace` - Audit Trail Management
+#### `rk trace` - Audit Trail Management
 
 View and manage execution traces.
 
 ```bash
-rk-core trace <ACTION>
+rk trace <ACTION>
 ```
 
 **Subcommands:**
@@ -186,7 +186,7 @@ rk-core trace <ACTION>
 **List Options:**
 
 ```bash
-rk-core trace list [OPTIONS]
+rk trace list [OPTIONS]
   --dir, -d <PATH>       Trace directory
   --protocol, -p <NAME>  Filter by protocol
   --limit, -l <N>        Limit results (default: 20)
@@ -195,7 +195,7 @@ rk-core trace list [OPTIONS]
 **View Options:**
 
 ```bash
-rk-core trace view <ID> [OPTIONS]
+rk trace view <ID> [OPTIONS]
   --dir, -d <PATH>       Trace directory
   --format, -f <FMT>     Output format (text, json)
 ```
@@ -203,18 +203,18 @@ rk-core trace view <ID> [OPTIONS]
 **Clean Options:**
 
 ```bash
-rk-core trace clean [OPTIONS]
+rk trace clean [OPTIONS]
   --dir, -d <PATH>       Trace directory
   --all                  Delete all traces
   --keep-days <N>        Keep traces from last N days
 ```
 
-#### `rk-core metrics` - Quality Metrics
+#### `rk metrics` - Quality Metrics
 
 View ThinkTools execution metrics and quality reports.
 
 ```bash
-rk-core metrics <ACTION>
+rk metrics <ACTION>
 ```
 
 **Subcommands:**
@@ -229,18 +229,18 @@ rk-core metrics <ACTION>
 **Report Options:**
 
 ```bash
-rk-core metrics report [OPTIONS]
+rk metrics report [OPTIONS]
   --format, -f <FMT>     Output format (text, json)
   --filter, -F <NAME>    Filter by protocol or profile
   --output, -o <PATH>    Save report to file
 ```
 
-#### `rk-core serve` - API Server
+#### `rk serve` - API Server
 
 Start the API server.
 
 ```bash
-rk-core serve [OPTIONS]
+rk serve [OPTIONS]
 ```
 
 **Options:**
@@ -250,12 +250,12 @@ rk-core serve [OPTIONS]
 | `--host` | `127.0.0.1` | Host to bind to |
 | `--port` | `8080`      | Port to bind to |
 
-#### `rk-core completions` - Shell Completions
+#### `rk completions` - Shell Completions
 
 Generate shell completions.
 
 ```bash
-rk-core completions <SHELL>
+rk completions <SHELL>
 ```
 
 **Supported Shells:** `zsh`, `bash`, `fish`, `powershell`, `elvish`
@@ -264,13 +264,13 @@ rk-core completions <SHELL>
 
 ```bash
 # Zsh (Oh-My-Zsh)
-rk-core completions zsh > $ZSH_CUSTOM/plugins/reasonkit/_rk-core
+rk completions zsh > $ZSH_CUSTOM/plugins/reasonkit/_rk
 
 # Bash
-rk-core completions bash > ~/.bash_completion.d/rk-core
+rk completions bash > ~/.bash_completion.d/rk
 
 # Fish
-rk-core completions fish > ~/.config/fish/completions/rk-core.fish
+rk completions fish > ~/.config/fish/completions/rk.fish
 ```
 
 ### Memory Feature Commands
@@ -281,37 +281,37 @@ The following commands require the `memory` feature:
 cargo build --release --features memory
 ```
 
-#### `rk-core ingest` - Document Ingestion
+#### `rk ingest` - Document Ingestion
 
 ```bash
-rk-core ingest [OPTIONS] <PATH>
+rk ingest [OPTIONS] <PATH>
   --doc-type, -t <TYPE>  Document type (paper, documentation, code, note)
   --recursive, -r        Process directories recursively
 ```
 
-#### `rk-core query` - Knowledge Base Query
+#### `rk query` - Knowledge Base Query
 
 ```bash
-rk-core query [OPTIONS] <QUERY>
+rk query [OPTIONS] <QUERY>
   --top-k, -k <N>        Number of results (default: 5)
   --hybrid               Use hybrid search (BM25 + vector)
   --raptor               Use RAPTOR tree retrieval
   --format, -f <FMT>     Output format (text, json, markdown)
 ```
 
-#### `rk-core rag` - RAG Operations
+#### `rk rag` - RAG Operations
 
 ```bash
-rk-core rag query [OPTIONS] <QUERY>
+rk rag query [OPTIONS] <QUERY>
   --top-k, -k <N>        Chunks to retrieve (default: 5)
   --min-score <SCORE>    Minimum relevance (0.0-1.0)
   --mode <MODE>          RAG mode (quick, balanced, thorough)
   --no-llm               Retrieval only, no generation
 
-rk-core rag retrieve <QUERY>
+rk rag retrieve <QUERY>
   --top-k, -k <N>        Number of results
 
-rk-core rag stats        Show knowledge base statistics
+rk rag stats        Show knowledge base statistics
 ```
 
 ### LLM Providers
@@ -717,17 +717,19 @@ async fn main() -> anyhow::Result<()> {
 
 ## Python Bindings
 
-ReasonKit provides Python bindings via PyO3.
+ReasonKit provides Python bindings via PyO3 (beta - build from source only).
+
+> **Note:** Python bindings are in beta and require building from source. No PyPI package is available yet.
 
 ### Installation
 
 ```bash
-# Build from source
-cd reasonkit-core
-maturin develop --release
+# Install maturin (build tool for Python bindings)
+uv pip install maturin
 
-# Or install from PyPI (when published)
-pip install reasonkit
+# Build Python bindings from source
+cd reasonkit-core
+maturin develop --release --features python
 ```
 
 ### Basic Usage
@@ -974,7 +976,7 @@ Add to Claude Desktop configuration (`~/.config/claude/claude_desktop_config.jso
 {
   "mcpServers": {
     "reasonkit": {
-      "command": "rk-core",
+      "command": "rk",
       "args": ["serve", "--mcp"]
     }
   }
@@ -1506,22 +1508,22 @@ let result = some_operation()
 
 ```bash
 # Quick analysis
-rk-core think "Your question"
+rk think "Your question"
 
 # Use specific profile
-rk-core think --profile balanced "Complex question"
+rk think --profile balanced "Complex question"
 
 # Deep research
-rk-core web --depth deep "Research topic"
+rk web --depth deep "Research topic"
 
 # Verify a claim
-rk-core verify "The claim to verify"
+rk verify "The claim to verify"
 
 # View metrics
-rk-core metrics report
+rk metrics report
 
 # List available tools
-rk-core think --list
+rk think --list
 ```
 
 ---

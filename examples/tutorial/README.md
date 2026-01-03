@@ -1,6 +1,6 @@
 # ReasonKit Interactive Tutorial
 
-> **Time:** 10 minutes total | **Difficulty:** Beginner | **Prerequisites:** rk-core installed
+> **Time:** 10 minutes total | **Difficulty:** Beginner | **Prerequisites:** rk installed
 
 This tutorial takes you from zero to confidently using ReasonKit for AI reasoning.
 
@@ -23,7 +23,7 @@ This tutorial takes you from zero to confidently using ReasonKit for AI reasonin
 ### 1. Verify installation
 
 ```bash
-rk-core --version
+rk --version
 ```
 
 ### 2. Set your API key

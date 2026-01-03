@@ -11,11 +11,11 @@ Comprehensive guides for integrating ReasonKit with major LLM providers:
 
 | Provider               | Guide                                                    | Best For                                              | Quick Start                                   |
 | ---------------------- | -------------------------------------------------------- | ----------------------------------------------------- | --------------------------------------------- |
-| **Anthropic (Claude)** | [ANTHROPIC_INTEGRATION.md](./ANTHROPIC_INTEGRATION.md)   | Complex reasoning, extended thinking, safety-critical | `rk-core think --provider anthropic "query"`  |
-| **OpenAI (GPT)**       | [OPENAI_INTEGRATION.md](./OPENAI_INTEGRATION.md)         | General reasoning, JSON mode, embeddings              | `rk-core think --provider openai "query"`     |
-| **Google (Gemini)**    | [GOOGLE_INTEGRATION.md](./GOOGLE_INTEGRATION.md)         | Long context (2M), multimodal, documents              | `rk-core think --provider gemini "query"`     |
-| **Groq**               | [GROQ_INTEGRATION.md](./GROQ_INTEGRATION.md)             | Ultra-fast inference, rapid iteration                 | `rk-core think --provider groq "query"`       |
-| **OpenRouter**         | [OPENROUTER_INTEGRATION.md](./OPENROUTER_INTEGRATION.md) | 300+ models, fallback routing, cost optimization      | `rk-core think --provider openrouter "query"` |
+| **Anthropic (Claude)** | [ANTHROPIC_INTEGRATION.md](./ANTHROPIC_INTEGRATION.md)   | Complex reasoning, extended thinking, safety-critical | `rk think --provider anthropic "query"`  |
+| **OpenAI (GPT)**       | [OPENAI_INTEGRATION.md](./OPENAI_INTEGRATION.md)         | General reasoning, JSON mode, embeddings              | `rk think --provider openai "query"`     |
+| **Google (Gemini)**    | [GOOGLE_INTEGRATION.md](./GOOGLE_INTEGRATION.md)         | Long context (2M), multimodal, documents              | `rk think --provider gemini "query"`     |
+| **Groq**               | [GROQ_INTEGRATION.md](./GROQ_INTEGRATION.md)             | Ultra-fast inference, rapid iteration                 | `rk think --provider groq "query"`       |
+| **OpenRouter**         | [OPENROUTER_INTEGRATION.md](./OPENROUTER_INTEGRATION.md) | 300+ models, fallback routing, cost optimization      | `rk think --provider openrouter "query"` |
 
 ---
 
@@ -72,7 +72,7 @@ export DEEPSEEK_API_KEY="..."            # DeepSeek
 ### ~/.ReasonKit/config.toml
 
 ```toml
-# Default provider for rk-core think
+# Default provider for rk think
 [thinktool]
 default_provider = "anthropic"
 default_model = "claude-sonnet-4"
@@ -102,30 +102,30 @@ default_model = "anthropic/claude-sonnet-4"
 
 ```bash
 # Use specific provider
-rk-core think --provider anthropic "Analyze this code"
-rk-core think --provider openai "Evaluate this design"
-rk-core think --provider gemini "Summarize this document"
-rk-core think --provider groq "Quick review"
+rk think --provider anthropic "Analyze this code"
+rk think --provider openai "Evaluate this design"
+rk think --provider gemini "Summarize this document"
+rk think --provider groq "Quick review"
 ```
 
 ### Provider + Model
 
 ```bash
 # Specify exact model
-rk-core think --provider anthropic --model claude-opus-4 "Deep analysis"
-rk-core think --provider openai --model o1 "Complex reasoning"
-rk-core think --provider gemini --model gemini-1.5-pro "Long document"
-rk-core think --provider groq --model llama-3.1-405b-reasoning "Hard problem"
+rk think --provider anthropic --model claude-opus-4 "Deep analysis"
+rk think --provider openai --model o1 "Complex reasoning"
+rk think --provider gemini --model gemini-1.5-pro "Long document"
+rk think --provider groq --model llama-3.1-405b-reasoning "Hard problem"
 ```
 
 ### Profile-Based Selection
 
 ```bash
 # Profiles auto-select appropriate models
-rk-core think --profile quick "Fast check"     # Uses fastest available
-rk-core think --profile balanced "Standard"    # Uses balanced model
-rk-core think --profile deep "Thorough"        # Uses reasoning model
-rk-core think --profile paranoid "Critical"    # Uses best model
+rk think --profile quick "Fast check"     # Uses fastest available
+rk think --profile balanced "Standard"    # Uses balanced model
+rk think --profile deep "Thorough"        # Uses reasoning model
+rk think --profile paranoid "Critical"    # Uses best model
 ```
 
 ---
@@ -201,22 +201,22 @@ Protocols are stored in `reasonkit-core/protocols/cli/`:
 
 ```bash
 # Set per-query budget
-rk-core think "Expensive query" --budget "$1.00"
+rk think "Expensive query" --budget "$1.00"
 
 # Set time budget
-rk-core think "Time-limited" --budget "60s"
+rk think "Time-limited" --budget "60s"
 
 # Set token budget
-rk-core think "Token-limited" --budget "5000t"
+rk think "Token-limited" --budget "5000t"
 ```
 
 ### Cost Tracking
 
 ```bash
 # View usage
-rk-core metrics cost --period day
-rk-core metrics cost --period month
-rk-core metrics cost --provider anthropic
+rk metrics cost --period day
+rk metrics cost --period month
+rk metrics cost --provider anthropic
 ```
 
 ---

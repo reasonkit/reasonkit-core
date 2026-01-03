@@ -20,7 +20,7 @@ export GROQ_API_KEY="gsk_..."
 cargo install reasonkit-core
 
 # 3. Run analysis (10x faster than typical cloud!)
-rk-core think --provider groq "Analyze this code quickly"
+rk think --provider groq "Analyze this code quickly"
 ```
 
 ---
@@ -43,10 +43,10 @@ api_key_env = "GROQ_API_KEY"
 
 ```bash
 # Test API connection
-rk-core think --provider groq --model llama-3.3-70b-versatile "Hello"
+rk think --provider groq --model llama-3.3-70b-versatile "Hello"
 
 # Check available models
-rk-core providers show groq
+rk providers show groq
 ```
 
 ---
@@ -98,30 +98,30 @@ retry_delay_ms = 500
 
 ```bash
 # GigaThink: Rapid creative expansion
-rk-core think "Generate startup ideas in AI space" \
+rk think "Generate startup ideas in AI space" \
   --provider groq \
   --model llama-3.3-70b-versatile \
   --protocol gigathink
 
 # LaserLogic: Fast logical validation
-rk-core think "Check this argument for fallacies" \
+rk think "Check this argument for fallacies" \
   --provider groq \
   --model llama-3.1-8b-instant \
   --protocol laserlogic
 
 # ProofGuard: Quick verification
-rk-core think "Verify these claims about Rust" \
+rk think "Verify these claims about Rust" \
   --provider groq \
   --protocol proofguard
 
 # BedRock: First principles with 405B (complex)
-rk-core think "Decompose the fundamentals of distributed consensus" \
+rk think "Decompose the fundamentals of distributed consensus" \
   --provider groq \
   --model llama-3.1-405b-reasoning \
   --protocol bedrock
 
 # BrutalHonesty: Rapid adversarial critique
-rk-core think "Critique my API design" \
+rk think "Critique my API design" \
   --provider groq \
   --protocol brutalhonesty
 ```
@@ -130,25 +130,25 @@ rk-core think "Critique my API design" \
 
 ```bash
 # Quick analysis (Llama 8B - lightning fast)
-rk-core think "Quick code review" \
+rk think "Quick code review" \
   --provider groq \
   --model llama-3.1-8b-instant \
   --profile quick
 
 # Balanced analysis (Llama 70B)
-rk-core think "Evaluate this architecture" \
+rk think "Evaluate this architecture" \
   --provider groq \
   --model llama-3.3-70b-versatile \
   --profile balanced
 
 # Deep analysis with 405B
-rk-core think "Complex system design analysis" \
+rk think "Complex system design analysis" \
   --provider groq \
   --model llama-3.1-405b-reasoning \
   --profile deep
 
 # Paranoid mode (multi-pass)
-rk-core think "Security audit this code" \
+rk think "Security audit this code" \
   --provider groq \
   --model llama-3.3-70b-versatile \
   --profile paranoid
@@ -159,7 +159,7 @@ rk-core think "Security audit this code" \
 ```bash
 # Batch analysis with ultra-fast model
 for file in src/*.rs; do
-  rk-core think "Review: $(cat $file)" \
+  rk think "Review: $(cat $file)" \
     --provider groq \
     --model llama-3.1-8b-instant \
     --profile quick \
@@ -167,13 +167,13 @@ for file in src/*.rs; do
 done
 
 # Real-time code review loop
-watch -n 5 'rk-core think "Check latest changes" \
+watch -n 5 'rk think "Check latest changes" \
   --provider groq \
   --model llama-3.1-8b-instant \
   --protocol laserlogic'
 
 # Interactive rapid iteration
-rk-core think --provider groq --model llama-3.1-8b-instant \
+rk think --provider groq --model llama-3.1-8b-instant \
   --interactive  # Start interactive session
 ```
 
@@ -181,14 +181,14 @@ rk-core think --provider groq --model llama-3.1-8b-instant \
 
 ```bash
 # 1. Fast draft with Groq (cheap + fast)
-rk-core think "Analyze this problem" \
+rk think "Analyze this problem" \
   --provider groq \
   --model llama-3.3-70b-versatile \
   --profile quick \
   --format json > draft.json
 
 # 2. Refine with Claude/GPT (higher quality)
-rk-core think "Improve and verify this analysis: $(cat draft.json)" \
+rk think "Improve and verify this analysis: $(cat draft.json)" \
   --provider anthropic \
   --model claude-sonnet-4 \
   --profile deep
@@ -402,7 +402,7 @@ retry_delay_ms = 1000
 
 ```bash
 # Check current available models
-rk-core providers show groq
+rk providers show groq
 
 # Some models rotate availability
 # Use the versatile models for stability:
@@ -419,7 +419,7 @@ rk-core providers show groq
 # Gemma 2: 8K context
 
 # Use appropriate model
-rk-core think "Long analysis" \
+rk think "Long analysis" \
   --provider groq \
   --model llama-3.3-70b-versatile  # 128K context
 ```
@@ -431,11 +431,11 @@ rk-core think "Long analysis" \
 # For critical tasks, use draft+refine workflow:
 
 # 1. Fast draft with Groq
-rk-core think "Initial analysis" \
+rk think "Initial analysis" \
   --provider groq --profile quick > draft.json
 
 # 2. Verify/improve with premium provider
-rk-core think "Verify: $(cat draft.json)" \
+rk think "Verify: $(cat draft.json)" \
   --provider anthropic --profile deep
 ```
 
@@ -444,7 +444,7 @@ rk-core think "Verify: $(cat draft.json)" \
 ```bash
 # 405B is slower (but still fast for its size)
 # Increase timeout
-rk-core think "Complex query" \
+rk think "Complex query" \
   --provider groq \
   --model llama-3.1-405b-reasoning \
   --timeout 60s
@@ -501,7 +501,7 @@ paranoid = "fast"  # Multi-pass is faster than 405B
 # 5. Cost optimization
 
 # Example: CI/CD integration
-rk-core think "Review PR diff: $(git diff main)" \
+rk think "Review PR diff: $(git diff main)" \
   --provider groq \
   --model llama-3.1-8b-instant \
   --profile quick \
@@ -515,11 +515,11 @@ rk-core think "Review PR diff: $(git diff main)" \
 
 # Development loop: Groq
 while developing:
-  rk-core think "Quick check" --provider groq --profile quick
+  rk think "Quick check" --provider groq --profile quick
   # Iterate fast
 
 # Final review: Claude/GPT
-rk-core think "Final analysis" --provider anthropic --profile deep
+rk think "Final analysis" --provider anthropic --profile deep
 ```
 
 ---

@@ -19,7 +19,7 @@ export GEMINI_API_KEY="..."
 cargo install reasonkit-core
 
 # 3. Run analysis
-rk-core think --provider gemini "Analyze this architecture"
+rk think --provider gemini "Analyze this architecture"
 ```
 
 ---
@@ -47,10 +47,10 @@ api_key_env = "GEMINI_API_KEY"
 
 ```bash
 # Test API connection
-rk-core think --provider gemini --model gemini-2.0-flash "Hello"
+rk think --provider gemini --model gemini-2.0-flash "Hello"
 
 # Check available models
-rk-core providers show gemini
+rk providers show gemini
 ```
 
 ---
@@ -104,29 +104,29 @@ retry_delay_ms = 1000
 
 ```bash
 # GigaThink: Creative expansion
-rk-core think "Brainstorm use cases for AI in healthcare" \
+rk think "Brainstorm use cases for AI in healthcare" \
   --provider gemini \
   --model gemini-2.0-flash \
   --protocol gigathink
 
 # LaserLogic: Logical validation
-rk-core think "Validate this mathematical proof" \
+rk think "Validate this mathematical proof" \
   --provider gemini \
   --protocol laserlogic
 
 # ProofGuard: Evidence verification with long context
-rk-core think "Verify claims in this research paper" \
+rk think "Verify claims in this research paper" \
   --provider gemini \
   --model gemini-1.5-pro \
   --protocol proofguard
 
 # BedRock: First principles decomposition
-rk-core think "Break down the fundamentals of quantum computing" \
+rk think "Break down the fundamentals of quantum computing" \
   --provider gemini \
   --protocol bedrock
 
 # BrutalHonesty: Adversarial critique
-rk-core think "Critique this product roadmap" \
+rk think "Critique this product roadmap" \
   --provider gemini \
   --protocol brutalhonesty
 ```
@@ -135,24 +135,24 @@ rk-core think "Critique this product roadmap" \
 
 ```bash
 # Quick analysis (Gemini Flash for speed)
-rk-core think "Quick review of this code" \
+rk think "Quick review of this code" \
   --provider gemini \
   --model gemini-2.0-flash \
   --profile quick
 
 # Balanced analysis
-rk-core think "Evaluate this system design" \
+rk think "Evaluate this system design" \
   --provider gemini \
   --profile balanced
 
 # Deep analysis with long context
-rk-core think "Comprehensive analysis of this codebase" \
+rk think "Comprehensive analysis of this codebase" \
   --provider gemini \
   --model gemini-1.5-pro \
   --profile deep
 
 # Paranoid mode with thinking model
-rk-core think "Security audit this contract" \
+rk think "Security audit this contract" \
   --provider gemini \
   --model gemini-2.0-flash-thinking-exp \
   --profile paranoid
@@ -162,20 +162,20 @@ rk-core think "Security audit this contract" \
 
 ```bash
 # Analyze entire codebase (up to 2M tokens!)
-rk-core think "Review this entire repository for issues" \
+rk think "Review this entire repository for issues" \
   --provider gemini \
   --model gemini-1.5-pro \
   --max-input-tokens 500000 \
   --profile deep
 
 # Process long documents
-rk-core think "Summarize this 500-page document" \
+rk think "Summarize this 500-page document" \
   --provider gemini \
   --model gemini-1.5-pro \
   --attach document.pdf
 
 # Multi-document analysis
-rk-core think "Compare these three research papers" \
+rk think "Compare these three research papers" \
   --provider gemini \
   --model gemini-1.5-pro \
   --attach paper1.pdf \
@@ -187,19 +187,19 @@ rk-core think "Compare these three research papers" \
 
 ```bash
 # Image analysis
-rk-core think "Analyze this architecture diagram" \
+rk think "Analyze this architecture diagram" \
   --provider gemini \
   --model gemini-2.0-flash \
   --attach diagram.png
 
 # Video analysis (YouTube)
-rk-core think "Summarize this video with timestamps" \
+rk think "Summarize this video with timestamps" \
   --provider gemini \
   --model gemini-2.0-flash \
   --attach "https://youtube.com/watch?v=..."
 
 # Audio transcription and analysis
-rk-core think "Transcribe and analyze this meeting" \
+rk think "Transcribe and analyze this meeting" \
   --provider gemini \
   --model gemini-2.0-flash \
   --attach meeting.mp3
@@ -353,7 +353,7 @@ npm install -g @anthropic-ai/gemini-cli  # Check official source
 gemini -p "Review this analysis for blind spots: $(cat analysis.json)"
 
 # Pipe ReasonKit output to Gemini
-rk-core think "Design a caching strategy" --format json | \
+rk think "Design a caching strategy" --format json | \
   gemini -p "Find flaws in this reasoning"
 
 # Use sandbox mode for untrusted inputs
@@ -391,7 +391,7 @@ gemini --sandbox -p "Analyze this code"
 # Total: ~$1,055/month (mostly from long context)
 
 # Cost-optimized for long context
-rk-core think "Process large document" \
+rk think "Process large document" \
   --provider gemini \
   --model gemini-2.0-flash \  # Use Flash even for long context
   --budget "$5.00"
@@ -423,7 +423,7 @@ export VERTEX_PROJECT="my-project"
 export VERTEX_LOCATION="us-central1"
 
 # Use Vertex AI
-rk-core think "Enterprise analysis" \
+rk think "Enterprise analysis" \
   --provider gemini \
   --vertex \
   --model gemini-2.0-flash
@@ -479,12 +479,12 @@ safety_threshold = "BLOCK_ONLY_HIGH"
 ```bash
 # Use model with larger context
 # Gemini 1.5 Pro: 2M tokens (!)
-rk-core think "Long analysis" \
+rk think "Long analysis" \
   --provider gemini \
   --model gemini-1.5-pro
 
 # Check token count before sending
-rk-core tokens count "your long text here"
+rk tokens count "your long text here"
 ```
 
 #### 5. "Multimodal input failed"
@@ -500,7 +500,7 @@ rk-core tokens count "your long text here"
 # Generally: Images < 20MB, Video < 2GB
 
 # Use direct URL for large files
-rk-core think "Analyze video" \
+rk think "Analyze video" \
   --provider gemini \
   --attach "https://storage.googleapis.com/bucket/video.mp4"
 ```
@@ -571,7 +571,7 @@ paranoid = "reasoning"
 
 # Example: Analyze entire project
 find src -name "*.rs" -exec cat {} \; | \
-  rk-core think "Review this codebase" \
+  rk think "Review this codebase" \
     --provider gemini \
     --model gemini-1.5-pro \
     --profile deep
@@ -581,7 +581,7 @@ find src -name "*.rs" -exec cat {} \; | \
 
 ```bash
 # Set budget limits
-rk-core think "Analysis" \
+rk think "Analysis" \
   --provider gemini \
   --budget "$1.00"
 
@@ -589,7 +589,7 @@ rk-core think "Analysis" \
 # Reserve Pro for long-context only
 
 # Monitor usage
-rk-core metrics cost --provider gemini --period month
+rk metrics cost --provider gemini --period month
 ```
 
 ---

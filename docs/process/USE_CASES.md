@@ -17,7 +17,7 @@ Here is how **ReasonKit** changes the outcome in critical high-stakes scenarios.
 **Command:**
 
 ```bash
-rk-core think "Critique architecture: Node.js for HFT matching engine" --profile paranoid
+rk think "Critique architecture: Node.js for HFT matching engine" --profile paranoid
 ```
 
 **Glass Box Output:**
@@ -40,7 +40,7 @@ rk-core think "Critique architecture: Node.js for HFT matching engine" --profile
 **Command:**
 
 ```bash
-rk-core think "Does homomorphic encryption satisfy GDPR Article 4(5) pseudonymization requirements?" --profile scientific
+rk think "Does homomorphic encryption satisfy GDPR Article 4(5) pseudonymization requirements?" --profile scientific
 ```
 
 **Glass Box Output:**
@@ -65,7 +65,7 @@ rk-core think "Does homomorphic encryption satisfy GDPR Article 4(5) pseudonymiz
 **Command:**
 
 ```bash
-rk-core think "Should we pivot to B2B given 20% MoM growth but 90% churn?" --profile decide
+rk think "Should we pivot to B2B given 20% MoM growth but 90% churn?" --profile decide
 ```
 
 **Glass Box Output:**
@@ -91,7 +91,7 @@ rk-core think "Should we pivot to B2B given 20% MoM growth but 90% churn?" --pro
 **Command:**
 
 ```bash
-rk-core think "Evaluate the methodology of the LK-99 paper" --profile scientific
+rk think "Evaluate the methodology of the LK-99 paper" --profile scientific
 ```
 
 **Glass Box Output:**

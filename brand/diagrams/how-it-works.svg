@@ -39,7 +39,7 @@
     <text x="115" y="72" fill="#9ca3af" font-family="Inter, sans-serif" font-size="14">Your question or problem</text>
 
     <rect x="0" y="100" width="400" height="95" rx="14" fill="#0a0d14" stroke="#ec4899" stroke-width="1.5"/>
-    <text x="25" y="135" fill="#f9fafb" font-family="JetBrains Mono, monospace" font-size="13">$ rk-core think --profile deep \</text>
+    <text x="25" y="135" fill="#f9fafb" font-family="JetBrains Mono, monospace" font-size="13">$ rk think --profile deep \</text>
     <text x="25" y="165" fill="#f9fafb" font-family="JetBrains Mono, monospace" font-size="13">    "Should we adopt microservices?"</text>
   </g>
 

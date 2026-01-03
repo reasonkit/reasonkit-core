@@ -70,10 +70,10 @@ ReasonKit Core provides a Rust-based MCP server implementation that exposes reas
 
 ```bash
 # Run the MCP server on stdio (for integration with Claude, etc.)
-rk-core mcp-server
+rk mcp-server
 
 # Or using cargo
-cargo run --bin rk-core -- mcp-server
+cargo run --bin rk -- mcp-server
 ```
 
 ### Running from Source
@@ -83,7 +83,7 @@ cargo run --bin rk-core -- mcp-server
 git clone https://github.com/reasonkit/reasonkit-core.git
 cd reasonkit-core
 cargo build --release
-./target/release/rk-core mcp-server
+./target/release/rk mcp-server
 ```
 
 The server will output status to stderr and communicate via JSON-RPC 2.0 on stdin/stdout:
@@ -99,7 +99,7 @@ ReasonKit Core MCP Server running on stdio...
 ### Prerequisites
 
 - Rust 1.75+ (for building from source)
-- Or pre-built `rk-core` binary
+- Or pre-built `rk` binary
 
 ### Installation Options
 
@@ -127,10 +127,10 @@ curl -fsSL https://reasonkit.sh/install | bash
 
 ```bash
 # Check version
-rk-core --version
+rk --version
 
 # Test MCP server startup
-echo '{"jsonrpc":"2.0","id":1,"method":"ping"}' | rk-core mcp-server
+echo '{"jsonrpc":"2.0","id":1,"method":"ping"}' | rk mcp-server
 ```
 
 ---
@@ -205,7 +205,7 @@ use std::collections::HashMap;
 
 let config = McpClientConfig {
     name: "reasonkit-core".to_string(),
-    command: "rk-core".to_string(),
+    command: "rk".to_string(),
     args: vec!["mcp-server".to_string()],
     env: HashMap::new(),
     timeout_secs: 30,        // Connection timeout
@@ -237,7 +237,7 @@ async fn main() -> anyhow::Result<()> {
     // Configure client
     let config = McpClientConfig {
         name: "reasonkit-core".to_string(),
-        command: "rk-core".to_string(),
+        command: "rk".to_string(),
         args: vec!["mcp-server".to_string()],
         env: HashMap::new(),
         timeout_secs: 30,
@@ -337,7 +337,7 @@ Add ReasonKit to your Claude Desktop MCP configuration:
 {
   "mcpServers": {
     "reasonkit": {
-      "command": "rk-core",
+      "command": "rk",
       "args": ["mcp-server"],
       "env": {
         "REASONKIT_LOG": "info"
@@ -349,13 +349,13 @@ Add ReasonKit to your Claude Desktop MCP configuration:
 
 ### Using with Absolute Path
 
-If `rk-core` is not in your PATH:
+If `rk` is not in your PATH:
 
 ```json
 {
   "mcpServers": {
     "reasonkit": {
-      "command": "/home/user/.cargo/bin/rk-core",
+      "command": "/home/user/.cargo/bin/rk",
       "args": ["mcp-server"]
     }
   }
@@ -463,7 +463,7 @@ echo '{
       "profile": "balanced"
     }
   }
-}' | rk-core mcp-server
+}' | rk mcp-server
 ```
 
 ### Calling rk_retrieve for Knowledge Base Search
@@ -481,7 +481,7 @@ echo '{
       "threshold": 0.7
     }
   }
-}' | rk-core mcp-server
+}' | rk mcp-server
 ```
 
 ### Using Protocol Delta for Citation
@@ -499,7 +499,7 @@ echo '{
       "url": "https://example.com/source"
     }
   }
-}' | rk-core mcp-server
+}' | rk mcp-server
 ```
 
 ### Listing Available Tools
@@ -509,7 +509,7 @@ echo '{
   "jsonrpc": "2.0",
   "id": 4,
   "method": "tools/list"
-}' | rk-core mcp-server
+}' | rk mcp-server
 ```
 
 ---
@@ -520,13 +520,13 @@ echo '{
 
 #### Server Not Starting
 
-**Symptom**: No output when running `rk-core mcp-server`
+**Symptom**: No output when running `rk mcp-server`
 
 **Solutions**:
 
-1. Check if the binary exists: `which rk-core`
-2. Run with verbose logging: `REASONKIT_LOG=debug rk-core mcp-server`
-3. Verify permissions: `chmod +x $(which rk-core)`
+1. Check if the binary exists: `which rk`
+2. Run with verbose logging: `REASONKIT_LOG=debug rk mcp-server`
+3. Verify permissions: `chmod +x $(which rk)`
 
 #### Connection Timeout
 
@@ -535,7 +535,7 @@ echo '{
 **Solutions**:
 
 1. Increase timeout: `timeout_secs: 60`
-2. Check if server is running: `ps aux | grep rk-core`
+2. Check if server is running: `ps aux | grep rk`
 3. Verify stdio is not blocked by other processes
 
 #### Invalid JSON-RPC Response
@@ -574,7 +574,7 @@ echo '{
 Run with full debugging:
 
 ```bash
-RUST_BACKTRACE=1 REASONKIT_LOG=trace rk-core mcp-server 2>debug.log
+RUST_BACKTRACE=1 REASONKIT_LOG=trace rk mcp-server 2>debug.log
 ```
 
 ### Testing Connection
@@ -583,13 +583,13 @@ Use the MCP CLI to test:
 
 ```bash
 # List servers
-rk-core mcp list-servers
+rk mcp list-servers
 
 # List tools
-rk-core mcp list-tools
+rk mcp list-tools
 
 # Check server health
-rk-core mcp ping
+rk mcp ping
 ```
 
 ### Error Codes
@@ -608,7 +608,7 @@ rk-core mcp ping
 
 ### Getting Help
 
-1. Check logs: `REASONKIT_LOG=debug rk-core mcp-server 2>&1 | tee mcp.log`
+1. Check logs: `REASONKIT_LOG=debug rk mcp-server 2>&1 | tee mcp.log`
 2. Run tests: `cargo test --lib mcp`
 3. File an issue: https://github.com/reasonkit/reasonkit-core/issues
 

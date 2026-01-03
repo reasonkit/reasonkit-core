@@ -9,9 +9,9 @@
 **Auditable Reasoning for Production AI | Rust-Native | SSR/SSG Compatible**
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://reasonkit.sh/assets/brand/core/reasonkit-core_hero.png">
-  <source media="(prefers-color-scheme: light)" srcset="https://reasonkit.sh/assets/brand/core/reasonkit-core_hero.png">
-  <img src="https://reasonkit.sh/assets/brand/core/reasonkit-core_hero.png" alt="ReasonKit - Auditable Reasoning for Production AI" width="100%">
+  <source media="(prefers-color-scheme: dark)" srcset="./brand/readme/reasonkit-core_hero.png">
+  <source media="(prefers-color-scheme: light)" srcset="./brand/readme/reasonkit-core_hero.png">
+  <img src="./brand/readme/reasonkit-core_hero.png" alt="ReasonKit - Auditable Reasoning for Production AI" width="100%">
 </picture>
 
 [![CI](https://img.shields.io/github/actions/workflow/status/reasonkit/reasonkit-core/ci.yml?branch=main&style=flat-square&logo=github&label=CI&color=06b6d4&logoColor=06b6d4)](https://github.com/reasonkit/reasonkit-core/actions)
@@ -46,30 +46,40 @@ LLMs are fundamentally **probabilistic**. Same prompt → different outputs. Thi
 
 ## Quick Start
 
-### Prerequisites
-- Rust toolchain installed (`curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh`)
-- API key for your preferred LLM provider (e.g., `OPENAI_API_KEY` for OpenAI)
-- Optional: `uv` for Python bindings (`curl -LsSf https://astral.sh/uv/install.sh | sh`)
-
+**1. Install (Universal)**
 ```bash
-# Install (Universal)
 curl -fsSL https://reasonkit.sh/install | bash
-
-# Or via Cargo
-cargo install reasonkit-core
-
-# Run your first analysis
-rk-core think --profile balanced "Should we migrate to microservices?"
+# Installs 'rk' alias automatically
 ```
 
-> **Note:** In v0.1.x, CLI commands other than `mcp`, `serve-mcp`, and `completions` are scaffolded. The examples below describe the planned interface.
+**2. Choose Your Workflow**
+
+### 🤖 Claude Code (Opus 4.5)
+*Agentic CLI. No API key required.*
+```bash
+claude mcp add reasonkit -- rk serve-mcp
+claude "Use ReasonKit to analyze: Should we migrate to microservices?"
+```
+
+### 🌐 ChatGPT (Browser)
+*Manual MCP Bridge. Injects the reasoning protocol directly into the chat.*
+```bash
+# Generate strict protocol
+rk protocol "Should we migrate to microservices?" | pbcopy
+
+# → Paste into ChatGPT: "Execute this protocol..."
+```
+
+### ⚡ Gemini 3.0 Pro (API)
+*Native CLI integration with Google's latest preview.*
+```bash
+export GEMINI_API_KEY=AIza...
+rk think --model gemini-3.0-pro-preview "Should we migrate to microservices?"
+```
+
+> **Note:** The `rk` command is the shorthand alias for `rk`.
 
 **30 seconds to structured reasoning.**
-
-### Troubleshooting
-- **Command not found**: Ensure `~/.cargo/bin` is in your PATH.
-- **API errors**: Verify your API key is set and valid.
-- **Performance issues**: Check system resources; ReasonKit targets <5ms latency.
 
 ---
 
@@ -77,10 +87,11 @@ rk-core think --profile balanced "Should we migrate to microservices?"
 
 Each ThinkTool acts as a **variance reduction filter**, transforming probabilistic outputs into increasingly deterministic reasoning paths.
 
-![ReasonKit Protocol Chain - Turn Prompts into Protocols](https://reasonkit.sh/assets/brand/core/powercombo_process.png)
+![ReasonKit Protocol Chain - Turn Prompts into Protocols](./brand/readme/powercombo_process.png)
 
-![ReasonKit ThinkTool Chain - Variance Reduction](https://reasonkit.sh/assets/brand/core/thinktool_cards_deck.svg)
-![ReasonKit Variance Reduction Chart](https://reasonkit.sh/assets/brand/core/chart_variance_reduction.png)
+![ReasonKit Core ThinkTool Chain - Variance Reduction](./brand/readme/thinktool_cards_deck.svg)
+
+![ReasonKit Variance Reduction Chart](./brand/readme/chart_variance_reduction.png)
 
 | ThinkTool         | Operation    | What It Does                                    |
 | ----------------- | ------------ | ----------------------------------------------- |
@@ -100,88 +111,20 @@ Each ThinkTool acts as a **variance reduction filter**, transforming probabilist
 
 Pre-configured chains for different rigor levels:
 
-![Reasoning Profiles Scale](https://reasonkit.sh/assets/brand/core/reasoning_profiles_scale.svg)
+![ReasonKit Core Reasoning Profiles Scale](./brand/readme/reasoning_profiles_scale.svg)
 
 ```bash
 # Fast analysis (70% confidence target)
-rk-core think --profile quick "Is this email phishing?"
+rk think --profile quick "Is this email phishing?"
 
 # Standard analysis (80% confidence target)
-rk-core think --profile balanced "Should we use microservices?"
+rk think --profile balanced "Should we use microservices?"
 
 # Thorough analysis (85% confidence target)
-rk-core think --profile deep "Design A/B test for feature X"
+rk think --profile deep "Design A/B test for feature X"
 
 # Maximum rigor (95% confidence target)
-rk-core think --profile paranoid "Validate cryptographic implementation"
-```
-
-| Profile      | Chain                   | Confidence | Use Case           |
-| ------------ | ----------------------- | ---------- | ------------------ |
-| `--quick`    | GigaThink → LaserLogic  | 70%        | Fast sanity checks |
-| `--balanced` | All 5 ThinkTools        | 80%        | Standard decisions |
-| `--deep`     | All 5 + meta-cognition  | 85%        | Complex problems   |
-| `--paranoid` | All 5 + validation pass | 95%        | Critical decisions |
-
-### Command Flow Diagram
-```mermaid
-flowchart TD
-    A[User Input] --> B[Select Profile]
-    B --> C[Execute ThinkTool Chain]
-    C --> D[Output Result with Confidence]
-    D --> E[Log Trace to SQLite]
-```
-
-**Standard Operations:**
-
-```bash
-# Balanced analysis (5-step protocol)
-rk-core think --profile balanced "Should we migrate our monolith to microservices?"
-
-# Quick sanity check (2-step protocol)
-rk-core think --profile quick "Is this email a phishing attempt?"
-
-# Maximum rigor (paranoid mode)
-rk-core think --profile paranoid "Validate this cryptographic implementation"
-
-# Scientific method (research & experiments)
-rk-core think --profile scientific "Design A/B test for feature X"
-```
-
-**With Memory (RAG):**
-
-```bash
-# Ingest documents
-rk-core ingest document.pdf
-
-# Query with RAG
-rk-core query "What are the key findings in the research papers?"
-
-# View execution traces
-rk-core trace list
-rk-core trace export <id>
-```
-
----
-
-## Reasoning Profiles
-
-Pre-configured chains for different rigor levels:
-
-![Reasoning Profiles Scale](https://reasonkit.sh/assets/brand/core/reasoning_profiles_scale.svg)
-
-```bash
-# Fast analysis (70% confidence target)
-rk-core think --profile quick "Is this email phishing?"
-
-# Standard analysis (80% confidence target)
-rk-core think --profile balanced "Should we use microservices?"
-
-# Thorough analysis (85% confidence target)
-rk-core think --profile deep "Design A/B test for feature X"
-
-# Maximum rigor (95% confidence target)
-rk-core think --profile paranoid "Validate cryptographic implementation"
+rk think --profile paranoid "Validate cryptographic implementation"
 ```
 
 | Profile      | Chain                   | Confidence | Use Case           |
@@ -195,10 +138,10 @@ rk-core think --profile paranoid "Validate cryptographic implementation"
 
 ## See It In Action
 
-![ReasonKit Terminal Experience](https://reasonkit.sh/assets/brand/core/terminal_mockup.png)
+![ReasonKit Terminal Experience](./brand/readme/terminal_mockup.png)
 
 ```text
-$ rk-core think --profile balanced "Should we migrate to microservices?"
+$ rk think --profile balanced "Should we migrate to microservices?"
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ThinkTool Chain: GigaThink → LaserLogic → BedRock → ProofGuard
@@ -248,9 +191,9 @@ VERDICT: conditional_yes | Confidence: 87% | Duration: 2.3s
 
 The ReasonKit architecture uses a **Protocol Engine** wrapper to enforce deterministic execution over probabilistic LLM outputs.
 
-![ReasonKit Core Architecture Exploded View](https://reasonkit.sh/assets/brand/core/core_architecture_exploded.png)
+![ReasonKit Core Architecture Exploded View](./brand/readme/core_architecture_exploded.png)
 
-![ReasonKit ThinkTool Chain Architecture](https://reasonkit.sh/assets/brand/core/architecture_diagram.png)
+![ReasonKit ThinkTool Chain Architecture](./brand/readme/architecture_diagram.png)
 
 **Three-Layer Architecture:**
 
@@ -282,8 +225,8 @@ The ReasonKit architecture uses a **Protocol Engine** wrapper to enforce determi
 
 ```mermaid
 flowchart LR
-    subgraph CLI["ReasonKit CLI (rk-core)"]
-      A[User Command<br/>rk-core think --profile balanced]
+    subgraph CLI["ReasonKit CLI (rk)"]
+      A[User Command<br/>rk think --profile balanced]
     end
 
     subgraph PROTOCOL["Deterministic Protocol Engine"]
@@ -397,70 +340,38 @@ Python bindings available via PyO3 (build from source with `--features python`).
 
 ---
 
-## Usage Examples
+## How to Use
 
-Pre-configured chains for different rigor levels:
-
-![Reasoning Profiles Scale](https://reasonkit.sh/assets/brand/core/reasoning_profiles_scale.svg)
-
-```bash
-# Fast analysis (70% confidence target)
-rk-core think --profile quick "Is this email phishing?"
-
-# Standard analysis (80% confidence target)
-rk-core think --profile balanced "Should we use microservices?"
-
-# Thorough analysis (85% confidence target)
-rk-core think --profile deep "Design A/B test for feature X"
-
-# Maximum rigor (95% confidence target)
-rk-core think --profile paranoid "Validate cryptographic implementation"
-```
-
-| Profile      | Chain                   | Confidence | Use Case           |
-| ------------ | ----------------------- | ---------- | ------------------ |
-| `--quick`    | GigaThink → LaserLogic  | 70%        | Fast sanity checks |
-| `--balanced` | All 5 ThinkTools        | 80%        | Standard decisions |
-| `--deep`     | All 5 + meta-cognition  | 85%        | Complex problems   |
-| `--paranoid` | All 5 + validation pass | 95%        | Critical decisions |
-
-### Command Flow Diagram
-```mermaid
-flowchart TD
-    A[User Input] --> B[Select Profile]
-    B --> C[Execute ThinkTool Chain]
-    C --> D[Output Result with Confidence]
-    D --> E[Log Trace to SQLite]
-```
+**Command Structure:** `rk <command> [options] [arguments]`
 
 **Standard Operations:**
 
 ```bash
 # Balanced analysis (5-step protocol)
-rk-core think --profile balanced "Should we migrate our monolith to microservices?"
+rk think --profile balanced "Should we migrate our monolith to microservices?"
 
 # Quick sanity check (2-step protocol)
-rk-core think --profile quick "Is this email a phishing attempt?"
+rk think --profile quick "Is this email a phishing attempt?"
 
 # Maximum rigor (paranoid mode)
-rk-core think --profile paranoid "Validate this cryptographic implementation"
+rk think --profile paranoid "Validate this cryptographic implementation"
 
 # Scientific method (research & experiments)
-rk-core think --profile scientific "Design A/B test for feature X"
+rk think --profile scientific "Design A/B test for feature X"
 ```
 
 **With Memory (RAG):**
 
 ```bash
 # Ingest documents
-rk-core ingest document.pdf
+rk ingest document.pdf
 
 # Query with RAG
-rk-core query "What are the key findings in the research papers?"
+rk query "What are the key findings in the research papers?"
 
 # View execution traces
-rk-core trace list
-rk-core trace export <id>
+rk trace list
+rk trace export <id>
 ```
 
 ---
@@ -469,7 +380,7 @@ rk-core trace export <id>
 
 We demand excellence. All contributions must pass **The 5 Gates of Quality**:
 
-![ReasonKit Quality Gates Shield](https://reasonkit.sh/assets/brand/core/quality_gates_shield.png)
+![ReasonKit Quality Gates Shield](./brand/readme/quality_gates_shield.png)
 
 ```bash
 # Clone & Setup
@@ -543,13 +454,13 @@ See [Community Badges](brand/COMMUNITY_BADGES.md) for all variants and usage gui
 
 ```bash
 # Check version
-rk-core --version
+rk --version
 
 # Verify MCP server starts
-rk-core serve-mcp --help
+rk serve-mcp --help
 
 # Run a quick test (requires LLM API key)
-OPENAI_API_KEY=your-key rk-core mcp
+OPENAI_API_KEY=your-key rk mcp
 ```
 
 ---
@@ -564,7 +475,7 @@ OPENAI_API_KEY=your-key rk-core mcp
 
 <div align="center">
 
-![ReasonKit Ecosystem Connection](https://reasonkit.sh/assets/brand/core/ecosystem_connection.png)
+![ReasonKit Ecosystem Connection](./brand/readme/ecosystem_connection.png)
 
 **ReasonKit** — Turn Prompts into Protocols
 

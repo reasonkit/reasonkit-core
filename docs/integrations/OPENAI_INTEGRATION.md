@@ -19,7 +19,7 @@ export OPENAI_API_KEY="sk-..."
 cargo install reasonkit-core
 
 # 3. Run analysis
-rk-core think --provider openai "Evaluate this business strategy"
+rk think --provider openai "Evaluate this business strategy"
 ```
 
 ---
@@ -44,10 +44,10 @@ export OPENAI_ORG_ID="org-..."
 
 ```bash
 # Test API connection
-rk-core think --provider openai --model gpt-4o-mini "Hello" --mock false
+rk think --provider openai --model gpt-4o-mini "Hello" --mock false
 
 # Check available models
-rk-core providers show openai
+rk providers show openai
 ```
 
 ---
@@ -100,31 +100,31 @@ retry_delay_ms = 1000
 
 ```bash
 # GigaThink: Creative expansion with GPT-4o
-rk-core think "Generate product feature ideas" \
+rk think "Generate product feature ideas" \
   --provider openai \
   --model gpt-4o \
   --protocol gigathink
 
 # LaserLogic: Logical validation with GPT-4o-mini (fast)
-rk-core think "Check this argument for logical fallacies" \
+rk think "Check this argument for logical fallacies" \
   --provider openai \
   --model gpt-4o-mini \
   --protocol laserlogic
 
 # ProofGuard: Evidence verification
-rk-core think "Verify these performance claims" \
+rk think "Verify these performance claims" \
   --provider openai \
   --model gpt-4o \
   --protocol proofguard
 
 # BedRock: First principles with o1 (deep reasoning)
-rk-core think "Break down the fundamentals of distributed systems" \
+rk think "Break down the fundamentals of distributed systems" \
   --provider openai \
   --model o1 \
   --protocol bedrock
 
 # BrutalHonesty: Adversarial critique
-rk-core think "Critique my marketing strategy" \
+rk think "Critique my marketing strategy" \
   --provider openai \
   --protocol brutalhonesty
 ```
@@ -133,24 +133,24 @@ rk-core think "Critique my marketing strategy" \
 
 ```bash
 # Quick analysis (GPT-4o-mini for speed)
-rk-core think "Is this API design good?" \
+rk think "Is this API design good?" \
   --provider openai \
   --model gpt-4o-mini \
   --profile quick
 
 # Balanced analysis (GPT-4o default)
-rk-core think "Evaluate this architecture" \
+rk think "Evaluate this architecture" \
   --provider openai \
   --profile balanced
 
 # Deep analysis with o1 (maximum reasoning)
-rk-core think "Design a fault-tolerant system" \
+rk think "Design a fault-tolerant system" \
   --provider openai \
   --model o1 \
   --profile deep
 
 # Paranoid mode (multi-pass verification)
-rk-core think "Review this financial model" \
+rk think "Review this financial model" \
   --provider openai \
   --model gpt-4o \
   --profile paranoid \
@@ -161,14 +161,14 @@ rk-core think "Review this financial model" \
 
 ```bash
 # Force JSON output
-rk-core think "Analyze these metrics" \
+rk think "Analyze these metrics" \
   --provider openai \
   --model gpt-4o \
   --response-format json_object \
   --format json
 
 # With JSON schema validation
-rk-core think "Extract entities from this text" \
+rk think "Extract entities from this text" \
   --provider openai \
   --response-format json_schema \
   --schema '{"type":"object","properties":{"entities":{"type":"array"}}}'
@@ -178,13 +178,13 @@ rk-core think "Extract entities from this text" \
 
 ```bash
 # o1 for complex multi-step reasoning
-rk-core think "Solve this optimization problem" \
+rk think "Solve this optimization problem" \
   --provider openai \
   --model o1 \
   --profile deep
 
 # o1-mini for faster reasoning tasks
-rk-core think "Debug this algorithm" \
+rk think "Debug this algorithm" \
   --provider openai \
   --model o1-mini \
   --protocol laserlogic
@@ -315,8 +315,8 @@ let embedding = embedder.embed("Your text here").await?;
 # Total: ~$673/month
 
 # Cost-optimized strategy
-rk-core think "Initial analysis" --model gpt-4o-mini
-rk-core think "Final verification" --model gpt-4o --profile deep
+rk think "Initial analysis" --model gpt-4o-mini
+rk think "Final verification" --model gpt-4o --profile deep
 ```
 
 ---
@@ -342,7 +342,7 @@ export AZURE_OPENAI_KEY="..."
 export AZURE_OPENAI_ENDPOINT="https://YOUR-RESOURCE.openai.azure.com"
 
 # Use Azure deployment
-rk-core think "Enterprise analysis" \
+rk think "Enterprise analysis" \
   --provider openai \
   --api-base "$AZURE_OPENAI_ENDPOINT" \
   --model gpt-4o-deployment
@@ -390,21 +390,21 @@ retry_delay_ms = 2000
 # o1: 200K context
 
 # Truncate input if needed
-rk-core think "Long document" --max-input-tokens 50000
+rk think "Long document" --max-input-tokens 50000
 
 # Or use ReasonKit's chunking
-rk-core ingest document.pdf  # Auto-chunks
-rk-core query "Summary" --raptor  # Uses RAPTOR tree
+rk ingest document.pdf  # Auto-chunks
+rk query "Summary" --raptor  # Uses RAPTOR tree
 ```
 
 #### 4. "Model not found"
 
 ```bash
 # Check available models
-rk-core providers show openai
+rk providers show openai
 
 # Use correct model ID
-rk-core think "Query" --provider openai --model gpt-4o
+rk think "Query" --provider openai --model gpt-4o
 
 # Note: Some models require API access approval
 # Apply at: https://platform.openai.com/
@@ -414,12 +414,12 @@ rk-core think "Query" --provider openai --model gpt-4o
 
 ```bash
 # Ensure prompt requests JSON
-rk-core think "Return analysis as JSON with keys: score, reasons, recommendation" \
+rk think "Return analysis as JSON with keys: score, reasons, recommendation" \
   --provider openai \
   --response-format json_object
 
 # Or use JSON schema
-rk-core think "Extract data" \
+rk think "Extract data" \
   --response-format json_schema \
   --schema '{"type":"object","properties":{"result":{"type":"string"}},"required":["result"]}'
 ```
@@ -432,7 +432,7 @@ rk-core think "Extract data" \
 # Good: "Solve this problem: ..."
 
 # Use ReasonKit profiles which optimize for o1
-rk-core think "Complex problem" \
+rk think "Complex problem" \
   --provider openai \
   --model o1 \
   --profile deep  # Profile auto-adjusts prompts
@@ -482,23 +482,23 @@ paranoid = "reasoning"
 
 ```bash
 # Set hard budget limit
-rk-core think "Expensive analysis" \
+rk think "Expensive analysis" \
   --provider openai \
   --budget "$1.00"
 
 # Use mini for drafts, upgrade for final
-rk-core think "Draft" --model gpt-4o-mini --profile quick
-rk-core think "Final" --model gpt-4o --profile deep
+rk think "Draft" --model gpt-4o-mini --profile quick
+rk think "Final" --model gpt-4o --profile deep
 
 # Monitor usage
-rk-core metrics cost --provider openai --period month
+rk metrics cost --provider openai --period month
 ```
 
 ### Reproducibility
 
 ```bash
 # Use seed for reproducible outputs
-rk-core think "Analysis" \
+rk think "Analysis" \
   --provider openai \
   --model gpt-4o \
   --seed 42 \

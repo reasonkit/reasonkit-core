@@ -297,8 +297,8 @@ rk_opencode() {
     exec "$real_bin" "$subcmd" "${new_args[@]}" "$wrapped"
   fi
 
-  # Check if we are wrapping rk-core
-  if [[ "$real_bin" == *"rk-core"* ]]; then
+  # Check if we are wrapping rk
+  if [[ "$real_bin" == *"rk"* ]]; then
       exec "$real_bin" think --profile "$profile" --query "$prompt" "${new_args[@]}"
   else
       # opencode run takes message as argument, not -p

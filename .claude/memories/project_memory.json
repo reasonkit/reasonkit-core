@@ -1,0 +1,56 @@
+{
+  "memories": [],
+  "manual_memories": [],
+  "realtime_memories": [
+    {
+      "type": "claude_response",
+      "content": "**Fixed.** All active MegaLogic references renamed to LaserLogic:\n\n| File | Status |\n|------|--------|\n| `~/.claude/commands/rk-logic.md` | ✅ Fixed |\n| `~/.claude/commands/rk-help.md` | ✅ Fixed |\n| `~",
+      "added_at": "2026-01-03T00:45:09.992082",
+      "source": "realtime_capture"
+    },
+    {
+      "type": "message",
+      "content": "Are these Claude Code (`claude`) commands a default part of the installation right now?",
+      "added_at": "2026-01-03T00:45:09.992160",
+      "source": "realtime_capture"
+    },
+    {
+      "type": "claude_response",
+      "content": "No. The `/rk-*` commands are **custom commands you created** - they're stored in your personal `~/.claude/commands/` directory.\n\n**Default Claude Code commands** (built-in):\n- `/help` - Show help\n- `/",
+      "added_at": "2026-01-03T00:47:38.305560",
+      "source": "realtime_capture"
+    },
+    {
+      "type": "message",
+      "content": "Yes, but are they installed as soon as someone would install ReasonKit right now? How is this for via `cargo` and how for via the one-liner install (curl + bash)?",
+      "added_at": "2026-01-03T00:47:38.305614",
+      "source": "realtime_capture"
+    },
+    {
+      "type": "claude_response",
+      "content": "Looking at the install script (`reasonkit-site/install.sh`):\n\n**Current state:**\n\n| Method | Claude Commands Installed? |\n|--------|---------------------------|\n| `cargo install reasonkit` | ❌ None |\n",
+      "added_at": "2026-01-03T00:57:39.869252",
+      "source": "realtime_capture"
+    },
+    {
+      "type": "message",
+      "content": "curl -fsSL https://reasonkit.sh/install | bash - Let me check if this script exists and what it does: --> It should be the same as the website: 'curl -fsSL https://get.reasonkit.sh | bash' --- - Is it",
+      "added_at": "2026-01-03T00:57:39.869315",
+      "source": "realtime_capture"
+    },
+    {
+      "type": "claude_response",
+      "content": "## Summary: ReasonKit Installation System Overhaul Complete ✅\n\n### Completed Tasks\n\n**1. Install Script v2.0.0 - Complete Overhaul** (`reasonkit-site/install.sh` & `install`)\n- Interactive by default ",
+      "added_at": "2026-01-03T01:33:48.525007",
+      "source": "realtime_capture"
+    },
+    {
+      "type": "message",
+      "content": "``` 4. UV Mandate Enforcement (CONS-010) - Fixed: docs/guides/INTEGRATION.md - pip → uv pip - Fixed: docs/reference/API_REFERENCE.md - pip → uv pip - Fixed: docs/getting-started/INSTALLATION_TROUBLESH",
+      "added_at": "2026-01-03T01:33:48.525108",
+      "source": "realtime_capture"
+    }
+  ],
+  "created_at": "2026-01-03T00:45:09.744834",
+  "updated_at": "2026-01-03T01:33:48.525111"
+}

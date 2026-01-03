@@ -19,7 +19,7 @@ export ANTHROPIC_API_KEY="sk-ant-..."
 cargo install reasonkit-core
 
 # 3. Run analysis
-rk-core think --provider anthropic "Should we adopt microservices?"
+rk think --provider anthropic "Should we adopt microservices?"
 ```
 
 ---
@@ -45,10 +45,10 @@ api_key = "sk-ant-..."
 
 ```bash
 # Test API connection
-rk-core think --provider anthropic --model claude-haiku "Hello" --mock false
+rk think --provider anthropic --model claude-haiku "Hello" --mock false
 
 # Check configuration
-rk-core config show | grep anthropic
+rk config show | grep anthropic
 ```
 
 ---
@@ -99,25 +99,25 @@ retry_delay_ms = 1000
 
 ```bash
 # GigaThink: Creative expansion with Claude Sonnet
-rk-core think "What are novel approaches to database scaling?" \
+rk think "What are novel approaches to database scaling?" \
   --provider anthropic \
   --model claude-sonnet-4 \
   --protocol gigathink
 
 # LaserLogic: Logical validation with Haiku (fast)
-rk-core think "Validate this argument: If A then B, A is true, therefore B" \
+rk think "Validate this argument: If A then B, A is true, therefore B" \
   --provider anthropic \
   --model claude-3-5-haiku-latest \
   --protocol laserlogic
 
 # ProofGuard: Evidence verification with Opus (thorough)
-rk-core think "Verify: Rust is memory-safe by default" \
+rk think "Verify: Rust is memory-safe by default" \
   --provider anthropic \
   --model claude-opus-4 \
   --protocol proofguard
 
 # BrutalHonesty: Adversarial critique
-rk-core think "Critique this startup idea: AI-powered pet food delivery" \
+rk think "Critique this startup idea: AI-powered pet food delivery" \
   --provider anthropic \
   --protocol brutalhonesty
 ```
@@ -126,23 +126,23 @@ rk-core think "Critique this startup idea: AI-powered pet food delivery" \
 
 ```bash
 # Quick analysis (GigaThink + LaserLogic)
-rk-core think "Is GraphQL better than REST?" \
+rk think "Is GraphQL better than REST?" \
   --provider anthropic \
   --profile quick
 
 # Balanced analysis (all 5 modules, sequential)
-rk-core think "Should we rewrite in Rust?" \
+rk think "Should we rewrite in Rust?" \
   --provider anthropic \
   --profile balanced
 
 # Deep analysis with Opus (maximum rigor)
-rk-core think "Evaluate this security architecture" \
+rk think "Evaluate this security architecture" \
   --provider anthropic \
   --model claude-opus-4 \
   --profile deep
 
 # Paranoid mode (multi-pass verification)
-rk-core think "Is this smart contract safe to deploy?" \
+rk think "Is this smart contract safe to deploy?" \
   --provider anthropic \
   --model claude-opus-4 \
   --profile paranoid \
@@ -153,14 +153,14 @@ rk-core think "Is this smart contract safe to deploy?" \
 
 ```bash
 # Enable extended thinking for complex problems
-rk-core think "Design a distributed consensus algorithm" \
+rk think "Design a distributed consensus algorithm" \
   --provider anthropic \
   --model claude-opus-4 \
   --thinking \
   --thinking-budget 16000
 
 # View thinking process in trace
-rk-core think "Prove P = NP is unlikely" \
+rk think "Prove P = NP is unlikely" \
   --provider anthropic \
   --profile paranoid \
   --thinking \
@@ -254,7 +254,7 @@ ReasonKit integrates with the official Claude CLI (`claude`) for AI-to-AI consul
 claude -p "Review this ReasonKit analysis for blind spots: $(cat analysis.json)"
 
 # Pipe ReasonKit output to Claude for critique
-rk-core think "Design a caching strategy" --format json | \
+rk think "Design a caching strategy" --format json | \
   claude -p "Find flaws in this reasoning chain"
 
 # Use Claude CLI for quick checks
@@ -292,7 +292,7 @@ claude -p "Is this Rust code safe?" --allowedTools "Read" < src/lib.rs
 
 # Enterprise: Heavy usage with Opus
 # Use budget controls to cap costs
-rk-core think "Complex analysis" \
+rk think "Complex analysis" \
   --provider anthropic \
   --model claude-opus-4 \
   --budget "$5.00"
@@ -331,19 +331,19 @@ retry_attempts = 5
 retry_delay_ms = 2000
 
 # Or use budget-based throttling
-rk-core think "Query" --budget "10t/min"
+rk think "Query" --budget "10t/min"
 ```
 
 #### 3. "Context length exceeded"
 
 ```bash
 # Use a model with larger context
-rk-core think "Long document analysis" \
+rk think "Long document analysis" \
   --provider anthropic \
   --model claude-sonnet-4  # 200K context
 
 # Or truncate input
-rk-core think "Summary of large doc" \
+rk think "Summary of large doc" \
   --max-input-tokens 50000
 ```
 
@@ -352,20 +352,20 @@ rk-core think "Summary of large doc" \
 ```bash
 # Only Opus 4.5 and Sonnet 4 support extended thinking
 # Use correct model
-rk-core think "Complex problem" \
+rk think "Complex problem" \
   --provider anthropic \
   --model claude-opus-4 \
   --thinking
 
 # Check model supports thinking
-rk-core providers show anthropic
+rk providers show anthropic
 ```
 
 #### 5. "Output truncated"
 
 ```bash
 # Increase max_tokens
-rk-core think "Long analysis" \
+rk think "Long analysis" \
   --provider anthropic \
   --max-tokens 8192
 
@@ -416,13 +416,13 @@ paranoid = "deep"
 
 ```bash
 # Set hard budget limit
-rk-core think "Expensive query" \
+rk think "Expensive query" \
   --provider anthropic \
   --budget "$1.00"
 
 # Use Haiku for exploration, upgrade for final
-rk-core think "Draft analysis" --model claude-3-5-haiku-latest
-rk-core think "Final analysis" --model claude-sonnet-4 --profile deep
+rk think "Draft analysis" --model claude-3-5-haiku-latest
+rk think "Final analysis" --model claude-sonnet-4 --profile deep
 ```
 
 ---

@@ -14,7 +14,7 @@ ReasonKit follows [Semantic Versioning 2.0.0](https://semver.org/).
 
 The following interfaces constitute the public API. Breaking changes to these will trigger a MAJOR version bump:
 
-1.  **CLI Commands:** All subcommands and flags of `rk-core`.
+1.  **CLI Commands:** All subcommands and flags of `rk`.
 2.  **ThinkTool Protocols:** The TOML/YAML schema for protocol definitions.
 3.  **Rust Crate API:** Public modules in `reasonkit::thinktool` and `reasonkit::client`.
 4.  **HTTP API:** Endpoint signatures and JSON schemas (once stable in v1.0).

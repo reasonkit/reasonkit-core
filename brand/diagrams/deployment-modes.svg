@@ -85,7 +85,7 @@
 
     <!-- Install command with padding -->
     <rect x="25" y="200" width="330" height="45" rx="10" fill="#1a1a2e"/>
-    <text x="190" y="228" text-anchor="middle" fill="#f9fafb" font-family="JetBrains Mono, monospace" font-size="13">rk-core mcp serve</text>
+    <text x="190" y="228" text-anchor="middle" fill="#f9fafb" font-family="JetBrains Mono, monospace" font-size="13">rk mcp serve</text>
 
     <!-- Features with generous line spacing (28px) -->
     <text x="40" y="280" fill="#10b981" font-family="Inter, sans-serif" font-size="14">+ AI agent integration</text>

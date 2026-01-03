@@ -13,7 +13,7 @@
 - [Core Integration Patterns](#core-integration-patterns)
   - [CLI Integration](#cli-integration)
   - [Rust Library Integration](#rust-library-integration)
-  - [Python Integration](#python-integration)
+  - [Python Integration (Beta)](#python-integration-beta---build-from-source)
 - [LLM Provider Setup](#llm-provider-setup)
 - [MCP Server Integration](#mcp-server-integration)
 - [Memory System Configuration](#memory-system-configuration)
@@ -36,10 +36,10 @@
 curl -fsSL https://reasonkit.sh/install | bash
 
 # Verify installation
-rk-core --version
+rk --version
 
 # Run your first reasoning query
-rk-core think --profile balanced "Should we migrate to microservices?"
+rk think --profile balanced "Should we migrate to microservices?"
 ```
 
 ### Minimal Rust Integration
@@ -65,9 +65,12 @@ async fn main() -> anyhow::Result<()> {
 }
 ```
 
-### Minimal Python Integration
+### Minimal Python Integration (Beta - Build from Source)
+
+> **Note:** Python bindings are in beta and require building from source with `--features python`. There is no PyPI package yet.
 
 ```python
+# Requires: cd reasonkit-core && maturin develop --release --features python
 from reasonkit import Reasoner, Profile
 
 # Create reasoner instance
@@ -88,7 +91,7 @@ print(f"Confidence: {result.confidence:.1%}")
 curl -fsSL https://reasonkit.sh/install | bash
 ```
 
-This installs the `rk-core` binary to `~/.local/bin/`.
+This installs the `rk` binary to `~/.local/bin/`.
 
 ### Cargo (Rust Developers)
 
@@ -119,29 +122,33 @@ cargo build --release --features memory
 cargo test --all-features
 ```
 
-### Python Bindings
+### Python Bindings (Beta - Build from Source)
+
+> **Note:** Python bindings are optional and in beta. No PyPI package is available yet.
 
 ```bash
-# Build Python bindings (requires maturin)
-pip install maturin
-cd reasonkit-core
-maturin develop --release
+# Install maturin (Python bindings build tool)
+uv pip install maturin
 
-# Or install from PyPI (when published)
-pip install reasonkit
+# Build Python bindings with the python feature
+cd reasonkit-core
+maturin develop --release --features python
+
+# Verify Python bindings
+python -c "from reasonkit import Reasoner; print('OK')"
 ```
 
 ### Verify Installation
 
 ```bash
 # Check CLI is working
-rk-core --version
+rk --version
 
 # List available protocols
-rk-core think --list
+rk think --list
 
 # Test with mock LLM (no API key needed)
-rk-core think --mock --profile quick "Test query"
+rk think --mock --profile quick "Test query"
 ```
 
 ---
@@ -156,67 +163,67 @@ The CLI is the simplest integration path. Use it from shell scripts, CI/CD pipel
 
 ```bash
 # Quick analysis (2-step chain)
-rk-core think --profile quick "Is this email phishing?"
+rk think --profile quick "Is this email phishing?"
 
 # Balanced analysis (5-step chain)
-rk-core think --profile balanced "Should we use microservices?"
+rk think --profile balanced "Should we use microservices?"
 
 # Deep analysis with full chain
-rk-core think --profile deep "Design A/B test for feature X"
+rk think --profile deep "Design A/B test for feature X"
 
 # Maximum rigor (paranoid mode)
-rk-core think --profile paranoid "Validate this cryptographic implementation"
+rk think --profile paranoid "Validate this cryptographic implementation"
 ```
 
 #### Run Specific Protocols
 
 ```bash
 # GigaThink: Generate 10+ perspectives
-rk-core think --protocol gigathink "Analyze market trends"
+rk think --protocol gigathink "Analyze market trends"
 
 # LaserLogic: Detect logical fallacies
-rk-core think --protocol laserlogic "Evaluate this argument"
+rk think --protocol laserlogic "Evaluate this argument"
 
 # BedRock: First principles decomposition
-rk-core think --protocol bedrock "Break down the problem"
+rk think --protocol bedrock "Break down the problem"
 
 # ProofGuard: Multi-source verification
-rk-core think --protocol proofguard "Verify this claim"
+rk think --protocol proofguard "Verify this claim"
 
 # BrutalHonesty: Adversarial self-critique
-rk-core think --protocol brutalhonesty "Find flaws in this plan"
+rk think --protocol brutalhonesty "Find flaws in this plan"
 ```
 
 #### JSON Output for Scripting
 
 ```bash
 # Get structured JSON output
-rk-core think --format json --profile balanced "Analyze this decision" | jq .
+rk think --format json --profile balanced "Analyze this decision" | jq .
 
 # Save to file
-rk-core think --format json --profile balanced "Query" > analysis.json
+rk think --format json --profile balanced "Query" > analysis.json
 ```
 
 #### Using Different LLM Providers
 
 ```bash
 # Anthropic Claude (default)
-rk-core think --provider anthropic "Your query"
+rk think --provider anthropic "Your query"
 
 # OpenAI GPT
-rk-core think --provider openai --model gpt-4o "Your query"
+rk think --provider openai --model gpt-4o "Your query"
 
 # Google Gemini
-rk-core think --provider gemini --model gemini-2.0-flash "Your query"
+rk think --provider gemini --model gemini-2.0-flash "Your query"
 
 # DeepSeek
-rk-core think --provider deepseek "Your query"
+rk think --provider deepseek "Your query"
 
 # Groq (ultra-fast inference)
-rk-core think --provider groq --model llama-3.3-70b-versatile "Your query"
+rk think --provider groq --model llama-3.3-70b-versatile "Your query"
 
 # OpenRouter (300+ models)
-rk-core think --provider openrouter --model anthropic/claude-3.5-sonnet "Your query"
+rk think --provider openrouter --model anthropic/claude-3.5-sonnet "Your query"
 ```
 
 #### Shell Script Integration
@@ -233,7 +240,7 @@ if [ -z "$DECISION" ]; then
 fi
 
 # Run analysis and capture JSON output
-RESULT=$(rk-core think --format json --profile balanced "$DECISION")
+RESULT=$(rk think --format json --profile balanced "$DECISION")
 
 # Extract confidence score
 CONFIDENCE=$(echo "$RESULT" | jq -r '.confidence')
@@ -602,7 +609,7 @@ ReasonKit implements the Model Context Protocol (MCP) for seamless AI agent inte
 
 ```bash
 # Start MCP server
-rk-core serve-mcp
+rk serve-mcp
 
 # The server listens on stdio by default
 ```
@@ -615,7 +622,7 @@ Add to your Claude Desktop config (`~/.config/claude/claude_desktop_config.json`
 {
   "mcpServers": {
     "reasonkit": {
-      "command": "rk-core",
+      "command": "rk",
       "args": ["serve-mcp"],
       "env": {
         "ANTHROPIC_API_KEY": "${ANTHROPIC_API_KEY}"
@@ -635,7 +642,7 @@ use std::collections::HashMap;
 async fn main() -> anyhow::Result<()> {
     // Connect to MCP server
     let config = McpClientConfig {
-        server_command: "rk-core".to_string(),
+        server_command: "rk".to_string(),
         server_args: vec!["serve-mcp".to_string()],
         ..Default::default()
     };
@@ -894,7 +901,7 @@ class ReasonKitTool:
     def run(self, query: str) -> str:
         # Use CLI for reliability
         result = subprocess.run(
-            ["rk-core", "think", "--format", "json", "--profile", "balanced", query],
+            ["rk", "think", "--format", "json", "--profile", "balanced", query],
             capture_output=True,
             text=True
         )
@@ -935,7 +942,7 @@ import json
 def reasonkit_analyze(query: str, profile: str = "balanced") -> dict:
     """Execute ReasonKit analysis and return structured results."""
     result = subprocess.run(
-        ["rk-core", "think", "--format", "json", "--profile", profile, query],
+        ["rk", "think", "--format", "json", "--profile", profile, query],
         capture_output=True,
         text=True
     )
@@ -1007,7 +1014,7 @@ RUN cargo build --release --features memory
 FROM debian:bookworm-slim
 RUN apt-get update && apt-get install -y ca-certificates && rm -rf /var/lib/apt/lists/*
 
-COPY --from=builder /app/target/release/rk-core /usr/local/bin/
+COPY --from=builder /app/target/release/rk /usr/local/bin/
 
 # Create data directory
 RUN mkdir -p /data
@@ -1018,7 +1025,7 @@ ENV RUST_LOG=info
 
 EXPOSE 8080
 
-CMD ["rk-core", "serve", "--host", "0.0.0.0", "--port", "8080"]
+CMD ["rk", "serve", "--host", "0.0.0.0", "--port", "8080"]
 ```
 
 ```yaml
@@ -1142,30 +1149,30 @@ echo $ANTHROPIC_API_KEY
 export ANTHROPIC_API_KEY="sk-ant-..."
 
 # Or use mock mode for testing
-rk-core think --mock "Test query"
+rk think --mock "Test query"
 ```
 
 #### 2. "Connection refused" (MCP Server)
 
 ```bash
 # Check if server is running
-ps aux | grep rk-core
+ps aux | grep rk
 
 # Start server manually
-rk-core serve-mcp &
+rk serve-mcp &
 
 # Check logs
-rk-core serve-mcp 2>&1 | tee server.log
+rk serve-mcp 2>&1 | tee server.log
 ```
 
 #### 3. "Timeout during LLM call"
 
 ```bash
 # Increase timeout
-rk-core think --timeout 300 "Complex query"
+rk think --timeout 300 "Complex query"
 
 # Or use faster provider
-rk-core think --provider groq "Query"
+rk think --provider groq "Query"
 ```
 
 #### 4. "Memory feature not enabled"
@@ -1196,10 +1203,10 @@ cargo check 2>&1 | head -50
 
 ```bash
 # Enable verbose logging
-RUST_LOG=debug rk-core think "Query"
+RUST_LOG=debug rk think "Query"
 
 # Maximum verbosity
-RUST_LOG=trace rk-core think -vvv "Query"
+RUST_LOG=trace rk think -vvv "Query"
 ```
 
 ### Getting Help

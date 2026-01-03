@@ -51,7 +51,7 @@ Verify claims with triangulated sources:
 
 ```bash
 # Single claim verification
-rk-core verify "GPT-4 has 1.7 trillion parameters" --sources 3
+rk verify "GPT-4 has 1.7 trillion parameters" --sources 3
 
 # ProofGuard standalone
 rk-pg "The ROI projection of 15% is accurate based on historical data"
@@ -83,7 +83,7 @@ Generate diverse perspectives:
 rk-gt "Generate 10 perspectives on AI safety regulations"
 
 # With creative temperature
-rk-core think --protocol gigathink --temperature 0.9 "Innovation ideas for our product"
+rk think --protocol gigathink --temperature 0.9 "Innovation ideas for our product"
 ```
 
 ### 6. Argument Validation
@@ -95,7 +95,7 @@ Check logical soundness:
 rk-ll "If AI improves productivity, and productivity improves economy, then AI improves economy"
 
 # Full logical analysis
-rk-core think --protocol laserlogic "Analyze this argument: [your argument]"
+rk think --protocol laserlogic "Analyze this argument: [your argument]"
 ```
 
 ### 7. First Principles Analysis
@@ -107,7 +107,7 @@ Break down to fundamentals:
 rk-br "Why do customers choose our product over competitors?"
 
 # Deep decomposition
-rk-core think --protocol bedrock "What are the fundamental assumptions in our business model?"
+rk think --protocol bedrock "What are the fundamental assumptions in our business model?"
 ```
 
 ### 8. Self-Critique
@@ -119,7 +119,7 @@ Find flaws before others do:
 rk-bh "Review this proposal and find all weaknesses"
 
 # Adversarial review
-rk-core think --protocol brutalhonesty "Attack this design: [your design]"
+rk think --protocol brutalhonesty "Attack this design: [your design]"
 ```
 
 ---
@@ -275,7 +275,7 @@ export REASONKIT_PROVIDER="anthropic"  # or openai, openrouter
 
 2. **Use `rk-web`** for research tasks that need web sources.
 
-3. **Use `rk-core verify`** when specific claims need triangulation.
+3. **Use `rk verify`** when specific claims need triangulation.
 
 4. **Save traces** with `--save-trace` for audit trails.
 
@@ -289,7 +289,7 @@ export REASONKIT_PROVIDER="anthropic"  # or openai, openrouter
 
 ```bash
 # Check installation
-rk-core --version
+rk --version
 
 # List available protocols
 rk-think --list

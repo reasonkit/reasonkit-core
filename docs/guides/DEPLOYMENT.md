@@ -148,7 +148,7 @@ services:
     volumes:
       - reasonkit-data:/app/data
     healthcheck:
-      test: ["CMD", "rk-core", "--version"]
+      test: ["CMD", "rk", "--version"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -223,7 +223,7 @@ services:
       redis:
         condition: service_healthy
     healthcheck:
-      test: ["CMD", "rk-core", "--version"]
+      test: ["CMD", "rk", "--version"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -557,7 +557,7 @@ spec:
           livenessProbe:
             exec:
               command:
-                - rk-core
+                - rk
                 - --version
             initialDelaySeconds: 10
             periodSeconds: 30
@@ -852,10 +852,10 @@ cargo install reasonkit-core
 git clone https://github.com/reasonkit/reasonkit-core.git
 cd reasonkit-core
 cargo build --release
-cp target/release/rk-core /usr/local/bin/
+cp target/release/rk /usr/local/bin/
 
 # Verify installation
-rk-core --version
+rk --version
 ```
 
 ### Create Systemd Service
@@ -892,7 +892,7 @@ User=reasonkit
 Group=reasonkit
 WorkingDirectory=/opt/reasonkit
 EnvironmentFile=/opt/reasonkit/.env
-ExecStart=/usr/local/bin/rk-core serve-mcp --port 8080
+ExecStart=/usr/local/bin/rk serve-mcp --port 8080
 ExecReload=/bin/kill -HUP $MAINPID
 Restart=always
 RestartSec=5
@@ -1036,7 +1036,7 @@ docker push ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/reasonkit/core:lat
         }
       },
       "healthCheck": {
-        "command": ["CMD-SHELL", "rk-core --version || exit 1"],
+        "command": ["CMD-SHELL", "rk --version || exit 1"],
         "interval": 30,
         "timeout": 5,
         "retries": 3,
@@ -1576,7 +1576,7 @@ max_request_size_mb = 50
 
 ```dockerfile
 HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
-    CMD rk-core --version || exit 1
+    CMD rk --version || exit 1
 ```
 
 ### Kubernetes Probes
@@ -1585,7 +1585,7 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
 livenessProbe:
   exec:
     command:
-      - rk-core
+      - rk
       - --version
   initialDelaySeconds: 10
   periodSeconds: 30
@@ -2071,7 +2071,7 @@ docker run --privileged --cap-add SYS_ADMIN reasonkit/core:latest
 
 # Memory profiling with heaptrack
 docker run -v /tmp/heap:/tmp/heap reasonkit/core:latest \
-  heaptrack rk-core serve-mcp
+  heaptrack rk serve-mcp
 ```
 
 ### Getting Help

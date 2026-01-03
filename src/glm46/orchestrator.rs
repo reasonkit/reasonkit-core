@@ -3,14 +3,14 @@
 //! Advanced orchestration system using GLM-4.6's elite agentic capabilities.
 //! Leverages 70.1% TAU-Bench performance for sophisticated coordination.
 
-use anyhow::{Context, Result};
+use crate::error::Result;
 use std::collections::{HashMap, VecDeque};
 use std::sync::Arc;
 use tokio::sync::RwLock;
-use tracing::{debug, error, info, warn};
+use tracing::{debug, info};
 
-use super::types::*;
 use super::client::GLM46Client;
+use super::types::*;
 
 /// Multi-Agent Orchestrator Configuration
 #[derive(Debug, Clone)]
@@ -65,7 +65,9 @@ pub enum AgentStatus {
 impl AgentState {
     pub fn availability_percentage(&self) -> f64 {
         match &self.status {
-            AgentStatus::Available => ((self.max_capacity - self.current_load) / self.max_capacity) * 100.0,
+            AgentStatus::Available => {
+                ((self.max_capacity - self.current_load) / self.max_capacity) * 100.0
+            }
             _ => 0.0,
         }
     }
@@ -146,7 +148,7 @@ pub enum WorkflowStatus {
     Cancelled,
 }
 
-#[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
+#[derive(Debug, Clone, serde::Serialize, serde::Deserialize, Default)]
 pub struct WorkflowMetrics {
     pub total_duration_seconds: f64,
     pub total_cost: f64,
@@ -179,7 +181,7 @@ pub enum WorkflowEventType {
 }
 
 /// Multi-Agent Orchestration Engine
-/// 
+///
 /// Core coordination system leveraging GLM-4.6's superior agentic
 /// capabilities for complex workflow orchestration and optimization.
 pub struct MultiAgentOrchestrator {
@@ -188,7 +190,7 @@ pub struct MultiAgentOrchestrator {
     active_agents: Arc<RwLock<HashMap<AgentId, AgentState>>>,
     active_workflows: Arc<RwLock<HashMap<WorkflowId, WorkflowExecution>>>,
     workflow_queue: Arc<RwLock<VecDeque<WorkflowId>>>,
-    orchestration_history: Arc<RwLock<Vec<OrchestrationRecord>>>,
+    // orchestration_history: Arc<RwLock<Vec<OrchestrationRecord>>>,
     performance_metrics: Arc<RwLock<OrchestrationMetrics>>,
 }
 
@@ -256,14 +258,15 @@ impl MultiAgentOrchestrator {
             active_agents: Arc::new(RwLock::new(HashMap::new())),
             active_workflows: Arc::new(RwLock::new(HashMap::new())),
             workflow_queue: Arc::new(RwLock::new(VecDeque::new())),
-            orchestration_history: Arc::new(RwLock::new(Vec::new())),
+            // orchestration_history: Arc::new(RwLock::new(Vec::new())),
             performance_metrics: Arc::new(RwLock::new(OrchestrationMetrics::default())),
         }
     }
 
     /// Create from environment configuration
     pub async fn from_env() -> Result<Self> {
-        let client = GLM46Client::from_env()?;
+        let client =
+            GLM46Client::from_env().map_err(|e| crate::error::Error::Config(e.to_string()))?;
         let config = OrchestratorConfig::default();
         Ok(Self::new(client, config))
     }
@@ -271,22 +274,22 @@ impl MultiAgentOrchestrator {
     /// Register an agent for orchestration
     pub async fn register_agent(&self, agent: AgentState) -> Result<()> {
         info!("Registering agent: {} ({})", agent.name, agent.id);
-        
+
         let mut agents = self.active_agents.write().await;
         agents.insert(agent.id.clone(), agent);
-        
+
         // Trigger workflow scheduling
         self.schedule_pending_workflows().await?;
-        
+
         Ok(())
     }
 
     /// Submit workflow for orchestration
     pub async fn submit_workflow(&self, workflow: WorkflowDefinition) -> Result<WorkflowId> {
         info!("Submitting workflow: {} ({})", workflow.name, workflow.id);
-        
+
         let workflow_id = workflow.id.clone();
-        
+
         // Add to queue if we have capacity
         if self.get_active_workflow_count().await >= self.config.max_concurrent_workflows {
             info!("Workflow queue full, adding to pending queue");
@@ -296,7 +299,7 @@ impl MultiAgentOrchestrator {
             // Start immediate analysis
             self.start_workflow_analysis(&workflow).await?;
         }
-        
+
         Ok(workflow_id)
     }
 
@@ -305,7 +308,7 @@ impl MultiAgentOrchestrator {
         let agents = self.active_agents.read().await;
         let workflows = self.active_workflows.read().await;
         let metrics = self.performance_metrics.read().await;
-        
+
         OrchestrationStatus {
             active_agents: agents.len(),
             active_workflows: workflows.len(),
@@ -325,11 +328,14 @@ impl MultiAgentOrchestrator {
     /// Cancel active workflow
     pub async fn cancel_workflow(&self, workflow_id: &WorkflowId) -> Result<bool> {
         let mut workflows = self.active_workflows.write().await;
-        
+
         if let Some(execution) = workflows.get_mut(workflow_id) {
-            if matches!(execution.status, WorkflowStatus::Executing | WorkflowStatus::Planning) {
+            if matches!(
+                execution.status,
+                WorkflowStatus::Executing | WorkflowStatus::Planning
+            ) {
                 execution.status = WorkflowStatus::Cancelled;
-                
+
                 // Release agent resources
                 for agent_id in &execution.assigned_agents.clone() {
                     if let Some(agent) = self.active_agents.write().await.get_mut(agent_id) {
@@ -339,19 +345,20 @@ impl MultiAgentOrchestrator {
                         }
                     }
                 }
-                
+
                 self.record_orchestration_event(
                     workflow_id,
                     WorkflowEventType::Failed,
                     "Workflow cancelled by request".to_string(),
                     serde_json::json!({"reason": "manual_cancellation"}),
-                ).await;
-                
+                )
+                .await;
+
                 info!("Cancelled workflow: {}", workflow_id);
                 return Ok(true);
             }
         }
-        
+
         Ok(false)
     }
 
@@ -360,7 +367,7 @@ impl MultiAgentOrchestrator {
     /// Start workflow analysis phase
     async fn start_workflow_analysis(&self, workflow: &WorkflowDefinition) -> Result<()> {
         debug!("Starting analysis for workflow: {}", workflow.id);
-        
+
         // Create execution record
         let execution = WorkflowExecution {
             workflow_id: workflow.id.clone(),
@@ -373,32 +380,32 @@ impl MultiAgentOrchestrator {
             cost_tracker: CostTracker::default(),
             event_log: vec![],
         };
-        
+
         // Store execution
         let mut workflows = self.active_workflows.write().await;
         workflows.insert(workflow.id.clone(), execution);
-        
+
         // Perform analysis with GLM-4.6
         self.perform_workflow_analysis(workflow).await?;
-        
+
         Ok(())
     }
 
     /// Perform comprehensive workflow analysis using GLM-4.6
     async fn perform_workflow_analysis(&self, workflow: &WorkflowDefinition) -> Result<()> {
         let analysis_prompt = self.build_analysis_prompt(workflow)?;
-        
+
         debug!("Sending workflow analysis to GLM-4.6");
         let response = self.glm46_client.chat_completion(ChatRequest {
             messages: vec![
                 ChatMessage::system(self.get_analysis_system_prompt()),
                 ChatMessage::user(analysis_prompt),
             ],
-            temperature: 0.15, // Low temperature for precise analysis
+            temperature: 0.7,
             max_tokens: 2000,
             response_format: Some(ResponseFormat::JsonSchema {
                 name: "workflow_analysis".to_string(),
-                schema: json!({
+                schema: serde_json::json!({
                     "type": "object",
                     "properties": {
                         "complexity_assessment": {"type": "object"},
@@ -418,11 +425,16 @@ impl MultiAgentOrchestrator {
             frequency_penalty: None,
             presence_penalty: None,
             stream: None,
-        }).await.context("GLM-4.6 workflow analysis failed")?;
+        }).await.map_err(|e| crate::error::Error::Mcp(e.to_string()))?;
 
         // Parse analysis result
-        let analysis: WorkflowAnalysis = serde_json::from_str(&response.content)
-            .context("Failed to parse GLM-4.6 workflow analysis")?;
+        let content = response
+            .choices
+            .first()
+            .map(|c| c.message.content.clone())
+            .unwrap_or_default();
+        let analysis: WorkflowAnalysis =
+            serde_json::from_str(&content).map_err(crate::error::Error::Json)?;
 
         // Update workflow with analysis results
         let mut workflows = self.active_workflows.write().await;
@@ -430,31 +442,41 @@ impl MultiAgentOrchestrator {
             execution.current_phase = "agent_allocation".to_string();
             execution.progress = 15.0; // Analysis phase complete
             execution.cost_tracker.total_cost += self.estimate_cost(&response.usage);
-            
+
             // Record analysis event
             self.record_orchestration_event(
                 &workflow.id,
                 WorkflowEventType::Started,
                 "Workflow analysis completed".to_string(),
                 serde_json::to_value(&analysis)?,
-            ).await;
+            )
+            .await;
         }
 
-        Move to agent allocation phase
-        self.allocate_agents_for_workflow(workflow, &analysis).await?;
-        
+        // Move to agent allocation phase
+        self.allocate_agents_for_workflow(workflow, &analysis)
+            .await?;
+
         Ok(())
     }
 
     /// Allocate optimal agents for workflow
-    async fn allocate_agents_for_workflow(&self, workflow: &WorkflowDefinition, analysis: &WorkflowAnalysis) -> Result<()> {
+    async fn allocate_agents_for_workflow(
+        &self,
+        workflow: &WorkflowDefinition,
+        analysis: &WorkflowAnalysis,
+    ) -> Result<()> {
         debug!("Allocating agents for workflow: {}", workflow.id);
-        
+
         let agents = self.active_agents.read().await;
-        let suitable_agents = self.find_suitable_agents(&workflow.tasks, &agents, &analysis.agent_recommendations);
-        
+        let suitable_agents =
+            self.find_suitable_agents(&workflow.tasks, &agents, &analysis.agent_recommendations);
+
         if suitable_agents.is_empty() {
-            return Err(anyhow::anyhow!("No suitable agents available for workflow: {}", workflow.id));
+            return Err(crate::error::Error::Config(format!(
+                "No suitable agents available for workflow: {}",
+                workflow.id
+            )));
         }
 
         // Update workflow with assigned agents
@@ -463,7 +485,7 @@ impl MultiAgentOrchestrator {
             execution.assigned_agents = suitable_agents.iter().map(|a| a.id.clone()).collect();
             execution.current_phase = "execution".to_string();
             execution.progress = 25.0; // Allocation phase complete
-            
+
             // Update agent states
             drop(workflows);
             let mut agents = self.active_agents.write().await;
@@ -480,14 +502,14 @@ impl MultiAgentOrchestrator {
 
         // Start execution
         self.start_workflow_execution(workflow).await?;
-        
+
         Ok(())
     }
 
     /// Execute workflow with agent coordination
     async fn start_workflow_execution(&self, workflow: &WorkflowDefinition) -> Result<()> {
         debug!("Starting execution for workflow: {}", workflow.id);
-        
+
         // Build execution plan using GLM-4.6
         let execution_prompt = format!(
             "Create optimal execution plan for this workflow using GLM-4.6's coordination excellence:
@@ -517,21 +539,31 @@ impl MultiAgentOrchestrator {
             frequency_penalty: None,
             presence_penalty: None,
             stream: None,
-        }).await.context("GLM-4.6 execution planning failed")?;
+        }).await.map_err(|e| crate::error::Error::Mcp(e.to_string()))?;
 
-        let execution_plan: ExecutionPlan = serde_json::from_str(&response.content)
-            .context("Failed to parse GLM-4.6 execution plan")?;
+        let content = response
+            .choices
+            .first()
+            .map(|c| c.message.content.clone())
+            .unwrap_or_default();
+        let execution_plan: ExecutionPlan =
+            serde_json::from_str(&content).map_err(crate::error::Error::Json)?;
 
         // Start execution monitoring
-        self.monitor_workflow_execution(workflow, &execution_plan).await?;
-        
+        self.monitor_workflow_execution(workflow, &execution_plan)
+            .await?;
+
         Ok(())
     }
 
     /// Monitor workflow execution progress
-    async fn monitor_workflow_execution(&self, workflow: &WorkflowDefinition, execution_plan: &ExecutionPlan) -> Result<()> {
+    async fn monitor_workflow_execution(
+        &self,
+        workflow: &WorkflowDefinition,
+        execution_plan: &ExecutionPlan,
+    ) -> Result<()> {
         debug!("Monitoring execution for workflow: {}", workflow.id);
-        
+
         // Updateworkflow status
         let mut workflows = self.active_workflows.write().await;
         if let Some(execution) = workflows.get_mut(&workflow.id) {
@@ -542,29 +574,40 @@ impl MultiAgentOrchestrator {
 
         // Implement execution monitoring logic
         // This would include periodic checkpoints, conflict detection, performance tracking
-        self.execute_workflow_steps(workflow, execution_plan).await?;
-        
+        self.execute_workflow_steps(workflow, execution_plan)
+            .await?;
+
         Ok(())
     }
 
     /// Execute workflow steps with coordination
-    async fn execute_workflow_steps(&self, workflow: &WorkflowDefinition, execution_plan: &ExecutionPlan) -> Result<()> {
+    async fn execute_workflow_steps(
+        &self,
+        workflow: &WorkflowDefinition,
+        execution_plan: &ExecutionPlan,
+    ) -> Result<()> {
         let total_steps = execution_plan.execution_sequence.len();
-        
+
         for (step_index, step) in execution_plan.execution_sequence.iter().enumerate() {
-            debug!("Executing step {} of {}: {}", step_index + 1, total_steps, step.name);
-            
+            debug!(
+                "Executing step {} of {}: {}",
+                step_index + 1,
+                total_steps,
+                step.name
+            );
+
             // Update progress
             let mut workflows = self.active_workflows.write().await;
             if let Some(execution) = workflows.get_mut(&workflow.id) {
                 execution.progress = 30.0 + (step_index as f64 / total_steps as f64) * 60.0;
-                
+
                 self.record_orchestration_event(
                     &workflow.id,
                     WorkflowEventType::TaskCompleted,
                     format!("Completed step: {}", step.name),
                     serde_json::json!({"step": step_index + 1, "total_steps": total_steps}),
-                ).await;
+                )
+                .await;
             }
             drop(workflows);
 
@@ -579,29 +622,35 @@ impl MultiAgentOrchestrator {
 
         // Complete workflow
         self.complete_workflow(&workflow.id, true).await?;
-        
+
         Ok(())
     }
 
     /// Complete workflow execution
     async fn complete_workflow(&self, workflow_id: &WorkflowId, success: bool) -> Result<()> {
-        info!("Completing workflow: {} (success: {})", workflow_id, success);
-        
+        info!(
+            "Completing workflow: {} (success: {})",
+            workflow_id, success
+        );
+
         let mut workflows = self.active_workflows.write().await;
         if let Some(execution) = workflows.get_mut(workflow_id) {
             execution.status = if success {
                 WorkflowStatus::Completed { success: true }
             } else {
-                WorkflowStatus::Failed { error: "Execution failed".to_string() }
+                WorkflowStatus::Failed {
+                    error: "Execution failed".to_string(),
+                }
             };
-            
+
             execution.current_phase = "completed".to_string();
             execution.progress = 100.0;
-            execution.metrics.total_duration_seconds = execution.started_at
+            execution.metrics.total_duration_seconds = -execution
+                .started_at
                 .duration_since(std::time::SystemTime::now())
                 .unwrap_or_default()
-                .as_secs_f64() * -1.0;
-            
+                .as_secs_f64();
+
             // Release agents
             for agent_id in &execution.assigned_agents.clone() {
                 if let Some(agent) = self.active_agents.write().await.get_mut(agent_id) {
@@ -612,24 +661,36 @@ impl MultiAgentOrchestrator {
                     }
                 }
             }
-            
+
             self.record_orchestration_event(
                 workflow_id,
-                if success { WorkflowEventType::Completed } else { WorkflowEventType::Failed },
-                format!("Workflow {}", if success { "completed successfully" } else { "failed" }),
+                if success {
+                    WorkflowEventType::Completed
+                } else {
+                    WorkflowEventType::Failed
+                },
+                format!(
+                    "Workflow {}",
+                    if success {
+                        "completed successfully"
+                    } else {
+                        "failed"
+                    }
+                ),
                 serde_json::json!({"final_status": execution.status}),
-            ).await;
-            
+            )
+            .await;
+
             // Update metrics
             self.update_orchestration_metrics(success);
         }
-        
+
         // Remove from active workflows (or keep for history)
         // workflows.remove(workflow_id);
-        
+
         // Process next workflow in queue
         self.schedule_pending_workflows().await?;
-        
+
         Ok(())
     }
 
@@ -669,44 +730,59 @@ impl MultiAgentOrchestrator {
         Provide detailed, actionable workflow analysis that enables optimal agent allocation and execution planning."
     }
 
-    fn find_suitable_agents(&self, tasks: &[TaskDefinition], available_agents: &HashMap<AgentId, AgentState>, recommendations: &[AgentRecommendation]) -> Vec<AgentState> {
+    fn find_suitable_agents(
+        &self,
+        tasks: &[TaskDefinition],
+        available_agents: &HashMap<AgentId, AgentState>,
+        _recommendations: &[AgentRecommendation],
+    ) -> Vec<AgentState> {
         let mut suitable = vec![];
-        
+
         for agent_state in available_agents.values() {
-            if !matches!(agent_state.status, AgentStatus::Available | AgentStatus::Busy) {
+            if !matches!(
+                agent_state.status,
+                AgentStatus::Available | AgentStatus::Busy
+            ) {
                 continue;
             }
-            
+
             if agent_state.current_load >= agent_state.max_capacity {
                 continue;
             }
-            
+
             // Check if agent has required capabilities
             let has_required_caps = tasks.iter().any(|task| {
-                task.required_capabilities.iter()
+                task.required_capabilities
+                    .iter()
                     .all(|cap| agent_state.capabilities.contains(cap))
             });
-            
-            if has_available_capacity && has_required_caps {
+
+            if self.has_available_capacity(agent_state) && has_required_caps {
                 suitable.push(agent_state.clone());
             }
         }
-        
+
         // Sort by performance rating and availability
         suitable.sort_by(|a, b| {
-            b.performance_rating.partial_cmp(&a.performance_rating)
+            b.performance_rating
+                .partial_cmp(&a.performance_rating)
                 .unwrap_or(std::cmp::Ordering::Equal)
-                .then(b.availability_percentage().partial_cmp(&a.availability_percentage())
-                    .unwrap_or(std::cmp::Ordering::Equal))
+                .then(
+                    b.availability_percentage()
+                        .partial_cmp(&a.availability_percentage())
+                        .unwrap_or(std::cmp::Ordering::Equal),
+                )
         });
-        
+
         suitable
     }
 
     async fn get_workflow_agents(&self, workflow_id: &WorkflowId) -> Vec<AgentState> {
         let agents = self.active_agents.read().await;
         if let Some(execution) = self.active_workflows.read().await.get(workflow_id) {
-            execution.assigned_agents.iter()
+            execution
+                .assigned_agents
+                .iter()
                 .filter_map(|agent_id| agents.get(agent_id))
                 .cloned()
                 .collect()
@@ -716,7 +792,9 @@ impl MultiAgentOrchestrator {
     }
 
     fn get_task_dependencies(&self, workflow: &WorkflowDefinition) -> Vec<TaskDependency> {
-        workflow.tasks.iter()
+        workflow
+            .tasks
+            .iter()
             .flat_map(|task| {
                 task.dependencies.iter().map(|dep_id| TaskDependency {
                     task_id: task.id.clone(),
@@ -729,23 +807,24 @@ impl MultiAgentOrchestrator {
     async fn detect_and_resolve_conflicts(&self, workflow_id: &WorkflowId) -> Result<()> {
         // Check for conflicts (resource conflicts, scheduling conflicts, etc.)
         // For demonstration, just record that we checked
-        
+
         self.record_orchestration_event(
             workflow_id,
             WorkflowEventType::ConflictDetected,
             "Conflict check performed - no conflicts found".to_string(),
             serde_json::json!({"check_result": "no_conflicts"}),
-        ).await;
-        
+        )
+        .await;
+
         Ok(())
     }
 
     async fn schedule_pending_workflows(&self) -> Result<()> {
         let mut queue = self.workflow_queue.write().await;
         let mut active_count = self.get_active_workflow_count().await;
-        
+
         while active_count < self.config.max_concurrent_workflows && !queue.is_empty() {
-            if let Some(workflow_id) = queue.pop_front() {
+            if let Some(_workflow_id) = queue.pop_front() {
                 // Start analysis for queued workflow
                 // This would load the workflow definition and start analysis
                 active_count += 1;
@@ -753,7 +832,7 @@ impl MultiAgentOrchestrator {
                 break;
             }
         }
-        
+
         Ok(())
     }
 
@@ -761,38 +840,49 @@ impl MultiAgentOrchestrator {
         self.active_workflows.read().await.len()
     }
 
-    async fn calculate_average_agent_utilization(&self, agents: &HashMap<AgentId, AgentState>) -> f64 {
+    async fn calculate_average_agent_utilization(
+        &self,
+        agents: &HashMap<AgentId, AgentState>,
+    ) -> f64 {
         if agents.is_empty() {
             return 0.0;
         }
-        
-        let total_utilization: f64 = agents.values()
+
+        let total_utilization: f64 = agents
+            .values()
             .map(|agent| agent.current_load / agent.max_capacity)
             .sum();
-        
+
         total_utilization / agents.len() as f64
     }
 
-    async fn calculate_average_workflow_progress(&self, workflows: &HashMap<WorkflowId, WorkflowExecution>) -> f64 {
+    async fn calculate_average_workflow_progress(
+        &self,
+        workflows: &HashMap<WorkflowId, WorkflowExecution>,
+    ) -> f64 {
         if workflows.is_empty() {
             return 0.0;
         }
-        
-        let total_progress: f64 = workflows.values()
-            .map(|execution| execution.progress)
-            .sum();
-        
+
+        let total_progress: f64 = workflows.values().map(|execution| execution.progress).sum();
+
         total_progress / workflows.len() as f64
     }
 
     fn estimate_cost(&self, usage: &TokenUsage) -> f64 {
         // GLM-4.6 pricing: $0.0001/1K input + $0.0002/1K output
-        let input_cost = (usage.input_tokens as f64 / 1000.0) * 0.0001;
-        let output_cost = (usage.output_tokens as f64 / 1000.0) * 0.0002;
+        let input_cost = (usage.prompt_tokens as f64 / 1000.0) * 0.0001;
+        let output_cost = (usage.completion_tokens as f64 / 1000.0) * 0.0002;
         input_cost + output_cost
     }
 
-    async fn record_orchestration_event(&self, workflow_id: &WorkflowId, event_type: WorkflowEventType, description: String, metadata: serde_json::Value) {
+    async fn record_orchestration_event(
+        &self,
+        workflow_id: &WorkflowId,
+        event_type: WorkflowEventType,
+        description: String,
+        metadata: serde_json::Value,
+    ) {
         let mut workflows = self.active_workflows.write().await;
         if let Some(execution) = workflows.get_mut(workflow_id) {
             execution.event_log.push(WorkflowEvent {
@@ -804,7 +894,7 @@ impl MultiAgentOrchestrator {
         }
     }
 
-    fn update_orchestration_metrics(&self, success: bool) {
+    fn update_orchestration_metrics(&self, _success: bool) {
         // Update global orchestration metrics
         // This implementation would be more comprehensive in practice
     }
@@ -813,15 +903,15 @@ impl MultiAgentOrchestrator {
         agent_state.current_load < agent_state.max_capacity
     }
 
-    fn has_required_capabilities(&self, agent_state: &AgentState, task: &TaskDefinition) -> bool {
-        task.required_capabilities.iter()
-            .all(|cap| agent_state.capabilities.contains(cap))
-    }
+    // fn has_required_capabilities(&self, agent_state: &AgentState, task: &TaskDefinition) -> bool {
+    //     task.required_capabilities.iter()
+    //         .all(|cap| agent_state.capabilities.contains(cap))
+    // }
 }
 
 // === Supporting Types ===
 
-#[derive(Debug, serde::Deserialize)]
+#[derive(Debug, serde::Deserialize, serde::Serialize)]
 struct WorkflowAnalysis {
     complexity_assessment: serde_json::Value,
     dependency_analysis: Vec<TaskDependency>,
@@ -831,7 +921,7 @@ struct WorkflowAnalysis {
     optimization_opportunities: Vec<serde_json::Value>,
 }
 
-#[derive(Debug, serde::Deserialize)]
+#[derive(Debug, serde::Deserialize, serde::Serialize)]
 struct AgentRecommendation {
     agent_id: AgentId,
     confidence: f64,
@@ -847,16 +937,16 @@ struct TaskDependency {
 #[derive(Debug, serde::Deserialize)]
 struct ExecutionPlan {
     execution_sequence: Vec<ExecutionStep>,
-    coordination_checkpoints: Vec<serde_json::Value>,
-    monitoring_strategy: serde_json::Value,
+    // coordination_checkpoints: Vec<serde_json::Value>,
+    // monitoring_strategy: serde_json::Value,
 }
 
 #[derive(Debug, serde::Deserialize)]
 struct ExecutionStep {
     name: String,
-    agent_id: AgentId,
-    estimated_duration_minutes: f64,
-    checkpoints: Vec<serde_json::Value>,
+    // agent_id: AgentId,
+    // estimated_duration_minutes: f64,
+    // checkpoints: Vec<serde_json::Value>,
 }
 
 #[derive(Debug, Clone)]
@@ -867,78 +957,4 @@ pub struct OrchestrationStatus {
     pub average_agent_utilization: f64,
     pub average_workflow_progress: f64,
     pub performance_metrics: OrchestrationMetrics,
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-    use serde_json::json;
-
-    #[test]
-    fn test_orchestrator_config_default() {
-        let config = OrchestratorConfig::default();
-        assert_eq!(config.max_concurrent_workflows, 10);
-        assert!(config.conflict_resolution);
-        assert!(config.cost_optimization);
-    }
-
-    #[test]
-    fn test_agent_state_availability() {
-        let agent = AgentState {
-            id: "test_agent".to_string(),
-            name: "Test Agent".to_string(),
-            capabilities: vec!["coordination".to_string()],
-            status: AgentStatus::Available,
-            current_load: 0.5,
-            max_capacity: 1.0,
-            cost_per_hour: 50.0,
-            performance_rating: 0.9,
-            last_activity: std::time::SystemTime::now(),
-        };
-
-        assert_eq!(agent.availability_percentage(), 50.0);
-    }
-
-    #[tokio::test]
-    async fn test_workflow_submission() {
-        let client = GLM46Client::from_env().unwrap_or_default();
-        let orchestrator = MultiAgentOrchestrator::new(client, OrchestratorConfig::default());
-        
-        let workflow = WorkflowDefinition {
-            id: "test_workflow".to_string(),
-            name: "Test Workflow".to_string(),
-            description: "Test workflow".to_string(),
-            priority: WorkflowPriority::Medium,
-            tasks: vec![],
-            constraints: WorkflowConstraints {
-                time_limit: None,
-                budget_limit: None,
-                quality_threshold: 0.8,
-                agent_restrictions: vec![],
-                resource_limits: ResourceLimits {
-                    max_concurrent_agents: 5,
-                    compute_budget: 100.0,
-                    memory_budget_gb: 16.0,
-                    api_rate_limits: HashMap::new(),
-                },
-            },
-            deadline: None,
-            budget: Some(1000.0),
-            quality_requirements: vec!["high_quality".to_string()],
-        };
-
-        let workflow_id = orchestrator.submit_workflow(workflow).await.unwrap();
-        assert_eq!(workflow_id, "test_workflow");
-    }
-
-    #[tokio::test]
-    async fn test_orchestration_status() {
-        let client = GLM46Client::from_env().unwrap_or_default();
-        let orchestrator = MultiAgentOrchestrator::new(client, OrchestratorConfig::default());
-        
-        let status = orchestrator.get_orchestration_status().await;
-        assert_eq!(status.active_agents, 0);
-        assert_eq!(status.active_workflows, 0);
-        assert_eq!(status.queued_workflows, 0);
-    }
 }

@@ -66,7 +66,7 @@ curl -fsSL https://reasonkit.sh/install | bash
 **Type on screen:**
 
 ```bash
-rk-core --version
+rk --version
 # reasonkit-core 0.1.0
 ```
 
@@ -88,7 +88,7 @@ rk-core --version
 
 ```bash
 export ANTHROPIC_API_KEY="sk-ant-..."
-rk-core think "Should I use microservices?" --profile quick
+rk think "Should I use microservices?" --profile quick
 ```
 
 **Show:** Output appearing in real-time (can speed up slightly)
@@ -133,14 +133,14 @@ VERDICT: Start with monolith | Confidence: 78% | Time: 1.8s
 **Type on screen (left side):**
 
 ```bash
-rk-core think "Deploy now?" --profile quick
+rk think "Deploy now?" --profile quick
 # Time: 30s, Confidence: 70%
 ```
 
 **Type on screen (right side):**
 
 ```bash
-rk-core think "Deploy now?" --profile paranoid
+rk think "Deploy now?" --profile paranoid
 # Time: 10min, Confidence: 95%
 ```
 
@@ -174,7 +174,7 @@ rk-core think "Deploy now?" --profile paranoid
 **Type on screen:**
 
 ```bash
-rk-core think "Review this PR for security issues:
+rk think "Review this PR for security issues:
   - Adds user input to SQL query
   - Uses eval() on user data
   - Logs passwords in debug mode" --profile balanced --format json

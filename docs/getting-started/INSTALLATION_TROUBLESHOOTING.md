@@ -41,12 +41,12 @@ echo -e "\n[2] Checking PATH..."
 echo "  PATH contains ~/.cargo/bin: $(echo $PATH | grep -q '.cargo/bin' && echo 'YES' || echo 'NO')"
 echo "  PATH contains ~/.local/bin: $(echo $PATH | grep -q '.local/bin' && echo 'YES' || echo 'NO')"
 
-echo -e "\n[3] Checking rk-core binary..."
-if command -v rk-core &>/dev/null; then
-    echo "  Location: $(which rk-core)"
-    echo "  Version: $(rk-core --version 2>/dev/null || echo 'Unable to get version')"
+echo -e "\n[3] Checking rk binary..."
+if command -v rk &>/dev/null; then
+    echo "  Location: $(which rk)"
+    echo "  Version: $(rk --version 2>/dev/null || echo 'Unable to get version')"
 else
-    echo "  ERROR: rk-core not found in PATH"
+    echo "  ERROR: rk not found in PATH"
 fi
 
 echo -e "\n[4] Checking dependencies..."
@@ -501,7 +501,7 @@ cargo --version
 **Error Message:**
 
 ```
-error: could not write to /usr/local/bin/rk-core
+error: could not write to /usr/local/bin/rk
 Permission denied (os error 13)
 ```
 
@@ -532,7 +532,7 @@ CARGO_INSTALL_ROOT="$HOME/.local" cargo install reasonkit-core
 **Error Message:**
 
 ```bash
-rk-core: command not found
+rk: command not found
 ```
 
 (after successful installation)
@@ -631,7 +631,7 @@ CARGO_HTTP_TIMEOUT=120 cargo install reasonkit-core
 git clone https://github.com/reasonkit/reasonkit-core
 cd reasonkit-core
 cargo build --release
-cp target/release/rk-core ~/.local/bin/
+cp target/release/rk ~/.local/bin/
 ```
 
 **Prevention:** Use local build for unreliable networks.
@@ -961,7 +961,7 @@ default_profile = "balanced"
 EOF
 
 # Verify
-rk-core doctor check
+rk doctor check
 ```
 
 ---
@@ -1002,20 +1002,20 @@ echo 'ANTHROPIC_API_KEY=sk-ant-...' >> .env
 
 ```bash
 # 1. Check binary exists and runs
-rk-core --version
+rk --version
 # Expected: reasonkit-core 1.0.0
 
 # 2. Check help displays correctly
-rk-core --help
+rk --help
 # Should display command options
 
 # 3. Check configuration is valid
-rk-core doctor check
+rk doctor check
 # Should show health status
 
 # 4. Test basic functionality (requires API key)
 export ANTHROPIC_API_KEY="sk-ant-..."
-rk-core think "What is 2+2?" --profile quick
+rk think "What is 2+2?" --profile quick
 # Should return structured response
 ```
 
@@ -1023,11 +1023,11 @@ rk-core think "What is 2+2?" --profile quick
 
 ```bash
 # Test without API key (mock mode)
-rk-core think "Test query" --mock --profile quick
+rk think "Test query" --mock --profile quick
 # Should return simulated response
 
 # Test JSON output
-rk-core think "Test" --mock --format json | jq .
+rk think "Test" --mock --format json | jq .
 # Should output valid JSON
 ```
 
@@ -1035,10 +1035,10 @@ rk-core think "Test" --mock --format json | jq .
 
 ```bash
 # Full version details
-rk-core --version
+rk --version
 
 # Check Rust version used for build
-rk-core doctor check --verbose
+rk doctor check --verbose
 ```
 
 ---
@@ -1112,7 +1112,7 @@ When opening an issue, include:
 | Problem                      | Quick Fix                                                                                |
 | ---------------------------- | ---------------------------------------------------------------------------------------- |
 | `cargo: command not found`   | `curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs \| sh && source ~/.cargo/env` |
-| `rk-core: command not found` | `export PATH="$HOME/.cargo/bin:$PATH"`                                                   |
+| `rk: command not found` | `export PATH="$HOME/.cargo/bin:$PATH"`                                                   |
 | OpenSSL errors (macOS)       | `brew install openssl@3 && export OPENSSL_DIR=$(brew --prefix openssl@3)`                |
 | OpenSSL errors (Linux)       | `sudo apt install libssl-dev` or `sudo dnf install openssl-devel`                        |
 | linker not found             | `sudo apt install build-essential` or `xcode-select --install`                           |
@@ -1131,7 +1131,7 @@ When opening an issue, include:
 | **Universal Script** | `curl -fsSL https://reasonkit.sh/install \| bash` | Quick setup, auto-detection    |
 | **From Source**      | `git clone ... && cargo build --release`          | Development, customization     |
 | **npm**              | `npm install -g @reasonkit/cli`                   | Node.js ecosystem (wrapper)    |
-| **pip**              | `pip install reasonkit`                           | Python ecosystem (bindings)    |
+| **uv pip**           | `uv pip install reasonkit`                        | Python ecosystem (bindings)    |
 
 ---
 

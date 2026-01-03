@@ -340,8 +340,8 @@ Make CLI help text more descriptive and include examples.
 .long_about(
     "Execute a ThinkTool protocol to analyze a query with structured reasoning.\n\n\
      Examples:\n\
-     rk-core think \"Should I take this job?\" --profile balanced\n\
-     rk-core think \"Is this email a phishing attempt?\" --profile quick"
+     rk think \"Should I take this job?\" --profile balanced\n\
+     rk think \"Is this email a phishing attempt?\" --profile quick"
 )
 ```
 
@@ -380,7 +380,7 @@ set -euo pipefail
 
 echo "Running ReasonKit analysis..."
 
-rk-core think \
+rk think \
     "Your question here" \
     --profile balanced \
     --output json > result.json
