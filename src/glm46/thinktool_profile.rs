@@ -12,7 +12,7 @@ use crate::error::Result;
 use serde_json::{json, Value};
 use std::collections::HashMap;
 use std::sync::Arc;
-use tracing::{debug, info};
+use tracing::debug;
 
 use super::client::GLM46Client;
 use super::types::{ChatMessage, ChatRequest, ResponseFormat, TokenUsage, Tool};
@@ -144,7 +144,7 @@ impl GLM46ThinkToolProfile {
         let content = response
             .choices
             .first()
-            .and_then(|c| Some(c.message.content.clone()))
+            .map(|c| c.message.content.clone())
             .unwrap_or_default();
 
         // Cache successful response
@@ -213,14 +213,14 @@ impl GLM46ThinkToolProfile {
         let content = response
             .choices
             .first()
-            .and_then(|c| Some(c.message.content.clone()))
+            .map(|c| c.message.content.clone())
             .unwrap_or_default();
 
-        Ok(self.convert_to_thinktool_output(
+        self.convert_to_thinktool_output(
             serde_json::from_str(&content)?,
             "bilingual_reasoning",
             &response.usage,
-        )?)
+        )
     }
 
     /// Execute comprehensive analysis with 198K context
@@ -265,14 +265,14 @@ impl GLM46ThinkToolProfile {
         let content = response
             .choices
             .first()
-            .and_then(|c| Some(c.message.content.clone()))
+            .map(|c| c.message.content.clone())
             .unwrap_or_default();
 
-        Ok(self.convert_to_thinktool_output(
+        self.convert_to_thinktool_output(
             serde_json::from_str(&content)?,
             &format!("comprehensive_{:?}", analysis_type),
             &response.usage,
-        )?)
+        )
     }
 
     /// Get performance metrics
@@ -642,58 +642,4 @@ impl ThinkToolModule for GLM46LaserLogic {
                 .to_string(),
         ))
     }
-}
-
-// Internal tests disabled - see tests/glm46_*.rs
-#[cfg(all(test, feature = "glm46-internal-tests"))]
-mod tests {
-    use super::*;
-    use serde_json::json;
-
-    #[test]
-    fn test_thinktool_config_default() {
-        let config = GLM46ThinkToolConfig::default();
-        assert_eq!(config.context_budget, 198_000);
-        assert_eq!(config.temperature, 0.15);
-        assert!(config.bilingual_optimization);
-        assert!(config.cost_tracking);
-    }
-
-    #[test]
-    fn test_performance_metrics() {
-        let metrics = PerformanceMetrics {
-            total_requests: 100,
-            total_tokens: 50000,
-            total_cost: 5.0,
-            cache_hit_rate: 0.15,
-            structured_output_rate: 0.80,
-            bilingual_usage_rate: 0.25,
-            average_response_time_ms: 850.0,
-            cost_savings_vs_claude: 105.0,
-        };
-
-        assert_eq!(metrics.total_requests, 100);
-        assert_eq!(metrics.cost_savings_vs_claude, 105.0);
-    }
-
-    #[test]
-    fn test_bilingual_modes() {
-        assert!(matches!(BilingualMode::Chinese, BilingualMode::Chinese));
-        assert!(matches!(BilingualMode::English, BilingualMode::English));
-        assert!(matches!(BilingualMode::Both, BilingualMode::Both));
-    }
-
-    #[tokio::test]
-    async fn test_profile_creation() {
-        let config = GLM46ThinkToolConfig::default();
-        let client = GLM46Client::from_env().unwrap_or_default();
-        let profile = GLM46ThinkToolProfile::new(client, config);
-
-        let metrics = profile.get_performance_metrics().await;
-        assert_eq!(metrics.total_requests, 0);
-        assert_eq!(metrics.cache_hit_rate, 0.0);
-    }
-
-    // Note: Full integration tests would require actual GLM-4.6 API credentials
-    // and would be implemented in integration test files
 }

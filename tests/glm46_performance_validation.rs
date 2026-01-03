@@ -7,7 +7,7 @@
 //! - Cost efficiency (1/7th Claude pricing)
 
 use reasonkit::glm46::types::{
-    ChatMessage, ChatRequest, MessageRole, ResponseFormat, TokenUsage, Tool, ToolChoice,
+    ChatMessage, ChatRequest, MessageRole, ResponseFormat, Tool, ToolChoice,
     ToolFunction,
 };
 use reasonkit::glm46::{GLM46Client, GLM46Config};
@@ -24,7 +24,7 @@ async fn test_glm46_198k_context_window() {
         ..Default::default()
     };
 
-    let client = GLM46Client::new(config).expect("Failed to create client");
+    let _client = GLM46Client::new(config).expect("Failed to create client");
 
     // Create a context that approaches 198K tokens
     // Approximate: 1 token ≈ 4 characters for English text
@@ -104,13 +104,13 @@ async fn test_glm46_cost_efficiency() {
 
     // Validate cost ratio is approximately 1/7th (within 10% tolerance)
     assert!(
-        input_ratio >= 6.0 && input_ratio <= 8.0,
+        (6.0..=8.0).contains(&input_ratio),
         "GLM-4.6 input cost should be ~1/7th of Claude (ratio: {:.2})",
         input_ratio
     );
 
     assert!(
-        output_ratio >= 6.0 && output_ratio <= 8.0,
+        (6.0..=8.0).contains(&output_ratio),
         "GLM-4.6 output cost should be ~1/7th of Claude (ratio: {:.2})",
         output_ratio
     );
@@ -132,7 +132,7 @@ async fn test_glm46_tau_bench_coordination() {
         ..Default::default()
     };
 
-    let client = GLM46Client::new(config).expect("Failed to create client");
+    let _client = GLM46Client::new(config).expect("Failed to create client");
 
     // TAU-Bench style agentic coordination request
     let tools = vec![
@@ -258,7 +258,7 @@ async fn test_glm46_structured_output_performance() {
         ..Default::default()
     };
 
-    let client = GLM46Client::new(config).expect("Failed to create client");
+    let _client = GLM46Client::new(config).expect("Failed to create client");
 
     let complex_schema = serde_json::json!({
         "type": "object",

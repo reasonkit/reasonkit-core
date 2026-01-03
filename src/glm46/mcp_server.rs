@@ -16,8 +16,8 @@ use super::client::GLM46Client;
 use super::types::*;
 use crate::mcp::tools::{Tool as McpTool, ToolHandler};
 use crate::mcp::{
-    McpServer, McpServerTrait, ServerCapabilities, ServerInfo, ServerMetrics, ServerStatus,
-    ToolCapability, ToolInput, ToolResult, MCP_VERSION,
+    McpServerTrait, ServerCapabilities, ServerInfo, ServerMetrics, ServerStatus, ToolResult,
+    MCP_VERSION,
 };
 
 /// GLM-4.6 MCP Server Configuration
@@ -197,7 +197,7 @@ impl GLM46MCPServer {
         let content = response
             .choices
             .first()
-            .and_then(|c| Some(c.message.content.clone()))
+            .map(|c| c.message.content.clone())
             .unwrap_or_default();
         let plan: WorkflowPlan =
             serde_json::from_str(&content).map_err(crate::error::Error::Json)?;
@@ -276,7 +276,7 @@ impl GLM46MCPServer {
         let content = response
             .choices
             .first()
-            .and_then(|c| Some(c.message.content.clone()))
+            .map(|c| c.message.content.clone())
             .unwrap_or_default();
         let optimization: WorkflowOptimization =
             serde_json::from_str(&content).map_err(crate::error::Error::Json)?;
@@ -351,7 +351,7 @@ impl GLM46MCPServer {
         let content = response
             .choices
             .first()
-            .and_then(|c| Some(c.message.content.clone()))
+            .map(|c| c.message.content.clone())
             .unwrap_or_default();
         let resolution: ConflictResolution =
             serde_json::from_str(&content).map_err(crate::error::Error::Json)?;
@@ -724,59 +724,3 @@ type ConflictAnalysis = serde_json::Value;
 type OptimizationStrategy = serde_json::Value;
 type RiskAssessment = serde_json::Value;
 type TaskSequence = serde_json::Value;
-
-// Internal tests disabled - see tests/glm46_*.rs
-#[cfg(all(test, feature = "glm46-internal-tests"))]
-mod tests {
-    use super::*;
-    use serde_json::json;
-
-    #[test]
-    fn test_server_config_default() {
-        let config = GLM46MCPServerConfig::default();
-        assert_eq!(config.max_concurrent_coords, 10);
-        assert!(config.cost_optimization);
-        assert!(config.local_fallback);
-    }
-
-    #[test]
-    fn test_coordination_prompt_building() {
-        // Test prompt construction logic
-        let config = GLM46MCPServerConfig::default();
-        let client = GLM46Client::from_env().unwrap_or_default();
-        let server = GLM46MCPServer::new(client, config).unwrap();
-
-        // Test would verify prompt structure and content
-        assert!(true); // Placeholder assertion
-    }
-
-    #[test]
-    fn test_hash_workflow() {
-        let workflow = WorkflowDefinition {
-            name: "test_workflow".to_string(),
-            description: "Test workflow".to_string(),
-            complexity_score: 0.5,
-            estimated_duration_hours: 8.0,
-        };
-
-        let config = GLM46MCPServerConfig::default();
-        let client = GLM46Client::from_env().unwrap_or_default();
-        let server = GLM46MCPServer::new(client, config).unwrap();
-
-        let hash1 = server.hash_workflow(&workflow);
-        let hash2 = server.hash_workflow(&workflow);
-
-        assert_eq!(hash1, hash2); // Should be deterministic
-    }
-
-    #[tokio::test]
-    async fn test_get_status() {
-        let config = GLM46MCPServerConfig::default();
-        let client = GLM46Client::from_env().unwrap_or_default();
-        let server = GLM46MCPServer::new(client, config).unwrap();
-
-        let status = server.get_status().await;
-        assert_eq!(status.requests_processed, 0);
-        assert_eq!(status.active_connections, 0);
-    }
-}

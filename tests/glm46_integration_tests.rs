@@ -5,7 +5,7 @@
 //! Tests cover ThinkTool profile integration, MCP server, and orchestrator.
 
 use reasonkit::glm46::types::{
-    ChatMessage, ChatRequest, MessageRole, ResponseFormat, TokenUsage, Tool, ToolChoice,
+    ChatMessage, ChatRequest, MessageRole, ResponseFormat, Tool, ToolChoice,
     ToolFunction,
 };
 use reasonkit::glm46::{GLM46Client, GLM46Config};
@@ -21,7 +21,7 @@ async fn test_glm46_thinktool_profile_integration() {
         ..Default::default()
     };
 
-    let client = GLM46Client::new(config).expect("Failed to create client");
+    let _client = GLM46Client::new(config).expect("Failed to create client");
 
     // Test balanced profile integration
     let request = ChatRequest {
@@ -89,7 +89,7 @@ async fn test_glm46_large_context() {
         ..Default::default()
     };
 
-    let client = GLM46Client::new(config).expect("Failed to create client");
+    let _client = GLM46Client::new(config).expect("Failed to create client");
 
     // Create a large context (simulated)
     let large_context = "A".repeat(100_000); // Simulate large input
@@ -127,7 +127,7 @@ async fn test_glm46_structured_output() {
         ..Default::default()
     };
 
-    let client = GLM46Client::new(config).expect("Failed to create client");
+    let _client = GLM46Client::new(config).expect("Failed to create client");
 
     let schema = serde_json::json!({
         "type": "object",
@@ -180,7 +180,7 @@ async fn test_glm46_agentic_coordination() {
         ..Default::default()
     };
 
-    let client = GLM46Client::new(config).expect("Failed to create client");
+    let _client = GLM46Client::new(config).expect("Failed to create client");
 
     let tools = vec![
         Tool {

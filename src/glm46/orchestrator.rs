@@ -4,7 +4,6 @@
 //! Leverages 70.1% TAU-Bench performance for sophisticated coordination.
 
 use crate::error::Result;
-use serde_json::json;
 use std::collections::{HashMap, VecDeque};
 use std::sync::Arc;
 use tokio::sync::RwLock;
@@ -432,10 +431,10 @@ impl MultiAgentOrchestrator {
         let content = response
             .choices
             .first()
-            .and_then(|c| Some(c.message.content.clone()))
+            .map(|c| c.message.content.clone())
             .unwrap_or_default();
         let analysis: WorkflowAnalysis =
-            serde_json::from_str(&content).map_err(|e| crate::error::Error::Json(e))?;
+            serde_json::from_str(&content).map_err(crate::error::Error::Json)?;
 
         // Update workflow with analysis results
         let mut workflows = self.active_workflows.write().await;
@@ -545,10 +544,10 @@ impl MultiAgentOrchestrator {
         let content = response
             .choices
             .first()
-            .and_then(|c| Some(c.message.content.clone()))
+            .map(|c| c.message.content.clone())
             .unwrap_or_default();
         let execution_plan: ExecutionPlan =
-            serde_json::from_str(&content).map_err(|e| crate::error::Error::Json(e))?;
+            serde_json::from_str(&content).map_err(crate::error::Error::Json)?;
 
         // Start execution monitoring
         self.monitor_workflow_execution(workflow, &execution_plan)
@@ -646,12 +645,11 @@ impl MultiAgentOrchestrator {
 
             execution.current_phase = "completed".to_string();
             execution.progress = 100.0;
-            execution.metrics.total_duration_seconds = execution
+            execution.metrics.total_duration_seconds = -execution
                 .started_at
                 .duration_since(std::time::SystemTime::now())
                 .unwrap_or_default()
-                .as_secs_f64()
-                * -1.0;
+                .as_secs_f64();
 
             // Release agents
             for agent_id in &execution.assigned_agents.clone() {
@@ -959,79 +957,4 @@ pub struct OrchestrationStatus {
     pub average_agent_utilization: f64,
     pub average_workflow_progress: f64,
     pub performance_metrics: OrchestrationMetrics,
-}
-
-// Internal tests disabled - see tests/glm46_*.rs
-#[cfg(all(test, feature = "glm46-internal-tests"))]
-mod tests {
-    use super::*;
-    // use serde_json::json;
-
-    #[test]
-    fn test_orchestrator_config_default() {
-        let config = OrchestratorConfig::default();
-        assert_eq!(config.max_concurrent_workflows, 10);
-        assert!(config.conflict_resolution);
-        assert!(config.cost_optimization);
-    }
-
-    #[test]
-    fn test_agent_state_availability() {
-        let agent = AgentState {
-            id: "test_agent".to_string(),
-            name: "Test Agent".to_string(),
-            capabilities: vec!["coordination".to_string()],
-            status: AgentStatus::Available,
-            current_load: 0.5,
-            max_capacity: 1.0,
-            cost_per_hour: 50.0,
-            performance_rating: 0.9,
-            last_activity: std::time::SystemTime::now(),
-        };
-
-        assert_eq!(agent.availability_percentage(), 50.0);
-    }
-
-    #[tokio::test]
-    async fn test_workflow_submission() {
-        let client = GLM46Client::from_env().unwrap_or_default();
-        let orchestrator = MultiAgentOrchestrator::new(client, OrchestratorConfig::default());
-
-        let workflow = WorkflowDefinition {
-            id: "test_workflow".to_string(),
-            name: "Test Workflow".to_string(),
-            description: "Test workflow".to_string(),
-            priority: WorkflowPriority::Medium,
-            tasks: vec![],
-            constraints: WorkflowConstraints {
-                time_limit: None,
-                budget_limit: None,
-                quality_threshold: 0.8,
-                agent_restrictions: vec![],
-                resource_limits: ResourceLimits {
-                    max_concurrent_agents: 5,
-                    compute_budget: 100.0,
-                    memory_budget_gb: 16.0,
-                    api_rate_limits: HashMap::new(),
-                },
-            },
-            deadline: None,
-            budget: Some(1000.0),
-            quality_requirements: vec!["high_quality".to_string()],
-        };
-
-        let workflow_id = orchestrator.submit_workflow(workflow).await.unwrap();
-        assert_eq!(workflow_id, "test_workflow");
-    }
-
-    #[tokio::test]
-    async fn test_orchestration_status() {
-        let client = GLM46Client::from_env().unwrap_or_default();
-        let orchestrator = MultiAgentOrchestrator::new(client, OrchestratorConfig::default());
-
-        let status = orchestrator.get_orchestration_status().await;
-        assert_eq!(status.active_agents, 0);
-        assert_eq!(status.active_workflows, 0);
-        assert_eq!(status.queued_workflows, 0);
-    }
 }

@@ -41,11 +41,11 @@ impl OllamaClient {
     pub async fn is_available(&self) -> bool {
         let response = self
             .http_client
-            .get(&format!("{}/api/version", self.config.url))
+            .get(format!("{}/api/version", self.config.url))
             .send()
             .await;
 
-        response.map_or(false, |r| r.status().is_success())
+        response.is_ok_and(|r| r.status().is_success())
     }
 
     /// Execute chat completion with fallback
@@ -64,7 +64,7 @@ impl OllamaClient {
         let response = timeout(self.config.timeout, self.send_request(&ollama_request))
             .await
             .map_err(|_| GLM46Error::Timeout(self.config.timeout))?
-            .map_err(|e| GLM46Error::Network(e))?;
+            .map_err(GLM46Error::Network)?;
 
         self.parse_response(response).await
     }
@@ -235,7 +235,7 @@ impl OllamaClient {
         }
 
         let ollama_response: OllamaResponse =
-            serde_json::from_str(&body).map_err(|e| GLM46Error::Json(e))?;
+            serde_json::from_str(&body).map_err(GLM46Error::Json)?;
 
         debug!(
             "Ollama response: done={}, content_length={}",
@@ -441,45 +441,4 @@ pub struct FallbackStatus {
     pub consecutive_failures: u32,
     pub failure_threshold: u32,
     pub active: bool,
-}
-
-// Internal tests disabled - see tests/glm46_*.rs
-#[cfg(all(test, feature = "glm46-internal-tests"))]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_ollama_message_conversion() {
-        let chat_msg = ChatMessage {
-            role: crate::glm46::types::MessageRole::User,
-            content: "Hello".to_string(),
-            tool_calls: None,
-            tool_call_id: None,
-        };
-
-        let ollama_msg: OllamaMessage = chat_msg.into();
-        assert_eq!(ollama_msg.role, "user");
-        assert_eq!(ollama_msg.content, "Hello");
-    }
-
-    #[test]
-    fn test_ollama_response_conversion() {
-        let response = OllamaResponse {
-            message: OllamaMessage {
-                role: "assistant".to_string(),
-                content: "Hello back!".to_string(),
-            },
-            done: true,
-            prompt_eval_count: Some(10),
-            eval_count: Some(5),
-            total_duration: Some(1000000),
-            load_duration: Some(500000),
-        };
-
-        let chat_response = response.into_chat_response();
-        assert_eq!(chat_response.choices[0].message.content, "Hello back!");
-        assert_eq!(chat_response.usage.prompt_tokens, 10);
-        assert_eq!(chat_response.usage.completion_tokens, 5);
-        assert_eq!(chat_response.usage.total_tokens, 15);
-    }
 }

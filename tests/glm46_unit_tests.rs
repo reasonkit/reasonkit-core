@@ -5,8 +5,8 @@
 //! Tests cover client, types, circuit breaker, and ThinkTool profile integration.
 
 use reasonkit::glm46::types::{
-    ChatMessage, ChatRequest, MessageRole, ResponseFormat, TokenUsage, Tool, ToolCall,
-    ToolChoice, ToolFunction, ToolFunctionCall,
+    ChatMessage, ChatRequest, MessageRole, ResponseFormat, Tool, ToolCall, ToolChoice,
+    ToolFunction, ToolFunctionCall,
 };
 use reasonkit::glm46::{GLM46Client, GLM46Config};
 use std::time::Duration;
@@ -176,10 +176,13 @@ fn test_tool_choice_enum() {
 
 #[test]
 fn test_cost_tracker_initialization() {
-    // Test that cost tracker can be created
-    // This is a placeholder - actual implementation depends on CostTracker struct
-    // For now, we verify the concept exists
-    assert!(true); // Placeholder until CostTracker is fully implemented
+    use reasonkit::glm46::CostTracker;
+    // Test that cost tracker can be created and defaults work
+    let tracker = CostTracker::new();
+    // Verify initial state
+    let stats = tracker.get_stats();
+    assert_eq!(stats.total_requests, 0);
+    assert_eq!(stats.total_cost, 0.0);
 }
 
 #[test]

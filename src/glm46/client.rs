@@ -46,7 +46,6 @@
 
 use anyhow::{Context, Result};
 use reqwest::{Client, StatusCode};
-use serde::Deserialize;
 use std::sync::Arc;
 use std::time::Duration;
 use tokio::sync::Mutex;
@@ -394,6 +393,12 @@ pub struct CostTracker {
     start_time: std::time::Instant,
 }
 
+impl Default for CostTracker {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl CostTracker {
     pub fn new() -> Self {
         Self {
@@ -447,51 +452,5 @@ impl CostTracker {
             session_start: std::time::SystemTime::now(),
         };
         self.start_time = std::time::Instant::now();
-    }
-}
-
-// Internal tests disabled - use integration tests in tests/glm46_*.rs
-#[cfg(all(test, feature = "glm46-internal-tests"))]
-mod tests {
-    use super::*;
-    use tokio_test;
-
-    #[test]
-    fn test_config_default() {
-        let config = GLM46Config::default();
-        assert_eq!(config.model, "glm-4.6");
-        assert_eq!(config.context_budget, 198_000);
-        assert!(config.cost_tracking);
-    }
-
-    #[test]
-    fn test_token_estimation() {
-        let request = ChatRequest {
-            messages: vec![
-                ChatMessage::system("You are a test"),
-                ChatMessage::user("Test message with multiple words"),
-            ],
-            temperature: 0.15,
-            max_tokens: 1500,
-            response_format: None,
-        };
-
-        let config = GLM46Config::default();
-        let client = GLM46Client::new(config).unwrap();
-
-        let estimate = client.estimate_tokens(&request);
-        assert!(estimate > 0);
-    }
-
-    #[tokio_test]
-    async fn test_health_check() {
-        let mut config = GLM46Config::default();
-        config.api_key = "test-key".to_string(); // Will fail but test structure
-
-        let client = GLM46Client::new(config).unwrap();
-        let result = client.health_check().await;
-
-        // Should fail gracefully with error status
-        assert!(result.is_ok());
     }
 }
