@@ -2,7 +2,7 @@
 name = "reasonkit-core"
 version = "0.1.0"
 edition = "2021"
-rust-version = "1.74"
+rust-version = "1.75"
 authors = ["ReasonKit Team <team@reasonkit.sh>"]
 description = "The Reasoning Engine — Auditable Reasoning for Production AI | Rust-Native | Turn Prompts into Protocols"
 license = "Apache-2.0"
@@ -65,7 +65,7 @@ crate-type = ["cdylib", "rlib"]
 doctest = false
 
 [[bin]]
-name = "rk-core"
+name = "rk"
 path = "src/main.rs"
 
 [[bin]]
@@ -90,6 +90,11 @@ required-features = ["aesthetic"]
 name = "m2_integration_example"
 path = "examples/m2_integration_example.rs"
 required-features = ["minimax"]
+
+[[example]]
+name = "glm46_quick_start"
+path = "examples/glm46_quick_start.rs"
+required-features = []
 
 # ============================================================================
 # DEPENDENCIES
@@ -118,11 +123,11 @@ regex = "1.10"
 qdrant-client = { version = "1.10", optional = true }
 
 # Full-text Search (optional - use reasonkit-mem for full memory features)
-tantivy = { version = "0.22", optional = true }
+tantivy = { version = "0.25", optional = true }
 
 # Memory Infrastructure (optional - provides storage, retrieval, embeddings)
 # Version required for crates.io publishing; path used for workspace development
-reasonkit-mem = { version = "0.1.0", optional = true }
+reasonkit-mem = { version = "0.1.1", optional = true }
 
 # Async Runtime
 tokio = { version = "1", features = ["full"] }
