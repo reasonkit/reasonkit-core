@@ -19,7 +19,7 @@ export OPENROUTER_API_KEY="sk-or-..."
 cargo install reasonkit-core
 
 # 3. Run analysis with any model
-rk-core think --provider openrouter --model anthropic/claude-sonnet-4 "Analyze this"
+rk think --provider openrouter --model anthropic/claude-sonnet-4 "Analyze this"
 ```
 
 ---
@@ -46,13 +46,13 @@ export OPENROUTER_SITE_NAME="ReasonKit"
 
 ```bash
 # Test API connection
-rk-core think --provider openrouter --model meta-llama/llama-3.3-70b-instruct "Hello"
+rk think --provider openrouter --model meta-llama/llama-3.3-70b-instruct "Hello"
 
 # List available models
-rk-core providers show openrouter
+rk providers show openrouter
 
 # Search for specific models
-rk-core providers search openrouter "claude"
+rk providers search openrouter "claude"
 ```
 
 ---
@@ -140,31 +140,31 @@ deepseek/deepseek-r1
 
 ```bash
 # GigaThink with Claude
-rk-core think "Generate creative solutions" \
+rk think "Generate creative solutions" \
   --provider openrouter \
   --model anthropic/claude-sonnet-4 \
   --protocol gigathink
 
 # LaserLogic with GPT-4
-rk-core think "Validate this argument" \
+rk think "Validate this argument" \
   --provider openrouter \
   --model openai/gpt-4o \
   --protocol laserlogic
 
 # ProofGuard with Gemini
-rk-core think "Verify these claims" \
+rk think "Verify these claims" \
   --provider openrouter \
   --model google/gemini-2.0-flash \
   --protocol proofguard
 
 # BedRock with DeepSeek R1
-rk-core think "First principles analysis" \
+rk think "First principles analysis" \
   --provider openrouter \
   --model deepseek/deepseek-r1 \
   --protocol bedrock
 
 # BrutalHonesty with Llama
-rk-core think "Critique this plan" \
+rk think "Critique this plan" \
   --provider openrouter \
   --model meta-llama/llama-3.3-70b-instruct \
   --protocol brutalhonesty
@@ -174,25 +174,25 @@ rk-core think "Critique this plan" \
 
 ```bash
 # Quick analysis with fast model
-rk-core think "Quick review" \
+rk think "Quick review" \
   --provider openrouter \
   --model google/gemini-2.0-flash \
   --profile quick
 
 # Balanced with Claude Sonnet
-rk-core think "Evaluate this design" \
+rk think "Evaluate this design" \
   --provider openrouter \
   --model anthropic/claude-sonnet-4 \
   --profile balanced
 
 # Deep analysis with Claude Opus
-rk-core think "Comprehensive analysis" \
+rk think "Comprehensive analysis" \
   --provider openrouter \
   --model anthropic/claude-opus-4 \
   --profile deep
 
 # Paranoid with o1
-rk-core think "Security audit" \
+rk think "Security audit" \
   --provider openrouter \
   --model openai/o1 \
   --profile paranoid
@@ -202,17 +202,17 @@ rk-core think "Security audit" \
 
 ```bash
 # Meta Llama - FREE
-rk-core think "Analyze this code" \
+rk think "Analyze this code" \
   --provider openrouter \
   --model meta-llama/llama-3.3-70b-instruct:free
 
 # Google Gemma - FREE
-rk-core think "Quick check" \
+rk think "Quick check" \
   --provider openrouter \
   --model google/gemma-2-9b-it:free
 
 # Mistral - FREE
-rk-core think "Code review" \
+rk think "Code review" \
   --provider openrouter \
   --model mistralai/devstral-small:free
 
@@ -223,17 +223,17 @@ rk-core think "Code review" \
 
 ```bash
 # Lowest cost route
-rk-core think "Analyze this" \
+rk think "Analyze this" \
   --provider openrouter \
   --route lowest-cost
 
 # Lowest latency route
-rk-core think "Quick response needed" \
+rk think "Quick response needed" \
   --provider openrouter \
   --route lowest-latency
 
 # Fallback chain (try each until success)
-rk-core think "Critical analysis" \
+rk think "Critical analysis" \
   --provider openrouter \
   --route fallback \
   --fallback "anthropic/claude-sonnet-4,openai/gpt-4o,google/gemini-2.0-flash"
@@ -243,13 +243,13 @@ rk-core think "Critical analysis" \
 
 ```bash
 # Compare reasoning across models
-rk-core compare "Should we use microservices?" \
+rk compare "Should we use microservices?" \
   --provider openrouter \
   --models "anthropic/claude-sonnet-4,openai/gpt-4o,google/gemini-2.0-flash" \
   --profile balanced
 
 # Consensus from multiple models
-rk-core consensus "Is this architecture sound?" \
+rk consensus "Is this architecture sound?" \
   --provider openrouter \
   --models "anthropic/claude-opus-4,openai/o1,deepseek/deepseek-r1" \
   --threshold 0.8
@@ -416,23 +416,23 @@ for model, result in results.items():
 
 ```bash
 # Strategy 1: Use free models for development
-rk-core think "Test query" \
+rk think "Test query" \
   --provider openrouter \
   --model meta-llama/llama-3.3-70b-instruct:free
 
 # Strategy 2: Use lowest-cost routing
-rk-core think "Analysis" \
+rk think "Analysis" \
   --provider openrouter \
   --route lowest-cost
 
 # Strategy 3: Budget caps
-rk-core think "Expensive analysis" \
+rk think "Expensive analysis" \
   --provider openrouter \
   --budget "$0.50"
 
 # Strategy 4: Tiered model selection
-rk-core think "Draft" --model meta-llama/llama-3.3-70b-instruct:free
-rk-core think "Final" --model anthropic/claude-sonnet-4
+rk think "Draft" --model meta-llama/llama-3.3-70b-instruct:free
+rk think "Final" --model anthropic/claude-sonnet-4
 ```
 
 ### Monthly Budget Examples
@@ -481,7 +481,7 @@ curl https://openrouter.ai/api/v1/models \
 
 ```bash
 # Check exact model name
-rk-core providers search openrouter "claude"
+rk providers search openrouter "claude"
 
 # Model names are case-sensitive and require provider prefix
 # Wrong: claude-sonnet-4
@@ -501,7 +501,7 @@ curl https://openrouter.ai/api/v1/auth/key \
 # Add credits at: https://openrouter.ai/credits
 
 # Or use free models
-rk-core think "Query" \
+rk think "Query" \
   --provider openrouter \
   --model meta-llama/llama-3.3-70b-instruct:free
 ```
@@ -516,7 +516,7 @@ requests_per_minute = 30
 retry_delay_ms = 2000
 
 # Or use fallback routing
-rk-core think "Query" \
+rk think "Query" \
   --route fallback \
   --fallback "anthropic/claude-sonnet-4,openai/gpt-4o"
 ```
@@ -535,7 +535,7 @@ fallback_models = [
 ]
 
 # Or specify alternatives
-rk-core think "Query" \
+rk think "Query" \
   --provider openrouter \
   --model anthropic/claude-sonnet-4 \
   --fallback openai/gpt-4o
@@ -545,7 +545,7 @@ rk-core think "Query" \
 
 ```bash
 # Use lowest-latency routing
-rk-core think "Time-sensitive query" \
+rk think "Time-sensitive query" \
   --provider openrouter \
   --route lowest-latency
 
@@ -609,26 +609,26 @@ paranoid = "anthropic/claude-opus-4"
 
 ```bash
 # Workflow 1: Draft + Refine
-rk-core think "Initial analysis" \
+rk think "Initial analysis" \
   --provider openrouter \
   --model meta-llama/llama-3.3-70b-instruct:free \
   --profile quick > draft.json
 
-rk-core think "Refine: $(cat draft.json)" \
+rk think "Refine: $(cat draft.json)" \
   --provider openrouter \
   --model anthropic/claude-sonnet-4 \
   --profile deep
 
 # Workflow 2: Multi-Perspective
 for model in "anthropic/claude-sonnet-4" "openai/gpt-4o" "google/gemini-2.0-flash"; do
-  rk-core think "Evaluate this decision" \
+  rk think "Evaluate this decision" \
     --provider openrouter \
     --model "$model" \
     --profile balanced
 done
 
 # Workflow 3: Consensus
-rk-core consensus "Is this architecture sound?" \
+rk consensus "Is this architecture sound?" \
   --provider openrouter \
   --models "anthropic/claude-opus-4,openai/o1,deepseek/deepseek-r1" \
   --threshold 0.8

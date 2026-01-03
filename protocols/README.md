@@ -36,10 +36,10 @@ Protocols are invoked through ThinkTool profiles:
 
 ```bash
 # CLI invocation (future)
-rk-core think --profile paranoid "query"
+rk think --profile paranoid "query"
 
 # Explicit protocol
-rk-core think --protocol pg-deep "research topic"
+rk think --protocol pg-deep "research topic"
 ```
 
 ## Schema

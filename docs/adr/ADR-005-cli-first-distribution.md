@@ -46,7 +46,7 @@ git pull
 uv pip install -r requirements.txt
 python train.py
 llm "explain this error: $(cat error.log)"
-rk-core --profile deep "Is this approach correct?"  # <-- ReasonKit fits here
+rk --profile deep "Is this approach correct?"  # <-- ReasonKit fits here
 git commit -m "Fix training loop"
 ```
 
@@ -77,24 +77,24 @@ CLI tools integrate naturally into this flow.
 
 ```bash
 # Immediate value (one command)
-rk-core "Should I use microservices for my startup?"
+rk "Should I use microservices for my startup?"
 
 # Profile selection
-rk-core --profile deep "Complex architectural question"
-rk-core --profile paranoid "Security-critical decision"
+rk --profile deep "Complex architectural question"
+rk --profile paranoid "Security-critical decision"
 
 # Output control
-rk-core --format json "Query"
-rk-core --format markdown "Query" > analysis.md
+rk --format json "Query"
+rk --format markdown "Query" > analysis.md
 
 # Integration with other tools
-cat requirements.txt | rk-core "Are there security vulnerabilities?"
-rk-core "Explain this code" < src/main.rs
-git diff | rk-core "Review these changes"
+cat requirements.txt | rk "Are there security vulnerabilities?"
+rk "Explain this code" < src/main.rs
+git diff | rk "Review these changes"
 
 # Configuration
-rk-core config set llm.provider openai
-rk-core config set llm.model gpt-4
+rk config set llm.provider openai
+rk config set llm.model gpt-4
 ```
 
 ### Installation Options
@@ -143,7 +143,7 @@ print(f"Confidence: {result.confidence}")
 
 ### Positive
 
-1. **Immediate Value**: `cargo install reasonkit && rk-core "question"` in under 30 seconds
+1. **Immediate Value**: `cargo install reasonkit && rk "question"` in under 30 seconds
 2. **Low Friction**: No accounts, API keys (with local models), or configuration required
 3. **Scriptable**: Integrates with CI/CD, shell scripts, automation
 4. **Discoverable**: `--help` and `--version` are universal interfaces
@@ -162,7 +162,7 @@ print(f"Confidence: {result.confidence}")
 
 | Negative          | Mitigation                                            |
 | ----------------- | ----------------------------------------------------- |
-| Limited UI        | TUI mode (`rk-core --tui`); web dashboard planned     |
+| Limited UI        | TUI mode (`rk --tui`); web dashboard planned     |
 | Learning curve    | Excellent `--help`; interactive mode; examples        |
 | Integration depth | Library/SDK for programmatic use                      |
 | State management  | SQLite audit log persists state; session continuation |
@@ -175,11 +175,11 @@ Stage 1: Discovery
   cargo install reasonkit
 
 Stage 2: First Value
-  rk-core "Is Kubernetes overkill for my project?"
+  rk "Is Kubernetes overkill for my project?"
   "Wow, this is thorough"
 
 Stage 3: Integration
-  alias think='rk-core --profile balanced'
+  alias think='rk --profile balanced'
   Added to git pre-commit hooks
 
 Stage 4: Library Use

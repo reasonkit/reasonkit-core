@@ -269,7 +269,7 @@ main() {
 
     echo ""
     log_info "Documentation indexing complete!"
-    log_info "Run 'rk-core ingest ${DATA_DIR}/all_docs.jsonl' to add to knowledge base"
+    log_info "Run 'rk ingest ${DATA_DIR}/all_docs.jsonl' to add to knowledge base"
 }
 
 main "$@"

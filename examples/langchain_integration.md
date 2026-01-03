@@ -12,7 +12,7 @@ Unlike standard "Black Box" agents that think obscurely, this agent delegates cr
 
 - Python 3.10+
 - `uv` (recommended) or `pip`
-- A built `rk-core` binary (from the Rust project)
+- A built `rk` binary (from the Rust project)
 
 ## Setup
 
@@ -20,8 +20,8 @@ Unlike standard "Black Box" agents that think obscurely, this agent delegates cr
 # 1. Install dependencies
 uv pip install langchain langchain-core langchain-community
 
-# 2. Ensure rk-core is in your PATH or point to it directly
-export RK_CORE_PATH="../target/release/rk-core"
+# 2. Ensure rk is in your PATH or point to it directly
+export RK_CORE_PATH="../target/release/rk"
 ```
 
 ## The Integration Code (`rk_langchain.py`)
@@ -38,7 +38,7 @@ from langchain.prompts import PromptTemplate
 from langchain_community.llms import FakeListLLM  # For demo without API keys
 
 # --- Configuration ---
-RK_CORE_PATH = os.environ.get("RK_CORE_PATH", "./target/release/rk-core")
+RK_CORE_PATH = os.environ.get("RK_CORE_PATH", "./target/release/rk")
 
 # --- 1. Define the ReasonKit Tool Wrapper ---
 
@@ -56,9 +56,9 @@ class ReasonKitTool(BaseTool):
     args_schema: type[BaseModel] = ReasonKitInput
 
     def _run(self, query: str, profile: str = "quick") -> str:
-        """Executes the rk-core binary and returns the structured output."""
+        """Executes the rk binary and returns the structured output."""
         try:
-            # Construct command: rk-core think "query" --profile profile --format json --mock
+            # Construct command: rk think "query" --profile profile --format json --mock
             # Note: --mock is used here to avoid needing live API keys for this demo.
             # In production, remove --mock and provide provider credentials.
             cmd = [
@@ -86,7 +86,7 @@ class ReasonKitTool(BaseTool):
                 summary.append(f"Step {step_id}: {success}")
 
             # Extract the final synthesized output if available
-            # (The JSON structure depends on your specific rk-core output schema)
+            # (The JSON structure depends on your specific rk output schema)
             # This is a generic fallback:
             summary.append("\nDetailed Findings:")
             output_data = data.get('data', {})
@@ -172,7 +172,7 @@ if __name__ == "__main__":
 
 ## How It Works
 
-1. **Tool Registration**: We subclass `BaseTool` to create `ReasonKitTool`. This exposes the `rk-core think` CLI command as a callable function within Python.
+1. **Tool Registration**: We subclass `BaseTool` to create `ReasonKitTool`. This exposes the `rk think` CLI command as a callable function within Python.
 2. **Structured Execution**: When the Python agent calls the tool, it shells out to the optimized Rust binary.
 3. **Config-Driven**: The agent can select profiles (`quick`, `paranoid`) defined in your YAML configuration, leveraging the work we just finished.
 4. **Artifact Return**: Instead of just text, the tool returns a summary of the *verification steps* (Confidence, Step Success), making the reasoning "Glass Box".

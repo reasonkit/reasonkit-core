@@ -16,14 +16,14 @@
 
 2. **Fixed `opencode` Integration**:
    - Updated `reasonkit-core/scripts/rk-cli-wrapper.sh` to correctly handle `opencode` CLI.
-   - Added check for `rk-core` to use native `--profile` and `--query` arguments instead of injecting protocol text.
+   - Added check for `rk` to use native `--profile` and `--query` arguments instead of injecting protocol text.
    - Corrected `opencode` invocation to use `run` command instead of `-p` flag (matching `opencode --help`).
 
 ### Code Quality Audit
 
 - **Safety**: Found `unwrap()` usage in `mcp/server.rs` (tests) and `processing/chunking.rs` (safe regex/find).
 - **Performance**: `llm.rs` uses connection pooling. `executor.rs` supports parallel execution.
-- **Protocol Compliance**: `rk-cli-wrapper.sh` now correctly respects the `rk-core` interface.
+- **Protocol Compliance**: `rk-cli-wrapper.sh` now correctly respects the `rk` interface.
 
 ### Recommendations
 

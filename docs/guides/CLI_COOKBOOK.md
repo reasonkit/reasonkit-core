@@ -1,6 +1,6 @@
 # ReasonKit CLI Cookbook
 
-Practical examples for using `rk-core` in your daily workflow.
+Practical examples for using `rk` in your daily workflow.
 
 ## 🧠 Structured Reasoning
 
@@ -9,7 +9,7 @@ Practical examples for using `rk-core` in your daily workflow.
 Use GigaThink for rapid brainstorming.
 
 ```bash
-rk-core think "What are creative names for a Rust-based AI tool?" --profile quick
+rk think "What are creative names for a Rust-based AI tool?" --profile quick
 ```
 
 ### Deep Analysis (Standard)
@@ -17,7 +17,7 @@ rk-core think "What are creative names for a Rust-based AI tool?" --profile quic
 Use the standard chain (GigaThink -> LaserLogic -> BedRock) for thorough analysis.
 
 ```bash
-rk-core think "Should we migrate from microservices to a monolith?" --profile balanced
+rk think "Should we migrate from microservices to a monolith?" --profile balanced
 ```
 
 ### Maximum Rigor (Paranoid)
@@ -25,7 +25,7 @@ rk-core think "Should we migrate from microservices to a monolith?" --profile ba
 Apply all ThinkTools, including adversarial critique and source verification.
 
 ```bash
-rk-core think "Analyze the security risks of this architecture" --profile paranoid
+rk think "Analyze the security risks of this architecture" --profile paranoid
 ```
 
 ### Budget-Constrained
@@ -33,8 +33,8 @@ rk-core think "Analyze the security risks of this architecture" --profile parano
 Limit execution to a specific time or token budget.
 
 ```bash
-rk-core think "Summarize this topic" --budget 30s
-rk-core think "Generate ideas" --budget 1000t
+rk think "Summarize this topic" --budget 30s
+rk think "Generate ideas" --budget 1000t
 ```
 
 ---
@@ -44,7 +44,7 @@ rk-core think "Generate ideas" --budget 1000t
 ### Quick Topic Overview
 
 ```bash
-rk-core web "Rust async runtime comparison" --depth quick
+rk web "Rust async runtime comparison" --depth quick
 ```
 
 ### Comprehensive Report
@@ -52,7 +52,7 @@ rk-core web "Rust async runtime comparison" --depth quick
 Deep dive with web search and knowledge base integration.
 
 ```bash
-rk-core web "State of AI Agents in 2025" \
+rk web "State of AI Agents in 2025" \
   --depth deep \
   --output report.md
 ```
@@ -66,7 +66,7 @@ rk-core web "State of AI Agents in 2025" \
 Triangulate a claim against 3 independent sources.
 
 ```bash
-rk-core verify "Python 3.13 removes the GIL" --sources 3
+rk verify "Python 3.13 removes the GIL" --sources 3
 ```
 
 ### Fact-Check with Knowledge Base
@@ -74,7 +74,7 @@ rk-core verify "Python 3.13 removes the GIL" --sources 3
 Cross-reference a claim against your local documents.
 
 ```bash
-rk-core verify "Our architecture requires mTLS" --kb --no-web
+rk verify "Our architecture requires mTLS" --kb --no-web
 ```
 
 ---
@@ -84,7 +84,7 @@ rk-core verify "Our architecture requires mTLS" --kb --no-web
 ### Run a Custom TOML Tool
 
 ```bash
-rk-core think "Critique this design" --protocol devils_advocate
+rk think "Critique this design" --protocol devils_advocate
 ```
 
 _(Requires `devils_advocate` to be defined in `protocols/_.toml`)\*
@@ -94,8 +94,8 @@ _(Requires `devils_advocate` to be defined in `protocols/_.toml`)\*
 See the raw execution trace for debugging.
 
 ```bash
-rk-core think "Test query" --protocol my_new_tool --save-trace
-rk-core trace view <trace_id>
+rk think "Test query" --protocol my_new_tool --save-trace
+rk trace view <trace_id>
 ```
 
 ---
@@ -105,14 +105,14 @@ rk-core trace view <trace_id>
 ### Ingest Documents
 
 ```bash
-rk-core ingest ./docs --recursive --type markdown
-rk-core ingest ./papers/whitepaper.pdf
+rk ingest ./docs --recursive --type markdown
+rk ingest ./papers/whitepaper.pdf
 ```
 
 ### Query Knowledge Base
 
 ```bash
-rk-core query "What is the retry policy?" --top-k 5
+rk query "What is the retry policy?" --top-k 5
 ```
 
 ---
@@ -122,11 +122,11 @@ rk-core query "What is the retry policy?" --top-k 5
 ### Check Status
 
 ```bash
-rk-core stats
+rk stats
 ```
 
 ### Export Metrics
 
 ```bash
-rk-core metrics report --format json > monthly_report.json
+rk metrics report --format json > monthly_report.json
 ```

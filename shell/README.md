@@ -8,16 +8,16 @@ Turn Prompts into Protocols directly from your terminal.
 
 ```bash
 # Zsh
-rk-core completions zsh > ~/.zsh/completions/_rk-core
+rk completions zsh > ~/.zsh/completions/_rk
 
 # Bash
-rk-core completions bash > ~/.bash_completion.d/rk-core
+rk completions bash > ~/.bash_completion.d/rk
 
 # Fish
-rk-core completions fish > ~/.config/fish/completions/rk-core.fish
+rk completions fish > ~/.config/fish/completions/rk.fish
 
 # PowerShell
-rk-core completions powershell >> $PROFILE
+rk completions powershell >> $PROFILE
 ```
 
 ### 2. Oh-My-Zsh Plugin (Recommended)
@@ -61,15 +61,15 @@ source /path/to/reasonkit-core/shell/zsh/functions/rk-widgets.zsh
 
 | Alias  | Command                              |
 | ------ | ------------------------------------ |
-| `rk`   | `rk-core`                            |
-| `rkq`  | `rk-core think --profile quick`      |
-| `rkb`  | `rk-core think --profile balanced`   |
-| `rkd`  | `rk-core think --profile deep`       |
-| `rkp`  | `rk-core think --profile paranoid`   |
-| `rkpc` | `rk-core think --profile powercombo` |
-| `rkw`  | `rk-core web`                        |
-| `rkv`  | `rk-core verify`                     |
-| `rkm`  | `rk-core metrics report`             |
+| `rk`   | `rk`                            |
+| `rkq`  | `rk think --profile quick`      |
+| `rkb`  | `rk think --profile balanced`   |
+| `rkd`  | `rk think --profile deep`       |
+| `rkp`  | `rk think --profile paranoid`   |
+| `rkpc` | `rk think --profile powercombo` |
+| `rkw`  | `rk web`                        |
+| `rkv`  | `rk verify`                     |
+| `rkm`  | `rk metrics report`             |
 
 ## Helper Functions
 
@@ -111,7 +111,7 @@ export RK_DEFAULT_PROFILE="balanced"
 export RK_KEYBINDS_ENABLED="true"
 
 # Custom binary path (optional)
-export RK_CORE="/path/to/rk-core"
+export RK_CORE="/path/to/rk"
 
 # Suppress startup message
 export RK_QUIET=1
@@ -119,7 +119,7 @@ export RK_QUIET=1
 
 ## Requirements
 
-- **Required**: `rk-core` binary
+- **Required**: `rk` binary
 - **Optional**: `fzf` for interactive selectors
 
 ## Prompt Integration (Powerlevel10k)
@@ -144,7 +144,7 @@ typeset -g POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(
 
 ### Completions not working
 
-1. Regenerate: `rk-core completions zsh > ~/.zsh/completions/_rk-core`
+1. Regenerate: `rk completions zsh > ~/.zsh/completions/_rk`
 2. Rebuild completion cache: `rm ~/.zcompdump* && compinit`
 
 ### fzf selectors not appearing

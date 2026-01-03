@@ -38,8 +38,11 @@ env:
   RUSTFLAGS: "-D warnings"
   RUST_BACKTRACE: 1
   CARGO_INCREMENTAL: 0
-  SCCACHE_GHA_ENABLED: "true"
-  RUSTC_WRAPPER: "sccache"
+  # TEMPORARILY DISABLED: GitHub cache service outage
+  # SCCACHE_GHA_ENABLED: "true"
+  # RUSTC_WRAPPER: "sccache"
+  # Override .cargo/config.toml target-cpu=native to prevent SIGILL on different runners
+  CARGO_TARGET_X86_64_UNKNOWN_LINUX_GNU_RUSTFLAGS: ""
 
 jobs:
   # ===========================================================================
@@ -136,6 +139,7 @@ jobs:
       - name: Install Rust toolchain
         uses: dtolnay/rust-toolchain@f7ccc83f9ed1e5b9c81d8a67d7ad1a747e22a561 # stable
         with:
+          toolchain: stable
           components: clippy
 
       - name: Configure sccache
@@ -178,6 +182,7 @@ jobs:
       - name: Install Rust toolchain
         uses: dtolnay/rust-toolchain@f7ccc83f9ed1e5b9c81d8a67d7ad1a747e22a561 # stable
         with:
+          toolchain: stable
           components: rustfmt
 
       - name: Check formatting
@@ -205,6 +210,8 @@ jobs:
 
       - name: Install Rust toolchain
         uses: dtolnay/rust-toolchain@f7ccc83f9ed1e5b9c81d8a67d7ad1a747e22a561 # stable
+        with:
+          toolchain: stable
 
       - name: Configure sccache
         uses: mozilla-actions/sccache-action@676c0e67b665684f17941acf5cc3af83bcf10228 # v0.0.6
@@ -251,6 +258,8 @@ jobs:
 
       - name: Install Rust toolchain
         uses: dtolnay/rust-toolchain@f7ccc83f9ed1e5b9c81d8a67d7ad1a747e22a561 # stable
+        with:
+          toolchain: stable
 
       - name: Configure sccache
         uses: mozilla-actions/sccache-action@676c0e67b665684f17941acf5cc3af83bcf10228 # v0.0.6
@@ -309,6 +318,8 @@ jobs:
 
       - name: Install Rust toolchain
         uses: dtolnay/rust-toolchain@f7ccc83f9ed1e5b9c81d8a67d7ad1a747e22a561 # stable
+        with:
+          toolchain: stable
 
       - name: Install cargo-audit
         run: cargo install cargo-audit --locked
@@ -358,6 +369,8 @@ jobs:
 
       - name: Install Rust toolchain
         uses: dtolnay/rust-toolchain@f7ccc83f9ed1e5b9c81d8a67d7ad1a747e22a561 # stable
+        with:
+          toolchain: stable
 
       - name: Configure sccache
         uses: mozilla-actions/sccache-action@676c0e67b665684f17941acf5cc3af83bcf10228 # v0.0.6
@@ -437,6 +450,8 @@ jobs:
 
       - name: Install Rust toolchain
         uses: dtolnay/rust-toolchain@f7ccc83f9ed1e5b9c81d8a67d7ad1a747e22a561 # stable
+        with:
+          toolchain: stable
 
       - name: Install tarpaulin
         run: cargo install cargo-tarpaulin --locked

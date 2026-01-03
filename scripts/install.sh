@@ -181,7 +181,7 @@ check_rust() {
 try_prebuilt_binary() {
     info "Checking for pre-built binary..."
 
-    BINARY_NAME="rk-core-${OS_NAME}-${ARCH_NAME}"
+    BINARY_NAME="rk-${OS_NAME}-${ARCH_NAME}"
     if [ "$OS_NAME" = "windows" ]; then
         BINARY_NAME="${BINARY_NAME}.exe"
     fi
@@ -201,12 +201,12 @@ try_prebuilt_binary() {
         info "Downloading pre-built binary..."
 
         if command -v curl &> /dev/null; then
-            curl -fsSL "$DOWNLOAD_URL" -o "$INSTALL_DIR/rk-core"
+            curl -fsSL "$DOWNLOAD_URL" -o "$INSTALL_DIR/rk"
         else
-            wget -q "$DOWNLOAD_URL" -O "$INSTALL_DIR/rk-core"
+            wget -q "$DOWNLOAD_URL" -O "$INSTALL_DIR/rk"
         fi
 
-        chmod +x "$INSTALL_DIR/rk-core"
+        chmod +x "$INSTALL_DIR/rk"
         success "Pre-built binary installed"
         return 0
     else
@@ -230,7 +230,7 @@ install_via_cargo() {
 
         # Copy to install dir if cargo bin is different
         if [ "$INSTALL_DIR" != "$HOME/.cargo/bin" ]; then
-            cp "$HOME/.cargo/bin/rk-core" "$INSTALL_DIR/rk-core" 2>/dev/null || true
+            cp "$HOME/.cargo/bin/rk" "$INSTALL_DIR/rk" 2>/dev/null || true
         fi
         return 0
     else
@@ -275,8 +275,8 @@ install_from_source() {
     fi
 
     # Install binary
-    cp target/release/rk-core "$INSTALL_DIR/"
-    chmod +x "$INSTALL_DIR/rk-core"
+    cp target/release/rk "$INSTALL_DIR/"
+    chmod +x "$INSTALL_DIR/rk"
 
     success "Built and installed from source"
 }
@@ -352,17 +352,17 @@ validate_installation() {
 
     # Find the binary
     RK_BINARY=""
-    if [ -x "$INSTALL_DIR/rk-core" ]; then
-        RK_BINARY="$INSTALL_DIR/rk-core"
-    elif command -v rk-core &> /dev/null; then
-        RK_BINARY=$(command -v rk-core)
+    if [ -x "$INSTALL_DIR/rk" ]; then
+        RK_BINARY="$INSTALL_DIR/rk"
+    elif command -v rk &> /dev/null; then
+        RK_BINARY=$(command -v rk)
     fi
 
     if [ -z "$RK_BINARY" ]; then
-        error "rk-core binary not found after installation"
+        error "rk binary not found after installation"
         echo ""
         echo "Try running manually:"
-        echo "  $INSTALL_DIR/rk-core --version"
+        echo "  $INSTALL_DIR/rk --version"
         return 1
     fi
 
@@ -399,14 +399,14 @@ print_quickstart() {
     echo -e "   ${CYAN}export ANTHROPIC_API_KEY=\"sk-ant-...\"${NC}"
     echo ""
     echo "2. Run your first analysis:"
-    echo -e "   ${CYAN}rk-core think \"Should I use microservices?\" --profile quick${NC}"
+    echo -e "   ${CYAN}rk think \"Should I use microservices?\" --profile quick${NC}"
     echo ""
     echo -e "${BOLD}ThinkTools:${NC}"
     echo ""
-    echo "  rk-core think \"query\" --profile quick      # Fast analysis"
-    echo "  rk-core think \"query\" --profile balanced   # Standard"
-    echo "  rk-core think \"query\" --profile deep       # Thorough"
-    echo "  rk-core think \"query\" --profile paranoid   # Maximum rigor"
+    echo "  rk think \"query\" --profile quick      # Fast analysis"
+    echo "  rk think \"query\" --profile balanced   # Standard"
+    echo "  rk think \"query\" --profile deep       # Thorough"
+    echo "  rk think \"query\" --profile paranoid   # Maximum rigor"
     echo ""
     echo -e "${BOLD}Individual Tools:${NC}"
     echo ""

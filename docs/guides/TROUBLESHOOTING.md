@@ -6,7 +6,7 @@
 
 ## Top 10 Issues (Copy-Paste Fixes)
 
-### 1. "command not found: rk-core"
+### 1. "command not found: rk"
 
 **Fix:**
 
@@ -25,7 +25,7 @@ echo 'export PATH="$HOME/.cargo/bin:$PATH"' >> ~/.zshrc && source ~/.zshrc
 
 ```bash
 # Check if binary exists
-ls -la ~/.cargo/bin/rk-core
+ls -la ~/.cargo/bin/rk
 
 # If not, reinstall
 cargo install reasonkit-core --force
@@ -64,14 +64,14 @@ source ~/.bashrc
 
 ```bash
 # Use budget limit
-rk-core think "query" --budget "$0.10"
+rk think "query" --budget "$0.10"
 
 # Use faster provider (Groq is cheap/fast)
 export GROQ_API_KEY="gsk_..."
-rk-core think "query" --provider groq
+rk think "query" --provider groq
 
 # Wait and retry
-sleep 60 && rk-core think "query" --profile quick
+sleep 60 && rk think "query" --profile quick
 ```
 
 ---
@@ -144,13 +144,13 @@ sudo pacman -S openssl
 
 ```bash
 # Use faster profile
-rk-core think "query" --profile quick
+rk think "query" --profile quick
 
 # Increase timeout
-rk-core think "query" --budget "5m"
+rk think "query" --budget "5m"
 
 # Use faster provider
-rk-core think "query" --provider groq
+rk think "query" --provider groq
 ```
 
 ---
@@ -161,13 +161,13 @@ rk-core think "query" --provider groq
 
 ```bash
 # Ensure JSON format is specified
-rk-core think "query" --format json
+rk think "query" --format json
 
 # Pipe to jq for validation
-rk-core think "query" --format json | jq .
+rk think "query" --format json | jq .
 
 # If still failing, check for error messages in output
-rk-core think "query" --format json 2>&1 | head -50
+rk think "query" --format json 2>&1 | head -50
 ```
 
 ---
@@ -198,14 +198,14 @@ mkdir -p ~/.cargo/bin
 
 ```bash
 # Use higher-rigor profile
-rk-core think "query" --profile deep       # 85% target
-rk-core think "query" --profile paranoid   # 95% target
+rk think "query" --profile deep       # 85% target
+rk think "query" --profile paranoid   # 95% target
 
 # Use better model
-rk-core think "query" --provider anthropic --model claude-opus-4
+rk think "query" --provider anthropic --model claude-opus-4
 
 # Provide more context
-rk-core think "Given context X, Y, Z, should we do A?" --profile balanced
+rk think "Given context X, Y, Z, should we do A?" --profile balanced
 ```
 
 ---
@@ -216,8 +216,8 @@ Run these to gather information for troubleshooting:
 
 ```bash
 # Check installation
-rk-core --version
-which rk-core
+rk --version
+which rk
 echo $PATH | tr ':' '\n' | grep -E "(cargo|local)"
 
 # Check Rust
@@ -238,9 +238,9 @@ uname -a
 
 | Problem                      | Quick Fix                               |
 | ---------------------------- | --------------------------------------- |
-| `rk-core: command not found` | `export PATH="$HOME/.cargo/bin:$PATH"`  |
+| `rk: command not found` | `export PATH="$HOME/.cargo/bin:$PATH"`  |
 | `API key not found`          | `export ANTHROPIC_API_KEY="sk-ant-..."` |
-| `Rate limit exceeded`        | `rk-core think "..." --provider groq`   |
+| `Rate limit exceeded`        | `rk think "..." --provider groq`   |
 | `cargo not found`            | `curl -sSf https://sh.rustup.rs \| sh`  |
 | `linker not found`           | `xcode-select --install` (macOS)        |
 | `OpenSSL not found`          | `brew install openssl@3` (macOS)        |
@@ -259,7 +259,7 @@ uname -a
 ### 2. Enable debug logging
 
 ```bash
-RUST_LOG=debug rk-core think "query" --profile quick
+RUST_LOG=debug rk think "query" --profile quick
 ```
 
 ### 3. Search existing issues
@@ -275,7 +275,7 @@ RUST_LOG=debug rk-core think "query" --profile quick
 Include:
 
 - OS and version
-- `rk-core --version` output
+- `rk --version` output
 - Full error message
 - Steps to reproduce
 

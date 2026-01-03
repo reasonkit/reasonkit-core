@@ -29,33 +29,33 @@ ReasonKit Core v0.1.0 is the initial public release of the AI Thinking Enhanceme
 ### Reasoning Profiles
 
 ```bash
-rk-core think --profile quick "Fast 3-step analysis"
-rk-core think --profile balanced "Standard 5-module chain"
-rk-core think --profile deep "Thorough analysis with all modules"
-rk-core think --profile paranoid "Maximum verification mode"
-rk-core think --profile scientific "Research and experiments"
+rk think --profile quick "Fast 3-step analysis"
+rk think --profile balanced "Standard 5-module chain"
+rk think --profile deep "Thorough analysis with all modules"
+rk think --profile paranoid "Maximum verification mode"
+rk think --profile scientific "Research and experiments"
 ```
 
 ### CLI Commands
 
 ```bash
 # Core reasoning
-rk-core think --profile <profile> "<query>"
+rk think --profile <profile> "<query>"
 
 # Deep research
-rk-core web --depth <level> "<query>"
+rk web --depth <level> "<query>"
 
 # RAG operations
-rk-core query "<query>"
-rk-core ingest <file>
+rk query "<query>"
+rk ingest <file>
 
 # Verification
-rk-core anchor --url <url> "<content>"
-rk-core verify --hash <hash> "<content>"
+rk anchor --url <url> "<content>"
+rk verify --hash <hash> "<content>"
 
 # Trace management
-rk-core trace list
-rk-core trace export <id>
+rk trace list
+rk trace export <id>
 ```
 
 ---

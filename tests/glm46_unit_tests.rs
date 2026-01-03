@@ -546,7 +546,10 @@ fn test_tool_serialization_api_format() {
     // Validate structure matches OpenAI-style API format
     assert_eq!(parsed["type"], "function");
     assert_eq!(parsed["function"]["name"], "get_weather");
-    assert_eq!(parsed["function"]["description"], "Get weather for a location");
+    assert_eq!(
+        parsed["function"]["description"],
+        "Get weather for a location"
+    );
     assert!(parsed["function"]["parameters"].is_object());
 }
 
@@ -642,7 +645,10 @@ fn test_chat_response_deserialization() {
     assert_eq!(response.object, "chat.completion");
     assert_eq!(response.model, "glm-4.6");
     assert_eq!(response.choices.len(), 1);
-    assert_eq!(response.choices[0].message.content, "Hello! How can I help you?");
+    assert_eq!(
+        response.choices[0].message.content,
+        "Hello! How can I help you?"
+    );
     assert_eq!(response.usage.total_tokens, 18);
 }
 
@@ -680,9 +686,19 @@ fn test_chat_response_with_tool_calls() {
     }"#;
 
     let response: ChatResponse = serde_json::from_str(api_response).unwrap();
-    assert_eq!(response.choices[0].message.tool_calls.as_ref().unwrap().len(), 1);
     assert_eq!(
-        response.choices[0].message.tool_calls.as_ref().unwrap()[0].function.name,
+        response.choices[0]
+            .message
+            .tool_calls
+            .as_ref()
+            .unwrap()
+            .len(),
+        1
+    );
+    assert_eq!(
+        response.choices[0].message.tool_calls.as_ref().unwrap()[0]
+            .function
+            .name,
         "get_weather"
     );
 }

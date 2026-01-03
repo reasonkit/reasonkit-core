@@ -28,13 +28,13 @@
     <circle cx="60" cy="18" r="6" fill="#10b981"/>
 
     <!-- Title -->
-    <text x="420" y="23" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="13" fill="#6b7280">rk-core — bash — 120×40</text>
+    <text x="420" y="23" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="13" fill="#6b7280">rk — bash — 120×40</text>
 
     <!-- Terminal content -->
     <g transform="translate(20, 55)" font-family="JetBrains Mono, SF Mono, Consolas, monospace" font-size="13">
       <!-- Command prompt -->
       <text y="0" fill="#10b981">$</text>
-      <text x="15" y="0" fill="#f9fafb">rk-core think --profile balanced "Should we migrate to microservices?"</text>
+      <text x="15" y="0" fill="#f9fafb">rk think --profile balanced "Should we migrate to microservices?"</text>
 
       <!-- Empty line -->
       <text y="25" fill="#6b7280"></text>

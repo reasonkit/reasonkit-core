@@ -27,7 +27,7 @@ curl -fsSL https://reasonkit.sh/install | bash
 export ANTHROPIC_API_KEY="sk-ant-..."
 
 # Run
-rk-core think "Should I use microservices?" --profile quick
+rk think "Should I use microservices?" --profile quick
 ```
 
 **That's it.** You now have structured AI reasoning.

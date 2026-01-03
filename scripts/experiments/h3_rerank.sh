@@ -59,7 +59,7 @@ phase_1_setup() {
     log_info "Building project in release mode..."
     cargo build --release 2>&1 | tail -5
 
-    if [ -f "target/release/rk-core" ]; then
+    if [ -f "target/release/rk" ]; then
         log_success "Build successful"
     else
         log_error "Build failed"

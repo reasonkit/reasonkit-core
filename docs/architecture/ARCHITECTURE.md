@@ -77,7 +77,7 @@ ReasonKit is a **Rust-first reasoning engine** that transforms probabilistic LLM
 ```mermaid
 flowchart TB
     subgraph USER["User Interface Layer"]
-        CLI[rk-core CLI]
+        CLI[rk CLI]
         API[MCP Server]
         PY[Python Bindings]
     end
@@ -598,7 +598,7 @@ cargo build --release --features "memory,local-embeddings,arf,aesthetic"
 
 ```
 +------------------+
-| rk-core CLI      |
+| rk CLI      |
 |                  |
 | - Local SQLite   |
 | - LLM API calls  |
@@ -610,7 +610,7 @@ cargo build --release --features "memory,local-embeddings,arf,aesthetic"
 
 ```
 +------------------+     +------------------+
-| Host Application |<--->| rk-core MCP      |
+| Host Application |<--->| rk MCP      |
 | (Claude, etc.)   |     | Server           |
 +------------------+     +--------+---------+
                                   |
@@ -624,7 +624,7 @@ cargo build --release --features "memory,local-embeddings,arf,aesthetic"
 
 ```
 +------------------+     +------------------+     +------------------+
-| Load Balancer    |---->| rk-core API      |---->| Qdrant Cluster   |
+| Load Balancer    |---->| rk API      |---->| Qdrant Cluster   |
 |                  |     | (Multiple)       |     |                  |
 +------------------+     +--------+---------+     +------------------+
                                   |

@@ -45,7 +45,7 @@ We propose these 5 prompts to test any reasoning engine (Raw LLM vs. ReasonKit).
 > "Verify the claim: 'The 2024 EU AI Act bans all biometric identification systems in public spaces.'"
 
 - **Success Criteria:** Correctly identifies the _exceptions_ (law enforcement, specific crimes) rather than a blanket "yes/no". Requires citing specific articles.
-- **ReasonKit Goal:** Use `rk-core verify` with 3-source rule.
+- **ReasonKit Goal:** Use `rk verify` with 3-source rule.
 
 ### 4. The Adversarial Stress Test
 

@@ -20,24 +20,24 @@ echo -e "${CYAN}                ReasonKit CLI Commands Installation${NC}"
 echo -e "${CYAN}═══════════════════════════════════════════════════════════════════════${NC}"
 echo ""
 
-# Find rk-core binary (check both workspace and project level)
+# Find rk binary (check both workspace and project level)
 WORKSPACE_ROOT="$(dirname "$PROJECT_ROOT")"
-if [[ -f "$WORKSPACE_ROOT/target/release/rk-core" ]]; then
-    RK_CORE_BIN="$WORKSPACE_ROOT/target/release/rk-core"
-elif [[ -f "$PROJECT_ROOT/target/release/rk-core" ]]; then
-    RK_CORE_BIN="$PROJECT_ROOT/target/release/rk-core"
+if [[ -f "$WORKSPACE_ROOT/target/release/rk" ]]; then
+    RK_CORE_BIN="$WORKSPACE_ROOT/target/release/rk"
+elif [[ -f "$PROJECT_ROOT/target/release/rk" ]]; then
+    RK_CORE_BIN="$PROJECT_ROOT/target/release/rk"
 else
-    echo "Building rk-core in release mode..."
+    echo "Building rk in release mode..."
     cd "$PROJECT_ROOT"
     cargo build --release
     # Check both locations again
-    if [[ -f "$WORKSPACE_ROOT/target/release/rk-core" ]]; then
-        RK_CORE_BIN="$WORKSPACE_ROOT/target/release/rk-core"
+    if [[ -f "$WORKSPACE_ROOT/target/release/rk" ]]; then
+        RK_CORE_BIN="$WORKSPACE_ROOT/target/release/rk"
     else
-        RK_CORE_BIN="$PROJECT_ROOT/target/release/rk-core"
+        RK_CORE_BIN="$PROJECT_ROOT/target/release/rk"
     fi
 fi
-echo "Found rk-core at: $RK_CORE_BIN"
+echo "Found rk at: $RK_CORE_BIN"
 
 # Determine installation directory
 if [[ -d "$HOME/.local/bin" ]]; then
@@ -52,10 +52,10 @@ fi
 echo "Installation directory: $INSTALL_DIR"
 echo ""
 
-# Install rk-core binary
-echo -n "Installing rk-core... "
+# Install rk binary
+echo -n "Installing rk... "
 cp "$RK_CORE_BIN" "$INSTALL_DIR/"
-chmod +x "$INSTALL_DIR/rk-core"
+chmod +x "$INSTALL_DIR/rk"
 echo -e "${GREEN}done${NC}"
 
 # Install wrapper scripts

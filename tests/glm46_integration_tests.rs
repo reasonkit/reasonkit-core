@@ -5,8 +5,7 @@
 //! Tests cover ThinkTool profile integration, MCP server, and orchestrator.
 
 use reasonkit::glm46::types::{
-    ChatMessage, ChatRequest, MessageRole, ResponseFormat, Tool, ToolChoice,
-    ToolFunction,
+    ChatMessage, ChatRequest, MessageRole, ResponseFormat, Tool, ToolChoice, ToolFunction,
 };
 use reasonkit::glm46::{GLM46Client, GLM46Config};
 use std::time::Duration;

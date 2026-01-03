@@ -1011,19 +1011,19 @@ ReasonKit Core includes a command-line interface:
 cargo build --release
 
 # Run commands
-./target/release/rk-core --help
+./target/release/rk --help
 
 # Ingest documents
-./target/release/rk-core ingest --path ./data/papers --recursive
+./target/release/rk ingest --path ./data/papers --recursive
 
 # Query the knowledge base
-./target/release/rk-core query "What is chain-of-thought prompting?" --top-k 10
+./target/release/rk query "What is chain-of-thought prompting?" --top-k 10
 
 # Get statistics
-./target/release/rk-core stats
+./target/release/rk stats
 
 # Serve as HTTP API
-./target/release/rk-core serve --port 8080
+./target/release/rk serve --port 8080
 ```
 
 ---

@@ -53,7 +53,7 @@ env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
   # Binary name
-  BINARY_NAME: rk
+  BINARY_NAME: rk-core
   # Package names
   CRATE_NAME: reasonkit-core
   NPM_PACKAGE: "@reasonkit/cli"
@@ -74,15 +74,17 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
         with:
           fetch-depth: 0 # Full history for changelog
 
       - name: Install Rust toolchain
-        uses: dtolnay/rust-toolchain@stable
+        uses: dtolnay/rust-toolchain@f7ccc83f9ed1e5b9c81d8a67d7ad1a747e22a561 # stable
+        with:
+          toolchain: stable
 
       - name: Setup Rust cache
-        uses: Swatinem/rust-cache@v2
+        uses: Swatinem/rust-cache@779680da715d629ac1d338a641029a2f4372abb5 # v2
         with:
           cache-on-failure: true
 
@@ -186,7 +188,7 @@ jobs:
           echo "EOF" >> $GITHUB_OUTPUT
 
       - name: Upload changelog artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: changelog
           path: |
@@ -207,65 +209,66 @@ jobs:
           # Linux x86_64 (glibc)
           - os: ubuntu-22.04
             target: x86_64-unknown-linux-gnu
-            artifact_name: rk
-            asset_name: rk-linux-x86_64
+            artifact_name: rk-core
+            asset_name: rk-core-linux-x86_64
             cross: false
 
           # Linux x86_64 (musl - static, Alpine compatible)
           - os: ubuntu-22.04
             target: x86_64-unknown-linux-musl
-            artifact_name: rk
-            asset_name: rk-linux-x86_64-musl
+            artifact_name: rk-core
+            asset_name: rk-core-linux-x86_64-musl
             cross: false
 
           # Linux ARM64 (glibc)
           - os: ubuntu-22.04
             target: aarch64-unknown-linux-gnu
-            artifact_name: rk
-            asset_name: rk-linux-aarch64
+            artifact_name: rk-core
+            asset_name: rk-core-linux-aarch64
             cross: true
 
           # Linux ARM64 (musl - static)
           - os: ubuntu-22.04
             target: aarch64-unknown-linux-musl
-            artifact_name: rk
-            asset_name: rk-linux-aarch64-musl
+            artifact_name: rk-core
+            asset_name: rk-core-linux-aarch64-musl
             cross: true
 
           # macOS x86_64 (Intel)
           - os: macos-13
             target: x86_64-apple-darwin
-            artifact_name: rk
-            asset_name: rk-macos-x86_64
+            artifact_name: rk-core
+            asset_name: rk-core-macos-x86_64
             cross: false
 
           # macOS ARM64 (Apple Silicon)
           - os: macos-14
             target: aarch64-apple-darwin
-            artifact_name: rk
-            asset_name: rk-macos-aarch64
+            artifact_name: rk-core
+            asset_name: rk-core-macos-aarch64
             cross: false
 
           # Windows x86_64
           - os: windows-latest
             target: x86_64-pc-windows-msvc
-            artifact_name: rk.exe
-            asset_name: rk-windows-x86_64
+            artifact_name: rk-core.exe
+            asset_name: rk-core-windows-x86_64
             cross: false
 
     runs-on: ${{ matrix.os }}
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
 
       - name: Install Rust toolchain
-        uses: dtolnay/rust-toolchain@stable
+        uses: dtolnay/rust-toolchain@f7ccc83f9ed1e5b9c81d8a67d7ad1a747e22a561 # stable
         with:
+          toolchain: stable
           targets: ${{ matrix.target }}
 
       - name: Setup Rust cache
-        uses: Swatinem/rust-cache@v2
+        uses: Swatinem/rust-cache@779680da715d629ac1d338a641029a2f4372abb5 # v2
         with:
           key: release-${{ matrix.target }}
 
@@ -330,7 +333,7 @@ jobs:
 
       - name: Upload artifact (Unix)
         if: runner.os != 'Windows'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: ${{ matrix.asset_name }}
           path: |
@@ -340,7 +343,7 @@ jobs:
 
       - name: Upload artifact (Windows)
         if: runner.os == 'Windows'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: ${{ matrix.asset_name }}
           path: |
@@ -359,7 +362,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
@@ -435,7 +438,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
 
       - name: Download all artifacts
         uses: actions/download-artifact@v4
@@ -481,7 +484,7 @@ jobs:
 
           VERSION="${RK_VERSION:-latest}"
           REPO="reasonkit/reasonkit-core"
-          BINARY="rk"
+          BINARY="rk-core"
 
           # Colors
           RED='\033[0;31m'
@@ -628,13 +631,15 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
 
       - name: Install Rust toolchain
-        uses: dtolnay/rust-toolchain@stable
+        uses: dtolnay/rust-toolchain@f7ccc83f9ed1e5b9c81d8a67d7ad1a747e22a561 # stable
+        with:
+          toolchain: stable
 
       - name: Setup Rust cache
-        uses: Swatinem/rust-cache@v2
+        uses: Swatinem/rust-cache@779680da715d629ac1d338a641029a2f4372abb5 # v2
 
       - name: Verify package
         run: |
@@ -668,7 +673,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -692,8 +697,8 @@ jobs:
             "version": "${{ needs.validate.outputs.version }}",
             "description": "ReasonKit Core - The Reasoning Engine CLI",
             "bin": {
-              "rk": "./bin/rk",
-              "rk": "./bin/rk"
+              "rk-core": "./bin/rk-core",
+              "rk": "./bin/rk-core"
             },
             "scripts": {
               "postinstall": "node scripts/install.js"
@@ -723,7 +728,7 @@ jobs:
           const https = require('https');
 
           const REPO = 'reasonkit/reasonkit-core';
-          const BINARY = 'rk';
+          const BINARY = 'rk-core';
           const VERSION = require('../package.json').version;
 
           function getPlatform() {
@@ -808,8 +813,8 @@ jobs:
           ## Usage
 
           ```bash
-          rk --help
-          rk think --profile balanced "Your question here"
+          rk-core --help
+          rk-core think --profile balanced "Your question here"
           ```
 
           ## Documentation
@@ -846,7 +851,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
 
       - name: Setup Python
         uses: actions/setup-python@v5
@@ -854,7 +859,9 @@ jobs:
           python-version: "3.12"
 
       - name: Install Rust toolchain
-        uses: dtolnay/rust-toolchain@stable
+        uses: dtolnay/rust-toolchain@f7ccc83f9ed1e5b9c81d8a67d7ad1a747e22a561 # stable
+        with:
+          toolchain: stable
 
       - name: Install maturin
         run: |
@@ -960,13 +967,13 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "| Platform | Architecture | Asset |" >> $GITHUB_STEP_SUMMARY
           echo "|----------|--------------|-------|" >> $GITHUB_STEP_SUMMARY
-          echo "| Linux | x86_64 | rk-linux-x86_64.tar.gz |" >> $GITHUB_STEP_SUMMARY
-          echo "| Linux | x86_64 (static) | rk-linux-x86_64-musl.tar.gz |" >> $GITHUB_STEP_SUMMARY
-          echo "| Linux | ARM64 | rk-linux-aarch64.tar.gz |" >> $GITHUB_STEP_SUMMARY
-          echo "| Linux | ARM64 (static) | rk-linux-aarch64-musl.tar.gz |" >> $GITHUB_STEP_SUMMARY
-          echo "| macOS | x86_64 (Intel) | rk-macos-x86_64.tar.gz |" >> $GITHUB_STEP_SUMMARY
-          echo "| macOS | ARM64 (Apple Silicon) | rk-macos-aarch64.tar.gz |" >> $GITHUB_STEP_SUMMARY
-          echo "| Windows | x86_64 | rk-windows-x86_64.zip |" >> $GITHUB_STEP_SUMMARY
+          echo "| Linux | x86_64 | rk-core-linux-x86_64.tar.gz |" >> $GITHUB_STEP_SUMMARY
+          echo "| Linux | x86_64 (static) | rk-core-linux-x86_64-musl.tar.gz |" >> $GITHUB_STEP_SUMMARY
+          echo "| Linux | ARM64 | rk-core-linux-aarch64.tar.gz |" >> $GITHUB_STEP_SUMMARY
+          echo "| Linux | ARM64 (static) | rk-core-linux-aarch64-musl.tar.gz |" >> $GITHUB_STEP_SUMMARY
+          echo "| macOS | x86_64 (Intel) | rk-core-macos-x86_64.tar.gz |" >> $GITHUB_STEP_SUMMARY
+          echo "| macOS | ARM64 (Apple Silicon) | rk-core-macos-aarch64.tar.gz |" >> $GITHUB_STEP_SUMMARY
+          echo "| Windows | x86_64 | rk-core-windows-x86_64.zip |" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
 
           if [ "${{ needs.create-release.result }}" = "success" ]; then

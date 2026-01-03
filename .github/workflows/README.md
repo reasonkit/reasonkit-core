@@ -75,12 +75,12 @@ cargo bench --bench retrieval_bench
 
 | Platform             | Target                      | Binary Name                        |
 | -------------------- | --------------------------- | ---------------------------------- |
-| Linux x86_64 (glibc) | `x86_64-unknown-linux-gnu`  | `rk-core-linux-x86_64.tar.gz`      |
-| Linux x86_64 (musl)  | `x86_64-unknown-linux-musl` | `rk-core-linux-x86_64-musl.tar.gz` |
-| Linux ARM64          | `aarch64-unknown-linux-gnu` | `rk-core-linux-aarch64.tar.gz`     |
-| macOS x86_64         | `x86_64-apple-darwin`       | `rk-core-macos-x86_64.tar.gz`      |
-| macOS ARM64          | `aarch64-apple-darwin`      | `rk-core-macos-aarch64.tar.gz`     |
-| Windows x86_64       | `x86_64-pc-windows-msvc`    | `rk-core-windows-x86_64.exe.zip`   |
+| Linux x86_64 (glibc) | `x86_64-unknown-linux-gnu`  | `rk-linux-x86_64.tar.gz`      |
+| Linux x86_64 (musl)  | `x86_64-unknown-linux-musl` | `rk-linux-x86_64-musl.tar.gz` |
+| Linux ARM64          | `aarch64-unknown-linux-gnu` | `rk-linux-aarch64.tar.gz`     |
+| macOS x86_64         | `x86_64-apple-darwin`       | `rk-macos-x86_64.tar.gz`      |
+| macOS ARM64          | `aarch64-apple-darwin`      | `rk-macos-aarch64.tar.gz`     |
+| Windows x86_64       | `x86_64-pc-windows-msvc`    | `rk-windows-x86_64.exe.zip`   |
 
 ### Release Process
 

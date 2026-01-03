@@ -18,7 +18,7 @@ LLM: [2000 words of maybe-correct rambling]
 **After ReasonKit:**
 
 ```
-You: rk-core think "Should I use microservices?" --profile balanced
+You: rk think "Should I use microservices?" --profile balanced
 Output: 10 perspectives analyzed, 3 hidden assumptions found, verdict with 82% confidence
 ```
 
@@ -49,7 +49,7 @@ git clone https://github.com/reasonkit/reasonkit-core && cd reasonkit-core && ca
 **Verify it worked:**
 
 ```bash
-rk-core --version
+rk --version
 # Expected: reasonkit-core 0.1.0
 ```
 
@@ -76,7 +76,7 @@ export OPENAI_API_KEY="sk-..."
 Copy-paste this exact command:
 
 ```bash
-rk-core think "Should a startup use microservices or a monolith?" --profile quick
+rk think "Should a startup use microservices or a monolith?" --profile quick
 ```
 
 ### Step 3: See the output
@@ -120,25 +120,25 @@ VERDICT: Start with monolith | Confidence: 78% | Time: 1.8s
 **Code review:**
 
 ```bash
-rk-core think "Review this PR: https://github.com/org/repo/pull/123" --profile balanced
+rk think "Review this PR: https://github.com/org/repo/pull/123" --profile balanced
 ```
 
 **Architecture decision:**
 
 ```bash
-rk-core think "GraphQL vs REST for a mobile banking app" --profile deep
+rk think "GraphQL vs REST for a mobile banking app" --profile deep
 ```
 
 **Risk assessment:**
 
 ```bash
-rk-core think "What could go wrong with this deployment plan?" --profile paranoid
+rk think "What could go wrong with this deployment plan?" --profile paranoid
 ```
 
 **Debug assistance:**
 
 ```bash
-rk-core think "Why might a React component re-render infinitely?" --profile quick
+rk think "Why might a React component re-render infinitely?" --profile quick
 ```
 
 ---
@@ -149,26 +149,26 @@ Each ThinkTool catches a specific blind spot:
 
 ```bash
 # Generate 10+ perspectives you missed
-rk-core think "Evaluate AI safety" --protocol gigathink
+rk think "Evaluate AI safety" --protocol gigathink
 
 # Find logical fallacies in an argument
-rk-core think "Is this reasoning valid: X therefore Y" --protocol laserlogic
+rk think "Is this reasoning valid: X therefore Y" --protocol laserlogic
 
 # First principles decomposition
-rk-core think "What really matters for user growth?" --protocol bedrock
+rk think "What really matters for user growth?" --protocol bedrock
 
 # Verify claims with sources
-rk-core think "Is Rust really faster than Go?" --protocol proofguard
+rk think "Is Rust really faster than Go?" --protocol proofguard
 
 # Adversarial self-critique
-rk-core think "Critique my startup idea: X" --protocol brutalhonesty
+rk think "Critique my startup idea: X" --protocol brutalhonesty
 ```
 
 ---
 
 ## Troubleshooting (30 seconds)
 
-### "command not found: rk-core"
+### "command not found: rk"
 
 ```bash
 # Add cargo bin to PATH
@@ -193,10 +193,10 @@ export ANTHROPIC_API_KEY="sk-ant-..."
 
 ```bash
 # Use a faster/cheaper provider
-rk-core think "query" --provider groq
+rk think "query" --provider groq
 
 # Or set budget limits
-rk-core think "query" --budget "$0.10"
+rk think "query" --budget "$0.10"
 ```
 
 ### Build errors?
@@ -221,7 +221,7 @@ See [Installation & Troubleshooting](INSTALLATION_TROUBLESHOOTING.md) for platfo
 
 ```
 INSTALL:     curl -fsSL https://reasonkit.sh/install | bash
-VERIFY:      rk-core --version
+VERIFY:      rk --version
 API KEY:     export ANTHROPIC_API_KEY="sk-ant-..."
 
 PROFILES:

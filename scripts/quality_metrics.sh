@@ -154,9 +154,9 @@ echo "  Dependencies: ~$DEP_COUNT"
 METRICS["dependency_count"]="$DEP_COUNT"
 
 # Binary size
-if [[ -f "target/release/rk-core" ]]; then
-    BINARY_SIZE=$(du -h target/release/rk-core | cut -f1)
-    BINARY_SIZE_BYTES=$(stat -f%z target/release/rk-core 2>/dev/null || stat -c%s target/release/rk-core 2>/dev/null || echo "0")
+if [[ -f "target/release/rk" ]]; then
+    BINARY_SIZE=$(du -h target/release/rk | cut -f1)
+    BINARY_SIZE_BYTES=$(stat -f%z target/release/rk 2>/dev/null || stat -c%s target/release/rk 2>/dev/null || echo "0")
     echo "  Binary size: $BINARY_SIZE"
     METRICS["binary_size_bytes"]="$BINARY_SIZE_BYTES"
 fi

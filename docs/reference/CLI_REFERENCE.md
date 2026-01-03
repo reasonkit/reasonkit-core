@@ -1,6 +1,6 @@
 # ReasonKit Core CLI Reference
 
-> Quick reference guide for the `rk-core` command-line interface
+> Quick reference guide for the `rk` command-line interface
 
 **Version:** 1.0.0
 **License:** Apache 2.0
@@ -31,7 +31,7 @@ cargo install --path reasonkit-core
 cargo install reasonkit-core
 
 # Verify installation
-rk-core --version
+rk --version
 ```
 
 ---
@@ -41,7 +41,7 @@ rk-core --version
 Available for all commands:
 
 ```bash
-rk-core [OPTIONS] <COMMAND>
+rk [OPTIONS] <COMMAND>
 
 OPTIONS:
   -v, --verbose              Increase verbosity (-v=INFO, -vv=DEBUG, -vvv=TRACE)
@@ -55,13 +55,13 @@ OPTIONS:
 
 ```bash
 # Debug logging
-rk-core -vv mcp list-servers
+rk -vv mcp list-servers
 
 # Custom data directory
-rk-core -d /mnt/data/reasonkit mcp list-tools
+rk -d /mnt/data/reasonkit mcp list-tools
 
 # Use config file
-rk-core -c ~/.reasonkit/config.toml mcp list-prompts
+rk -c ~/.reasonkit/config.toml mcp list-prompts
 ```
 
 ---
@@ -75,7 +75,7 @@ Ingest documents (PDF, Markdown, HTML, JSON) into the knowledge base.
 #### Syntax
 
 ```bash
-rk-core ingest <PATH> [OPTIONS]
+rk ingest <PATH> [OPTIONS]
 ```
 
 #### Arguments
@@ -98,16 +98,16 @@ rk-core ingest <PATH> [OPTIONS]
 
 ```bash
 # Ingest a single PDF paper
-rk-core ingest paper.pdf
+rk ingest paper.pdf
 
 # Ingest all PDFs in a directory
-rk-core ingest ./papers --doc-type paper --recursive
+rk ingest ./papers --doc-type paper --recursive
 
 # Ingest documentation
-rk-core ingest ./docs --doc-type documentation --recursive
+rk ingest ./docs --doc-type documentation --recursive
 
 # With verbose logging
-rk-core -vv ingest ./data/papers --recursive
+rk -vv ingest ./data/papers --recursive
 ```
 
 #### Output
@@ -132,7 +132,7 @@ Search the knowledge base using semantic (vector) or hybrid (vector + BM25) sear
 #### Syntax
 
 ```bash
-rk-core query <QUERY> [OPTIONS]
+rk query <QUERY> [OPTIONS]
 ```
 
 #### Arguments
@@ -153,22 +153,22 @@ rk-core query <QUERY> [OPTIONS]
 
 ```bash
 # Basic semantic search
-rk-core query "What is chain-of-thought reasoning?"
+rk query "What is chain-of-thought reasoning?"
 
 # Get top 10 results
-rk-core query "quantum computing applications" --top-k 10
+rk query "quantum computing applications" --top-k 10
 
 # Hybrid search (vector + BM25)
-rk-core query "transformer architecture" --hybrid
+rk query "transformer architecture" --hybrid
 
 # RAPTOR tree retrieval (for long documents)
-rk-core query "explain the full paper methodology" --raptor --top-k 5
+rk query "explain the full paper methodology" --raptor --top-k 5
 
 # JSON output for scripting
-rk-core query "neural networks" --format json > results.json
+rk query "neural networks" --format json > results.json
 
 # Markdown output
-rk-core query "attention mechanism" --format markdown
+rk query "attention mechanism" --format markdown
 ```
 
 #### Output (text format)
@@ -219,7 +219,7 @@ Execute structured reasoning protocols using LLMs.
 #### Syntax
 
 ```bash
-rk-core think [QUERY] [OPTIONS]
+rk think [QUERY] [OPTIONS]
 ```
 
 #### Arguments
@@ -280,45 +280,45 @@ rk-core think [QUERY] [OPTIONS]
 
 ```bash
 # Execute specific protocol
-rk-core think "Should we adopt microservices?" --protocol gigathink
+rk think "Should we adopt microservices?" --protocol gigathink
 
 # Execute profile (multiple protocols)
-rk-core think "Evaluate this startup idea" --profile balanced
+rk think "Evaluate this startup idea" --profile balanced
 
 # Custom LLM configuration
-rk-core think "Analyze this code" \
+rk think "Analyze this code" \
   --protocol laserlogic \
   --provider openai \
   --model gpt-4-turbo \
   --temperature 0.3
 
 # With time budget
-rk-core think "Research quantum computing" \
+rk think "Research quantum computing" \
   --profile deep \
   --budget "60s"
 
 # With cost budget
-rk-core think "Complex analysis task" \
+rk think "Complex analysis task" \
   --protocol proofguard \
   --budget "$0.50"
 
 # Save execution trace
-rk-core think "Is this architecture sound?" \
+rk think "Is this architecture sound?" \
   --profile paranoid \
   --save-trace \
   --trace-dir ./analysis-traces
 
 # List available options
-rk-core think --list
+rk think --list
 
 # Use ultra-fast Groq
-rk-core think "Quick code review" \
+rk think "Quick code review" \
   --protocol laserlogic \
   --provider groq \
   --model llama-3.3-70b-versatile
 
 # Use OpenRouter for access to 300+ models
-rk-core think "Deep analysis" \
+rk think "Deep analysis" \
   --provider openrouter \
   --model anthropic/claude-opus-4
 ```
@@ -384,7 +384,7 @@ Manage BM25 and vector indexes.
 #### Syntax
 
 ```bash
-rk-core index <ACTION>
+rk index <ACTION>
 ```
 
 #### Actions
@@ -397,13 +397,13 @@ rk-core index <ACTION>
 
 ```bash
 # Rebuild indexes
-rk-core index rebuild
+rk index rebuild
 
 # Show statistics
-rk-core index stats
+rk index stats
 
 # Optimize for performance
-rk-core index optimize
+rk index optimize
 ```
 
 #### Output (stats)
@@ -439,17 +439,17 @@ Display comprehensive statistics about the knowledge base.
 #### Syntax
 
 ```bash
-rk-core stats
+rk stats
 ```
 
 #### Examples
 
 ```bash
 # Show all stats
-rk-core stats
+rk stats
 
 # With verbose logging
-rk-core -v stats
+rk -v stats
 ```
 
 #### Output
@@ -514,7 +514,7 @@ Export documents and metadata to JSON or JSONL format.
 #### Syntax
 
 ```bash
-rk-core export <OUTPUT> [OPTIONS]
+rk export <OUTPUT> [OPTIONS]
 ```
 
 #### Arguments
@@ -531,13 +531,13 @@ rk-core export <OUTPUT> [OPTIONS]
 
 ```bash
 # Export to JSONL (recommended for large datasets)
-rk-core export documents.jsonl
+rk export documents.jsonl
 
 # Export to JSON
-rk-core export backup.json --format json
+rk export backup.json --format json
 
 # Export with compression (pipe to gzip)
-rk-core export documents.jsonl | gzip > documents.jsonl.gz
+rk export documents.jsonl | gzip > documents.jsonl.gz
 ```
 
 #### JSONL Output Format
@@ -572,7 +572,7 @@ Start HTTP API server for programmatic access.
 #### Syntax
 
 ```bash
-rk-core serve [OPTIONS]
+rk serve [OPTIONS]
 ```
 
 #### Options
@@ -584,16 +584,16 @@ rk-core serve [OPTIONS]
 
 ```bash
 # Start on default port
-rk-core serve
+rk serve
 
 # Custom host and port
-rk-core serve --host 0.0.0.0 --port 3000
+rk serve --host 0.0.0.0 --port 3000
 
 # Bind to all interfaces
-rk-core serve --host 0.0.0.0
+rk serve --host 0.0.0.0
 
 # With verbose logging
-rk-core -vv serve
+rk -vv serve
 ```
 
 #### Output
@@ -741,28 +741,28 @@ mkdir -p ./data/papers
 # ... download PDFs to ./data/papers
 
 # Ingest all papers
-rk-core ingest ./data/papers --doc-type paper --recursive
+rk ingest ./data/papers --doc-type paper --recursive
 
 # Verify ingestion
-rk-core stats
+rk stats
 
 # Query the knowledge base
-rk-core query "What is tree-of-thought prompting?" --hybrid --top-k 5
+rk query "What is tree-of-thought prompting?" --hybrid --top-k 5
 ```
 
 ### 2. Execute Structured Reasoning
 
 ```bash
 # Quick analysis
-rk-core think "Is this code safe to deploy?" --profile quick
+rk think "Is this code safe to deploy?" --profile quick
 
 # Deep analysis with verification
-rk-core think "Evaluate this architecture decision" \
+rk think "Evaluate this architecture decision" \
   --profile paranoid \
   --save-trace
 
 # Budget-limited analysis
-rk-core think "Research this topic" \
+rk think "Research this topic" \
   --profile deep \
   --budget "2m" \
   --budget "$0.50"
@@ -772,26 +772,26 @@ rk-core think "Research this topic" \
 
 ```bash
 # Export to JSONL
-rk-core export backup-$(date +%Y%m%d).jsonl
+rk export backup-$(date +%Y%m%d).jsonl
 
 # Compress backup
-rk-core export backup.jsonl | gzip > backup.jsonl.gz
+rk export backup.jsonl | gzip > backup.jsonl.gz
 
 # Restore from backup
-gunzip -c backup.jsonl.gz | rk-core import -
+gunzip -c backup.jsonl.gz | rk import -
 ```
 
 ### 4. API Server Deployment
 
 ```bash
 # Development server
-rk-core serve
+rk serve
 
 # Production server (bind to all interfaces)
-rk-core serve --host 0.0.0.0 --port 8080
+rk serve --host 0.0.0.0 --port 8080
 
 # Behind nginx reverse proxy
-rk-core serve --host 127.0.0.1 --port 8080
+rk serve --host 127.0.0.1 --port 8080
 ```
 
 ---
@@ -840,8 +840,8 @@ batch_delay_ms = 100
 
 ```bash
 # Process in smaller batches
-rk-core ingest ./papers/batch1 --recursive
-rk-core ingest ./papers/batch2 --recursive
+rk ingest ./papers/batch1 --recursive
+rk ingest ./papers/batch2 --recursive
 
 # Reduce chunk size (edit config.toml)
 [processing]
@@ -853,10 +853,10 @@ chunk_overlap = 50
 
 ```bash
 # Increase budget
-rk-core think "query" --protocol gigathink --budget "5m"
+rk think "query" --protocol gigathink --budget "5m"
 
 # Use faster provider
-rk-core think "query" --protocol laserlogic --provider groq
+rk think "query" --protocol laserlogic --provider groq
 ```
 
 ---

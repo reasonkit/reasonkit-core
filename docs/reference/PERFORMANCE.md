@@ -285,10 +285,10 @@ RAPTOR trees add ~2x overhead for hierarchical summaries.
 
 ```bash
 # Check process memory
-ps aux | grep rk-core
+ps aux | grep rk
 
 # Detailed memory breakdown
-cat /proc/$(pgrep rk-core)/status | grep -E "VmRSS|VmSize"
+cat /proc/$(pgrep rk)/status | grep -E "VmRSS|VmSize"
 
 # Qdrant collection stats
 curl localhost:6333/collections/reasonkit_docs | jq '.result.points_count, .result.vectors_count'
@@ -400,20 +400,20 @@ Cache performance:
 #### Single Document Ingestion
 
 ```bash
-rk-core ingest /path/to/document.md
+rk ingest /path/to/document.md
 ```
 
 #### Batch Ingestion (Recommended)
 
 ```bash
 # Process directory recursively
-rk-core ingest /path/to/documents/ --recursive
+rk ingest /path/to/documents/ --recursive
 
 # With parallel processing
-rk-core ingest /path/to/documents/ --parallel 8
+rk ingest /path/to/documents/ --parallel 8
 
 # Stream from stdin (for pipelines)
-find /path -name "*.md" | rk-core ingest --stdin
+find /path -name "*.md" | rk ingest --stdin
 ```
 
 ### 5.2 Parallel Processing Configuration
@@ -423,7 +423,7 @@ find /path -name "*.md" | rk-core ingest --stdin
 export RAYON_NUM_THREADS=8
 
 # Or via CLI
-rk-core ingest /path --threads 8
+rk ingest /path --threads 8
 ```
 
 Optimal thread count:
@@ -559,7 +559,7 @@ Reports include:
 cargo install flamegraph
 
 # Generate flamegraph
-cargo flamegraph --bin rk-core -- query "test query"
+cargo flamegraph --bin rk -- query "test query"
 ```
 
 #### Perf (Linux)
@@ -576,7 +576,7 @@ perf report
 
 ```bash
 # Time Profiler
-xcrun xctrace record --template 'Time Profiler' --launch rk-core query "test"
+xcrun xctrace record --template 'Time Profiler' --launch rk query "test"
 ```
 
 ### 6.6 Variance Benchmarking
@@ -686,7 +686,7 @@ reqwest::Client::builder()
 
 ```bash
 # Enable metrics endpoint
-rk-core serve --metrics-port 9090
+rk serve --metrics-port 9090
 ```
 
 #### Grafana Dashboard
@@ -714,15 +714,15 @@ grafana/dashboards/reasonkit-overview.json
 curl localhost:6333/collections/reasonkit_docs | jq
 
 # Check index status
-rk-core stats --verbose
+rk stats --verbose
 ```
 
 **Solutions**:
 
-1. Ensure HNSW index is built: `rk-core index rebuild`
+1. Ensure HNSW index is built: `rk index rebuild`
 2. Enable quantization for memory pressure
 3. Reduce `top_k` if returning too many results
-4. Check BM25 index: `rk-core index check-bm25`
+4. Check BM25 index: `rk index check-bm25`
 
 #### Issue: High Memory Usage
 
@@ -731,8 +731,8 @@ rk-core stats --verbose
 **Diagnosis**:
 
 ```bash
-ps aux | grep rk-core
-cat /proc/$(pgrep rk-core)/status | grep VmRSS
+ps aux | grep rk
+cat /proc/$(pgrep rk)/status | grep VmRSS
 ```
 
 **Solutions**:
@@ -750,10 +750,10 @@ cat /proc/$(pgrep rk-core)/status | grep VmRSS
 
 ```bash
 # Check embedding latency
-time rk-core embed "test text"
+time rk embed "test text"
 
 # Check chunking speed
-time rk-core chunk /path/to/doc.md
+time rk chunk /path/to/doc.md
 ```
 
 **Solutions**:
@@ -806,10 +806,10 @@ cargo bench -- --baseline main
 Enable detailed performance logging:
 
 ```bash
-RUST_LOG=reasonkit=debug rk-core query "test"
+RUST_LOG=reasonkit=debug rk query "test"
 
 # Even more detail
-RUST_LOG=reasonkit=trace rk-core query "test"
+RUST_LOG=reasonkit=trace rk query "test"
 ```
 
 ### 8.4 Getting Help

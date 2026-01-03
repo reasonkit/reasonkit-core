@@ -7,7 +7,7 @@
   </defs>
   <rect width="1200" height="1200" fill="url(#rk-code-post-bg)"/>
   <rect x="100" y="300" width="1000" height="500" rx="10" fill="#0a0d14" stroke="#06b6d4" stroke-width="2.5" opacity="0.35"/>
-  <text x="150" y="380" font-family="'JetBrains Mono', 'Fira Code', 'Consolas', monospace" font-size="28" font-weight="400" fill="#06b6d4">$ rk-core think "Your question"</text>
+  <text x="150" y="380" font-family="'JetBrains Mono', 'Fira Code', 'Consolas', monospace" font-size="28" font-weight="400" fill="#06b6d4">$ rk think "Your question"</text>
   <text x="150" y="450" font-family="'JetBrains Mono', 'Fira Code', 'Consolas', monospace" font-size="28" font-weight="400" fill="#9ca3af">  --profile balanced</text>
   <text x="150" y="520" font-family="'JetBrains Mono', 'Fira Code', 'Consolas', monospace" font-size="28" font-weight="400" fill="#f9fafb">✓ Analysis complete</text>
   <text x="150" y="590" font-family="'JetBrains Mono', 'Fira Code', 'Consolas', monospace" font-size="28" font-weight="400" fill="#10b981">  Confidence: 85%</text>

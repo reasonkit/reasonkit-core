@@ -77,9 +77,9 @@
 
 ```bash
 # User can control verbosity
-rk-core think "query" --verbose-level 1  # Standard (default)
-rk-core think "query" --verbose-level 2  # Detailed
-rk-core think "query" --verbose-level 3  # Full trace
+rk think "query" --verbose-level 1  # Standard (default)
+rk think "query" --verbose-level 2  # Detailed
+rk think "query" --verbose-level 3  # Full trace
 ```
 
 ---
@@ -1953,16 +1953,16 @@ thinking_trace_laserlogic_20251222_143156.md
 
 ```bash
 # Single module with verbose output
-rk-core think "query" --module gigathink --verbose-level 1
+rk think "query" --module gigathink --verbose-level 1
 
 # Profile-based (multiple modules)
-rk-core think "query" --profile balanced --verbose-level 2
+rk think "query" --profile balanced --verbose-level 2
 
 # Output to JSON
-rk-core think "query" --profile paranoid --output-format json --output-dir ./traces
+rk think "query" --profile paranoid --output-format json --output-dir ./traces
 
 # Quiet mode (only summary)
-rk-core think "query" --profile quick --quiet
+rk think "query" --profile quick --quiet
 ```
 
 ### Rust API

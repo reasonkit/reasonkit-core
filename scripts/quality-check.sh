@@ -114,8 +114,8 @@ echo "  TODO count: $(grep -r 'TODO' src --include='*.rs' 2>/dev/null | wc -l ||
 echo "  FIXME count: $(grep -r 'FIXME' src --include='*.rs' 2>/dev/null | wc -l || echo 0)"
 echo "  Unsafe blocks: $(grep -r 'unsafe' src --include='*.rs' 2>/dev/null | wc -l || echo 0)"
 
-if [ -f target/release/rk-core ]; then
-    BINARY_SIZE=$(ls -lh target/release/rk-core | awk '{print $5}')
+if [ -f target/release/rk ]; then
+    BINARY_SIZE=$(ls -lh target/release/rk | awk '{print $5}')
     echo "  Binary size (release): $BINARY_SIZE"
 fi
 

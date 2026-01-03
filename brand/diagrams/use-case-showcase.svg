@@ -217,7 +217,7 @@
     <!-- Content - left side -->
     <text x="145" y="55" fill="url(#heroGrad)" font-family="Inter, sans-serif" font-size="26" font-weight="700">PowerCombo: Chain Any Use Case</text>
     <text x="145" y="90" fill="#9ca3af" font-family="Inter, sans-serif" font-size="15">Combine multiple ThinkTools in custom sequences for complex workflows.</text>
-    <text x="145" y="125" fill="#6b7280" font-family="JetBrains Mono, monospace" font-size="12">rk-core --powercombo="LaserLogic→ProofGuard→DeciDomatic" --depth=Extreme</text>
+    <text x="145" y="125" fill="#6b7280" font-family="JetBrains Mono, monospace" font-size="12">rk --powercombo="LaserLogic→ProofGuard→DeciDomatic" --depth=Extreme</text>
 
     <!-- Output panel - right side with clear separation -->
     <rect x="1100" y="20" width="390" height="110" rx="12" fill="#111827"/>

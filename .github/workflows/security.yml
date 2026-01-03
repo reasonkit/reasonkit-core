@@ -15,6 +15,8 @@ on:
 
 env:
   CARGO_TERM_COLOR: always
+  # Override .cargo/config.toml target-cpu=native to prevent SIGILL on different runners
+  CARGO_TARGET_X86_64_UNKNOWN_LINUX_GNU_RUSTFLAGS: ""
 
 jobs:
   # ═══════════════════════════════════════════════════════════════════════════
@@ -29,6 +31,8 @@ jobs:
 
       - name: Install Rust toolchain
         uses: dtolnay/rust-toolchain@f7ccc83f9ed1e5b9c81d8a67d7ad1a747e22a561 # stable
+        with:
+          toolchain: stable
 
       - name: Install cargo-audit
         run: cargo install cargo-audit --locked
@@ -83,6 +87,8 @@ jobs:
 
       - name: Install Rust toolchain
         uses: dtolnay/rust-toolchain@f7ccc83f9ed1e5b9c81d8a67d7ad1a747e22a561 # stable
+        with:
+          toolchain: stable
 
       - name: Install cargo-license
         run: cargo install cargo-license
@@ -140,6 +146,7 @@ jobs:
       - name: Install Rust toolchain
         uses: dtolnay/rust-toolchain@f7ccc83f9ed1e5b9c81d8a67d7ad1a747e22a561 # stable
         with:
+          toolchain: stable
           components: clippy
 
       - name: Cache cargo
@@ -194,12 +201,14 @@ jobs:
 
       - name: Install Rust toolchain
         uses: dtolnay/rust-toolchain@f7ccc83f9ed1e5b9c81d8a67d7ad1a747e22a561 # stable
+        with:
+          toolchain: stable
 
       - name: Install cargo-sbom
         run: cargo install cargo-sbom
 
       - name: Generate SBOM (CycloneDX)
-        run: cargo sbom --output-format cyclonedx_json_1_4 > sbom-cyclonedx.json
+        run: cargo sbom --output-format cyclone_dx_json_1_4 > sbom-cyclonedx.json
 
       - name: Generate SBOM (SPDX)
         run: cargo sbom --output-format spdx_json_2_3 > sbom-spdx.json

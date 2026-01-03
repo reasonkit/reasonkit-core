@@ -51,13 +51,13 @@
     <circle cx="68" cy="20" r="6" fill="#10b981"/>
     
     <!-- Title -->
-    <text x="400" y="26" fill="#9ca3af" font-family="JetBrains Mono, SF Mono, monospace" font-size="12" text-anchor="middle">rk-core — reasonkit v1.0.0</text>
+    <text x="400" y="26" fill="#9ca3af" font-family="JetBrains Mono, SF Mono, monospace" font-size="12" text-anchor="middle">rk — reasonkit v1.0.0</text>
     
     <!-- Terminal content -->
     <g transform="translate(20, 55)">
       <!-- Command line -->
       <text x="0" y="15" fill="#10b981" font-family="JetBrains Mono, SF Mono, monospace" font-size="13">❯</text>
-      <text x="20" y="15" fill="#f9fafb" font-family="JetBrains Mono, SF Mono, monospace" font-size="13">rk-core think --profile balanced "Should we migrate to microservices?"</text>
+      <text x="20" y="15" fill="#f9fafb" font-family="JetBrains Mono, SF Mono, monospace" font-size="13">rk think --profile balanced "Should we migrate to microservices?"</text>
       
       <!-- Separator -->
       <text x="0" y="45" fill="#4b5563" font-family="JetBrains Mono, SF Mono, monospace" font-size="12">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</text>
