@@ -65,18 +65,18 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
 
       - name: Install Rust toolchain (${{ matrix.rust }})
-        uses: dtolnay/rust-toolchain@master
+        uses: dtolnay/rust-toolchain@f7ccc83f9ed1e5b9c81d8a67d7ad1a747e22a561 # master
         with:
           toolchain: ${{ matrix.rust }}
 
       - name: Configure sccache
-        uses: mozilla-actions/sccache-action@v0.0.6
+        uses: mozilla-actions/sccache-action@676c0e67b665684f17941acf5cc3af83bcf10228 # v0.0.6
 
       - name: Cache Rust artifacts
-        uses: Swatinem/rust-cache@v2
+        uses: Swatinem/rust-cache@779680da715d629ac1d338a641029a2f4372abb5 # v2
         with:
           prefix-key: "v2-build"
           shared-key: "${{ matrix.os }}-${{ matrix.rust }}-${{ matrix.features }}"
@@ -101,26 +101,26 @@ jobs:
 
       - name: Upload binary (Linux)
         if: matrix.os == 'ubuntu-latest' && matrix.rust == 'stable' && matrix.features == 'default'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
-          name: rk-core-linux-x86_64
-          path: target/release/rk-core
+          name: rk-linux-x86_64
+          path: target/release/rk
           retention-days: 7
 
       - name: Upload binary (macOS)
         if: matrix.os == 'macos-latest' && matrix.rust == 'stable' && matrix.features == 'default'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
-          name: rk-core-macos-x86_64
-          path: target/release/rk-core
+          name: rk-macos-x86_64
+          path: target/release/rk
           retention-days: 7
 
       - name: Upload binary (Windows)
         if: matrix.os == 'windows-latest' && matrix.rust == 'stable' && matrix.features == 'default'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
-          name: rk-core-windows-x86_64
-          path: target/release/rk-core.exe
+          name: rk-windows-x86_64
+          path: target/release/rk.exe
           retention-days: 7
 
   # ===========================================================================
@@ -131,18 +131,18 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
 
       - name: Install Rust toolchain
-        uses: dtolnay/rust-toolchain@stable
+        uses: dtolnay/rust-toolchain@f7ccc83f9ed1e5b9c81d8a67d7ad1a747e22a561 # stable
         with:
           components: clippy
 
       - name: Configure sccache
-        uses: mozilla-actions/sccache-action@v0.0.6
+        uses: mozilla-actions/sccache-action@676c0e67b665684f17941acf5cc3af83bcf10228 # v0.0.6
 
       - name: Cache Rust artifacts
-        uses: Swatinem/rust-cache@v2
+        uses: Swatinem/rust-cache@779680da715d629ac1d338a641029a2f4372abb5 # v2
         with:
           prefix-key: "v2-lint"
           cache-on-failure: true
@@ -173,10 +173,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
 
       - name: Install Rust toolchain
-        uses: dtolnay/rust-toolchain@stable
+        uses: dtolnay/rust-toolchain@f7ccc83f9ed1e5b9c81d8a67d7ad1a747e22a561 # stable
         with:
           components: rustfmt
 
@@ -201,16 +201,16 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
 
       - name: Install Rust toolchain
-        uses: dtolnay/rust-toolchain@stable
+        uses: dtolnay/rust-toolchain@f7ccc83f9ed1e5b9c81d8a67d7ad1a747e22a561 # stable
 
       - name: Configure sccache
-        uses: mozilla-actions/sccache-action@v0.0.6
+        uses: mozilla-actions/sccache-action@676c0e67b665684f17941acf5cc3af83bcf10228 # v0.0.6
 
       - name: Cache Rust artifacts
-        uses: Swatinem/rust-cache@v2
+        uses: Swatinem/rust-cache@779680da715d629ac1d338a641029a2f4372abb5 # v2
         with:
           prefix-key: "v2-test"
           shared-key: "${{ matrix.os }}"
@@ -247,16 +247,16 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
 
       - name: Install Rust toolchain
-        uses: dtolnay/rust-toolchain@stable
+        uses: dtolnay/rust-toolchain@f7ccc83f9ed1e5b9c81d8a67d7ad1a747e22a561 # stable
 
       - name: Configure sccache
-        uses: mozilla-actions/sccache-action@v0.0.6
+        uses: mozilla-actions/sccache-action@676c0e67b665684f17941acf5cc3af83bcf10228 # v0.0.6
 
       - name: Cache Rust artifacts
-        uses: Swatinem/rust-cache@v2
+        uses: Swatinem/rust-cache@779680da715d629ac1d338a641029a2f4372abb5 # v2
         with:
           prefix-key: "v2-docs"
           cache-on-failure: true
@@ -267,7 +267,7 @@ jobs:
           RUSTDOCFLAGS: "-D warnings --cfg docsrs"
 
       - name: Upload documentation
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: documentation
           path: target/doc
@@ -277,19 +277,19 @@ jobs:
   # MSRV Check (Minimum Supported Rust Version)
   # ===========================================================================
   msrv:
-    name: "MSRV Check (Rust 1.74)"
+    name: "MSRV Check (Rust 1.75)"
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
 
       - name: Install Rust toolchain (MSRV)
-        uses: dtolnay/rust-toolchain@master
+        uses: dtolnay/rust-toolchain@f7ccc83f9ed1e5b9c81d8a67d7ad1a747e22a561 # master
         with:
-          toolchain: "1.74"
+          toolchain: "1.75"
 
       - name: Cache Rust artifacts
-        uses: Swatinem/rust-cache@v2
+        uses: Swatinem/rust-cache@779680da715d629ac1d338a641029a2f4372abb5 # v2
         with:
           prefix-key: "v2-msrv"
           cache-on-failure: true
@@ -305,10 +305,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
 
       - name: Install Rust toolchain
-        uses: dtolnay/rust-toolchain@stable
+        uses: dtolnay/rust-toolchain@f7ccc83f9ed1e5b9c81d8a67d7ad1a747e22a561 # stable
 
       - name: Install cargo-audit
         run: cargo install cargo-audit --locked
@@ -318,14 +318,14 @@ jobs:
         continue-on-error: true
 
       - name: Run cargo-deny (advisories)
-        uses: EmbarkStudios/cargo-deny-action@v1
+        uses: EmbarkStudios/cargo-deny-action@ef301417264190a1eb9f26fcf171642070085c5b # v1
         with:
           log-level: warn
           command: check advisories
         continue-on-error: true
 
       - name: Run cargo-deny (licenses)
-        uses: EmbarkStudios/cargo-deny-action@v1
+        uses: EmbarkStudios/cargo-deny-action@ef301417264190a1eb9f26fcf171642070085c5b # v1
         with:
           log-level: warn
           command: check licenses
@@ -354,22 +354,22 @@ jobs:
       contains(github.event.pull_request.labels.*.name, 'performance')
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
 
       - name: Install Rust toolchain
-        uses: dtolnay/rust-toolchain@stable
+        uses: dtolnay/rust-toolchain@f7ccc83f9ed1e5b9c81d8a67d7ad1a747e22a561 # stable
 
       - name: Configure sccache
-        uses: mozilla-actions/sccache-action@v0.0.6
+        uses: mozilla-actions/sccache-action@676c0e67b665684f17941acf5cc3af83bcf10228 # v0.0.6
 
       - name: Cache Rust artifacts
-        uses: Swatinem/rust-cache@v2
+        uses: Swatinem/rust-cache@779680da715d629ac1d338a641029a2f4372abb5 # v2
         with:
           prefix-key: "v2-bench"
           cache-on-failure: true
 
       - name: Restore benchmark baseline
-        uses: actions/cache@v4
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
         with:
           path: target/criterion
           key: benchmark-baseline-${{ github.base_ref || 'main' }}
@@ -395,7 +395,7 @@ jobs:
 
       - name: Save benchmark baseline (main only)
         if: github.ref == 'refs/heads/main'
-        uses: actions/cache/save@v4
+        uses: actions/cache/save@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
         with:
           path: target/criterion
           key: benchmark-baseline-main-${{ github.sha }}
@@ -418,7 +418,7 @@ jobs:
 
       - name: Upload benchmark reports
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: benchmark-reports
           path: target/criterion
@@ -433,10 +433,10 @@ jobs:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
 
       - name: Install Rust toolchain
-        uses: dtolnay/rust-toolchain@stable
+        uses: dtolnay/rust-toolchain@f7ccc83f9ed1e5b9c81d8a67d7ad1a747e22a561 # stable
 
       - name: Install tarpaulin
         run: cargo install cargo-tarpaulin --locked
@@ -446,14 +446,14 @@ jobs:
         continue-on-error: true
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@b9fd7d16f6d7d1b5d2bec1a2887e65ceed900238 # v4
         with:
           files: ./cobertura.xml
           fail_ci_if_error: false
         continue-on-error: true
 
       - name: Upload coverage HTML report
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: coverage-report
           path: tarpaulin-report.html
@@ -469,25 +469,25 @@ jobs:
     needs: [build]
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
 
       - name: Download Linux binary
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
         with:
-          name: rk-core-linux-x86_64
+          name: rk-linux-x86_64
           path: ./bin
 
       - name: Generate shell completions
         run: |
-          chmod +x ./bin/rk-core
+          chmod +x ./bin/rk
           mkdir -p completions
-          ./bin/rk-core completions bash > completions/rk-core.bash 2>/dev/null || echo "# Bash completions" > completions/rk-core.bash
-          ./bin/rk-core completions zsh > completions/_rk-core 2>/dev/null || echo "#compdef rk-core" > completions/_rk-core
-          ./bin/rk-core completions fish > completions/rk-core.fish 2>/dev/null || echo "# Fish completions" > completions/rk-core.fish
-          ./bin/rk-core completions powershell > completions/rk-core.ps1 2>/dev/null || echo "# PowerShell completions" > completions/rk-core.ps1
+          ./bin/rk completions bash > completions/rk.bash 2>/dev/null || echo "# Bash completions" > completions/rk.bash
+          ./bin/rk completions zsh > completions/_rk 2>/dev/null || echo "#compdef rk" > completions/_rk
+          ./bin/rk completions fish > completions/rk.fish 2>/dev/null || echo "# Fish completions" > completions/rk.fish
+          ./bin/rk completions powershell > completions/rk.ps1 2>/dev/null || echo "# PowerShell completions" > completions/rk.ps1
 
       - name: Upload completions
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: shell-completions
           path: completions/
@@ -502,7 +502,7 @@ jobs:
     needs: [build, lint, format, test, docs]
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
 
       - name: Calculate metrics
         run: |
@@ -557,28 +557,28 @@ jobs:
       contents: write
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
 
       - name: Download Linux binary
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
         with:
-          name: rk-core-linux-x86_64
+          name: rk-linux-x86_64
           path: artifacts/linux
 
       - name: Download macOS binary
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
         with:
-          name: rk-core-macos-x86_64
+          name: rk-macos-x86_64
           path: artifacts/macos
 
       - name: Download Windows binary
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
         with:
-          name: rk-core-windows-x86_64
+          name: rk-windows-x86_64
           path: artifacts/windows
 
       - name: Download shell completions
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
         with:
           name: shell-completions
           path: artifacts/completions
@@ -590,40 +590,40 @@ jobs:
 
           # Linux
           cd artifacts/linux
-          chmod +x rk-core
-          tar czvf ../../rk-core-${VERSION}-linux-x86_64.tar.gz rk-core
+          chmod +x rk
+          tar czvf ../../rk-${VERSION}-linux-x86_64.tar.gz rk
           cd ../..
 
           # macOS
           cd artifacts/macos
-          chmod +x rk-core
-          tar czvf ../../rk-core-${VERSION}-macos-x86_64.tar.gz rk-core
+          chmod +x rk
+          tar czvf ../../rk-${VERSION}-macos-x86_64.tar.gz rk
           cd ../..
 
           # Windows
           cd artifacts/windows
-          zip ../../rk-core-${VERSION}-windows-x86_64.zip rk-core.exe
+          zip ../../rk-${VERSION}-windows-x86_64.zip rk.exe
           cd ../..
 
           # Shell completions (if available)
           if [ -d "artifacts/completions" ]; then
             cd artifacts/completions
-            tar czvf ../../rk-core-${VERSION}-completions.tar.gz *
+            tar czvf ../../rk-${VERSION}-completions.tar.gz *
             cd ../..
           fi
 
           # Generate checksums
-          sha256sum rk-core-${VERSION}-*.tar.gz rk-core-${VERSION}-*.zip 2>/dev/null > checksums-${VERSION}.txt || true
+          sha256sum rk-${VERSION}-*.tar.gz rk-${VERSION}-*.zip 2>/dev/null > checksums-${VERSION}.txt || true
 
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@26994186c0ac3ef5cae75ac16aa32e8153525f77 # v1
         with:
           draft: false
           prerelease: ${{ contains(github.ref, '-alpha') || contains(github.ref, '-beta') || contains(github.ref, '-rc') }}
           generate_release_notes: true
           files: |
-            rk-core-*.tar.gz
-            rk-core-*.zip
+            rk-*.tar.gz
+            rk-*.zip
             checksums-*.txt
 
   # ===========================================================================
