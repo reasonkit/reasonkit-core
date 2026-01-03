@@ -38,8 +38,9 @@ env:
   RUSTFLAGS: "-D warnings"
   RUST_BACKTRACE: 1
   CARGO_INCREMENTAL: 0
-  SCCACHE_GHA_ENABLED: "true"
-  RUSTC_WRAPPER: "sccache"
+  # TEMPORARILY DISABLED: GitHub cache service outage
+  # SCCACHE_GHA_ENABLED: "true"
+  # RUSTC_WRAPPER: "sccache"
   # Override .cargo/config.toml target-cpu=native to prevent SIGILL on different runners
   CARGO_TARGET_X86_64_UNKNOWN_LINUX_GNU_RUSTFLAGS: ""
 
