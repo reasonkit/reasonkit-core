@@ -49,7 +49,9 @@ async fn main() -> anyhow::Result<()> {
 /// Example 1: Basic client setup and configuration
 async fn example_basic_client() -> anyhow::Result<()> {
     let config = GLM46Config {
-        api_key: std::env::var("GLM46_API_KEY").unwrap_or_else(|_| "demo-key".to_string()),
+        api_key: std::env::var("GLM46_API_KEY")
+            .unwrap_or_else(|_| "demo-key".to_string())
+            .into(),
         base_url: "https://openrouter.ai/api/v1".to_string(),
         model: "glm-4.6".to_string(),
         timeout: Duration::from_secs(30),
@@ -72,7 +74,9 @@ async fn example_basic_client() -> anyhow::Result<()> {
 /// Example 2: Basic chat completion
 async fn example_chat_completion() -> anyhow::Result<()> {
     let config = GLM46Config {
-        api_key: std::env::var("GLM46_API_KEY").unwrap_or_else(|_| "demo-key".to_string()),
+        api_key: std::env::var("GLM46_API_KEY")
+            .unwrap_or_else(|_| "demo-key".to_string())
+            .into(),
         base_url: "https://openrouter.ai/api/v1".to_string(),
         model: "glm-4.6".to_string(),
         timeout: Duration::from_secs(30),
@@ -127,7 +131,9 @@ async fn example_chat_completion() -> anyhow::Result<()> {
 /// Example 3: Structured output for agent coordination
 async fn example_structured_output() -> anyhow::Result<()> {
     let config = GLM46Config {
-        api_key: std::env::var("GLM46_API_KEY").unwrap_or_else(|_| "demo-key".to_string()),
+        api_key: std::env::var("GLM46_API_KEY")
+            .unwrap_or_else(|_| "demo-key".to_string())
+            .into(),
         base_url: "https://openrouter.ai/api/v1".to_string(),
         model: "glm-4.6".to_string(),
         timeout: Duration::from_secs(30),

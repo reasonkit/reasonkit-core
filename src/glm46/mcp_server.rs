@@ -6,6 +6,7 @@
 use async_trait::async_trait;
 // use anyhow::Context;
 use crate::error::Result;
+use secrecy::ExposeSecret;
 use serde_json::{json, Value};
 use std::collections::{HashMap, HashSet};
 use std::sync::Arc;
@@ -530,7 +531,7 @@ impl McpServerTrait for GLM46MCPServer {
 
     /// Perform a health check
     async fn health_check(&self) -> Result<bool> {
-        Ok(!self.client.config().api_key.is_empty())
+        Ok(!self.client.config().api_key.expose_secret().is_empty())
     }
 
     /// List available tools

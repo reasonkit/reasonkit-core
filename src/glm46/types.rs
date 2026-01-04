@@ -4,7 +4,32 @@
 //! Optimized for structured output and agent coordination.
 
 use serde::{Deserialize, Serialize};
-// use std::collections::HashMap;
+
+/// Maximum content length for a single message (characters)
+/// Based on GLM-4.6's context window and safety margin
+pub const MAX_MESSAGE_CONTENT_LENGTH: usize = 500_000;
+
+/// Maximum number of messages in a single request
+pub const MAX_MESSAGES_PER_REQUEST: usize = 1000;
+
+/// Maximum number of tools per request
+pub const MAX_TOOLS_PER_REQUEST: usize = 128;
+
+/// Validation error for input constraints
+#[derive(Debug, Clone, thiserror::Error)]
+pub enum ValidationError {
+    #[error("Content length {actual} exceeds maximum {max}")]
+    ContentTooLong { actual: usize, max: usize },
+
+    #[error("Too many messages: {actual} exceeds maximum {max}")]
+    TooManyMessages { actual: usize, max: usize },
+
+    #[error("Too many tools: {actual} exceeds maximum {max}")]
+    TooManyTools { actual: usize, max: usize },
+
+    #[error("Empty content not allowed for {role:?} messages")]
+    EmptyContent { role: MessageRole },
+}
 
 /// Chat message for GLM-4.6 API
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
@@ -59,6 +84,52 @@ impl ChatMessage {
             tool_call_id: Some(tool_call_id.into()),
         }
     }
+
+    /// Validate message content against input constraints
+    ///
+    /// # Returns
+    /// - `Ok(())` if the message is valid
+    /// - `Err(ValidationError)` if validation fails
+    pub fn validate(&self) -> Result<(), ValidationError> {
+        // Check content length
+        if self.content.len() > MAX_MESSAGE_CONTENT_LENGTH {
+            return Err(ValidationError::ContentTooLong {
+                actual: self.content.len(),
+                max: MAX_MESSAGE_CONTENT_LENGTH,
+            });
+        }
+
+        // User messages should have content (unless tool calls)
+        if matches!(self.role, MessageRole::User) && self.content.is_empty() {
+            return Err(ValidationError::EmptyContent {
+                role: self.role.clone(),
+            });
+        }
+
+        Ok(())
+    }
+
+    /// Create a validated system message
+    ///
+    /// # Returns
+    /// - `Ok(ChatMessage)` if content is valid
+    /// - `Err(ValidationError)` if validation fails
+    pub fn system_validated(content: impl Into<String>) -> Result<Self, ValidationError> {
+        let msg = Self::system(content);
+        msg.validate()?;
+        Ok(msg)
+    }
+
+    /// Create a validated user message
+    ///
+    /// # Returns
+    /// - `Ok(ChatMessage)` if content is valid
+    /// - `Err(ValidationError)` if validation fails
+    pub fn user_validated(content: impl Into<String>) -> Result<Self, ValidationError> {
+        let msg = Self::user(content);
+        msg.validate()?;
+        Ok(msg)
+    }
 }
 
 /// Message role in conversation
@@ -103,6 +174,40 @@ pub struct ChatRequest {
     /// Enable streaming
     #[serde(skip_serializing_if = "Option::is_none")]
     pub stream: Option<bool>,
+}
+
+impl ChatRequest {
+    /// Validate the entire request against input constraints
+    ///
+    /// # Returns
+    /// - `Ok(())` if the request is valid
+    /// - `Err(ValidationError)` if validation fails
+    pub fn validate(&self) -> Result<(), ValidationError> {
+        // Validate message count
+        if self.messages.len() > MAX_MESSAGES_PER_REQUEST {
+            return Err(ValidationError::TooManyMessages {
+                actual: self.messages.len(),
+                max: MAX_MESSAGES_PER_REQUEST,
+            });
+        }
+
+        // Validate each message
+        for msg in &self.messages {
+            msg.validate()?;
+        }
+
+        // Validate tool count
+        if let Some(tools) = &self.tools {
+            if tools.len() > MAX_TOOLS_PER_REQUEST {
+                return Err(ValidationError::TooManyTools {
+                    actual: tools.len(),
+                    max: MAX_TOOLS_PER_REQUEST,
+                });
+            }
+        }
+
+        Ok(())
+    }
 }
 
 /// Response format for structured output

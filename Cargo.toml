@@ -163,6 +163,9 @@ chrono = { version = "0.4", features = ["serde"] }
 # Cryptographic hashing for telemetry and caching
 sha2 = "0.10"
 
+# Secret management for API keys (prevents accidental Debug/log exposure)
+secrecy = { version = "0.10", features = ["serde"] }
+
 # SQLite for local telemetry storage
 rusqlite = { version = "0.32", features = ["bundled"] }
 

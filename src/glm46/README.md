@@ -105,12 +105,12 @@ cargo bench --features glm46 --bench glm46_benchmark
 
 ## Performance Targets
 
-| Metric | Target | Status |
-|--------|--------|--------|
-| TAU-Bench Score | 70.1% | ⏳ Validation pending |
-| Context Window | 198K tokens | ✅ Supported |
-| Cost Efficiency | 1/7th Claude | ✅ Tracked |
-| Latency Overhead | <5ms | ⏳ Benchmarking |
+| Metric           | Target       | Status                |
+| ---------------- | ------------ | --------------------- |
+| TAU-Bench Score  | 70.1%        | ⏳ Validation pending |
+| Context Window   | 198K tokens  | ✅ Supported          |
+| Cost Efficiency  | 1/7th Claude | ✅ Tracked            |
+| Latency Overhead | <5ms         | ⏳ Benchmarking       |
 
 ## Current Status
 
@@ -126,6 +126,7 @@ cargo test --features glm46
 ```
 
 **Completed:**
+
 - ✅ Core module compilation: Fixed
 - ✅ Error handling: Properly typed
 - ✅ Feature gating: Module is opt-in
@@ -197,4 +198,3 @@ When contributing to GLM-4.6 integration:
 ---
 
 **Status**: Experimental (feature-gated) ✅ | Enable with `--features glm46`
-

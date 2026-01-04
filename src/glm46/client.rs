@@ -46,6 +46,7 @@
 
 use anyhow::{Context, Result};
 use reqwest::{Client, StatusCode};
+use secrecy::{ExposeSecret, SecretString};
 use std::sync::Arc;
 use std::time::Duration;
 use tokio::sync::Mutex;
@@ -55,10 +56,14 @@ use tracing::{debug, warn};
 use crate::glm46::types::*;
 
 /// GLM-4.6 Client Configuration
-#[derive(Debug, Clone)]
+///
+/// # Security
+/// API key is wrapped in `SecretString` to prevent accidental exposure
+/// via Debug logging or error messages.
+#[derive(Clone)]
 pub struct GLM46Config {
-    /// API Key for authentication
-    pub api_key: String,
+    /// API Key for authentication (protected from Debug exposure)
+    pub api_key: SecretString,
     /// Base URL for API requests
     pub base_url: String,
     /// Model identifier
@@ -73,10 +78,24 @@ pub struct GLM46Config {
     pub local_fallback: bool,
 }
 
+impl std::fmt::Debug for GLM46Config {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("GLM46Config")
+            .field("api_key", &"[REDACTED]")
+            .field("base_url", &self.base_url)
+            .field("model", &self.model)
+            .field("timeout", &self.timeout)
+            .field("context_budget", &self.context_budget)
+            .field("cost_tracking", &self.cost_tracking)
+            .field("local_fallback", &self.local_fallback)
+            .finish()
+    }
+}
+
 impl Default for GLM46Config {
     fn default() -> Self {
         Self {
-            api_key: std::env::var("GLM46_API_KEY").unwrap_or_default(),
+            api_key: SecretString::from(std::env::var("GLM46_API_KEY").unwrap_or_default()),
             base_url: std::env::var("GLM46_BASE_URL")
                 .unwrap_or_else(|_| "https://openrouter.ai/api/v1".to_string()),
             model: "glm-4.6".to_string(),
@@ -123,7 +142,7 @@ impl GLM46Client {
     /// Create client from environment variables
     pub fn from_env() -> Result<Self> {
         let config = GLM46Config::default();
-        if config.api_key.is_empty() {
+        if config.api_key.expose_secret().is_empty() {
             return Err(anyhow::anyhow!(
                 "GLM46_API_KEY environment variable required"
             ));
@@ -236,7 +255,10 @@ impl GLM46Client {
             Duration::from_secs(5),
             self.http_client
                 .post(&self.config.base_url)
-                .header("Authorization", format!("Bearer {}", self.config.api_key))
+                .header(
+                    "Authorization",
+                    format!("Bearer {}", self.config.api_key.expose_secret()),
+                )
                 .header("Content-Type", "application/json")
                 .json(&test_request)
                 .send(),
@@ -303,7 +325,10 @@ impl GLM46Client {
         let response = self
             .http_client
             .post(&self.config.base_url)
-            .header("Authorization", format!("Bearer {}", self.config.api_key))
+            .header(
+                "Authorization",
+                format!("Bearer {}", self.config.api_key.expose_secret()),
+            )
             .header("Content-Type", "application/json")
             .header("HTTP-Referer", "https://reasonkit.sh")
             .header("X-Title", "ReasonKit GLM-4.6 Client")

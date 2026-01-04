@@ -16,7 +16,8 @@ use std::time::Duration;
 async fn test_glm46_thinktool_profile_integration() {
     let config = GLM46Config {
         api_key: std::env::var("GLM46_API_KEY")
-            .expect("GLM46_API_KEY environment variable required"),
+            .expect("GLM46_API_KEY environment variable required")
+            .into(),
         ..Default::default()
     };
 
@@ -65,7 +66,8 @@ async fn test_glm46_thinktool_profile_integration() {
 async fn test_glm46_cost_tracking() {
     let config = GLM46Config {
         api_key: std::env::var("GLM46_API_KEY")
-            .expect("GLM46_API_KEY environment variable required"),
+            .expect("GLM46_API_KEY environment variable required")
+            .into(),
         cost_tracking: true,
         ..Default::default()
     };
@@ -83,7 +85,8 @@ async fn test_glm46_cost_tracking() {
 async fn test_glm46_large_context() {
     let config = GLM46Config {
         api_key: std::env::var("GLM46_API_KEY")
-            .expect("GLM46_API_KEY environment variable required"),
+            .expect("GLM46_API_KEY environment variable required")
+            .into(),
         context_budget: 198_000,
         ..Default::default()
     };
@@ -122,7 +125,8 @@ async fn test_glm46_large_context() {
 async fn test_glm46_structured_output() {
     let config = GLM46Config {
         api_key: std::env::var("GLM46_API_KEY")
-            .expect("GLM46_API_KEY environment variable required"),
+            .expect("GLM46_API_KEY environment variable required")
+            .into(),
         ..Default::default()
     };
 
@@ -175,7 +179,8 @@ async fn test_glm46_structured_output() {
 async fn test_glm46_agentic_coordination() {
     let config = GLM46Config {
         api_key: std::env::var("GLM46_API_KEY")
-            .expect("GLM46_API_KEY environment variable required"),
+            .expect("GLM46_API_KEY environment variable required")
+            .into(),
         ..Default::default()
     };
 
@@ -253,7 +258,8 @@ async fn test_glm46_agentic_coordination() {
 async fn test_glm46_timeout_handling() {
     let config = GLM46Config {
         api_key: std::env::var("GLM46_API_KEY")
-            .expect("GLM46_API_KEY environment variable required"),
+            .expect("GLM46_API_KEY environment variable required")
+            .into(),
         timeout: Duration::from_secs(5), // Short timeout for testing
         ..Default::default()
     };
@@ -269,7 +275,7 @@ async fn test_glm46_timeout_handling() {
 #[ignore] // Requires local ollama instance
 async fn test_glm46_local_fallback() {
     let config = GLM46Config {
-        api_key: String::new(),                         // Empty key triggers fallback
+        api_key: String::new().into(), // Empty key triggers fallback
         base_url: "http://localhost:11434".to_string(), // Ollama default
         local_fallback: true,
         ..Default::default()
