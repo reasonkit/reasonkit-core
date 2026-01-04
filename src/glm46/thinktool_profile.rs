@@ -277,7 +277,11 @@ impl GLM46ThinkToolProfile {
 
     /// Get performance metrics
     pub async fn get_performance_metrics(&self) -> PerformanceMetrics {
-        let usage = self.usage_stats.lock().unwrap();
+        // Use unwrap_or_else to recover from mutex poisoning gracefully
+        let usage = self
+            .usage_stats
+            .lock()
+            .unwrap_or_else(|poisoned| poisoned.into_inner());
 
         PerformanceMetrics {
             total_requests: usage.total_requests,
@@ -353,7 +357,11 @@ impl GLM46ThinkToolProfile {
     }
 
     async fn get_cached_response(&self, cache_key: &str) -> Option<CachedResponse> {
-        let cache = self.cached_responses.lock().unwrap();
+        // Use unwrap_or_else to recover from mutex poisoning gracefully
+        let cache = self
+            .cached_responses
+            .lock()
+            .unwrap_or_else(|poisoned| poisoned.into_inner());
 
         if let Some(cached) = cache.get(cache_key) {
             if cached.created_at.elapsed().unwrap_or_default() < cached.ttl {
@@ -365,7 +373,11 @@ impl GLM46ThinkToolProfile {
     }
 
     async fn cache_response(&self, cache_key: &str, response: &str, confidence: f64) {
-        let mut cache = self.cached_responses.lock().unwrap();
+        // Use unwrap_or_else to recover from mutex poisoning gracefully
+        let mut cache = self
+            .cached_responses
+            .lock()
+            .unwrap_or_else(|poisoned| poisoned.into_inner());
         cache.insert(
             cache_key.to_string(),
             CachedResponse {
@@ -378,7 +390,11 @@ impl GLM46ThinkToolProfile {
     }
 
     async fn update_usage_stats(&self, cache_hit: bool, structured: bool, bilingual: bool) {
-        let mut stats = self.usage_stats.lock().unwrap();
+        // Use unwrap_or_else to recover from mutex poisoning gracefully
+        let mut stats = self
+            .usage_stats
+            .lock()
+            .unwrap_or_else(|poisoned| poisoned.into_inner());
 
         if !cache_hit {
             stats.total_requests += 1;

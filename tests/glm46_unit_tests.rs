@@ -1293,3 +1293,123 @@ fn test_api_key_debug_redaction() {
         "Debug output should indicate redaction"
     );
 }
+
+// ==================== P2: SSRF PROTECTION TESTS ====================
+
+/// Test that validate_base_url allows trusted hosts
+#[test]
+fn test_ssrf_allows_trusted_hosts() {
+    use reasonkit::glm46::validate_base_url;
+
+    // Trusted hosts should always be allowed
+    assert!(validate_base_url("https://openrouter.ai/api/v1", false).is_ok());
+    assert!(validate_base_url("https://api.zhipu.ai/v1", false).is_ok());
+    assert!(validate_base_url("https://api.openai.com/v1", false).is_ok());
+}
+
+/// Test that validate_base_url blocks cloud metadata endpoints
+#[test]
+fn test_ssrf_blocks_metadata_endpoints() {
+    use reasonkit::glm46::validate_base_url;
+
+    // AWS/GCP/Azure metadata endpoint must be blocked
+    assert!(validate_base_url("http://169.254.169.254/latest/meta-data/", true).is_err());
+    assert!(validate_base_url("http://169.254.169.254", true).is_err());
+
+    // Google metadata hostname
+    assert!(validate_base_url("http://metadata.google.internal", true).is_err());
+}
+
+/// Test that validate_base_url restricts localhost to local_fallback mode
+#[test]
+fn test_ssrf_localhost_requires_local_fallback() {
+    use reasonkit::glm46::validate_base_url;
+
+    // Without local_fallback, localhost should fail
+    assert!(validate_base_url("http://localhost:11434", false).is_err());
+    assert!(validate_base_url("http://127.0.0.1:11434", false).is_err());
+
+    // With local_fallback, localhost should succeed
+    assert!(validate_base_url("http://localhost:11434", true).is_ok());
+    assert!(validate_base_url("http://127.0.0.1:11434", true).is_ok());
+    assert!(validate_base_url("http://[::1]:11434", true).is_ok());
+}
+
+/// Test that validate_base_url blocks private IPs without local_fallback
+#[test]
+fn test_ssrf_blocks_private_ips() {
+    use reasonkit::glm46::validate_base_url;
+
+    // Private IP ranges blocked without local_fallback
+    assert!(validate_base_url("http://10.0.0.1:8080", false).is_err());
+    assert!(validate_base_url("http://192.168.1.1:8080", false).is_err());
+    assert!(validate_base_url("http://172.16.0.1:8080", false).is_err());
+
+    // Private IPs allowed with local_fallback (for internal deployments)
+    assert!(validate_base_url("http://10.0.0.1:8080", true).is_ok());
+    assert!(validate_base_url("http://192.168.1.1:8080", true).is_ok());
+}
+
+/// Test that validate_base_url requires HTTPS for non-localhost
+#[test]
+fn test_ssrf_requires_https() {
+    use reasonkit::glm46::validate_base_url;
+
+    // HTTP on non-localhost should fail
+    assert!(validate_base_url("http://external-api.com/v1", false).is_err());
+
+    // HTTPS on external hosts should succeed
+    assert!(validate_base_url("https://external-api.com/v1", false).is_ok());
+
+    // HTTP on localhost should succeed (for local development)
+    assert!(validate_base_url("http://localhost:11434", true).is_ok());
+}
+
+/// Test that validate_base_url blocks link-local IPs
+#[test]
+fn test_ssrf_blocks_link_local() {
+    use reasonkit::glm46::validate_base_url;
+
+    // Link-local addresses (169.254.x.x) must always be blocked
+    assert!(validate_base_url("http://169.254.0.1:8080", true).is_err());
+    assert!(validate_base_url("http://169.254.255.255", true).is_err());
+}
+
+/// Test client creation with SSRF protection
+#[tokio::test]
+async fn test_client_ssrf_validation() {
+    // Client with valid URL should succeed
+    let valid_config = GLM46Config {
+        api_key: SecretString::from("test-key".to_string()),
+        base_url: "https://openrouter.ai/api/v1".to_string(),
+        ..Default::default()
+    };
+    assert!(GLM46Client::new(valid_config).is_ok());
+
+    // Client with localhost URL and local_fallback=true should succeed
+    let local_config = GLM46Config {
+        api_key: SecretString::from("test-key".to_string()),
+        base_url: "http://localhost:11434".to_string(),
+        local_fallback: true,
+        ..Default::default()
+    };
+    assert!(GLM46Client::new(local_config).is_ok());
+
+    // Client with localhost URL but local_fallback=false should fail
+    let invalid_local_config = GLM46Config {
+        api_key: SecretString::from("test-key".to_string()),
+        base_url: "http://localhost:11434".to_string(),
+        local_fallback: false,
+        ..Default::default()
+    };
+    assert!(GLM46Client::new(invalid_local_config).is_err());
+
+    // Client with metadata endpoint should fail
+    let metadata_config = GLM46Config {
+        api_key: SecretString::from("test-key".to_string()),
+        base_url: "http://169.254.169.254/latest".to_string(),
+        local_fallback: true, // Even with local_fallback, metadata is blocked
+        ..Default::default()
+    };
+    assert!(GLM46Client::new(metadata_config).is_err());
+}

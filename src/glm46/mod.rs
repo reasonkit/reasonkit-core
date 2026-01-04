@@ -12,5 +12,5 @@ pub mod thinktool_profile;
 pub mod types;
 
 // Re-export commonly used types
-pub use client::{CostTracker, GLM46Client, GLM46Config};
+pub use client::{validate_base_url, CostTracker, GLM46Client, GLM46Config};
 pub use types::*;

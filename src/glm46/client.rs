@@ -47,13 +47,161 @@
 use anyhow::{Context, Result};
 use reqwest::{Client, StatusCode};
 use secrecy::{ExposeSecret, SecretString};
+use std::net::IpAddr;
 use std::sync::Arc;
 use std::time::Duration;
 use tokio::sync::Mutex;
 use tokio::time::timeout;
 use tracing::{debug, warn};
+use url::Url;
 
 use crate::glm46::types::*;
+
+/// Trusted API hosts that are always allowed
+const TRUSTED_HOSTS: &[&str] = &["openrouter.ai", "api.zhipu.ai", "api.openai.com"];
+
+/// Cloud metadata endpoints that must be blocked (SSRF protection)
+const BLOCKED_HOSTS: &[&str] = &[
+    "169.254.169.254", // AWS, GCP, Azure metadata
+    "metadata.google.internal",
+    "metadata.gcp.internal",
+];
+
+/// Validate base URL for SSRF protection
+///
+/// # Security Rules
+/// - Blocks cloud metadata endpoints
+/// - Restricts local_fallback to localhost only
+/// - Blocks private IP ranges unless local_fallback is enabled
+/// - Always allows trusted API hosts
+///
+/// # Errors
+/// Returns an error if the URL is invalid or fails SSRF checks
+pub fn validate_base_url(url: &str, local_fallback: bool) -> Result<()> {
+    let parsed = Url::parse(url).context("Invalid base URL")?;
+
+    // Get host for validation
+    let host = parsed
+        .host_str()
+        .ok_or_else(|| anyhow::anyhow!("Invalid URL: no host"))?;
+
+    // Block cloud metadata endpoints first (always blocked)
+    if BLOCKED_HOSTS
+        .iter()
+        .any(|blocked| host.eq_ignore_ascii_case(blocked))
+    {
+        return Err(anyhow::anyhow!(
+            "SSRF protection: blocked access to cloud metadata endpoint"
+        ));
+    }
+
+    // Allow trusted API hosts
+    if TRUSTED_HOSTS.iter().any(|trusted| host.ends_with(trusted)) {
+        return Ok(());
+    }
+
+    // Check if this is an internal/localhost URL
+    let is_localhost = is_localhost_url(&parsed);
+    let is_private_ip = is_private_ip_url(host);
+
+    // For external URLs (not localhost, not private IP), require HTTPS
+    if !is_localhost && !is_private_ip && parsed.scheme() != "https" {
+        return Err(anyhow::anyhow!(
+            "SSRF protection: non-localhost URLs must use HTTPS"
+        ));
+    }
+
+    // Check for IP addresses
+    if let Ok(ip) = host.parse::<IpAddr>() {
+        return validate_ip_address(ip, local_fallback);
+    }
+
+    // For localhost hostnames, require local_fallback mode
+    if is_localhost {
+        if !local_fallback {
+            return Err(anyhow::anyhow!(
+                "SSRF protection: localhost URLs require local_fallback=true"
+            ));
+        }
+        return Ok(());
+    }
+
+    // For other hostnames, allow (they will be resolved at connection time)
+    Ok(())
+}
+
+/// Check if URL points to localhost
+fn is_localhost_url(url: &Url) -> bool {
+    match url.host_str() {
+        Some(host) => {
+            host.eq_ignore_ascii_case("localhost")
+                || host == "127.0.0.1"
+                || host == "::1"
+                || host == "[::1]"
+        }
+        None => false,
+    }
+}
+
+/// Check if host is a private IP address
+fn is_private_ip_url(host: &str) -> bool {
+    if let Ok(ip) = host.parse::<IpAddr>() {
+        match ip {
+            IpAddr::V4(ipv4) => ipv4.is_private() || ipv4.is_loopback(),
+            IpAddr::V6(ipv6) => ipv6.is_loopback(),
+        }
+    } else {
+        false
+    }
+}
+
+/// Validate IP address for SSRF protection
+fn validate_ip_address(ip: IpAddr, local_fallback: bool) -> Result<()> {
+    match ip {
+        IpAddr::V4(ipv4) => {
+            // Loopback (127.0.0.0/8)
+            if ipv4.is_loopback() {
+                return if local_fallback {
+                    Ok(())
+                } else {
+                    Err(anyhow::anyhow!(
+                        "SSRF protection: loopback addresses require local_fallback=true"
+                    ))
+                };
+            }
+
+            // Block private ranges unless local_fallback
+            if ipv4.is_private() && !local_fallback {
+                return Err(anyhow::anyhow!(
+                    "SSRF protection: private IP addresses require local_fallback=true"
+                ));
+            }
+
+            // Block link-local (169.254.0.0/16) - includes metadata endpoints
+            if ipv4.is_link_local() {
+                return Err(anyhow::anyhow!(
+                    "SSRF protection: link-local addresses are blocked"
+                ));
+            }
+
+            Ok(())
+        }
+        IpAddr::V6(ipv6) => {
+            // Loopback (::1)
+            if ipv6.is_loopback() {
+                return if local_fallback {
+                    Ok(())
+                } else {
+                    Err(anyhow::anyhow!(
+                        "SSRF protection: loopback addresses require local_fallback=true"
+                    ))
+                };
+            }
+
+            Ok(())
+        }
+    }
+}
 
 /// GLM-4.6 Client Configuration
 ///
@@ -120,7 +268,18 @@ pub struct GLM46Client {
 
 impl GLM46Client {
     /// Create new GLM-4.6 client with provided configuration
+    ///
+    /// # Security
+    /// Validates base URL for SSRF protection before creating client.
+    /// Blocks access to cloud metadata endpoints and restricts localhost
+    /// access to when `local_fallback` is enabled.
+    ///
+    /// # Errors
+    /// Returns an error if URL validation fails or HTTP client creation fails.
     pub fn new(config: GLM46Config) -> Result<Self> {
+        // SSRF protection: validate base URL before creating client
+        validate_base_url(&config.base_url, config.local_fallback)?;
+
         let http_client = Client::builder()
             .timeout(config.timeout)
             .user_agent("reasonkit-glm46/0.1.0")

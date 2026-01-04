@@ -119,6 +119,9 @@ pulldown-cmark = "0.10"
 scraper = "0.18"
 regex = "1.10"
 
+# URL Parsing (for SSRF protection)
+url = "2.5"
+
 # Vector Database (optional - use reasonkit-mem for full memory features)
 qdrant-client = { version = "1.10", optional = true }
 

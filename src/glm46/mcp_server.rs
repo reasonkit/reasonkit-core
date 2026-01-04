@@ -104,9 +104,12 @@ impl GLM46MCPServer {
     }
 
     /// Create server with custom configuration
-    pub fn with_config(client: GLM46Client) -> Self {
+    ///
+    /// # Errors
+    /// Returns an error if server initialization fails.
+    pub fn with_config(client: GLM46Client) -> Result<Self> {
         let config = GLM46MCPServerConfig::default();
-        Self::new(client, config).unwrap()
+        Self::new(client, config)
     }
 
     /// Get current server status
