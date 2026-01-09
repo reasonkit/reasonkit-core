@@ -1,6 +1,6 @@
 [package]
 name = "reasonkit-core"
-version = "0.1.0"
+version = "0.1.4"
 edition = "2021"
 rust-version = "1.75"
 authors = ["ReasonKit Team <team@reasonkit.sh>"]
@@ -130,7 +130,7 @@ tantivy = { version = "0.25", optional = true }
 
 # Memory Infrastructure (optional - provides storage, retrieval, embeddings)
 # Version required for crates.io publishing; path used for workspace development
-reasonkit-mem = { version = "0.1.1", optional = true }
+reasonkit-mem = { version = "0.1", optional = true }
 
 # Async Runtime
 tokio = { version = "1", features = ["full"] }
