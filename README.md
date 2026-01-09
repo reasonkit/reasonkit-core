@@ -491,7 +491,7 @@ See [Community Badges](brand/COMMUNITY_BADGES.md) for all variants and usage gui
 | **Memory Features**  | ✅ Stable     | Via `reasonkit-mem` crate                              |
 | **Python Bindings**  | 🔶 Beta       | Build from source with `--features python`             |
 
-**Current Version:** v0.1.2 | [CHANGELOG](CHANGELOG.md) | [Releases](https://github.com/reasonkit/reasonkit-core/releases)
+**Current Version:** v0.1.5 | [CHANGELOG](CHANGELOG.md) | [Releases](https://github.com/reasonkit/reasonkit-core/releases)
 
 ### Verify Installation
 
