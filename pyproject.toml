@@ -21,7 +21,7 @@ build-backend = "maturin"
 
 [project]
 name = "reasonkit"
-version = "0.1.0"
+version = "0.1.5"
 description = "ReasonKit - Turn Prompts into Protocols. Structured AI Reasoning with ThinkTools."
 readme = "README.md"
 license = { text = "Apache-2.0" }

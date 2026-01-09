@@ -1,6 +1,6 @@
 [package]
 name = "reasonkit-core"
-version = "0.1.4"
+version = "0.1.5"
 edition = "2021"
 rust-version = "1.75"
 authors = ["ReasonKit Team <team@reasonkit.sh>"]
@@ -228,6 +228,7 @@ hyper = "1"
 # ============================================================================
 
 [dev-dependencies]
+reasonkit = { package = "reasonkit-core", path = "." }
 tokio-test = "0.4"
 tempfile = "3.10"
 pretty_assertions = "1.4"
