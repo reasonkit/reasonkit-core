@@ -22,7 +22,7 @@
 //! # Example
 //!
 //! ```rust,ignore
-//! use reasonkit_core::security::{ApiKeyManager, RateLimiter, AuditLogger};
+//! use reasonkit::security::{ApiKeyManager, RateLimiter, AuditLogger};
 //!
 //! // Initialize security components
 //! let key_manager = ApiKeyManager::new(kek, db, audit.clone());

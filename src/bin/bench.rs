@@ -15,13 +15,13 @@ use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::time::Instant;
 
-use reasonkit_core::thinktool::consistency::{
+use reasonkit::thinktool::consistency::{
     SelfConsistencyConfig, SelfConsistencyEngine, VotingMethod,
 };
-use reasonkit_core::thinktool::executor::{
+use reasonkit::thinktool::executor::{
     ExecutorConfig, ProtocolExecutor, ProtocolInput, ProtocolOutput,
 };
-use reasonkit_core::thinktool::step::{StepOutput, StepResult};
+use reasonkit::thinktool::step::{StepOutput, StepResult};
 
 /// ReasonKit Benchmark Runner
 #[derive(Parser, Debug)]

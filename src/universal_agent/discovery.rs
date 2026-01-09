@@ -103,7 +103,7 @@ impl DiscoveryEngine {
         // Known endpoint patterns for different frameworks
         let endpoint_patterns = vec![
             ("http://localhost:3000", FrameworkType::ClaudeCode),
-            ("http://localhost:8080", FrameworkType::Cline),
+            ("http://localhost:9100", FrameworkType::Cline),
             ("http://localhost:5000", FrameworkType::KiloCode),
             ("http://localhost:3001", FrameworkType::Droid),
             ("http://localhost:4000", FrameworkType::RooCode),
@@ -183,7 +183,7 @@ impl DiscoveryEngine {
                     id: Uuid::new_v4(),
                     framework_type: *framework_type,
                     discovery_method: DiscoveryMethod::ApiEndpointScan,
-                    endpoint: Some(format!("{}{}", "http://localhost:8080", pattern)),
+                    endpoint: Some(format!("{}{}", "http://localhost:9100", pattern)),
                     version: self.get_api_version(pattern).await?,
                     capabilities: self.detect_capabilities(*framework_type).await?,
                     confidence_score: 0.7,
@@ -227,12 +227,30 @@ impl DiscoveryEngine {
 
     async fn detect_capabilities(&self, framework_type: FrameworkType) -> Result<Vec<String>> {
         match framework_type {
-            FrameworkType::ClaudeCode => Ok(vec!["json_output".to_string(), "confidence_scoring".to_string()]),
-            FrameworkType::Cline => Ok(vec!["logical_analysis".to_string(), "fallacy_detection".to_string()]),
-            FrameworkType::KiloCode => Ok(vec!["comprehensive_critique".to_string(), "flaw_categorization".to_string()]),
-            FrameworkType::Droid => Ok(vec!["mobile_optimization".to_string(), "android_development".to_string()]),
-            FrameworkType::RooCode => Ok(vec!["multi_agent_collaboration".to_string(), "protocol_delegation".to_string()]),
-            FrameworkType::BlackBoxAI => Ok(vec!["high_throughput".to_string(), "speed_optimization".to_string()]),
+            FrameworkType::ClaudeCode => Ok(vec![
+                "json_output".to_string(),
+                "confidence_scoring".to_string(),
+            ]),
+            FrameworkType::Cline => Ok(vec![
+                "logical_analysis".to_string(),
+                "fallacy_detection".to_string(),
+            ]),
+            FrameworkType::KiloCode => Ok(vec![
+                "comprehensive_critique".to_string(),
+                "flaw_categorization".to_string(),
+            ]),
+            FrameworkType::Droid => Ok(vec![
+                "mobile_optimization".to_string(),
+                "android_development".to_string(),
+            ]),
+            FrameworkType::RooCode => Ok(vec![
+                "multi_agent_collaboration".to_string(),
+                "protocol_delegation".to_string(),
+            ]),
+            FrameworkType::BlackBoxAI => Ok(vec![
+                "high_throughput".to_string(),
+                "speed_optimization".to_string(),
+            ]),
         }
     }
 
@@ -246,7 +264,10 @@ impl DiscoveryEngine {
     }
 
     /// Merge and deduplicate discoveries
-    async fn merge_discoveries(&self, discoveries: Vec<AgentDiscovery>) -> Result<Vec<AgentDiscovery>> {
+    async fn merge_discoveries(
+        &self,
+        discoveries: Vec<AgentDiscovery>,
+    ) -> Result<Vec<AgentDiscovery>> {
         let mut merged = HashMap::new();
 
         for discovery in discoveries {
@@ -333,7 +354,9 @@ impl AgentRegistry {
         let mut best_score = 0.0;
 
         for (framework_type, registration) in registrations.iter() {
-            let score = self.score_framework_for_protocol(*framework_type, protocol).await?;
+            let score = self
+                .score_framework_for_protocol(*framework_type, protocol)
+                .await?;
             if score > best_score {
                 best_score = score;
                 best_framework = *framework_type;
@@ -344,7 +367,11 @@ impl AgentRegistry {
     }
 
     /// Score how well a framework fits a protocol
-    async fn score_framework_for_protocol(&self, framework: FrameworkType, protocol: &Protocol) -> Result<f64> {
+    async fn score_framework_for_protocol(
+        &self,
+        framework: FrameworkType,
+        protocol: &Protocol,
+    ) -> Result<f64> {
         let mut score = 0.0;
 
         // Base score from framework priority
@@ -385,7 +412,10 @@ impl AgentRegistry {
     }
 
     /// Get or create an adapter for a framework
-    pub async fn get_or_create_adapter(&self, framework: FrameworkType) -> Result<Box<dyn FrameworkAdapter>> {
+    pub async fn get_or_create_adapter(
+        &self,
+        framework: FrameworkType,
+    ) -> Result<Box<dyn FrameworkAdapter>> {
         let mut adapters = self.adapters.write().await;
 
         if let Some(adapter) = adapters.get(&framework) {
@@ -399,13 +429,19 @@ impl AgentRegistry {
     }
 
     /// Get an existing adapter for a framework
-    pub async fn get_adapter(&self, framework: FrameworkType) -> Result<Option<Box<dyn FrameworkAdapter>>> {
+    pub async fn get_adapter(
+        &self,
+        framework: FrameworkType,
+    ) -> Result<Option<Box<dyn FrameworkAdapter>>> {
         let adapters = self.adapters.read().await;
         Ok(adapters.get(&framework).cloned())
     }
 
     /// Register a new framework adapter
-    pub async fn register_adapter<T: FrameworkAdapter + Send + Sync + 'static>(&mut self, adapter: T) -> Result<()> {
+    pub async fn register_adapter<T: FrameworkAdapter + Send + Sync + 'static>(
+        &mut self,
+        adapter: T,
+    ) -> Result<()> {
         let framework_type = adapter.framework_type();
         let capabilities = adapter.get_capabilities().await?;
 
@@ -427,26 +463,29 @@ impl AgentRegistry {
     }
 
     /// Create an adapter for a framework type
-    async fn create_adapter_for_framework(&self, framework: FrameworkType) -> Result<Box<dyn FrameworkAdapter>> {
+    async fn create_adapter_for_framework(
+        &self,
+        framework: FrameworkType,
+    ) -> Result<Box<dyn FrameworkAdapter>> {
         match framework {
-            FrameworkType::ClaudeCode => {
-                Ok(Box::new(crate::universal_agent::adapters::claude::ClaudeCodeAdapter::new()))
-            }
-            FrameworkType::Cline => {
-                Ok(Box::new(crate::universal_agent::adapters::cline::ClineAdapter::new()))
-            }
-            FrameworkType::KiloCode => {
-                Ok(Box::new(crate::universal_agent::adapters::kilo::KiloCodeAdapter::new()))
-            }
-            FrameworkType::Droid => {
-                Ok(Box::new(crate::universal_agent::adapters::droid::DroidAdapter::new()))
-            }
-            FrameworkType::RooCode => {
-                Ok(Box::new(crate::universal_agent::adapters::roo::RooCodeAdapter::new()))
-            }
-            FrameworkType::BlackBoxAI => {
-                Ok(Box::new(crate::universal_agent::adapters::blackbox::BlackBoxAIAdapter::new()))
-            }
+            FrameworkType::ClaudeCode => Ok(Box::new(
+                crate::universal_agent::adapters::claude::ClaudeCodeAdapter::new(),
+            )),
+            FrameworkType::Cline => Ok(Box::new(
+                crate::universal_agent::adapters::cline::ClineAdapter::new(),
+            )),
+            FrameworkType::KiloCode => Ok(Box::new(
+                crate::universal_agent::adapters::kilo::KiloCodeAdapter::new(),
+            )),
+            FrameworkType::Droid => Ok(Box::new(
+                crate::universal_agent::adapters::droid::DroidAdapter::new(),
+            )),
+            FrameworkType::RooCode => Ok(Box::new(
+                crate::universal_agent::adapters::roo::RooCodeAdapter::new(),
+            )),
+            FrameworkType::BlackBoxAI => Ok(Box::new(
+                crate::universal_agent::adapters::blackbox::BlackBoxAIAdapter::new(),
+            )),
         }
     }
 
@@ -457,7 +496,10 @@ impl AgentRegistry {
     }
 
     /// Get framework registration info
-    pub async fn get_registration(&self, framework: FrameworkType) -> Result<Option<AgentRegistration>> {
+    pub async fn get_registration(
+        &self,
+        framework: FrameworkType,
+    ) -> Result<Option<AgentRegistration>> {
         let registrations = self.registrations.read().await;
         Ok(registrations.get(&framework).cloned())
     }
@@ -470,7 +512,8 @@ impl AgentRegistry {
             registration.last_used = Some(chrono::Utc::now());
             registration.usage_count += 1;
             // Update rolling average performance
-            registration.average_performance = (registration.average_performance * 0.9) + (performance * 0.1);
+            registration.average_performance =
+                (registration.average_performance * 0.9) + (performance * 0.1);
         }
 
         Ok(())
@@ -535,7 +578,10 @@ mod tests {
             created_at: chrono::Utc::now(),
         };
 
-        let best_framework = registry.auto_detect_best_framework(&protocol).await.unwrap();
+        let best_framework = registry
+            .auto_detect_best_framework(&protocol)
+            .await
+            .unwrap();
         assert!(matches!(best_framework, FrameworkType::ClaudeCode));
     }
 }

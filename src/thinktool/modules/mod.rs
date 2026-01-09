@@ -13,7 +13,7 @@
 //! ## Direct Module Usage
 //!
 //! ```rust,ignore
-//! use reasonkit_core::thinktool::modules::{GigaThink, ThinkToolModule, ThinkToolContext};
+//! use reasonkit::thinktool::modules::{GigaThink, ThinkToolModule, ThinkToolContext};
 //!
 //! let module = GigaThink::new();
 //! let context = ThinkToolContext {

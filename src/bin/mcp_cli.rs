@@ -10,10 +10,10 @@
 #![allow(dead_code)]
 
 use clap::{Parser, Subcommand};
-use reasonkit_core::mcp::McpRegistry;
+use reasonkit::mcp::McpRegistry;
 
 #[cfg(feature = "daemon")]
-use reasonkit_core::mcp::daemon::{call_tool, DaemonManager, DaemonStatus};
+use reasonkit::mcp::daemon::{call_tool, DaemonManager, DaemonStatus};
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
@@ -138,12 +138,12 @@ pub async fn run_mcp_command(cli: McpCli) -> anyhow::Result<()> {
             match module.as_str() {
                 "all" | "thinktools" => {
                     println!("Starting ReasonKit MCP Server (ThinkTools)...");
-                    reasonkit_core::mcp::server::run_server().await?;
+                    reasonkit::mcp::server::run_server().await?;
                 }
                 "delta" => {
                     println!("Starting ReasonKit MCP Server (Delta Protocol)...");
                     // TODO: Implement delta-specific server
-                    reasonkit_core::mcp::server::run_server().await?;
+                    reasonkit::mcp::server::run_server().await?;
                 }
                 _ => {
                     eprintln!(
@@ -182,28 +182,28 @@ pub async fn run_mcp_command(cli: McpCli) -> anyhow::Result<()> {
             println!("{:<20}  {:<20}  Description", "Tool", "Server");
             println!("────────────────────────────────────────────────────────────────");
             println!(
-                "{:<20}  {:<20}  {}",
-                "gigathink", "reasonkit", "Expansive creative thinking (10+ perspectives)"
+                "{:<20}  {:<20}  Expansive creative thinking (10+ perspectives)",
+                "gigathink", "reasonkit"
             );
             println!(
-                "{:<20}  {:<20}  {}",
-                "laserlogic", "reasonkit", "Precision deductive reasoning with fallacy detection"
+                "{:<20}  {:<20}  Precision deductive reasoning with fallacy detection",
+                "laserlogic", "reasonkit"
             );
             println!(
-                "{:<20}  {:<20}  {}",
-                "bedrock", "reasonkit", "First principles decomposition"
+                "{:<20}  {:<20}  First principles decomposition",
+                "bedrock", "reasonkit"
             );
             println!(
-                "{:<20}  {:<20}  {}",
-                "proofguard", "reasonkit", "Multi-source verification (3+ sources)"
+                "{:<20}  {:<20}  Multi-source verification (3+ sources)",
+                "proofguard", "reasonkit"
             );
             println!(
-                "{:<20}  {:<20}  {}",
-                "brutalhonesty", "reasonkit", "Adversarial self-critique"
+                "{:<20}  {:<20}  Adversarial self-critique",
+                "brutalhonesty", "reasonkit"
             );
             println!(
-                "{:<20}  {:<20}  {}",
-                "delta_verify", "reasonkit-delta", "Delta Protocol verification"
+                "{:<20}  {:<20}  Delta Protocol verification",
+                "delta_verify", "reasonkit-delta"
             );
 
             // Also check registry
@@ -264,16 +264,16 @@ pub async fn run_mcp_command(cli: McpCli) -> anyhow::Result<()> {
                         // Print tool result
                         for content in result.content {
                             match content {
-                                reasonkit_core::mcp::tools::ToolResultContent::Text { text } => {
+                                reasonkit::mcp::tools::ToolResultContent::Text { text } => {
                                     println!("{}", text);
                                 }
-                                reasonkit_core::mcp::tools::ToolResultContent::Image {
+                                reasonkit::mcp::tools::ToolResultContent::Image {
                                     data,
                                     mime_type,
                                 } => {
                                     println!("[Image: {} bytes, {}]", data.len(), mime_type);
                                 }
-                                reasonkit_core::mcp::tools::ToolResultContent::Resource {
+                                reasonkit::mcp::tools::ToolResultContent::Resource {
                                     uri,
                                     mime_type,
                                 } => {
@@ -381,7 +381,7 @@ pub async fn run_mcp_command(cli: McpCli) -> anyhow::Result<()> {
         #[cfg(feature = "daemon")]
         McpCommands::ServeDaemon { socket: _socket } => {
             // Run as daemon server (internal command)
-            use reasonkit_core::mcp::daemon::{setup_signal_handlers, DaemonServer};
+            use reasonkit::mcp::daemon::{setup_signal_handlers, DaemonServer};
 
             println!("Starting MCP daemon server...");
 

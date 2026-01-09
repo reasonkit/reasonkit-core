@@ -1036,7 +1036,7 @@ services:
   reasonkit:
     build: .
     ports:
-      - "8080:8080"
+      - "9100:9100"
     volumes:
       - reasonkit-data:/data
     environment:

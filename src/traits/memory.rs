@@ -174,7 +174,7 @@ impl Default for MemoryConfig {
 /// # Example
 ///
 /// ```ignore
-/// use reasonkit_core::traits::{MemoryService, Document};
+/// use reasonkit::traits::{MemoryService, Document};
 ///
 /// async fn example(memory: &impl MemoryService) -> MemoryResult<()> {
 ///     let doc = Document {

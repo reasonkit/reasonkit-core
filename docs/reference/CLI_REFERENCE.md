@@ -578,7 +578,7 @@ rk serve [OPTIONS]
 #### Options
 
 - `--host <HOST>` - Host to bind to [default: 127.0.0.1]
-- `-p, --port <PORT>` - Port to bind to [default: 8080]
+- `-p, --port <PORT>` - Port to bind to [default: 9100]
 
 #### Examples
 
@@ -602,7 +602,7 @@ rk -vv serve
 ReasonKit Core API Server
 ═══════════════════════════════════════
 Version: 1.0.0
-Listening on: http://127.0.0.1:8080
+Listening on: http://127.0.0.1:9100
 
 Endpoints:
   GET  /health              Health check
@@ -619,14 +619,14 @@ Press Ctrl+C to stop
 **Health Check**
 
 ```bash
-curl http://localhost:8080/health
+curl http://localhost:9100/health
 # {"status": "ok", "version": "1.0.0"}
 ```
 
 **Query**
 
 ```bash
-curl -X POST http://localhost:8080/query \
+curl -X POST http://localhost:9100/query \
   -H "Content-Type: application/json" \
   -d '{"query": "chain of thought", "top_k": 5, "hybrid": true}'
 ```
@@ -634,7 +634,7 @@ curl -X POST http://localhost:8080/query \
 **Think (Protocol Execution)**
 
 ```bash
-curl -X POST http://localhost:8080/think \
+curl -X POST http://localhost:9100/think \
   -H "Content-Type: application/json" \
   -d '{
     "query": "Should we adopt microservices?",

@@ -306,7 +306,7 @@ pub use error::{Error, Result};
 /// # Example
 ///
 /// ```rust
-/// println!("ReasonKit Core v{}", reasonkit_core::VERSION);
+/// println!("ReasonKit Core v{}", reasonkit::VERSION);
 /// ```
 pub const VERSION: &str = env!("CARGO_PKG_VERSION");
 
@@ -402,7 +402,7 @@ mod python_module {
 /// # Example
 ///
 /// ```rust
-/// use reasonkit_core::DocumentType;
+/// use reasonkit::DocumentType;
 ///
 /// let doc_type = DocumentType::Paper;
 /// assert!(matches!(doc_type, DocumentType::Paper));
@@ -431,7 +431,7 @@ pub enum DocumentType {
 /// # Example
 ///
 /// ```rust
-/// use reasonkit_core::SourceType;
+/// use reasonkit::SourceType;
 ///
 /// let source = SourceType::Github;
 /// assert!(matches!(source, SourceType::Github));
@@ -459,7 +459,7 @@ pub enum SourceType {
 /// # Example
 ///
 /// ```rust
-/// use reasonkit_core::{Source, SourceType};
+/// use reasonkit::{Source, SourceType};
 /// use chrono::Utc;
 ///
 /// let source = Source {
@@ -502,7 +502,7 @@ pub struct Source {
 /// # Example
 ///
 /// ```rust
-/// use reasonkit_core::Author;
+/// use reasonkit::Author;
 ///
 /// let author = Author {
 ///     name: "Jane Doe".to_string(),
@@ -530,7 +530,7 @@ pub struct Author {
 /// # Example
 ///
 /// ```rust
-/// use reasonkit_core::Metadata;
+/// use reasonkit::Metadata;
 ///
 /// let metadata = Metadata {
 ///     title: Some("Understanding AI Reasoning".to_string()),
@@ -601,7 +601,7 @@ pub struct EmbeddingIds {
 /// # Example
 ///
 /// ```rust
-/// use reasonkit_core::{Chunk, EmbeddingIds};
+/// use reasonkit::{Chunk, EmbeddingIds};
 /// use uuid::Uuid;
 ///
 /// let chunk = Chunk {
@@ -733,7 +733,7 @@ pub struct DocumentContent {
 /// # Example
 ///
 /// ```rust
-/// use reasonkit_core::{Document, DocumentType, Source, SourceType};
+/// use reasonkit::{Document, DocumentType, Source, SourceType};
 /// use chrono::Utc;
 ///
 /// let source = Source {
@@ -794,7 +794,7 @@ impl Document {
     /// # Example
     ///
     /// ```rust
-    /// use reasonkit_core::{Document, DocumentType, Source, SourceType};
+    /// use reasonkit::{Document, DocumentType, Source, SourceType};
     /// use chrono::Utc;
     ///
     /// let source = Source {
@@ -833,7 +833,7 @@ impl Document {
     /// # Example
     ///
     /// ```rust
-    /// use reasonkit_core::{Document, DocumentType, Source, SourceType};
+    /// use reasonkit::{Document, DocumentType, Source, SourceType};
     /// use chrono::Utc;
     ///
     /// let source = Source {
@@ -874,7 +874,7 @@ impl Document {
     /// # Example
     ///
     /// ```rust
-    /// use reasonkit_core::{Document, DocumentType, Source, SourceType, Metadata};
+    /// use reasonkit::{Document, DocumentType, Source, SourceType, Metadata};
     /// use chrono::Utc;
     ///
     /// let source = Source {
@@ -1070,7 +1070,7 @@ pub enum MatchSource {
 /// # Example
 ///
 /// ```rust
-/// use reasonkit_core::{SearchResult, MatchSource, Chunk, EmbeddingIds};
+/// use reasonkit::{SearchResult, MatchSource, Chunk, EmbeddingIds};
 /// use uuid::Uuid;
 ///
 /// let chunk = Chunk {

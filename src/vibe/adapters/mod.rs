@@ -1220,7 +1220,7 @@ mod tests {
             adapter_id: "test_adapter".to_string(),
             adapter_type: AdapterType::VIBE,
             connection_settings: ConnectionSettings {
-                endpoint: Some("http://localhost:8080".to_string()),
+                endpoint: Some("http://localhost:9100".to_string()),
                 authentication: None,
                 ssl_config: None,
                 proxy_config: None,

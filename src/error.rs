@@ -15,7 +15,7 @@
 //! # Example
 //!
 //! ```rust
-//! use reasonkit_core::{Error, Result};
+//! use reasonkit::{Error, Result};
 //!
 //! fn process_document(path: &str) -> Result<()> {
 //!     // Return typed errors
@@ -51,7 +51,7 @@ use thiserror::Error;
 /// # Example
 ///
 /// ```rust
-/// use reasonkit_core::Result;
+/// use reasonkit::Result;
 ///
 /// fn do_something() -> Result<String> {
 ///     Ok("Success".to_string())
@@ -68,7 +68,7 @@ pub type Result<T> = std::result::Result<T, Error>;
 /// # Example
 ///
 /// ```rust
-/// use reasonkit_core::Error;
+/// use reasonkit::Error;
 ///
 /// // Create specific error types
 /// let validation_err = Error::Validation("Invalid input".to_string());
@@ -165,7 +165,7 @@ pub enum Error {
     /// # Example
     ///
     /// ```rust
-    /// use reasonkit_core::Error;
+    /// use reasonkit::Error;
     ///
     /// let err = Error::NotFound { resource: "protocol:gigathink".to_string() };
     /// assert!(err.to_string().contains("gigathink"));
@@ -234,7 +234,7 @@ pub enum Error {
     /// # Example
     ///
     /// ```rust
-    /// use reasonkit_core::Error;
+    /// use reasonkit::Error;
     ///
     /// let io_err = std::io::Error::new(std::io::ErrorKind::NotFound, "file missing");
     /// let err = Error::with_context("Loading configuration file", io_err);
@@ -369,7 +369,7 @@ impl Error {
     /// # Example
     ///
     /// ```rust
-    /// use reasonkit_core::Error;
+    /// use reasonkit::Error;
     ///
     /// let err = Error::io("Failed to open file");
     /// assert!(err.to_string().contains("Failed to open"));
@@ -387,7 +387,7 @@ impl Error {
     /// # Example
     ///
     /// ```rust
-    /// use reasonkit_core::Error;
+    /// use reasonkit::Error;
     ///
     /// let err = Error::parse("Invalid JSON syntax at line 42");
     /// ```
@@ -490,7 +490,7 @@ impl Error {
     /// # Example
     ///
     /// ```rust
-    /// use reasonkit_core::Error;
+    /// use reasonkit::Error;
     ///
     /// let err = Error::validation("Input must not be empty");
     /// ```
@@ -523,7 +523,7 @@ impl Error {
     /// # Example
     ///
     /// ```rust
-    /// use reasonkit_core::Error;
+    /// use reasonkit::Error;
     ///
     /// fn load_config(path: &str) -> Result<(), Error> {
     ///     std::fs::read_to_string(path)
@@ -600,7 +600,7 @@ impl From<reasonkit_mem::MemError> for Error {
 /// # Example
 ///
 /// ```rust
-/// use reasonkit_core::{Result, ResultExt};
+/// use reasonkit::{Result, ResultExt};
 ///
 /// fn load_data(path: &str) -> Result<String> {
 ///     std::fs::read_to_string(path)

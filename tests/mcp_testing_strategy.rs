@@ -63,7 +63,7 @@ pub struct MockLlmProvider {
     failure_message: Arc<RwLock<String>>,
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct MockLlmResponse {
     pub content: String,
     pub tokens_used: u32,

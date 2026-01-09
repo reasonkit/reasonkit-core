@@ -17,7 +17,8 @@ use std::time::Instant;
 #[command(author = "ReasonKit Team <team@reasonkit.sh>")]
 #[command(version)]
 #[command(about = "ReasonKit Compare — A/B Testing for Reasoning Enhancement")]
-#[command(long_about = r#"ReasonKit Compare — A/B Testing for Reasoning Enhancement
+#[command(
+    long_about = r#"ReasonKit Compare — A/B Testing for Reasoning Enhancement
 
 Part of The Reasoning Engine suite. This tool demonstrates the impact
 of ThinkTools by showing side-by-side comparisons of raw LLM output
@@ -40,7 +41,8 @@ EXAMPLES:
   rk-compare "Solve: 2x + 5 = 15" --mock
 
 WEBSITE: https://reasonkit.sh
-"#)]
+"#
+)]
 struct Args {
     /// The question or query to analyze
     query: String,

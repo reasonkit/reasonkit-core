@@ -20,7 +20,7 @@
 //! Use `register_thinktools()` to register all 5 tools at once:
 //!
 //! ```rust,ignore
-//! use reasonkit_core::mcp::{McpServer, register_thinktools};
+//! use reasonkit::mcp::{McpServer, register_thinktools};
 //!
 //! let server = McpServer::new(...);
 //! register_thinktools(&server).await;  // Registers all 5 ThinkTools
@@ -31,7 +31,7 @@
 //! Register specific tools using individual handlers:
 //!
 //! ```rust,ignore
-//! use reasonkit_core::mcp::{ThinkToolHandler, GigaThinkHandler, McpServer};
+//! use reasonkit::mcp::{ThinkToolHandler, GigaThinkHandler, McpServer};
 //! use std::sync::Arc;
 //!
 //! let server = McpServer::new(...);
@@ -48,7 +48,7 @@
 //! For backward compatibility, use `ThinkToolHandler` with `_tool` routing:
 //!
 //! ```rust,ignore
-//! use reasonkit_core::mcp::{ThinkToolHandler, ToolHandler};
+//! use reasonkit::mcp::{ThinkToolHandler, ToolHandler};
 //!
 //! let handler = ThinkToolHandler::new();
 //! let tools = handler.tool_definitions();
@@ -654,7 +654,7 @@ impl ToolHandler for BrutalHonestyHandler {
 /// # Example
 ///
 /// ```rust,ignore
-/// use reasonkit_core::mcp::{McpServer, register_thinktools};
+/// use reasonkit::mcp::{McpServer, register_thinktools};
 ///
 /// let server = McpServer::new(...);
 /// register_thinktools(&server).await;

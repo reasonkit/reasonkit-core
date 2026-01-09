@@ -2,11 +2,11 @@
 
 # ReasonKit
 
-### **The AI Reasoning Engine**
+## **The AI Reasoning Engine**
 
-> _"From Prompt to Cognitive Engineering."_ — Turn Prompts into Protocols.
+> _"Designed, not Dreamed."_ — From Prompt to Cognitive Engineering.
 
-**Auditable Reasoning for Production AI | Rust-Native | SSR/SSG Compatible**
+**Auditable Reasoning for Production AI | Rust-Native | Turn Prompts into Protocols**
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="./brand/readme/reasonkit-core_tree_hero.png">
@@ -28,9 +28,9 @@
 
 ## The Problem We Solve
 
-**Most AI is a slot machine.** Insert prompt → pull lever → hope for coherence.
+**Most AI is a slot machine.** Insert prompt → pull lever → unclear, hope for coherence, at the mercy of chance.
 
-**ReasonKit is a factory.** Input data → execute protocol → get deterministic, auditable output.
+**ReasonKit is a factory.** Input data → apply protocol → deeper logic, auditable result, known probabibility.
 
 ![Wrong Decisions vs Structured Reasoning: Financial Loss & Missed Opportunities vs Errors Caught & Costly Mistakes Prevented](./brand/readme/wrong_decisions_vs_structured_reasoning.png)
 

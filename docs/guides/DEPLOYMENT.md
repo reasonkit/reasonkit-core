@@ -73,11 +73,11 @@ docker pull reasonkit/core:latest
 # Run with basic configuration
 docker run -d \
   --name reasonkit-core \
-  -p 8080:8080 \
+  -p 9100:9100 \
   -e ANTHROPIC_API_KEY="${ANTHROPIC_API_KEY}" \
   -e RUST_LOG=info \
   -v reasonkit-data:/app/data \
-  reasonkit/core:latest serve-mcp --port 8080
+  reasonkit/core:latest serve-mcp --port 9100
 ```
 
 ### Build from Source
@@ -93,9 +93,9 @@ docker build -t reasonkit/core:local .
 # Run locally built image
 docker run -d \
   --name reasonkit-core \
-  -p 8080:8080 \
+  -p 9100:9100 \
   -e ANTHROPIC_API_KEY="${ANTHROPIC_API_KEY}" \
-  reasonkit/core:local serve-mcp --port 8080
+  reasonkit/core:local serve-mcp --port 9100
 ```
 
 ### Multi-Architecture Build
@@ -140,7 +140,7 @@ services:
     container_name: reasonkit-core
     restart: unless-stopped
     ports:
-      - "8080:8080"
+      - "9100:9100"
     environment:
       - RUST_LOG=info
       - REASONKIT_ENV=production
@@ -192,7 +192,7 @@ services:
     container_name: reasonkit-core
     restart: unless-stopped
     ports:
-      - "8080:8080"
+      - "9100:9100"
     networks:
       - reasonkit-network
       - monitoring-network
@@ -755,7 +755,7 @@ kubectl get hpa -n reasonkit
 kubectl logs -f deployment/reasonkit-core -n reasonkit
 
 # Port forward for local testing
-kubectl port-forward svc/reasonkit-core 8080:8080 -n reasonkit
+kubectl port-forward svc/reasonkit-core 9100:9100 -n reasonkit
 ```
 
 ### Helm Chart (Optional)
@@ -2041,7 +2041,7 @@ curl -I https://api.anthropic.com/v1/messages
 
 ```bash
 # Check metrics
-curl localhost:8080/metrics | grep duration
+curl localhost:9100/metrics | grep duration
 
 # Common causes:
 # 1. Insufficient CPU

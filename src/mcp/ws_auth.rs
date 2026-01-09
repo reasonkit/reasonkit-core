@@ -17,7 +17,7 @@
 //! # Usage
 //!
 //! ```rust,ignore
-//! use reasonkit_core::mcp::ws_auth::{WsAuthLayer, WsAuthState, SubscriptionTier};
+//! use reasonkit::mcp::ws_auth::{WsAuthLayer, WsAuthState, SubscriptionTier};
 //!
 //! let auth_state = WsAuthState::new(api_key_validator);
 //! let app = Router::new()
@@ -1079,7 +1079,7 @@ mod tests {
             metadata: HashMap::new(),
         };
 
-        let addr: SocketAddr = "127.0.0.1:8080".parse().unwrap();
+        let addr: SocketAddr = "127.0.0.1:9100".parse().unwrap();
 
         // First connection should succeed
         let conn1 = tracker.register(&key_info, addr);
@@ -1112,7 +1112,7 @@ mod tests {
             metadata: HashMap::new(),
         };
 
-        let addr: SocketAddr = "127.0.0.1:8080".parse().unwrap();
+        let addr: SocketAddr = "127.0.0.1:9100".parse().unwrap();
         let conn = tracker.register(&key_info, addr).unwrap();
 
         // Should allow 60 requests

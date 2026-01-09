@@ -224,7 +224,7 @@ pub struct CapturedPage {
 /// # Example
 ///
 /// ```ignore
-/// use reasonkit_core::traits::{WebBrowserAdapter, NavigateOptions, ExtractOptions};
+/// use reasonkit::traits::{WebBrowserAdapter, NavigateOptions, ExtractOptions};
 ///
 /// async fn example(browser: &mut impl WebBrowserAdapter) -> WebAdapterResult<()> {
 ///     browser.connect().await?;

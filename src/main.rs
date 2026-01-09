@@ -8,8 +8,8 @@ use std::path::{Path, PathBuf};
 use tracing::{info, Level};
 use tracing_subscriber::FmtSubscriber;
 
-use reasonkit_core::thinktool::llm::LlmProvider;
-use reasonkit_core::thinktool::{BudgetConfig, ExecutorConfig, ProtocolExecutor, ProtocolInput};
+use reasonkit::thinktool::llm::LlmProvider;
+use reasonkit::thinktool::{BudgetConfig, ExecutorConfig, ProtocolExecutor, ProtocolInput};
 
 // Import MCP CLI module
 #[path = "bin/mcp_cli.rs"]
@@ -519,7 +519,7 @@ fn setup_logging(verbosity: u8) {
 }
 
 async fn initialize_telemetry_if_enabled() -> anyhow::Result<()> {
-    use reasonkit_core::telemetry::{TelemetryConfig, TelemetryStorage};
+    use reasonkit::telemetry::{TelemetryConfig, TelemetryStorage};
     let config = TelemetryConfig::from_env();
     if config.enabled {
         let db_path = if config.db_path == Path::new(".rk_telemetry.db") {
@@ -644,7 +644,7 @@ async fn main() -> anyhow::Result<()> {
         }
 
         Commands::ServeMcp => {
-            reasonkit_core::mcp::server::run_server().await?;
+            reasonkit::mcp::server::run_server().await?;
         }
 
         #[cfg(feature = "memory")]
