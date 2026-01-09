@@ -35,7 +35,7 @@ use axum::{
     routing::{any, get},
     Json, Router,
 };
-use futures_util::{SinkExt, StreamExt};
+use futures_util::SinkExt;
 use parking_lot::RwLock;
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
@@ -46,7 +46,7 @@ use std::{
     time::{Duration, Instant},
 };
 use tokio::signal;
-use tracing::{debug, error, info, warn, Level};
+use tracing::{debug, error, info, warn};
 use tracing_subscriber::{fmt, prelude::*, EnvFilter};
 
 // Import the ws_auth module (would normally be from the crate)
@@ -414,7 +414,6 @@ async fn ws_handler_header_auth(
     );
 
     let tracker = Arc::clone(&state.tracker);
-    let connection_id = conn_info.connection_id;
 
     ws.on_upgrade(move |socket| handle_mcp_socket(socket, conn_info, tracker))
         .into_response()
