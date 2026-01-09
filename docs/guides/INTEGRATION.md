@@ -1023,9 +1023,9 @@ VOLUME /data
 ENV REASONKIT_DATA_DIR=/data
 ENV RUST_LOG=info
 
-EXPOSE 8080
+EXPOSE 9100
 
-CMD ["rk", "serve", "--host", "0.0.0.0", "--port", "8080"]
+CMD ["rk", "serve", "--host", "0.0.0.0", "--port", "9100"]
 ```
 
 ```yaml
@@ -1079,7 +1079,7 @@ spec:
         - name: reasonkit
           image: reasonkit/reasonkit-core:latest
           ports:
-            - containerPort: 8080
+            - containerPort: 9100
           env:
             - name: ANTHROPIC_API_KEY
               valueFrom:
