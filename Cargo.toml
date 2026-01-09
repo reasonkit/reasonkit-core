@@ -24,7 +24,6 @@ include = [
     "/protocols/**/*",
     "/.cargo/config.toml",
     "/Cargo.toml",
-    "/Cargo.lock",
     "/README.md",
     "/LICENSE",
     "/CHANGELOG.md",
@@ -58,7 +57,7 @@ targets = [
 maintenance = { status = "actively-developed" }
 
 [lib]
-name = "reasonkit_core"
+name = "reasonkit"
 path = "src/lib.rs"
 crate-type = ["cdylib", "rlib"]
 # Disable doctests to avoid compile-only example drift across feature sets
