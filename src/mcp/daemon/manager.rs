@@ -63,9 +63,9 @@ impl DaemonManager {
         // Try XDG_RUNTIME_DIR first (systemd standard)
         let runtime_dir = env::var("XDG_RUNTIME_DIR")
             .ok()
-            .and_then(|d| Some(PathBuf::from(d)))
-            .or_else(|| dirs::runtime_dir())
-            .unwrap_or_else(|| env::temp_dir());
+            .map(PathBuf::from)
+            .or_else(dirs::runtime_dir)
+            .unwrap_or_else(env::temp_dir);
 
         let socket_dir = runtime_dir.join("reasonkit");
         std::fs::create_dir_all(&socket_dir)?;

@@ -529,11 +529,7 @@ impl<V: ApiKeyValidator> WsAuthState<V> {
             .and_then(|v| v.to_str().ok())
             .map(|s| {
                 // Handle "Bearer <token>" format
-                if s.starts_with("Bearer ") {
-                    s[7..].to_string()
-                } else {
-                    s.to_string()
-                }
+                s.strip_prefix("Bearer ").unwrap_or(s).to_string()
             })
     }
 }
@@ -775,7 +771,7 @@ async fn handle_unauthenticated_upgrade<V: ApiKeyValidator>(
     };
 
     if let Ok(json) = serde_json::to_string(&auth_result) {
-        let _ = socket.send(Message::Text(json.into())).await;
+        let _ = socket.send(Message::Text(json)).await;
     }
 
     info!(
@@ -801,7 +797,7 @@ async fn send_auth_error(socket: &mut WebSocket, error: &WsAuthError) -> Result<
     };
 
     if let Ok(json) = serde_json::to_string(&result) {
-        socket.send(Message::Text(json.into())).await?;
+        socket.send(Message::Text(json)).await?;
     }
 
     // Send close frame
@@ -881,7 +877,7 @@ async fn handle_authenticated_socket(
                         }
                     });
                     if let Ok(json) = serde_json::to_string(&error_msg) {
-                        let _ = socket.send(Message::Text(json.into())).await;
+                        let _ = socket.send(Message::Text(json)).await;
                     }
                     continue;
                 }
