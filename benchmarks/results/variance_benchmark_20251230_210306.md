@@ -75,4 +75,4 @@ Structured prompting reduced output inconsistency from **20.0%** to **1.5%** (a 
 
 ---
 
-*ReasonKit Variance Benchmark v1.0*
+_ReasonKit Variance Benchmark v1.0_

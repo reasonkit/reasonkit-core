@@ -540,5 +540,5 @@ rk think "Analysis" \
 
 ---
 
-*ReasonKit + OpenAI Integration Guide | v1.0.0 | Apache 2.0*
-*"See How Your AI Thinks"*
+_ReasonKit + OpenAI Integration Guide | v1.0.0 | Apache 2.0_
+_"See How Your AI Thinks"_

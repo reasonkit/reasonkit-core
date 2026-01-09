@@ -17,6 +17,7 @@ cargo run --example glm46_quick_start
 ```
 
 **Features demonstrated:**
+
 - Basic client setup and configuration
 - Chat completion with GLM-4.6
 - Structured output for agent coordination
@@ -24,6 +25,7 @@ cargo run --example glm46_quick_start
 - Error handling patterns
 
 **Prerequisites:**
+
 - `GLM46_API_KEY` environment variable set
 - GLM-4.6 API access (via OpenRouter or direct)
 
@@ -36,6 +38,7 @@ cargo run --example quick-start-core
 ```
 
 **Features demonstrated:**
+
 - Protocol creation and execution
 - Reasoning strategies
 - Step-by-step reasoning process
@@ -114,11 +117,11 @@ GLM46_API_KEY="your-key" cargo run --example glm46_quick_start
 
 ## Example Categories
 
-| Category | Examples | Purpose |
-|----------|----------|---------|
-| **Quick Start** | `glm46_quick_start`, `quick-start-core` | Get started quickly |
+| Category        | Examples                                                                  | Purpose              |
+| --------------- | ------------------------------------------------------------------------- | -------------------- |
+| **Quick Start** | `glm46_quick_start`, `quick-start-core`                                   | Get started quickly  |
 | **Integration** | `memory_service_example`, `web_adapter_example`, `m2_integration_example` | Integration patterns |
-| **Advanced** | `aesthetic_demo`, `vibe_quick_start`, `powercombo` | Advanced features |
+| **Advanced**    | `aesthetic_demo`, `vibe_quick_start`, `powercombo`                        | Advanced features    |
 
 ## Contributing Examples
 
@@ -133,6 +136,7 @@ When adding new examples:
 ## Documentation
 
 For more detailed documentation:
+
 - **GLM-4.6 Integration**: See `src/glm46/INTEGRATION_GUIDE.md`
 - **API Reference**: Run `cargo doc --open`
 - **Getting Started**: See `GETTING_STARTED.md`
@@ -140,4 +144,3 @@ For more detailed documentation:
 ---
 
 **Last Updated:** 2026-01-02
-

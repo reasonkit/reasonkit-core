@@ -163,10 +163,10 @@ N/A - Initial release
 cargo install --path .
 
 # Or via release binary
-curl -fsSL https://reasonkit.sh/install | bash
+curl -fsSL https://get.reasonkit.sh | bash
 ```
 
 ---
 
-*"Designed, Not Dreamed. Turn Prompts into Protocols."*
-*<https://reasonkit.sh>*
+_"Designed, Not Dreamed. Turn Prompts into Protocols."_
+_<https://reasonkit.sh>_

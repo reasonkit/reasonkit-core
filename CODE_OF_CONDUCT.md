@@ -119,4 +119,4 @@ For answers to common questions about this code of conduct, see the FAQ at [http
 
 ---
 
-*Last updated: December 2025*
+_Last updated: December 2025_

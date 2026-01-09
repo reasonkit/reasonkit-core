@@ -3,7 +3,7 @@
 > **Classification:** ULTIMATE MASTER SOURCE OF TRUTH
 > **Enforcement:** HARD - ALL AI agents and projects MUST comply
 > **Last Updated:** 2025-12-31
-> **Supersedes:** All other BRAND\*.md files across RK-PROJECT
+> **Supersedes:** All other BRAND*.md files across RK-PROJECT
 
 ---
 
@@ -22,19 +22,26 @@
 
 ## Table of Contents
 
-1. [Core Identity](#core-identity)
-2. [Color System](#color-system)
-3. [Typography](#typography)
-4. [Logo System: The Luminous Polyhedron](#logo-system-the-luminous-polyhedron)
-5. [Visual Language](#visual-language)
-6. [Asset Directory Structure](#asset-directory-structure)
-7. [Touchpoint-Specific Guidelines](#touchpoint-specific-guidelines)
-8. [AI Agent Instructions](#ai-agent-instructions)
-9. [Quick Reference Cards](#quick-reference-cards)
+1. [Core Identity & Philosophy](#core-identity--philosophy)
+2. [Voice & Tone Strategy](#voice--tone-strategy)
+3. [Automated Style Enforcement](#automated-style-enforcement)
+4. [Color System](#color-system)
+5. [Typography](#typography)
+6. [Logo System: The Luminous Polyhedron](#logo-system-the-luminous-polyhedron)
+7. [Visual Language](#visual-language)
+8. [Asset Directory Structure](#asset-directory-structure)
+9. [Touchpoint-Specific Guidelines](#touchpoint-specific-guidelines)
+10. [AI Agent Instructions](#ai-agent-instructions)
 
 ---
 
-## Core Identity
+## Core Identity & Philosophy
+
+**We are the architects of the post-prompting era.**
+
+While the industry "chats" with AI, hoping for the best, ReasonKit engineers it. We reject the chaotic unpredictability of raw LLMs in favor of **auditable, structured, and deterministic protocols.**
+
+Our brand is not about "magic." It is about **mastery**. It evokes the feeling of a perfectly machined engine part, a clean compile, or a mathematical proof. It is the deep satisfaction of systems that work exactly as designed.
 
 | Attribute       | Value                                                 |
 | --------------- | ----------------------------------------------------- |
@@ -43,7 +50,7 @@
 | **Philosophy**  | "Designed, Not Dreamed" / "High Logic > Lost Hopes"   |
 | **Positioning** | "Structure Beats Intelligence"                        |
 | **Technical**   | "Auditable Reasoning by Default"                      |
-| **Website**     | <https://reasonkit.sh>                                  |
+| **Website**     | <https://reasonkit.sh>                                |
 | **Mission**     | Make AI reasoning structured, auditable, and reliable |
 
 ### Product Ecosystem
@@ -54,6 +61,78 @@
 | **ReasonKit-mem**  | Apache 2.0  | Memory/vector layer (optional)  | OSS    |
 | **ReasonKit-web**  | Apache 2.0  | Web sensing MCP sidecar         | OSS    |
 | **ReasonKit-pro**  | Proprietary | Advanced ThinkTools, enterprise | Paid   |
+
+---
+
+## Voice & Tone Strategy
+
+> **The Vibe:** The Lead Engineer who has seen it all. Calm, precise, slightly demanding, but ultimately reassuring because they have a plan.
+
+The ReasonKit voice is unique. It is **Competence Porn** in text form. It doesn't sell you a dream; it hands you a blueprint.
+
+### The Voice Matrix
+
+| Dimension | Description |
+| :--- | :--- |
+| **Visionary but Grounded** | We talk about AGI and reasoning chains, but we ground every claim in Rust reliability and memory safety. We dream in code, not concepts. |
+| **Authoritative but Not Arrogant** | We don't say we're the best because we say so; we say it because we measured the variance reduction (85% → 28%). Show, don't just tell. |
+| **Technical but Accessible** | We assume intelligence but not specific context. We explain complex architectures with crystal clarity, respecting the reader's time. |
+| **Instructional vs. Conversational** | We don't "chat." We "direct." Our documentation reads like a flight manual, not a blog post. |
+
+### The "Before & After" Examples
+
+| Context | ❌ Generic AI Brand (Weak) | ✅ ReasonKit Voice (Strong) |
+| :--- | :--- | :--- |
+| **Value Prop** | "ReasonKit helps you get better answers from your AI models effortlessly." | "ReasonKit forces LLMs to abandon probabilistic guessing in favor of structured, auditable reasoning chains." |
+| **Reliability** | "You can trust our system to be safe and secure." | "Auditable by default. If it isn't in the logs, it didn't happen. We trade magic for metrics." |
+| **Speed** | "Blazing fast performance for your apps." | "Core reasoning loops execute in <5ms. Rust supremacy means zero garbage collection pauses." |
+| **Error Handling** | "Oops! Something went wrong." | "Reasoning chain diverged at Step 4. Circuit breaker activated. Retrying with temperature 0.1." |
+
+### Key Lexicon & Banned Words
+
+**✅ USE THESE:**
+*   **Protocol:** Implies structure and rules.
+*   **Architecture:** We build systems, not just prompts.
+*   **Determinism:** The ultimate goal.
+*   **Variance Reduction:** The measurable benefit.
+*   **Pipeline / Chain / Tree:** Structural metaphors.
+*   **Inject / Extract / Synthesize:** Active engineering verbs.
+
+**❌ BAN THESE:**
+*   **Magic:** There is no magic, only unexamined code.
+*   **Hope / Imagine:** We don't hope; we design.
+*   **Seamless:** Nothing is seamless. It is "integrated."
+*   **Game-changer:** Show the delta, don't hype it.
+*   **Empower:** Too vague. Use "enable" or "equip."
+
+---
+
+## Automated Style Enforcement
+
+To ensure this voice remains consistent across thousands of commits, we adhere to strict linting rules.
+
+### 1. Vale Configuration (`.vale.ini`)
+
+We use **Vale** to police our prose.
+
+*   **No Passive Voice:** Active voice is responsible voice.
+    *   *Bad:* "The data was processed." (By whom? The data fairy?)
+    *   *Good:* "The `ReasoningEngine` processed the data."
+*   **No Weasel Words:**
+    *   *Error:* "ReasonKit aims to improve..."
+    *   *Fix:* "ReasonKit improves..."
+*   **Sentence Length:** Keep it punchy. If a sentence has more than 3 commas, break it.
+
+### 2. Textlint Rules
+
+*   **`textlint-rule-terminology`:** Enforces correct casing (`ReasonKit`, `Rust`, `LLM`, `MCP`).
+*   **`textlint-rule-no-dead-link`:** A broken link is a broken promise.
+
+### 3. ProofGuard in Documentation
+
+Every claim in our documentation must be triangulated.
+*   *Rule:* If you claim "20% faster," you must link to the benchmark.
+*   *Rule:* If you claim "Secure by default," you must reference the specific security protocol (e.g., "Sandboxed WASM execution").
 
 ---
 
@@ -364,15 +443,16 @@ WHEN_CREATING_IMAGES:
 
 WHEN_WRITING_COPY:
   tone:
-    - Authoritative
-    - Technical
-    - Clear
-    - Honest (no hype, substantiated claims)
+    - Authoritative (Competence Porn)
+    - Technical (Engineered, not Dreamed)
+    - Clear (No fluff)
+    - Honest (Triangulated claims)
   avoid:
-    - Buzzwords without substance
+    - Buzzwords (Game-changer, Revolution)
+    - Passive Voice (Own the action)
     - Unverified performance claims
     - Excessive exclamation marks
-    - Vague or wishy-washy language
+    - Vague or wishy-washy language (Aims to, Hopes to)
 
 ASSET_SELECTION_PRIORITY:
   1. reasonkit-core/brand/           # ALWAYS use this first
@@ -398,45 +478,12 @@ Need launch SVGs?      → brand/launch-svg/
 
 ---
 
-## Quick Reference Cards
-
-### Color Cheat Sheet
-
-```
-PRIMARY:     #06b6d4 (Cyan)
-SECONDARY:   #a855f7 (Purple)
-TERTIARY:    #ec4899 (Pink)
-SUCCESS:     #10b981 (Green)
-ALERT:       #f97316 (Orange)
-BACKGROUND:  #030508 (Void Black)
-CARDS:       #0a0d14 (Deep Black)
-TEXT:        #f9fafb (White)
-```
-
-### Font Cheat Sheet
-
-```
-HEADLINES:  Inter, Bold (700)
-BODY:       Inter, Regular (400)
-CODE:       JetBrains Mono, Regular (400)
-```
-
-### Taglines
-
-```
-Primary:    "Turn Prompts into Protocols"
-Philosophy: "Designed, Not Dreamed"
-Technical:  "Auditable Reasoning by Default"
-Competitive: "Structure Beats Intelligence"
-```
-
----
-
 ## Version History
 
 | Version | Date       | Changes                                                                                                                                                                   |
 | ------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 1.0.0   | 2025-12-31 | Initial BRAND_PLAYBOOK.md - Consolidated all brand assets into ReasonKit-core/brand/, created comprehensive AI agent instructions, defined touchpoint-specific guidelines |
+| 2.0.0   | 2026-01-08 | **MAJOR:** Complete "Brand Voice" overhaul. Added "Competence Porn" strategy, Voice Matrix, and Automated Enforcement sections. Updated philosophy to "Designed, Not Dreamed." |
+| 1.0.0   | 2025-12-31 | Initial BRAND_PLAYBOOK.md - Consolidated all brand assets.                                                                                                                |
 
 ---
 

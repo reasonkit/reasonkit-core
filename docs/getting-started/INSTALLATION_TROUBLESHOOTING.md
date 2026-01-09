@@ -1109,17 +1109,17 @@ When opening an issue, include:
 
 ## Quick Reference: Common Fixes
 
-| Problem                      | Quick Fix                                                                                |
-| ---------------------------- | ---------------------------------------------------------------------------------------- |
-| `cargo: command not found`   | `curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs \| sh && source ~/.cargo/env` |
-| `rk: command not found` | `export PATH="$HOME/.cargo/bin:$PATH"`                                                   |
-| OpenSSL errors (macOS)       | `brew install openssl@3 && export OPENSSL_DIR=$(brew --prefix openssl@3)`                |
-| OpenSSL errors (Linux)       | `sudo apt install libssl-dev` or `sudo dnf install openssl-devel`                        |
-| linker not found             | `sudo apt install build-essential` or `xcode-select --install`                           |
-| pkg-config not found         | `sudo apt install pkg-config`                                                            |
-| Permission denied            | Use `cargo install` (installs to ~/.cargo/bin, no sudo)                                  |
-| Compilation killed (OOM)     | `CARGO_BUILD_JOBS=1 cargo install reasonkit-core`                                        |
-| Proxy issues                 | `export https_proxy="http://proxy:port"`                                                 |
+| Problem                    | Quick Fix                                                                                |
+| -------------------------- | ---------------------------------------------------------------------------------------- |
+| `cargo: command not found` | `curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs \| sh && source ~/.cargo/env` |
+| `rk: command not found`    | `export PATH="$HOME/.cargo/bin:$PATH"`                                                   |
+| OpenSSL errors (macOS)     | `brew install openssl@3 && export OPENSSL_DIR=$(brew --prefix openssl@3)`                |
+| OpenSSL errors (Linux)     | `sudo apt install libssl-dev` or `sudo dnf install openssl-devel`                        |
+| linker not found           | `sudo apt install build-essential` or `xcode-select --install`                           |
+| pkg-config not found       | `sudo apt install pkg-config`                                                            |
+| Permission denied          | Use `cargo install` (installs to ~/.cargo/bin, no sudo)                                  |
+| Compilation killed (OOM)   | `CARGO_BUILD_JOBS=1 cargo install reasonkit-core`                                        |
+| Proxy issues               | `export https_proxy="http://proxy:port"`                                                 |
 
 ---
 
@@ -1128,7 +1128,7 @@ When opening an issue, include:
 | Method               | Command                                           | Best For                       |
 | -------------------- | ------------------------------------------------- | ------------------------------ |
 | **Cargo Install**    | `cargo install reasonkit-core`                    | Rust developers, most reliable |
-| **Universal Script** | `curl -fsSL https://reasonkit.sh/install \| bash` | Quick setup, auto-detection    |
+| **Universal Script** | `curl -fsSL https://get.reasonkit.sh \| bash` | Quick setup, auto-detection    |
 | **From Source**      | `git clone ... && cargo build --release`          | Development, customization     |
 | **npm**              | `npm install -g @reasonkit/cli`                   | Node.js ecosystem (wrapper)    |
 | **uv pip**           | `uv pip install reasonkit`                        | Python ecosystem (bindings)    |

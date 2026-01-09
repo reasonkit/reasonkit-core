@@ -77,11 +77,11 @@
 
 **Alternatives Considered:**
 
-| Option | Verdict | Reason |
-|--------|---------|--------|
-| Milvus | DEFER | Better for billion-scale, overkill for our needs |
-| LanceDB | KEEP AS OPTION | Good for edge/embedded use cases |
-| ChromaDB | REJECT | Python-first, slower |
+| Option   | Verdict        | Reason                                           |
+| -------- | -------------- | ------------------------------------------------ |
+| Milvus   | DEFER          | Better for billion-scale, overkill for our needs |
+| LanceDB  | KEEP AS OPTION | Good for edge/embedded use cases                 |
+| ChromaDB | REJECT         | Python-first, slower                             |
 
 ### 2.2 Full-Text Search: Tantivy
 

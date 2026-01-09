@@ -3,14 +3,18 @@
 > Connect ReasonKit to any LLM provider or CLI tool
 > "Turn Prompts into Protocols - Anywhere"
 
+![ReasonKit AI Integration Options: Claude, Gemini, OpenAI, Cursor, VS Code, Any LLM](../../brand/readme/integrations_options.png)
+
+**Universal Compatibility:** ReasonKit integrates seamlessly with Claude, Gemini, OpenAI, Cursor, VS Code, and any LLM provider. The same structured reasoning protocols work across all platforms, giving you flexibility without vendor lock-in.
+
 ---
 
 ## LLM Provider Integration Guides
 
 Comprehensive guides for integrating ReasonKit with major LLM providers:
 
-| Provider               | Guide                                                    | Best For                                              | Quick Start                                   |
-| ---------------------- | -------------------------------------------------------- | ----------------------------------------------------- | --------------------------------------------- |
+| Provider               | Guide                                                    | Best For                                              | Quick Start                              |
+| ---------------------- | -------------------------------------------------------- | ----------------------------------------------------- | ---------------------------------------- |
 | **Anthropic (Claude)** | [ANTHROPIC_INTEGRATION.md](./ANTHROPIC_INTEGRATION.md)   | Complex reasoning, extended thinking, safety-critical | `rk think --provider anthropic "query"`  |
 | **OpenAI (GPT)**       | [OPENAI_INTEGRATION.md](./OPENAI_INTEGRATION.md)         | General reasoning, JSON mode, embeddings              | `rk think --provider openai "query"`     |
 | **Google (Gemini)**    | [GOOGLE_INTEGRATION.md](./GOOGLE_INTEGRATION.md)         | Long context (2M), multimodal, documents              | `rk think --provider gemini "query"`     |
@@ -230,5 +234,5 @@ rk metrics cost --provider anthropic
 
 ---
 
-*ReasonKit Integrations | v1.0.0 | Apache 2.0*
-*"See How Your AI Thinks"*
+_ReasonKit Integrations | v1.0.0 | Apache 2.0_
+_"See How Your AI Thinks"_

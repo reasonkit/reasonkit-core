@@ -9,9 +9,9 @@
 **Auditable Reasoning for Production AI | Rust-Native | SSR/SSG Compatible**
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="./brand/readme/reasonkit-core_hero.png">
-  <source media="(prefers-color-scheme: light)" srcset="./brand/readme/reasonkit-core_hero.png">
-  <img src="./brand/readme/reasonkit-core_hero.png" alt="ReasonKit - Auditable Reasoning for Production AI" width="100%">
+  <source media="(prefers-color-scheme: dark)" srcset="./brand/readme/reasonkit-core_tree_hero.png">
+  <source media="(prefers-color-scheme: light)" srcset="./brand/readme/reasonkit-core_tree_hero.png">
+  <img src="./brand/readme/reasonkit-core_tree_hero.png" alt="ReasonKit - The Reasoning Engine - Auditable Reasoning for Production AI" width="100%">
 </picture>
 
 [![CI](https://img.shields.io/github/actions/workflow/status/reasonkit/reasonkit-core/ci.yml?branch=main&style=flat-square&logo=github&label=CI&color=06b6d4&logoColor=06b6d4)](https://github.com/reasonkit/reasonkit-core/actions)
@@ -32,6 +32,10 @@
 
 **ReasonKit is a factory.** Input data → execute protocol → get deterministic, auditable output.
 
+![Wrong Decisions vs Structured Reasoning: Financial Loss & Missed Opportunities vs Errors Caught & Costly Mistakes Prevented](./brand/readme/wrong_decisions_vs_structured_reasoning.png)
+
+**The Cost of Wrong Decisions:** Without structured reasoning, AI decisions lead to **financial loss** and **missed opportunities**. Structured protocols catch errors early and prevent costly mistakes before they compound.
+
 LLMs are fundamentally **probabilistic**. Same prompt → different outputs. This creates critical failures:
 
 | Failure           | Impact                    | Our Solution                                      |
@@ -47,22 +51,27 @@ LLMs are fundamentally **probabilistic**. Same prompt → different outputs. Thi
 ## Quick Start
 
 **1. Install (Universal)**
+
 ```bash
-curl -fsSL https://reasonkit.sh/install | bash
+curl -fsSL https://get.reasonkit.sh | bash
 # Installs 'rk' alias automatically
 ```
 
 **2. Choose Your Workflow**
 
 ### 🤖 Claude Code (Opus 4.5)
-*Agentic CLI. No API key required.*
+
+_Agentic CLI. No API key required._
+
 ```bash
 claude mcp add reasonkit -- rk serve-mcp
 claude "Use ReasonKit to analyze: Should we migrate to microservices?"
 ```
 
 ### 🌐 ChatGPT (Browser)
-*Manual MCP Bridge. Injects the reasoning protocol directly into the chat.*
+
+_Manual MCP Bridge. Injects the reasoning protocol directly into the chat._
+
 ```bash
 # Generate strict protocol
 rk protocol "Should we migrate to microservices?" | pbcopy
@@ -71,7 +80,9 @@ rk protocol "Should we migrate to microservices?" | pbcopy
 ```
 
 ### ⚡ Gemini 3.0 Pro (API)
-*Native CLI integration with Google's latest preview.*
+
+_Native CLI integration with Google's latest preview._
+
 ```bash
 export GEMINI_API_KEY=AIza...
 rk think --model gemini-3.0-pro-preview "Should we migrate to microservices?"
@@ -86,6 +97,8 @@ rk think --model gemini-3.0-pro-preview "Should we migrate to microservices?"
 ## ThinkTools: The 5-Step Reasoning Chain
 
 Each ThinkTool acts as a **variance reduction filter**, transforming probabilistic outputs into increasingly deterministic reasoning paths.
+
+![Tree-of-Thoughts vs Chain-of-Thought: 74% vs 4% Success Rate (NeurIPS 2023)](./brand/readme/tree_of_thoughts_vs_chain_of_thought.png)
 
 ![ReasonKit Protocol Chain - Turn Prompts into Protocols](./brand/readme/powercombo_process.png)
 
@@ -220,6 +233,8 @@ The ReasonKit architecture uses a **Protocol Engine** wrapper to enforce determi
 - **LLM Integration:** Unified client (Claude, GPT, Gemini, 18+ providers)
 - **Telemetry:** Local SQLite for execution traces + variance metrics
 
+![ReasonKit AI Integration Options: Claude, Gemini, OpenAI, Cursor, VS Code, Any LLM](./brand/readme/integrations_options.png)
+
 <details>
 <summary><strong>Architecture (Mermaid Diagram)</strong></summary>
 
@@ -316,11 +331,34 @@ reasonkit-core = { version = "0.1", features = ["memory"] }
 
 ## Installation
 
-**Primary Method (Universal):**
+**Primary Method (Universal - All Platforms & Shells):**
 
 ```bash
-curl -fsSL https://reasonkit.sh/install | bash
+curl -fsSL https://get.reasonkit.sh | bash
 ```
+
+**Platform Support:**
+- ✅ **Linux** (all distributions)
+- ✅ **macOS** (Intel & Apple Silicon)
+- ✅ **Windows** (WSL & Native PowerShell)
+- ✅ **FreeBSD** (experimental)
+
+**Shell Support:**
+- ✅ **Bash** (auto-detected, PATH configured)
+- ✅ **Zsh** (auto-detected, PATH configured)
+- ✅ **Fish** (auto-detected, PATH configured)
+- ✅ **Nu (Nushell)** (auto-detected, PATH configured)
+- ✅ **PowerShell** (cross-platform, PATH configured)
+- ✅ **Elvish** (auto-detected, PATH configured)
+- ✅ **tcsh/csh/ksh** (basic support)
+
+**Features:**
+- 🎨 Beautiful terminal UI with progress visualization
+- ⚡ Fast installation (~30 seconds)
+- 🔒 Secure (HTTPS-only, checksum verification)
+- 🧠 Smart shell detection and PATH configuration
+- 📊 Real-time build progress with ETA
+- 🔄 Automatic Rust installation if needed
 
 <details>
 <summary><strong>Alternative Methods</strong></summary>
@@ -332,6 +370,11 @@ cargo install reasonkit-core
 # From Source (Latest Features)
 git clone https://github.com/reasonkit/reasonkit-core
 cd reasonkit-core && cargo build --release
+```
+
+**Windows (Native PowerShell):**
+```powershell
+irm https://get.reasonkit.sh/windows | iex
 ```
 
 Python bindings available via PyO3 (build from source with `--features python`).

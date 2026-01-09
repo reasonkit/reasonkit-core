@@ -73,8 +73,8 @@ cargo bench --bench retrieval_bench
 
 ### Build Matrix
 
-| Platform             | Target                      | Binary Name                        |
-| -------------------- | --------------------------- | ---------------------------------- |
+| Platform             | Target                      | Binary Name                   |
+| -------------------- | --------------------------- | ----------------------------- |
 | Linux x86_64 (glibc) | `x86_64-unknown-linux-gnu`  | `rk-linux-x86_64.tar.gz`      |
 | Linux x86_64 (musl)  | `x86_64-unknown-linux-musl` | `rk-linux-x86_64-musl.tar.gz` |
 | Linux ARM64          | `aarch64-unknown-linux-gnu` | `rk-linux-aarch64.tar.gz`     |

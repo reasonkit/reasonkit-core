@@ -31,7 +31,7 @@ Output: 10 perspectives analyzed, 3 hidden assumptions found, verdict with 82% c
 ### Option A: One-liner (Recommended)
 
 ```bash
-curl -fsSL https://reasonkit.sh/install | bash
+curl -fsSL https://get.reasonkit.sh | bash
 ```
 
 ### Option B: Cargo (Rust developers)
@@ -207,20 +207,20 @@ See [Installation & Troubleshooting](INSTALLATION_TROUBLESHOOTING.md) for platfo
 
 ## What's Next?
 
-| Goal                 | Resource                                               |
-| -------------------- | ------------------------------------------------------ |
-| Full CLI options     | [CLI Reference](../reference/CLI_REFERENCE.md)         |
-| ThinkTool deep dive  | [ThinkTools Guide](../thinktools/THINKTOOLS_GUIDE.md)  |
-| Provider setup       | [Integrations](../integrations/README.md)              |
-| Real-world use cases | [Use Cases](../process/USE_CASES.md)                   |
-| Rust API             | [API Reference](../reference/API_REFERENCE.md)         |
+| Goal                 | Resource                                              |
+| -------------------- | ----------------------------------------------------- |
+| Full CLI options     | [CLI Reference](../reference/CLI_REFERENCE.md)        |
+| ThinkTool deep dive  | [ThinkTools Guide](../thinktools/THINKTOOLS_GUIDE.md) |
+| Provider setup       | [Integrations](../integrations/README.md)             |
+| Real-world use cases | [Use Cases](../process/USE_CASES.md)                  |
+| Rust API             | [API Reference](../reference/API_REFERENCE.md)        |
 
 ---
 
 ## Quick Reference Card
 
 ```
-INSTALL:     curl -fsSL https://reasonkit.sh/install | bash
+INSTALL:     curl -fsSL https://get.reasonkit.sh | bash
 VERIFY:      rk --version
 API KEY:     export ANTHROPIC_API_KEY="sk-ant-..."
 

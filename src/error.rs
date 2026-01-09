@@ -146,6 +146,12 @@ pub enum Error {
     #[error("Network error: {0}")]
     Network(String),
 
+    /// MCP Daemon error.
+    ///
+    /// Occurs during daemon lifecycle management (start, stop, IPC).
+    #[error("Daemon error: {0}")]
+    Daemon(String),
+
     /// Schema validation error.
     ///
     /// Input data does not conform to expected schema.
@@ -464,6 +470,15 @@ impl Error {
     /// * `msg` - Descriptive error message
     pub fn network(msg: impl Into<String>) -> Self {
         Self::Network(msg.into())
+    }
+
+    /// Create a daemon error from a message.
+    ///
+    /// # Arguments
+    ///
+    /// * `msg` - Descriptive error message
+    pub fn daemon(msg: impl Into<String>) -> Self {
+        Self::Daemon(msg.into())
     }
 
     /// Create a validation error from a message.

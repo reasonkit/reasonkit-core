@@ -33,7 +33,7 @@
 
 ```bash
 # Install ReasonKit
-curl -fsSL https://reasonkit.sh/install | bash
+curl -fsSL https://get.reasonkit.sh | bash
 
 # Verify installation
 rk --version
@@ -88,7 +88,7 @@ print(f"Confidence: {result.confidence:.1%}")
 ### Primary Method (Universal Installer)
 
 ```bash
-curl -fsSL https://reasonkit.sh/install | bash
+curl -fsSL https://get.reasonkit.sh | bash
 ```
 
 This installs the `rk` binary to `~/.local/bin/`.

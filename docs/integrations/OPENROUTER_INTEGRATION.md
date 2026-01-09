@@ -676,5 +676,5 @@ rk consensus "Is this architecture sound?" \
 
 ---
 
-*ReasonKit + OpenRouter Integration Guide | v1.0.0 | Apache 2.0*
-*"See How Your AI Thinks - With Any Model"*
+_ReasonKit + OpenRouter Integration Guide | v1.0.0 | Apache 2.0_
+_"See How Your AI Thinks - With Any Model"_

@@ -108,7 +108,7 @@ This document summarizes the production-grade CI/CD pipeline implemented for Rea
   - crates.io publishing (optional)
 
 - ✅ **Install Script Generation**
-  - One-liner installer: `curl -fsSL https://reasonkit.sh/install | bash`
+  - One-liner installer: `curl -fsSL https://get.reasonkit.sh | bash`
   - Multi-platform support
 
 ### 3. Security Workflow (`.github/workflows/security.yml`)
@@ -431,5 +431,5 @@ The production-grade CI/CD pipeline for ReasonKit Core is fully implemented with
 
 ---
 
-*"Designed, Not Dreamed. Turn Prompts into Protocols."*
-*<https://reasonkit.sh>*
+_"Designed, Not Dreamed. Turn Prompts into Protocols."_
+_<https://reasonkit.sh>_

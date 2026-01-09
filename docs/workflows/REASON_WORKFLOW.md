@@ -674,5 +674,5 @@ The Query->Reason->Response workflow in ReasonKit Core is well-architected with 
 
 ---
 
-*Document generated: 2026-01-01*
-*ReasonKit Core Version: 0.1.x*
+_Document generated: 2026-01-01_
+_ReasonKit Core Version: 0.1.x_

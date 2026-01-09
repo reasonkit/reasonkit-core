@@ -15,19 +15,43 @@ use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::time::Instant;
 
-use reasonkit::thinktool::consistency::{
+use reasonkit_core::thinktool::consistency::{
     SelfConsistencyConfig, SelfConsistencyEngine, VotingMethod,
 };
-use reasonkit::thinktool::executor::{
+use reasonkit_core::thinktool::executor::{
     ExecutorConfig, ProtocolExecutor, ProtocolInput, ProtocolOutput,
 };
-use reasonkit::thinktool::step::{StepOutput, StepResult};
+use reasonkit_core::thinktool::step::{StepOutput, StepResult};
 
 /// ReasonKit Benchmark Runner
 #[derive(Parser, Debug)]
 #[command(name = "rk-bench")]
-#[command(about = "Benchmark ThinkTools with scientific evaluation")]
+#[command(author = "ReasonKit Team <team@reasonkit.sh>")]
 #[command(version)]
+#[command(about = "ReasonKit Bench — Scientific ThinkTools Evaluation")]
+#[command(long_about = r#"ReasonKit Bench — Scientific ThinkTools Evaluation
+
+Part of The Reasoning Engine suite. This benchmark runner measures
+ThinkTools improvement using academically validated evaluation methods.
+
+METHODOLOGIES:
+  • Self-Consistency (Wang et al. 2023, arXiv:2203.11171)
+  • Majority voting and confidence-weighted aggregation
+  • Reproducible benchmark datasets (GSM8K, ARC-C)
+
+BENCHMARKS:
+  gsm8k     Grade School Math 8K (Wang et al. 2021)
+  arc-c     AI2 Reasoning Challenge (Clark et al. 2018)
+  custom    User-provided test suite
+
+EXAMPLES:
+  rk-bench --benchmark gsm8k --samples 50
+  rk-bench --benchmark arc-c --self-consistency 5
+  rk-bench --profile paranoid --verbose
+
+WEBSITE: https://reasonkit.sh
+DOCS:    https://reasonkit.sh/docs/benchmarks
+"#)]
 struct Args {
     /// Benchmark dataset to run
     #[arg(short, long, default_value = "gsm8k")]

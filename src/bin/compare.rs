@@ -13,8 +13,34 @@ use std::time::Instant;
 
 /// A/B Comparison: Raw vs ThinkTool-Enhanced
 #[derive(Parser)]
-#[command(name = "compare")]
-#[command(about = "Compare raw LLM response vs ThinkTool-enhanced response")]
+#[command(name = "rk-compare")]
+#[command(author = "ReasonKit Team <team@reasonkit.sh>")]
+#[command(version)]
+#[command(about = "ReasonKit Compare — A/B Testing for Reasoning Enhancement")]
+#[command(long_about = r#"ReasonKit Compare — A/B Testing for Reasoning Enhancement
+
+Part of The Reasoning Engine suite. This tool demonstrates the impact
+of ThinkTools by showing side-by-side comparisons of raw LLM output
+vs structured reasoning output.
+
+USE CASES:
+  • Demonstrate ThinkTools value proposition
+  • Benchmark reasoning improvements
+  • Quality assurance for reasoning chains
+
+PROFILES:
+  --profile quick      Fast drafts, initial exploration
+  --profile balanced   Standard analysis (default)
+  --profile deep       Important decisions
+  --profile paranoid   Critical verification
+
+EXAMPLES:
+  rk-compare "Should we use microservices?"
+  rk-compare "What causes inflation?" --profile deep
+  rk-compare "Solve: 2x + 5 = 15" --mock
+
+WEBSITE: https://reasonkit.sh
+"#)]
 struct Args {
     /// The question or query to analyze
     query: String,

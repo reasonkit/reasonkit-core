@@ -5,9 +5,9 @@ We welcome contributions to ReasonKit! This guide will help you get started.
 ## Development Setup
 
 1.  **Prerequisites:**
-    *   Rust 1.75+
-    *   `cargo`
-    *   `uv` (for Python bindings)
+    - Rust 1.75+
+    - `cargo`
+    - `uv` (for Python bindings)
 
 2.  **Clone & Build:**
     ```bash
@@ -21,8 +21,8 @@ We welcome contributions to ReasonKit! This guide will help you get started.
 1.  **Fork** the repository.
 2.  **Create a branch** for your feature/fix (`git checkout -b feature/my-feature`).
 3.  **Code** your changes.
-    *   Follow Rust idioms.
-    *   Add tests for new functionality.
+    - Follow Rust idioms.
+    - Add tests for new functionality.
 4.  **Test** locally:
     ```bash
     cargo test
@@ -33,10 +33,10 @@ We welcome contributions to ReasonKit! This guide will help you get started.
 
 ## Style Guide
 
-*   Use `cargo fmt`.
-*   Document public APIs with Rustdoc (`///`).
-*   Keep functions small and focused.
-*   Use `Result` for error handling (no `unwrap` in production code).
+- Use `cargo fmt`.
+- Document public APIs with Rustdoc (`///`).
+- Keep functions small and focused.
+- Use `Result` for error handling (no `unwrap` in production code).
 
 ## Code of Conduct
 

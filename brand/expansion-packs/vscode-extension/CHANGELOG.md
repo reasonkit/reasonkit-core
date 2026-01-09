@@ -7,6 +7,7 @@ All notable changes to the ReasonKit Protocol Mode theme will be documented in t
 ## [1.0.0] - 2025-01-01
 
 ### Added
+
 - Initial release
 - Void Black background (#030508)
 - High-contrast color scheme
@@ -16,6 +17,7 @@ All notable changes to the ReasonKit Protocol Mode theme will be documented in t
 - WCAG AAA compliant high-contrast mode
 
 ### Features
+
 - Cyan/Purple/Green/Orange/Pink color palette
 - Precise token color definitions
 - Terminal colors matching brand
@@ -25,4 +27,3 @@ All notable changes to the ReasonKit Protocol Mode theme will be documented in t
 ---
 
 **ReasonKit Protocol Mode** - Write code in the Void
-

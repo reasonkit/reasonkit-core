@@ -27,8 +27,8 @@ This directory contains behavioral protocols for ThinkTool modules.
 
 ### (Future) Decision Protocols (Pro)
 
-- DeciDomatic multi-criteria analysis *(Pro)*
-- RiskRadar threat assessment *(Pro)*
+- DeciDomatic multi-criteria analysis _(Pro)_
+- RiskRadar threat assessment _(Pro)_
 
 ## Usage
 

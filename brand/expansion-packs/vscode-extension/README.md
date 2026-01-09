@@ -9,13 +9,14 @@
 ### Manual Installation
 
 1. Copy this entire directory to your VS Code extensions folder:
+
    ```bash
    # Linux
    cp -r reasonkit-core/brand/expansion-packs/vscode-extension ~/.vscode/extensions/reasonkit-protocol-mode
-   
+
    # macOS
    cp -r reasonkit-core/brand/expansion-packs/vscode-extension ~/.vscode/extensions/reasonkit-protocol-mode
-   
+
    # Windows
    xcopy reasonkit-core\brand\expansion-packs\vscode-extension %USERPROFILE%\.vscode\extensions\reasonkit-protocol-mode /E /I
    ```
@@ -61,6 +62,7 @@ code .
 **"Designed, Not Dreamed"**
 
 This theme embodies the ReasonKit brand:
+
 - Industrial aesthetic
 - Technical precision
 - No distractions
@@ -70,15 +72,15 @@ This theme embodies the ReasonKit brand:
 
 ## Color Reference
 
-| Element | Color | Hex |
-|---------|-------|-----|
-| Background | Void Black | #030508 |
-| Foreground | Pure White | #f9fafb |
-| Primary (Cyan) | Active | #06b6d4 |
-| Secondary (Purple) | Logic | #a855f7 |
-| Success (Green) | Strings | #10b981 |
-| Alert (Orange) | Errors | #f97316 |
-| Tertiary (Pink) | Constants | #ec4899 |
+| Element            | Color      | Hex     |
+| ------------------ | ---------- | ------- |
+| Background         | Void Black | #030508 |
+| Foreground         | Pure White | #f9fafb |
+| Primary (Cyan)     | Active     | #06b6d4 |
+| Secondary (Purple) | Logic      | #a855f7 |
+| Success (Green)    | Strings    | #10b981 |
+| Alert (Orange)     | Errors     | #f97316 |
+| Tertiary (Pink)    | Constants  | #ec4899 |
 
 ---
 
@@ -96,4 +98,3 @@ Apache 2.0 - See [LICENSE](../../../../LICENSE)
 
 **ReasonKit** - Turn Prompts into Protocols  
 <https://reasonkit.sh>
-

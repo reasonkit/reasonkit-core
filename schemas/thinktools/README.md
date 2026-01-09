@@ -267,4 +267,4 @@ To add or modify schemas:
 
 ---
 
-*ThinkTools Schemas | Apache 2.0 | <https://reasonkit.sh>*
+_ThinkTools Schemas | Apache 2.0 | <https://reasonkit.sh>_

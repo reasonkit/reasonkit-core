@@ -247,5 +247,5 @@ Apache 2.0 (same as ReasonKit-core)
 
 ---
 
-*Part of Protocol Delta - The Anchor*
-*ReasonKit Core v1.0.0*
+_Part of Protocol Delta - The Anchor_
+_ReasonKit Core v1.0.0_

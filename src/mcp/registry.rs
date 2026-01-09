@@ -3,6 +3,8 @@
 //! Dynamic server discovery, registration, and health monitoring.
 
 use super::server::{McpServerTrait, ServerStatus};
+#[cfg(feature = "daemon")]
+use super::tools::ToolResult;
 use super::tools::{GetPromptResult, Prompt, Tool};
 use super::types::*;
 use crate::error::{Error, Result};
@@ -463,6 +465,83 @@ impl McpRegistry {
             unhealthy_servers: unhealthy,
             unknown_servers: unknown,
         }
+    }
+
+    // ─── Daemon-required methods ───────────────────────────────────────
+
+    /// Ping a server to check connectivity (lightweight health check)
+    ///
+    /// Returns Ok(true) if server responds, Ok(false) if no response,
+    /// or Err if server not found.
+    #[cfg(feature = "daemon")]
+    pub async fn ping_server(&self, id: &Uuid) -> Result<bool> {
+        let server = self.get_server(*id).await.ok_or_else(|| Error::NotFound {
+            resource: format!("Server {}", id),
+        })?;
+
+        // Use health_check as ping
+        server.health_check().await
+    }
+
+    /// Attempt to reconnect to a disconnected server
+    ///
+    /// Note: For now, this just performs a health check. Full reconnection
+    /// logic would require re-initializing the server process.
+    #[cfg(feature = "daemon")]
+    pub async fn reconnect_server(&self, id: &Uuid) -> Result<()> {
+        let server = self.get_server(*id).await.ok_or_else(|| Error::NotFound {
+            resource: format!("Server {}", id),
+        })?;
+
+        // Health check is our best option without full server restart support
+        let healthy = server.health_check().await?;
+        if healthy {
+            Ok(())
+        } else {
+            Err(Error::network(
+                "Server reconnection failed - health check returned false",
+            ))
+        }
+    }
+
+    /// Call a tool by name across registered servers
+    ///
+    /// Searches all registered servers for the tool and calls the first match.
+    #[cfg(feature = "daemon")]
+    pub async fn call_tool_by_name(
+        &self,
+        tool_name: &str,
+        args: serde_json::Value,
+    ) -> Result<ToolResult> {
+        use std::collections::HashMap;
+
+        let servers = self.servers.read().await;
+
+        // Convert Value to HashMap<String, Value>
+        let args_map: HashMap<String, serde_json::Value> = match args {
+            serde_json::Value::Object(obj) => obj.into_iter().collect(),
+            _ => HashMap::new(),
+        };
+
+        for (_id, server) in servers.iter() {
+            // Get tools from this server
+            let tools = server.list_tools().await;
+            if tools.iter().any(|t| t.name == tool_name) {
+                // Found the tool, call it
+                return server.call_tool(tool_name, args_map).await;
+            }
+        }
+
+        Err(Error::NotFound {
+            resource: format!("Tool {}", tool_name),
+        })
+    }
+
+    /// Disconnect from a server (graceful shutdown)
+    #[cfg(feature = "daemon")]
+    pub async fn disconnect_server(&self, id: &Uuid) -> Result<()> {
+        // Get mutable access to unregister the server
+        self.unregister_server(*id).await
     }
 }
 

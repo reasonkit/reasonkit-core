@@ -414,6 +414,9 @@ pub async fn run_server() -> Result<()> {
 
     let server = McpServer::new("reasonkit-core", info, capabilities, transport.clone());
 
+    // Register ThinkTools
+    crate::mcp::thinktool_tools::register_thinktools(&server).await;
+
     // Main loop
     let stdin = tokio::io::stdin();
     let mut reader = tokio::io::BufReader::new(stdin);

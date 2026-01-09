@@ -18,10 +18,10 @@ If you discover a security vulnerability in ReasonKit, please report it privatel
 1. **Email:** <security@reasonkit.sh>
 2. **Response Time:** We are committed to responding to security reports within 48 hours.
 3. **Process:**
-    - We will investigate and verify the issue.
-    - We will develop a patch.
-    - We will release a security advisory and a patched version.
-    - We will acknowledge your contribution (with permission).
+   - We will investigate and verify the issue.
+   - We will develop a patch.
+   - We will release a security advisory and a patched version.
+   - We will acknowledge your contribution (with permission).
 
 ## Responsible Disclosure
 

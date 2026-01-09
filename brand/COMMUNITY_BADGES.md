@@ -1,4 +1,5 @@
 # ReasonKit Community Badge System
+
 ## "Reasoned By" / "Protocol: ReasonKit" Badges
 
 > **Classification:** Community Marketing & Growth Tool
@@ -14,6 +15,7 @@
 **Primary badge** - For projects that use ReasonKit for reasoning/validation.
 
 **Visual Design:**
+
 - Hexagonal icon (matching Luminous Polyhedron logo)
 - "Reasoned By" text in Inter font
 - "ReasonKit" text with brand gradient (Cyan → Purple → Pink)
@@ -25,6 +27,7 @@
 **Technical badge** - For projects that implement ReasonKit protocols.
 
 **Visual Design:**
+
 - Same hexagonal icon
 - "Protocol:" prefix in muted text
 - "ReasonKit" in brand gradient
@@ -35,6 +38,7 @@
 **General badge** - For any project using ReasonKit.
 
 **Visual Design:**
+
 - Same hexagonal icon
 - "Powered By" text
 - "ReasonKit" in brand gradient
@@ -45,11 +49,11 @@
 
 ### Sizes
 
-| Size | Dimensions | Use Case |
-|------|------------|----------|
-| **Small** | 120×28px | Inline in README, compact spaces |
-| **Medium** | 160×38px | Standard README badge (recommended) |
-| **Large** | 200×48px | Hero sections, landing pages |
+| Size       | Dimensions | Use Case                            |
+| ---------- | ---------- | ----------------------------------- |
+| **Small**  | 120×28px   | Inline in README, compact spaces    |
+| **Medium** | 160×38px   | Standard README badge (recommended) |
+| **Large**  | 200×48px   | Hero sections, landing pages        |
 
 ### Formats
 
@@ -67,23 +71,23 @@
 <svg width="160" height="38" xmlns="http://www.w3.org/2000/svg">
   <!-- Background -->
   <rect width="160" height="38" fill="#030508" rx="6"/>
-  
+
   <!-- Hexagonal icon -->
   <g transform="translate(12, 8)">
-    <polygon 
-      points="11,0 22,6 22,16 11,22 0,16 0,6" 
-      fill="none" 
-      stroke="url(#badgeGradient)" 
+    <polygon
+      points="11,0 22,6 22,16 11,22 0,16 0,6"
+      fill="none"
+      stroke="url(#badgeGradient)"
       stroke-width="1.5"
     />
     <!-- Inner glow -->
-    <polygon 
-      points="11,2 20,7 20,15 11,20 2,15 2,7" 
-      fill="url(#badgeGradient)" 
+    <polygon
+      points="11,2 20,7 20,15 11,20 2,15 2,7"
+      fill="url(#badgeGradient)"
       opacity="0.2"
     />
   </g>
-  
+
   <!-- Text -->
   <text x="36" y="24" font-family="Inter, sans-serif" font-size="11" fill="#9ca3af">
     Reasoned By
@@ -91,7 +95,7 @@
   <text x="36" y="36" font-family="Inter, sans-serif" font-size="13" font-weight="600" fill="url(#badgeGradient)">
     ReasonKit
   </text>
-  
+
   <!-- Gradient definition -->
   <defs>
     <linearGradient id="badgeGradient" x1="0%" y1="0%" x2="100%" y2="0%">
@@ -110,22 +114,25 @@
 ### Markdown Badge (Recommended)
 
 **Standard Badge:**
+
 ```markdown
 [![Reasoned By ReasonKit](https://img.shields.io/badge/Reasoned%20By-ReasonKit-06b6d4?style=for-the-badge&logo=data:image/svg+xml;base64,...)](https://reasonkit.sh)
 ```
 
 **Custom Badge (SVG):**
+
 ```markdown
 [![Reasoned By ReasonKit](https://reasonkit.sh/badges/reasoned-by.svg)](https://reasonkit.sh)
 ```
 
 **HTML Badge (for websites):**
+
 ```html
 <a href="https://reasonkit.sh" target="_blank" rel="noopener noreferrer">
-  <img 
-    src="https://reasonkit.sh/badges/reasoned-by.svg" 
-    alt="Reasoned By ReasonKit" 
-    width="160" 
+  <img
+    src="https://reasonkit.sh/badges/reasoned-by.svg"
+    alt="Reasoned By ReasonKit"
+    width="160"
     height="38"
   />
 </a>
@@ -134,12 +141,14 @@
 ### Badge Placement
 
 **Recommended locations:**
+
 1. **Top of README** - After project title, before description
 2. **Features section** - Alongside other technology badges
 3. **Footer** - At the bottom with other acknowledgments
 
 **Example README structure:**
-```markdown
+
+````markdown
 # My Awesome Project
 
 [![Reasoned By ReasonKit](https://reasonkit.sh/badges/reasoned-by.svg)](https://reasonkit.sh)
@@ -157,10 +166,12 @@
 ```bash
 cargo add reasonkit-core
 ```
+````
 
 ## Acknowledgments
 
 Built with [ReasonKit](https://reasonkit.sh) for structured, auditable reasoning.
+
 ```
 
 ---
@@ -178,8 +189,10 @@ Built with [ReasonKit](https://reasonkit.sh) for structured, auditable reasoning
 
 **Example:**
 ```
+
 https://reasonkit.sh/badges/generator?variant=reasoned-by&size=medium&style=glow
-```
+
+````
 
 ### API Endpoint
 
@@ -189,7 +202,7 @@ https://reasonkit.sh/badges/generator?variant=reasoned-by&size=medium&style=glow
 ```bash
 curl "https://reasonkit.sh/api/badges/generate?variant=reasoned-by&size=medium" \
   -o badge.svg
-```
+````
 
 **Response:** SVG content
 
@@ -200,42 +213,57 @@ curl "https://reasonkit.sh/api/badges/generate?variant=reasoned-by&size=medium" 
 ### 1. "Reasoned By ReasonKit"
 
 **Markdown:**
+
 ```markdown
 [![Reasoned By ReasonKit](https://reasonkit.sh/badges/reasoned-by.svg)](https://reasonkit.sh)
 ```
 
 **HTML:**
+
 ```html
 <a href="https://reasonkit.sh">
-  <img src="https://reasonkit.sh/badges/reasoned-by.svg" alt="Reasoned By ReasonKit" />
+  <img
+    src="https://reasonkit.sh/badges/reasoned-by.svg"
+    alt="Reasoned By ReasonKit"
+  />
 </a>
 ```
 
 ### 2. "Protocol: ReasonKit"
 
 **Markdown:**
+
 ```markdown
 [![Protocol: ReasonKit](https://reasonkit.sh/badges/protocol.svg)](https://reasonkit.sh)
 ```
 
 **HTML:**
+
 ```html
 <a href="https://reasonkit.sh">
-  <img src="https://reasonkit.sh/badges/protocol.svg" alt="Protocol: ReasonKit" />
+  <img
+    src="https://reasonkit.sh/badges/protocol.svg"
+    alt="Protocol: ReasonKit"
+  />
 </a>
 ```
 
 ### 3. "Powered By ReasonKit"
 
 **Markdown:**
+
 ```markdown
 [![Powered By ReasonKit](https://reasonkit.sh/badges/powered-by.svg)](https://reasonkit.sh)
 ```
 
 **HTML:**
+
 ```html
 <a href="https://reasonkit.sh">
-  <img src="https://reasonkit.sh/badges/powered-by.svg" alt="Powered By ReasonKit" />
+  <img
+    src="https://reasonkit.sh/badges/powered-by.svg"
+    alt="Powered By ReasonKit"
+  />
 </a>
 ```
 
@@ -246,12 +274,14 @@ curl "https://reasonkit.sh/api/badges/generate?variant=reasoned-by&size=medium" 
 ### When to Use
 
 ✅ **Appropriate:**
+
 - Projects that use ReasonKit for reasoning/validation
 - Projects that implement ReasonKit protocols
 - Projects that depend on ReasonKit crates
 - Documentation sites for ReasonKit-based tools
 
 ❌ **Inappropriate:**
+
 - Projects that only mention ReasonKit in passing
 - Projects that don't actually use ReasonKit
 - Competitor products (unless explicitly partnered)
@@ -269,16 +299,19 @@ curl "https://reasonkit.sh/api/badges/generate?variant=reasoned-by&size=medium" 
 ## Badge Assets Location
 
 **Source Files:**
+
 - `reasonkit-core/brand/badges/reasoned-by.svg`
 - `reasonkit-core/brand/badges/protocol.svg`
 - `reasonkit-core/brand/badges/powered-by.svg`
 
 **CDN URLs:**
+
 - `https://reasonkit.sh/badges/reasoned-by.svg`
 - `https://reasonkit.sh/badges/protocol.svg`
 - `https://reasonkit.sh/badges/powered-by.svg`
 
 **GitHub Releases:**
+
 - Versioned badge packages in `brand-assets-*` releases
 
 ---
@@ -286,6 +319,7 @@ curl "https://reasonkit.sh/api/badges/generate?variant=reasoned-by&size=medium" 
 ## Analytics & Tracking
 
 **Badge clicks are tracked** (anonymously) to measure:
+
 - Community adoption
 - Badge placement effectiveness
 - Referral traffic to reasonkit.sh
@@ -296,9 +330,9 @@ curl "https://reasonkit.sh/api/badges/generate?variant=reasoned-by&size=medium" 
 
 ## Version History
 
-| Version | Date | Changes |
-|---------|------|---------|
-| 1.0.0 | 2026-01-01 | Initial badge system specification |
+| Version | Date       | Changes                            |
+| ------- | ---------- | ---------------------------------- |
+| 1.0.0   | 2026-01-01 | Initial badge system specification |
 
 ---
 
@@ -307,6 +341,7 @@ curl "https://reasonkit.sh/api/badges/generate?variant=reasoned-by&size=medium" 
 ### Real-World Usage
 
 **Example 1: README Top**
+
 ```markdown
 # My Reasoning Engine
 
@@ -316,6 +351,7 @@ A powerful reasoning engine built on ReasonKit protocols.
 ```
 
 **Example 2: Features Section**
+
 ```markdown
 ## Features
 
@@ -327,6 +363,7 @@ A powerful reasoning engine built on ReasonKit protocols.
 ```
 
 **Example 3: Footer**
+
 ```markdown
 ---
 

@@ -26,8 +26,8 @@ name: Brand Assets Pipeline
 on:
   push:
     paths:
-      - 'reasonkit-core/brand/**'
-      - '.github/workflows/brand-assets.yml'
+      - "reasonkit-core/brand/**"
+      - ".github/workflows/brand-assets.yml"
   workflow_dispatch:
     inputs:
       force_rebuild:
@@ -58,7 +58,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
         with:
-          fetch-depth: 0  # Full history for change detection
+          fetch-depth: 0 # Full history for change detection
 
       - name: Detect brand asset changes
         id: changes
@@ -128,7 +128,7 @@ jobs:
 
           echo "::group::Copy assets to staging"
           cp -r "${{ env.BRAND_DIR }}"/* staging/${ARCHIVE_NAME}/ 2>/dev/null || true
-          
+
           # Include BRAND_PLAYBOOK.md if it exists
           if [[ -f "${{ env.BRAND_DIR }}/BRAND_PLAYBOOK.md" ]]; then
             cp "${{ env.BRAND_DIR }}/BRAND_PLAYBOOK.md" staging/${ARCHIVE_NAME}/
@@ -143,7 +143,7 @@ jobs:
           Repository: ${GITHUB_REPOSITORY}
           Workflow: ${GITHUB_WORKFLOW}
           Run ID: ${GITHUB_RUN_ID}
-          
+
           Asset Count:
           - SVGs: $(find staging/${ARCHIVE_NAME} -name "*.svg" | wc -l)
           - PNGs: $(find staging/${ARCHIVE_NAME} -name "*.png" | wc -l)
@@ -155,10 +155,10 @@ jobs:
           cd staging
           tar czf "../${ARCHIVE_PATH}" "${ARCHIVE_NAME}"
           cd ..
-          
+
           # Generate checksum
           sha256sum "${ARCHIVE_PATH}" > "${ARCHIVE_PATH}.sha256"
-          
+
           echo "archive=${ARCHIVE_PATH}" >> $GITHUB_OUTPUT
           echo "Created: ${ARCHIVE_PATH}"
           ls -lh "${ARCHIVE_PATH}"
@@ -234,20 +234,20 @@ jobs:
           S3_BUCKET: ${{ secrets.S3_BUCKET }}
         run: |
           VERSION="${{ needs.package-assets.outputs.asset_version }}"
-          
+
           # Install AWS CLI
           sudo apt-get update
           sudo apt-get install -y awscli
 
           # Upload to versioned path
           S3_PATH="${S3_BUCKET}/v${VERSION}/"
-          
+
           echo "Uploading to S3: ${S3_PATH}"
           aws s3 cp artifacts/ "${S3_PATH}" --recursive --exclude "*" --include "*.tar.gz" --include "*.sha256"
-          
+
           # Also upload to latest
           aws s3 cp artifacts/ "${S3_BUCKET}/latest/" --recursive --exclude "*" --include "*.tar.gz" --include "*.sha256"
-          
+
           echo "Assets available at:"
           echo "  Versioned: ${S3_PATH}"
           echo "  Latest: ${S3_BUCKET}/latest/"
@@ -267,9 +267,9 @@ jobs:
           WEBHOOK_URL: ${{ secrets.REASONKIT_SITE_WEBHOOK }}
         run: |
           VERSION="${{ needs.package-assets.outputs.asset_version }}"
-          
+
           echo "Triggering reasonkit-site rebuild..."
-          
+
           curl -X POST "${WEBHOOK_URL}" \
             -H "Content-Type: application/json" \
             -H "X-GitHub-Event: brand-assets-updated" \
@@ -315,7 +315,7 @@ jobs:
           echo "| Upload Artifacts | ${{ needs.upload-artifacts.result }} |" >> $GITHUB_STEP_SUMMARY
           echo "| Trigger Rebuild | ${{ needs.trigger-site-rebuild.result }} |" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          
+
           if [[ "${{ needs.package-assets.outputs.has_changes }}" == "true" ]]; then
             echo "### Asset Version" >> $GITHUB_STEP_SUMMARY
             echo "" >> $GITHUB_STEP_SUMMARY

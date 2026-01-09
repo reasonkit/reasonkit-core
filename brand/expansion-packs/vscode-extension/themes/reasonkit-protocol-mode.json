@@ -15,7 +15,7 @@
     "editor.selectionHighlightBackground": "#0a0d14",
     "editor.wordHighlightBackground": "#1f2937",
     "editor.wordHighlightStrongBackground": "#374151",
-    
+
     // ============================================================
     // ACTIVITY BAR & SIDEBAR
     // ============================================================
@@ -28,7 +28,7 @@
     "sideBarTitle.foreground": "#f9fafb",
     "sideBarSectionHeader.background": "#0a0d14",
     "sideBarSectionHeader.foreground": "#06b6d4",
-    
+
     // ============================================================
     // STATUS BAR
     // ============================================================
@@ -39,7 +39,7 @@
     "statusBar.debuggingForeground": "#030508",
     "statusBarItem.prominentBackground": "#a855f7",
     "statusBarItem.prominentForeground": "#f9fafb",
-    
+
     // ============================================================
     // TITLE BAR
     // ============================================================
@@ -47,7 +47,7 @@
     "titleBar.activeForeground": "#f9fafb",
     "titleBar.inactiveBackground": "#030508",
     "titleBar.inactiveForeground": "#1f2937",
-    
+
     // ============================================================
     // TABS
     // ============================================================
@@ -57,7 +57,7 @@
     "tab.inactiveForeground": "#6b7280",
     "tab.border": "#1f2937",
     "tab.activeBorder": "#06b6d4",
-    
+
     // ============================================================
     // PANEL
     // ============================================================
@@ -65,7 +65,7 @@
     "panel.border": "#1f2937",
     "panelTitle.activeForeground": "#06b6d4",
     "panelTitle.inactiveForeground": "#6b7280",
-    
+
     // ============================================================
     // TERMINAL
     // ============================================================
@@ -87,7 +87,7 @@
     "terminal.ansiBrightMagenta": "#a855f7",
     "terminal.ansiBrightCyan": "#06b6d4",
     "terminal.ansiBrightWhite": "#f9fafb",
-    
+
     // ============================================================
     // INPUT & BUTTONS
     // ============================================================
@@ -98,7 +98,7 @@
     "button.background": "#06b6d4",
     "button.foreground": "#030508",
     "button.hoverBackground": "#0891b2",
-    
+
     // ============================================================
     // NOTIFICATIONS
     // ============================================================
@@ -107,7 +107,7 @@
     "notifications.background": "#030508",
     "notifications.border": "#1f2937",
     "notificationToast.border": "#1f2937",
-    
+
     // ============================================================
     // SCROLLBAR
     // ============================================================
@@ -115,14 +115,14 @@
     "scrollbarSlider.background": "#1f2937",
     "scrollbarSlider.hoverBackground": "#374151",
     "scrollbarSlider.activeBackground": "#06b6d4",
-    
+
     // ============================================================
     // BREADCRUMBS
     // ============================================================
     "breadcrumb.foreground": "#6b7280",
     "breadcrumb.focusForeground": "#f9fafb",
     "breadcrumb.activeSelectionForeground": "#06b6d4",
-    
+
     // ============================================================
     // LIST & TREE
     // ============================================================
@@ -132,14 +132,14 @@
     "list.hoverBackground": "#1f2937",
     "list.focusBackground": "#1f2937",
     "tree.indentGuidesStroke": "#1f2937",
-    
+
     // ============================================================
     // DIFF EDITOR
     // ============================================================
     "diffEditor.insertedTextBackground": "#10b98120",
     "diffEditor.removedTextBackground": "#f9731620",
     "diffEditor.border": "#1f2937",
-    
+
     // ============================================================
     // GUTTER
     // ============================================================
@@ -147,7 +147,7 @@
     "editorGutter.modifiedBackground": "#fbbf24",
     "editorGutter.addedBackground": "#10b981",
     "editorGutter.deletedBackground": "#f97316",
-    
+
     // ============================================================
     // WIDGETS
     // ============================================================
@@ -158,7 +158,7 @@
     "editorSuggestWidget.foreground": "#f9fafb",
     "editorSuggestWidget.highlightForeground": "#06b6d4",
     "editorSuggestWidget.selectedBackground": "#1f2937",
-    
+
     // ============================================================
     // PEEK VIEW
     // ============================================================
@@ -166,13 +166,13 @@
     "peekViewEditor.background": "#0a0d14",
     "peekViewResult.background": "#030508",
     "peekViewResult.selectionBackground": "#1f2937",
-    
+
     // ============================================================
     // BADGES
     // ============================================================
     "badge.background": "#06b6d4",
     "badge.foreground": "#030508",
-    
+
     // ============================================================
     // PROGRESS BAR
     // ============================================================
@@ -273,21 +273,14 @@
     },
     {
       "name": "Tags / Attributes",
-      "scope": [
-        "entity.name.tag",
-        "entity.other.attribute-name",
-        "meta.tag"
-      ],
+      "scope": ["entity.name.tag", "entity.other.attribute-name", "meta.tag"],
       "settings": {
         "foreground": "#06b6d4"
       }
     },
     {
       "name": "Markdown Headers",
-      "scope": [
-        "markup.heading",
-        "markup.heading.markdown"
-      ],
+      "scope": ["markup.heading", "markup.heading.markdown"],
       "settings": {
         "foreground": "#06b6d4",
         "fontStyle": "bold"
@@ -295,10 +288,7 @@
     },
     {
       "name": "Markdown Links",
-      "scope": [
-        "markup.underline.link",
-        "string.other.link.title.markdown"
-      ],
+      "scope": ["markup.underline.link", "string.other.link.title.markdown"],
       "settings": {
         "foreground": "#06b6d4",
         "fontStyle": "underline"
@@ -306,10 +296,7 @@
     },
     {
       "name": "Markdown Code",
-      "scope": [
-        "markup.inline.raw",
-        "markup.fenced_code.block.markdown"
-      ],
+      "scope": ["markup.inline.raw", "markup.fenced_code.block.markdown"],
       "settings": {
         "foreground": "#10b981",
         "background": "#0a0d14"
@@ -317,10 +304,7 @@
     },
     {
       "name": "Rust Keywords",
-      "scope": [
-        "keyword.other.rust",
-        "storage.type.rust"
-      ],
+      "scope": ["keyword.other.rust", "storage.type.rust"],
       "settings": {
         "foreground": "#a855f7",
         "fontStyle": "bold"
@@ -328,10 +312,7 @@
     },
     {
       "name": "Rust Macros",
-      "scope": [
-        "entity.name.function.macro.rust",
-        "support.macro.rust"
-      ],
+      "scope": ["entity.name.function.macro.rust", "support.macro.rust"],
       "settings": {
         "foreground": "#ec4899"
       }
@@ -353,10 +334,7 @@
     },
     {
       "name": "JSON Values",
-      "scope": [
-        "string.quoted.double.json",
-        "constant.numeric.json"
-      ],
+      "scope": ["string.quoted.double.json", "constant.numeric.json"],
       "settings": {
         "foreground": "#10b981"
       }
@@ -378,4 +356,3 @@
     }
   ]
 }
-

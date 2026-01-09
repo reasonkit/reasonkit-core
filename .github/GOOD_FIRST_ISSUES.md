@@ -524,4 +524,4 @@ Improve the visual formatting of CLI output for better readability.
 
 **Happy Contributing! 🎉**
 
-*Turn Prompts into Protocols. Make AI reasoning structured, auditable, and reliable.*
+_Turn Prompts into Protocols. Make AI reasoning structured, auditable, and reliable._

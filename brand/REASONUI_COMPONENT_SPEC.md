@@ -1,4 +1,5 @@
 # ReasonUI Component Specification
+
 ## "Industrial Console" - Visual Reasoning Interface System
 
 > **Classification:** Component Design System for ReasonKit Ecosystem
@@ -9,11 +10,11 @@
 
 ## Overview
 
-ReasonUI is a strictly typed UI Component Kit that enables developers to build reasoning interfaces that *look* like ReasonKit. These components visualize the structured, auditable reasoning process that ReasonKit enables.
+ReasonUI is a strictly typed UI Component Kit that enables developers to build reasoning interfaces that _look_ like ReasonKit. These components visualize the structured, auditable reasoning process that ReasonKit enables.
 
 ### Core Principles
 
-1. **Transparency First** - Every component shows *how* reasoning works
+1. **Transparency First** - Every component shows _how_ reasoning works
 2. **Industrial Aesthetic** - Heavy, precise, machinery-like interactions
 3. **Brand Consistency** - Uses ReasonKit color system (Cyan/Purple/Pink)
 4. **Accessibility** - WCAG AAA compliant, high-contrast mode support
@@ -28,6 +29,7 @@ ReasonUI is a strictly typed UI Component Kit that enables developers to build r
 **Purpose:** Visualize a single step in the reasoning chain.
 
 **Visual Design:**
+
 - Hexagonal node (matching Luminous Polyhedron logo)
 - Glass morphism effect (subtle backdrop blur)
 - Cyan border with glow on active state
@@ -35,6 +37,7 @@ ReasonUI is a strictly typed UI Component Kit that enables developers to build r
 - Status indicator (dot) in top-right corner
 
 **States:**
+
 - `pending` - Gray outline, no fill
 - `processing` - Cyan pulse animation
 - `completed` - Green fill, solid border
@@ -42,11 +45,12 @@ ReasonUI is a strictly typed UI Component Kit that enables developers to build r
 - `skipped` - Muted gray, dashed border
 
 **Props (TypeScript):**
+
 ```typescript
 interface TraceNodeProps {
   id: string;
   label: string;
-  status: 'pending' | 'processing' | 'completed' | 'error' | 'skipped';
+  status: "pending" | "processing" | "completed" | "error" | "skipped";
   confidence?: number; // 0-1
   metadata?: Record<string, unknown>;
   children?: TraceNodeProps[];
@@ -55,6 +59,7 @@ interface TraceNodeProps {
 ```
 
 **Props (Rust - via web-sys/leptos):**
+
 ```rust
 #[derive(Clone, Debug)]
 pub struct TraceNode {
@@ -77,6 +82,7 @@ pub enum TraceStatus {
 ```
 
 **HTML/CSS Implementation:**
+
 ```html
 <div class="trace-node trace-node--completed" data-id="node-1">
   <div class="trace-node__status-indicator"></div>
@@ -97,6 +103,7 @@ pub enum TraceStatus {
 **Purpose:** Radial or linear gauge displaying reasoning confidence.
 
 **Visual Design:**
+
 - Radial: Circular gauge (0-360°) with gradient fill (Cyan → Green)
 - Linear: Horizontal bar with segmented zones
 - Animated fill with "snap-to-value" physics
@@ -108,17 +115,19 @@ pub enum TraceStatus {
   - 90-100%: Green (high)
 
 **Props (TypeScript):**
+
 ```typescript
 interface ConfidenceMeterProps {
   value: number; // 0-1
-  variant?: 'radial' | 'linear';
+  variant?: "radial" | "linear";
   showLabel?: boolean;
-  size?: 'sm' | 'md' | 'lg';
+  size?: "sm" | "md" | "lg";
   animated?: boolean;
 }
 ```
 
 **Props (Rust):**
+
 ```rust
 #[derive(Clone, Debug)]
 pub struct ConfidenceMeter {
@@ -144,12 +153,19 @@ pub enum MeterSize {
 ```
 
 **HTML/CSS Implementation:**
+
 ```html
 <div class="confidence-meter confidence-meter--radial" data-value="0.85">
   <svg class="confidence-meter__gauge" viewBox="0 0 100 100">
-    <circle class="confidence-meter__track" cx="50" cy="50" r="45"/>
-    <circle class="confidence-meter__fill" cx="50" cy="50" r="45" 
-            stroke-dasharray="283" stroke-dashoffset="42"/>
+    <circle class="confidence-meter__track" cx="50" cy="50" r="45" />
+    <circle
+      class="confidence-meter__fill"
+      cx="50"
+      cy="50"
+      r="45"
+      stroke-dasharray="283"
+      stroke-dashoffset="42"
+    />
   </svg>
   <div class="confidence-meter__value">85%</div>
 </div>
@@ -162,6 +178,7 @@ pub enum MeterSize {
 **Purpose:** Terminal-like scrolling text area for raw reasoning logs.
 
 **Visual Design:**
+
 - Dark background (Void Black `#030508`)
 - Monospace font (JetBrains Mono)
 - Syntax highlighting for log levels:
@@ -175,6 +192,7 @@ pub enum MeterSize {
 - Line numbers (optional)
 
 **Props (TypeScript):**
+
 ```typescript
 interface LogStreamProps {
   logs: LogEntry[];
@@ -187,13 +205,14 @@ interface LogStreamProps {
 
 interface LogEntry {
   timestamp: Date;
-  level: 'INFO' | 'DEBUG' | 'WARN' | 'ERROR' | 'SUCCESS';
+  level: "INFO" | "DEBUG" | "WARN" | "ERROR" | "SUCCESS";
   message: string;
   metadata?: Record<string, unknown>;
 }
 ```
 
 **Props (Rust):**
+
 ```rust
 #[derive(Clone, Debug)]
 pub struct LogStream {
@@ -224,6 +243,7 @@ pub enum LogLevel {
 ```
 
 **HTML/CSS Implementation:**
+
 ```html
 <div class="log-stream">
   <div class="log-stream__header">
@@ -250,6 +270,7 @@ pub enum LogLevel {
 **Purpose:** "Industrial switch" style toggles for active/inactive states.
 
 **Visual Design:**
+
 - Large, heavy toggle switch (machinery aesthetic)
 - Cyan glow when active
 - "Snap" animation (no easing, instant state change)
@@ -257,24 +278,27 @@ pub enum LogLevel {
 - Optional icon (checkmark/X, or custom SVG)
 
 **States:**
+
 - `off` - Gray, left position
 - `on` - Cyan with glow, right position
 - `disabled` - Muted, no interaction
 
 **Props (TypeScript):**
+
 ```typescript
 interface StatusToggleProps {
   checked: boolean;
   label?: string;
   disabled?: boolean;
-  size?: 'sm' | 'md' | 'lg';
+  size?: "sm" | "md" | "lg";
   onChange?: (checked: boolean) => void;
-  icon?: 'check' | 'x' | 'custom';
+  icon?: "check" | "x" | "custom";
   customIcon?: React.ReactNode;
 }
 ```
 
 **Props (Rust):**
+
 ```rust
 #[derive(Clone, Debug)]
 pub struct StatusToggle {
@@ -301,9 +325,10 @@ pub enum ToggleIcon {
 ```
 
 **HTML/CSS Implementation:**
+
 ```html
 <label class="status-toggle">
-  <input type="checkbox" class="status-toggle__input" checked>
+  <input type="checkbox" class="status-toggle__input" checked />
   <span class="status-toggle__slider"></span>
   <span class="status-toggle__label">Enable Reasoning</span>
 </label>
@@ -316,6 +341,7 @@ pub enum ToggleIcon {
 ### React/TypeScript
 
 **Installation:**
+
 ```bash
 npm install @reasonkit/ui
 # or
@@ -323,19 +349,25 @@ yarn add @reasonkit/ui
 ```
 
 **Usage:**
+
 ```tsx
-import { TraceNode, ConfidenceMeter, LogStream, StatusToggle } from '@reasonkit/ui';
+import {
+  TraceNode,
+  ConfidenceMeter,
+  LogStream,
+  StatusToggle,
+} from "@reasonkit/ui";
 
 function ReasoningDashboard() {
   return (
     <div className="reasoning-dashboard">
-      <StatusToggle 
-        checked={isActive} 
+      <StatusToggle
+        checked={isActive}
         onChange={setIsActive}
         label="Reasoning Active"
       />
       <ConfidenceMeter value={0.85} variant="radial" />
-      <TraceNode 
+      <TraceNode
         id="step-1"
         label="Initial Analysis"
         status="completed"
@@ -350,6 +382,7 @@ function ReasoningDashboard() {
 ### Rust (Leptos/WebAssembly)
 
 **Cargo.toml:**
+
 ```toml
 [dependencies]
 reasonkit-ui = { version = "0.1.0", features = ["leptos"] }
@@ -357,6 +390,7 @@ leptos = "0.6"
 ```
 
 **Usage:**
+
 ```rust
 use reasonkit_ui::{TraceNode, ConfidenceMeter, LogStream, StatusToggle};
 
@@ -364,16 +398,16 @@ use reasonkit_ui::{TraceNode, ConfidenceMeter, LogStream, StatusToggle};
 pub fn ReasoningDashboard() -> impl IntoView {
     let (is_active, set_is_active) = create_signal(false);
     let confidence = create_signal(0.85);
-    
+
     view! {
         <div class="reasoning-dashboard">
-            <StatusToggle 
+            <StatusToggle
                 checked=is_active
                 on_change=move |v| set_is_active.set(v)
                 label="Reasoning Active"
             />
             <ConfidenceMeter value=confidence variant=MeterVariant::Radial />
-            <TraceNode 
+            <TraceNode
                 id="step-1"
                 label="Initial Analysis"
                 status=TraceStatus::Completed
@@ -388,27 +422,29 @@ pub fn ReasoningDashboard() -> impl IntoView {
 ### HTML/CSS (Vanilla)
 
 **Include CSS:**
+
 ```html
-<link rel="stylesheet" href="https://cdn.reasonkit.sh/ui/v1/reasonui.css">
+<link rel="stylesheet" href="https://cdn.reasonkit.sh/ui/v1/reasonui.css" />
 ```
 
 **Usage:**
+
 ```html
 <div class="reasoning-dashboard">
   <label class="status-toggle">
-    <input type="checkbox" class="status-toggle__input" checked>
+    <input type="checkbox" class="status-toggle__input" checked />
     <span class="status-toggle__slider"></span>
     <span class="status-toggle__label">Reasoning Active</span>
   </label>
-  
+
   <div class="confidence-meter confidence-meter--radial" data-value="0.85">
     <!-- SVG gauge -->
   </div>
-  
+
   <div class="trace-node trace-node--completed" data-id="step-1">
     <!-- Node content -->
   </div>
-  
+
   <div class="log-stream">
     <!-- Log entries -->
   </div>
@@ -436,6 +472,7 @@ All components use ReasonKit brand colors via CSS variables:
 
 **High-Contrast Mode:**
 All components automatically adapt to `@media (prefers-contrast: high)` with:
+
 - Pure black backgrounds (`#000000`)
 - Pure white text (`#ffffff`)
 - 100% saturation borders
@@ -447,6 +484,7 @@ All components automatically adapt to `@media (prefers-contrast: high)` with:
 See [Motion Design Physics Guidelines](./MOTION_DESIGN_GUIDELINES.md) for detailed animation specifications.
 
 **Quick Reference:**
+
 - **Snap-to-Grid**: Instant state changes (no easing)
 - **Data Flow**: Pulse animations (Cyan → Green direction)
 - **Error Glitch**: Chromatic aberration "twitch" before settling
@@ -465,9 +503,9 @@ See [Motion Design Physics Guidelines](./MOTION_DESIGN_GUIDELINES.md) for detail
 
 ## Version History
 
-| Version | Date | Changes |
-|---------|------|---------|
-| 1.0.0 | 2026-01-01 | Initial specification |
+| Version | Date       | Changes               |
+| ------- | ---------- | --------------------- |
+| 1.0.0   | 2026-01-01 | Initial specification |
 
 ---
 

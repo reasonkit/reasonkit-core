@@ -52,7 +52,7 @@ $ ask-llm "Should I use microservices?"
 **Type on screen:**
 
 ```bash
-curl -fsSL https://reasonkit.sh/install | bash
+curl -fsSL https://get.reasonkit.sh | bash
 ```
 
 **Show:** Installation progress (speed up 4x)
@@ -215,7 +215,7 @@ rk think "Review this PR for security issues:
 reasonkit.sh
 
 cargo install reasonkit-core
-curl -fsSL https://reasonkit.sh/install | bash
+curl -fsSL https://get.reasonkit.sh | bash
 ```
 
 **Narration:**

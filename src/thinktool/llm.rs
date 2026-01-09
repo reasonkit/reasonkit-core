@@ -76,24 +76,24 @@ fn get_pooled_client(timeout_secs: u64) -> reqwest::Client {
     }
 
     // Check if we have a cached client for this timeout
-    {
-        let pool = HTTP_CLIENT_POOL.read().unwrap();
+    // Handle poisoned lock by recovering the underlying data
+    if let Ok(pool) = HTTP_CLIENT_POOL.read() {
         if let Some(client) = pool.get(&timeout_secs) {
             return client.clone();
         }
     }
 
-    // Create new client and cache it
+    // Create new client - fall back to default on failure
     let client = reqwest::Client::builder()
         .timeout(Duration::from_secs(timeout_secs))
         .pool_max_idle_per_host(10)
         .pool_idle_timeout(Duration::from_secs(90))
         .tcp_keepalive(Duration::from_secs(60))
         .build()
-        .expect("Failed to create HTTP client");
+        .unwrap_or_else(|_| DEFAULT_HTTP_CLIENT.clone());
 
-    {
-        let mut pool = HTTP_CLIENT_POOL.write().unwrap();
+    // Cache it if we can acquire the write lock
+    if let Ok(mut pool) = HTTP_CLIENT_POOL.write() {
         pool.insert(timeout_secs, client.clone());
     }
 

@@ -31,4 +31,4 @@ The `brand/` directory contains ~140+ consolidated assets organized by type:
 
 **For the full brand playbook, see:** [brand/BRAND_PLAYBOOK.md](./brand/BRAND_PLAYBOOK.md)
 
-*"Designed, Not Dreamed" | <https://reasonkit.sh>*
+_"Designed, Not Dreamed" | <https://reasonkit.sh>_

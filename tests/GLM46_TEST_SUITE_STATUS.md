@@ -13,6 +13,7 @@ Comprehensive test suite for GLM-4.6 integration covering unit tests, integratio
 **Status:** ✅ Complete | **Tests:** 15+
 
 **Coverage:**
+
 - ✅ GLM46Config default and custom configuration
 - ✅ ChatMessage serialization/deserialization
 - ✅ ChatRequest creation and validation
@@ -31,6 +32,7 @@ Comprehensive test suite for GLM-4.6 integration covering unit tests, integratio
 **Status:** ✅ Complete | **Tests:** 8+
 
 **Coverage:**
+
 - ✅ ThinkTool profile integration
 - ✅ Cost tracking integration
 - ✅ Large context handling (198K tokens)
@@ -40,6 +42,7 @@ Comprehensive test suite for GLM-4.6 integration covering unit tests, integratio
 - ✅ Local fallback (ollama)
 
 **Requirements:**
+
 - `GLM46_API_KEY` environment variable
 - Optional: Local ollama instance for fallback tests
 
@@ -50,6 +53,7 @@ Comprehensive test suite for GLM-4.6 integration covering unit tests, integratio
 **Status:** ✅ Complete | **Benchmarks:** 7
 
 **Coverage:**
+
 - ✅ Client initialization performance
 - ✅ Request serialization performance
 - ✅ Response deserialization performance
@@ -65,6 +69,7 @@ Comprehensive test suite for GLM-4.6 integration covering unit tests, integratio
 **Status:** ✅ Complete | **Tests:** 6+
 
 **Coverage:**
+
 - ✅ 198K context window validation
 - ✅ Cost efficiency validation (1/7th Claude pricing)
 - ✅ TAU-Bench coordination validation (70.1% target)
@@ -73,6 +78,7 @@ Comprehensive test suite for GLM-4.6 integration covering unit tests, integratio
 - ✅ Cost tracking accuracy
 
 **Requirements:**
+
 - `GLM46_API_KEY` environment variable
 - TAU-Bench dataset (for full validation)
 
@@ -82,11 +88,11 @@ Comprehensive test suite for GLM-4.6 integration covering unit tests, integratio
 
 ### Current Status
 
-| Test Suite | Status | Notes |
-|------------|--------|-------|
-| Unit Tests | ⏳ Pending | Waiting for module compilation |
-| Integration Tests | ⏳ Pending | Requires API key + compilation |
-| Benchmarks | ⏳ Pending | Waiting for module compilation |
+| Test Suite             | Status     | Notes                          |
+| ---------------------- | ---------- | ------------------------------ |
+| Unit Tests             | ⏳ Pending | Waiting for module compilation |
+| Integration Tests      | ⏳ Pending | Requires API key + compilation |
+| Benchmarks             | ⏳ Pending | Waiting for module compilation |
 | Performance Validation | ⏳ Pending | Requires API key + compilation |
 
 ### Blockers
@@ -104,6 +110,7 @@ Comprehensive test suite for GLM-4.6 integration covering unit tests, integratio
 ### Unit Tests
 
 All unit tests should pass once module compiles. They test:
+
 - Type definitions and serialization
 - Configuration validation
 - Basic client functionality
@@ -111,6 +118,7 @@ All unit tests should pass once module compiles. They test:
 ### Integration Tests
 
 Integration tests validate:
+
 - End-to-end API communication
 - ThinkTool profile integration
 - Cost tracking accuracy
@@ -119,6 +127,7 @@ Integration tests validate:
 ### Benchmarks
 
 Benchmarks measure:
+
 - Serialization/deserialization performance
 - Context window scaling
 - Cost calculation overhead
@@ -128,6 +137,7 @@ Benchmarks measure:
 ### Performance Validation
 
 Validates:
+
 - **198K Context**: Request can handle full context window
 - **Cost Efficiency**: Pricing is ~1/7th of Claude
 - **TAU-Bench**: Coordination performance meets 70.1% target
@@ -154,6 +164,7 @@ Validates:
 ### Updating Tests
 
 When GLM-4.6 module changes:
+
 1. Update test expectations if API changes
 2. Verify all tests still pass
 3. Update performance targets if needed
@@ -161,12 +172,12 @@ When GLM-4.6 module changes:
 
 ## Test Coverage Goals
 
-| Category | Target | Current |
-|----------|--------|---------|
-| Unit Tests | 90%+ | ~85% (pending compilation) |
-| Integration Tests | 80%+ | ~75% (pending compilation) |
-| Benchmarks | All critical paths | 7 benchmarks |
-| Performance Validation | All claims | 6 validations |
+| Category               | Target             | Current                    |
+| ---------------------- | ------------------ | -------------------------- |
+| Unit Tests             | 90%+               | ~85% (pending compilation) |
+| Integration Tests      | 80%+               | ~75% (pending compilation) |
+| Benchmarks             | All critical paths | 7 benchmarks               |
+| Performance Validation | All claims         | 6 validations              |
 
 ## Notes
 
@@ -179,4 +190,3 @@ When GLM-4.6 module changes:
 
 **Last Updated:** 2026-01-02  
 **Maintainer:** ReasonKit Team
-

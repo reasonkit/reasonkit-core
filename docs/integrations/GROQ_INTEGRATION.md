@@ -562,5 +562,5 @@ rk think "Final analysis" --provider anthropic --profile deep
 
 ---
 
-*ReasonKit + Groq Integration Guide | v1.0.0 | Apache 2.0*
-*"See How Your AI Thinks - At Lightning Speed"*
+_ReasonKit + Groq Integration Guide | v1.0.0 | Apache 2.0_
+_"See How Your AI Thinks - At Lightning Speed"_

@@ -124,15 +124,19 @@
 //! ```
 
 pub mod client;
+#[cfg(feature = "daemon")]
+pub mod daemon;
 pub mod delta_tools;
 pub mod lifecycle;
 pub mod registry;
 #[cfg(feature = "memory")]
 pub mod rerank_tools;
 pub mod server;
+pub mod thinktool_tools;
 pub mod tools;
 pub mod transport;
 pub mod types;
+pub mod ws_auth;
 
 // Re-exports
 pub use types::{
@@ -156,8 +160,19 @@ pub use lifecycle::{ClientInfo, InitializeParams, InitializeResult, PingRequest,
 
 pub use delta_tools::DeltaToolHandler;
 
+pub use thinktool_tools::{
+    register_thinktools, BedRockHandler, BrutalHonestyHandler, GigaThinkHandler, LaserLogicHandler,
+    ProofGuardHandler, ThinkToolHandler,
+};
+
 #[cfg(feature = "memory")]
 pub use rerank_tools::RerankToolHandler;
+
+pub use ws_auth::{
+    ApiKeyInfo, ApiKeyValidator, AuthenticatedWsConnection, ConnectionInfo, ConnectionTracker,
+    InMemoryApiKeyValidator, SubscriptionTier, WsAuthError, WsAuthMessage, WsAuthResult,
+    WsAuthState,
+};
 
 /// MCP protocol version (2025-11-25)
 pub const MCP_VERSION: &str = "2025-11-25";

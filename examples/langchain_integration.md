@@ -175,4 +175,4 @@ if __name__ == "__main__":
 1. **Tool Registration**: We subclass `BaseTool` to create `ReasonKitTool`. This exposes the `rk think` CLI command as a callable function within Python.
 2. **Structured Execution**: When the Python agent calls the tool, it shells out to the optimized Rust binary.
 3. **Config-Driven**: The agent can select profiles (`quick`, `paranoid`) defined in your YAML configuration, leveraging the work we just finished.
-4. **Artifact Return**: Instead of just text, the tool returns a summary of the *verification steps* (Confidence, Step Success), making the reasoning "Glass Box".
+4. **Artifact Return**: Instead of just text, the tool returns a summary of the _verification steps_ (Confidence, Step Success), making the reasoning "Glass Box".

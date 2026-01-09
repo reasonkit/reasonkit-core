@@ -33,6 +33,10 @@ A ThinkTool is a structured reasoning protocol that:
 3. **Produces verifiable output with confidence scores** - calibrated certainty
 4. **Maintains provenance** - full chain of reasoning preserved
 
+![Tree-of-Thoughts vs Chain-of-Thought: 74% vs 4% Success Rate (NeurIPS 2023)](../../brand/readme/tree_of_thoughts_vs_chain_of_thought.png)
+
+**Research Foundation:** Tree-of-Thoughts reasoning (implemented by ThinkTools) achieved **74% success rate** vs **4% for Chain-of-Thought** on complex reasoning benchmarks (Yao et al., NeurIPS 2023). This 18.5x improvement demonstrates the power of structured, multi-path exploration over linear sequential thinking.
+
 ### Why ThinkTools?
 
 | Problem with Raw Prompting     | ThinkTool Solution                  |

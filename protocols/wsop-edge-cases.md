@@ -372,4 +372,4 @@ def test_rapid_fire_queries():
 
 ---
 
-*WSOP Edge Cases v1.1 | Robustness through exhaustive failure analysis*
+_WSOP Edge Cases v1.1 | Robustness through exhaustive failure analysis_

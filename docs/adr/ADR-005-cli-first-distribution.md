@@ -104,7 +104,7 @@ rk config set llm.model gpt-4
 cargo install reasonkit
 
 # Universal (detects platform, installs binary)
-curl -fsSL https://reasonkit.sh/install | bash
+curl -fsSL https://get.reasonkit.sh | bash
 
 # Package managers
 brew install reasonkit        # macOS
@@ -162,7 +162,7 @@ print(f"Confidence: {result.confidence}")
 
 | Negative          | Mitigation                                            |
 | ----------------- | ----------------------------------------------------- |
-| Limited UI        | TUI mode (`rk --tui`); web dashboard planned     |
+| Limited UI        | TUI mode (`rk --tui`); web dashboard planned          |
 | Learning curve    | Excellent `--help`; interactive mode; examples        |
 | Integration depth | Library/SDK for programmatic use                      |
 | State management  | SQLite audit log persists state; session continuation |

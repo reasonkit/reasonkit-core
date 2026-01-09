@@ -5,6 +5,44 @@ All notable changes to ReasonKit Core will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.0-supremacy] - 2026-01-08
+
+### The "Level Up" Overhaul
+
+This release represents a comprehensive quality and compliance overhaul, transitioning
+ReasonKit from prototype to production-ready.
+
+### Changed
+
+- **CLI Branding**: Updated help screen with comprehensive ThinkTools descriptions
+  - Added full ThinkTools list: GigaThink, LaserLogic, BedRock, ProofGuard, BrutalHonesty
+  - Added Profiles with confidence levels (70%/80%/85%/95%)
+  - Added usage examples and documentation links
+  - Aligned "about" text with brand identity: "The Reasoning Engine"
+
+### Fixed
+
+- **Compliance**: Removed dishonest marketing claims from website
+  - "5,000+ developers" → "a growing community of developers"
+  - "340+ Models Supported" → "9 Providers Tested"
+  - "+ 330+ more via OpenRouter" → "+ Any model via OpenRouter"
+- **Brand Identity**: Enforced CONS-014 (canonical description rule)
+
+### Documentation
+
+- Created Task 1039: LLM Provider Validation Playbook specification
+  - Comprehensive testing protocol for 9 providers
+  - Evidence-based validation matrix template
+  - Follow-up PDF compilation task for Gemini 3 Pro
+
+### Quality
+
+- Verified install.sh first-run experience (ASCII banner, interactive wizard)
+- Verified CLI help matches ThinkTools branding
+- All changes aligned with ORCHESTRATOR.md quality gates
+
+---
+
 ## [0.1.0] - 2025-01-01
 
 ### Added

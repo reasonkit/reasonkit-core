@@ -46,26 +46,31 @@ reasonkit-core/brand/
 ## 🎨 Quick Reference
 
 ### Badges
+
 - **Location:** `brand/badges/*.svg`
 - **Usage:** See [COMMUNITY_BADGES.md](COMMUNITY_BADGES.md)
 - **Integration:** Add to README.md files
 
 ### Audio
+
 - **Location:** `brand/audio/*.wav` (pending production)
 - **Spec:** See [REASONAUDIO_SPEC.md](REASONAUDIO_SPEC.md)
 - **Usage:** ReasonUI component integration
 
 ### Terminal Theme
+
 - **Location:** `brand/REASONTERMINAL_STARSHIP.toml`
 - **Usage:** Copy to `~/.config/starship.toml`
 - **Installation:** See file comments
 
 ### VS Code Theme
+
 - **Location:** `brand/VSCODE_THEME_PROTOCOL_MODE.json`
 - **Usage:** Install as VS Code extension (pending packaging)
 - **Manual:** Copy to VS Code themes directory
 
 ### 404 Page
+
 - **Location:** `reasonkit-site/404.html`
 - **Status:** ✅ Implemented
 - **Usage:** Automatic for 404 errors
@@ -81,4 +86,3 @@ reasonkit-core/brand/
 ---
 
 **Last Updated:** 2025-01-01
-

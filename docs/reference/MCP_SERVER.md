@@ -120,7 +120,7 @@ cargo build --release
 #### Option 3: Universal Installer
 
 ```bash
-curl -fsSL https://reasonkit.sh/install | bash
+curl -fsSL https://get.reasonkit.sh | bash
 ```
 
 ### Verifying Installation

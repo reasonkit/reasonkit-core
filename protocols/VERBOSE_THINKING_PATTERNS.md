@@ -2046,5 +2046,5 @@ consultation_count: 2 # Claude + Gemini (CONS-008 compliant)
 
 ---
 
-*"Turn Prompts into Protocols"*
-*<https://reasonkit.sh>*
+_"Turn Prompts into Protocols"_
+_<https://reasonkit.sh>_

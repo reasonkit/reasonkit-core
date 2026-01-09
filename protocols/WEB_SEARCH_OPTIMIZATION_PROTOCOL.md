@@ -444,11 +444,11 @@ TOTAL:                ~$7,500/month
 
 **Optimization Results:**
 
-| Metric | Before | After | Reduction |
-|--------|--------|-------|-----------|
-| Monthly costs | $500K-$1M+ | $50K-$150K | 80-90% |
-| Cost per user | $50-100+ | $5-15 | 85-90% |
-| Token usage | Baseline | Optimized | 60-80% |
+| Metric        | Before     | After      | Reduction |
+| ------------- | ---------- | ---------- | --------- |
+| Monthly costs | $500K-$1M+ | $50K-$150K | 80-90%    |
+| Cost per user | $50-100+   | $5-15      | 85-90%    |
+| Token usage   | Baseline   | Optimized  | 60-80%    |
 
 **Key Findings:**
 
@@ -498,10 +498,10 @@ Query → Generate Search Queries → Retrieve Top-K → Add to Context → Repe
 
 **Results:**
 
-| Iterations | Accuracy | Notes |
-|------------|----------|-------|
-| 1 (single-step) | 40.8% | Baseline |
-| 5 (multi-step) | 66.0% | Approaches oracle (72.9%) |
+| Iterations      | Accuracy | Notes                     |
+| --------------- | -------- | ------------------------- |
+| 1 (single-step) | 40.8%    | Baseline                  |
+| 5 (multi-step)  | 66.0%    | Approaches oracle (72.9%) |
 
 **Key Improvements:**
 
@@ -659,5 +659,5 @@ caching:
 
 ---
 
-*Protocol generated following ProofGuard Deep Research Protocol (PROT-PG-DEEP-001)*
-*Profile: --paranoid | Minimum 3 sources per claim | BRUTALLY HONEST assessment*
+_Protocol generated following ProofGuard Deep Research Protocol (PROT-PG-DEEP-001)_
+_Profile: --paranoid | Minimum 3 sources per claim | BRUTALLY HONEST assessment_

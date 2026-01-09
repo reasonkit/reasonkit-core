@@ -59,8 +59,8 @@ source /path/to/reasonkit-core/shell/zsh/functions/rk-widgets.zsh
 
 ## Aliases
 
-| Alias  | Command                              |
-| ------ | ------------------------------------ |
+| Alias  | Command                         |
+| ------ | ------------------------------- |
 | `rk`   | `rk`                            |
 | `rkq`  | `rk think --profile quick`      |
 | `rkb`  | `rk think --profile balanced`   |

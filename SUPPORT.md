@@ -33,12 +33,12 @@ For enterprise support, SLAs, or consulting, contact **enterprise@reasonkit.sh**
 
 ## Response Times
 
-| Channel | Expected Response |
-|---------|-------------------|
-| Security issues | < 24 hours |
-| Bug reports | < 48 hours |
-| Feature requests | < 1 week |
-| Discussions | Community-driven |
+| Channel          | Expected Response |
+| ---------------- | ----------------- |
+| Security issues  | < 24 hours        |
+| Bug reports      | < 48 hours        |
+| Feature requests | < 1 week          |
+| Discussions      | Community-driven  |
 
 ---
 

@@ -245,5 +245,5 @@ pub struct DesignAssessmentResult {
 
 ---
 
-*"Designed, Not Dreamed. Turn Prompts into Protocols."*
-*<https://reasonkit.sh>*
+_"Designed, Not Dreamed. Turn Prompts into Protocols."_
+_<https://reasonkit.sh>_

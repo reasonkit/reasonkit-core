@@ -8,7 +8,7 @@
 
 ```bash
 # Install ReasonKit
-curl -fsSL https://reasonkit.sh/install | bash
+curl -fsSL https://get.reasonkit.sh | bash
 
 # Or build from source
 cargo build --release
