@@ -91,7 +91,7 @@ features = ["cli"]
 # Build in release mode by default
 profile = "release"
 # Target Python 3.9+
-python-source = false
+# python-source = "python" # Uncomment if mixed Rust/Python project
 # Strip debug symbols for smaller wheels
 strip = true
 
