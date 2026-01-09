@@ -788,10 +788,10 @@ gunzip -c backup.jsonl.gz | rk import -
 rk serve
 
 # Production server (bind to all interfaces)
-rk serve --host 0.0.0.0 --port 8080
+rk serve --host 0.0.0.0 --port 9100
 
 # Behind nginx reverse proxy
-rk serve --host 127.0.0.1 --port 8080
+rk serve --host 127.0.0.1 --port 9100
 ```
 
 ---

@@ -535,7 +535,7 @@ spec:
           imagePullPolicy: Always
           ports:
             - name: http
-              containerPort: 8080
+              containerPort: 9100
               protocol: TCP
           envFrom:
             - configMapRef:
@@ -892,7 +892,7 @@ User=reasonkit
 Group=reasonkit
 WorkingDirectory=/opt/reasonkit
 EnvironmentFile=/opt/reasonkit/.env
-ExecStart=/usr/local/bin/rk serve-mcp --port 8080
+ExecStart=/usr/local/bin/rk serve-mcp --port 9100
 ExecReload=/bin/kill -HUP $MAINPID
 Restart=always
 RestartSec=5
@@ -1207,7 +1207,7 @@ gcloud run deploy reasonkit-core \
   --cpu 2 \
   --min-instances 1 \
   --max-instances 10 \
-  --port 8080 \
+  --port 9100 \
   --set-env-vars "RUST_LOG=info,REASONKIT_ENV=production" \
   --set-secrets "ANTHROPIC_API_KEY=reasonkit-anthropic-key:latest"
 ```
