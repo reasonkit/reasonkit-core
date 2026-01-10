@@ -21,6 +21,7 @@
 [![Downloads](https://img.shields.io/crates/d/reasonkit-core?style=flat-square&color=ec4899&logo=rust&logoColor=f9fafb)](https://crates.io/crates/reasonkit-core)
 [![License](https://img.shields.io/badge/license-Apache%202.0-a855f7?style=flat-square&labelColor=030508)](https://github.com/reasonkit/reasonkit-core/blob/main/LICENSE)
 [![Rust](https://img.shields.io/badge/rust-1.75+-f97316?style=flat-square&logo=rust&logoColor=f9fafb)](https://www.rust-lang.org/)
+[![MCP](https://img.shields.io/badge/MCP-Compatible-10b981?style=flat-square&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiNmOWZhZmIiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cGF0aCBkPSJNMTIgMnYyME0yIDEyaDIwIi8+PC9zdmc+)](https://modelcontextprotocol.io)
 
 [Website](https://reasonkit.sh) | [Pro](https://reasonkit.sh/pro/) | [Docs](https://docs.reasonkit.sh) | [Resources](https://reasonkit.sh/resources/) | [Enterprise](https://reasonkit.sh/enterprise/) | [About](https://reasonkit.sh/about/) | [GitHub](https://github.com/reasonkit/reasonkit-core)
 
