@@ -14,13 +14,32 @@
   <img src="./brand/readme/reasonkit-core_tree_hero.png" alt="ReasonKit - The Reasoning Engine - Auditable Reasoning for Production AI" width="100%">
 </picture>
 
-[![CI](https://img.shields.io/github/actions/workflow/status/reasonkit/reasonkit-core/ci.yml?branch=main&style=flat-square&logo=github&label=CI&color=06b6d4&logoColor=06b6d4)](https://github.com/reasonkit/reasonkit-core/actions)
-[![Crates.io](https://img.shields.io/crates/v/reasonkit-core?style=flat-square&logo=rust&color=10b981&logoColor=f9fafb)](https://crates.io/crates/reasonkit-core)
-[![Docs](https://img.shields.io/badge/docs-reasonkit.sh-06b6d4?style=flat-square&logo=readme&logoColor=f9fafb)](https://docs.reasonkit.sh)
-[![License](https://img.shields.io/badge/license-Apache%202.0-a855f7?style=flat-square&labelColor=030508)](https://github.com/reasonkit/reasonkit-core/blob/main/LICENSE)
-[![Architecture](https://img.shields.io/badge/stack-Rust%E2%80%A2MCP%E2%80%A2LLMs-f97316?style=flat-square&labelColor=030508)](https://reasonkit.sh)
+[![CI](https://badges.reasonkit.sh/github/actions/workflow/status/reasonkit/reasonkit-core/ci.yml?branch=main&style=flat-square&logo=github&label=CI&color=06b6d4&logoColor=06b6d4)](https://github.com/reasonkit/reasonkit-core/actions/workflows/ci.yml)
+[![Security](https://badges.reasonkit.sh/github/actions/workflow/status/reasonkit/reasonkit-core/security.yml?branch=main&style=flat-square&logo=github&label=Security&color=10b981&logoColor=10b981)](https://github.com/reasonkit/reasonkit-core/actions/workflows/security.yml)
+[![Crates.io](https://badges.reasonkit.sh/crates/v/reasonkit-core?style=flat-square&logo=rust&color=10b981&logoColor=f9fafb)](https://crates.io/crates/reasonkit-core)
+[![docs.rs](https://badges.reasonkit.sh/docsrs/reasonkit-core?style=flat-square&logo=docs.rs&color=06b6d4&logoColor=f9fafb)](https://docs.rs/reasonkit-core)
+[![Downloads](https://badges.reasonkit.sh/crates/d/reasonkit-core?style=flat-square&color=ec4899&logo=rust&logoColor=f9fafb)](https://crates.io/crates/reasonkit-core)
+[![License](https://badges.reasonkit.sh/static/v1?label=license&message=Apache%202.0&color=a855f7&style=flat-square&labelColor=030508)](https://github.com/reasonkit/reasonkit-core/blob/main/LICENSE)
+[![Rust](https://badges.reasonkit.sh/static/v1?label=rust&message=1.75%2B&color=f97316&style=flat-square&logo=rust&logoColor=f9fafb)](https://www.rust-lang.org/)
+[![MCP](https://badges.reasonkit.sh/static/v1?label=MCP&message=Compatible&color=10b981&style=flat-square&logo=data:image/svg%2Bxml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiNmOWZhZmIiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cGF0aCBkPSJNMTIgMnYyME0yIDEyaDIwIi8+PC9zdmc+)](https://modelcontextprotocol.io)
 
-[Website](https://reasonkit.sh) | [Documentation](https://docs.reasonkit.sh) | [GitHub](https://github.com/reasonkit/reasonkit-core)
+[Website](https://reasonkit.sh) | [Pro](https://reasonkit.sh/pro/) | [Docs](https://docs.reasonkit.sh) | [Resources](https://reasonkit.sh/resources/) | [Enterprise](https://reasonkit.sh/enterprise/) | [About](https://reasonkit.sh/about/) | [GitHub](https://github.com/reasonkit/reasonkit-core)
+
+</div>
+
+---
+
+## 🚀 Quick Install
+
+<div align="center">
+
+```bash
+curl -fsSL https://get.reasonkit.sh | bash
+```
+
+**Universal Installer** • All Platforms • All Shells • 30 Seconds
+
+[📖 Installation Guide](https://docs.reasonkit.sh/getting-started/installation) • [📦 Crates.io](https://crates.io/crates/reasonkit-core) • [📚 Docs.rs](https://docs.rs/reasonkit-core)
 
 </div>
 
@@ -50,14 +69,11 @@ LLMs are fundamentally **probabilistic**. Same prompt → different outputs. Thi
 
 ## Quick Start
 
-**1. Install (Universal)**
+**Already installed?** Jump to [Choose Your Workflow](#-choose-your-workflow) or [How to Use](#how-to-use).
 
-```bash
-curl -fsSL https://get.reasonkit.sh | bash
-# Installs 'rk' alias automatically
-```
+**Need installation help?** See the [Installation Guide](https://docs.reasonkit.sh/getting-started/installation) or [Installation Section](#installation) below.
 
-**2. Choose Your Workflow**
+### 🤖 Choose Your Workflow
 
 ### 🤖 Claude Code (Opus 4.5)
 
@@ -67,6 +83,8 @@ _Agentic CLI. No API key required._
 claude mcp add reasonkit -- rk serve-mcp
 claude "Use ReasonKit to analyze: Should we migrate to microservices?"
 ```
+
+**Learn more:** [Claude Code Integration](https://docs.reasonkit.sh/integrations/claude-code)
 
 ### 🌐 ChatGPT (Browser)
 
@@ -79,6 +97,8 @@ rk protocol "Should we migrate to microservices?" | pbcopy
 # → Paste into ChatGPT: "Execute this protocol..."
 ```
 
+**Learn more:** [ChatGPT Integration](https://docs.reasonkit.sh/integrations/chatgpt)
+
 ### ⚡ Gemini 3.0 Pro (API)
 
 _Native CLI integration with Google's latest preview._
@@ -88,15 +108,19 @@ export GEMINI_API_KEY=AIza...
 rk think --model gemini-3.0-pro-preview "Should we migrate to microservices?"
 ```
 
+**Learn more:** [Google Gemini Integration](https://docs.reasonkit.sh/integrations/google-gemini) • [All Provider Integrations](https://docs.reasonkit.sh/integrations)
+
 > **Note:** The `rk` command is the shorthand alias for `rk`.
 
-**30 seconds to structured reasoning.**
+**30 seconds to structured reasoning.** See [How to Use](#how-to-use) for more examples.
 
 ---
 
 ## ThinkTools: The 5-Step Reasoning Chain
 
 Each ThinkTool acts as a **variance reduction filter**, transforming probabilistic outputs into increasingly deterministic reasoning paths.
+
+**📖 Full Documentation:** [ThinkTools Guide](https://docs.reasonkit.sh/thinktools) • [API Reference](https://docs.rs/reasonkit-core/latest/reasonkit_core/thinktool/)
 
 ![Tree-of-Thoughts vs Chain-of-Thought: 74% vs 4% Success Rate (NeurIPS 2023)](./brand/readme/tree_of_thoughts_vs_chain_of_thought.png)
 
@@ -122,7 +146,7 @@ Each ThinkTool acts as a **variance reduction filter**, transforming probabilist
 
 ## Reasoning Profiles
 
-Pre-configured chains for different rigor levels:
+Pre-configured chains for different rigor levels. See [Reasoning Profiles Guide](https://docs.reasonkit.sh/profiles) for detailed documentation.
 
 ![ReasonKit Core Reasoning Profiles Scale](./brand/readme/reasoning_profiles_scale.svg)
 
@@ -203,6 +227,8 @@ VERDICT: conditional_yes | Confidence: 87% | Duration: 2.3s
 ## Architecture
 
 The ReasonKit architecture uses a **Protocol Engine** wrapper to enforce deterministic execution over probabilistic LLM outputs.
+
+**📖 Full Documentation:** [Architecture Guide](https://docs.reasonkit.sh/architecture) • [API Reference](https://docs.rs/reasonkit-core/)
 
 ![ReasonKit Core Architecture Exploded View](./brand/readme/core_architecture_exploded.png)
 
@@ -291,7 +317,7 @@ ReasonKit is written in Rust because reasoning infrastructure demands reliabilit
 | **Fearless Concurrency** | Run 100+ reasoning chains in parallel safely        |
 | **Type Safety**          | Errors caught at compile time, not runtime          |
 
-**Benchmarked Performance** ([view full report](./docs/reference/PERFORMANCE.md)):
+**Benchmarked Performance** ([view full report](./docs/reference/PERFORMANCE.md) • [online version](https://docs.reasonkit.sh/reference/performance)):
 
 | Operation                          | Time  | Target |
 | ---------------------------------- | ----- | ------ |
@@ -311,6 +337,8 @@ ReasonKit's Rust foundation ensures deterministic, auditable execution every tim
 ## Memory Infrastructure (Optional)
 
 **Memory modules (storage, embedding, retrieval, RAPTOR, indexing) are available in the standalone [`reasonkit-mem`](https://crates.io/crates/reasonkit-mem) crate.**
+
+**📖 Documentation:** [Memory Layer Guide](https://docs.reasonkit.sh/memory) • [Crates.io](https://crates.io/crates/reasonkit-mem) • [Docs.rs](https://docs.rs/reasonkit-mem)
 
 Enable the `memory` feature to use these modules:
 
@@ -333,17 +361,25 @@ reasonkit-core = { version = "0.1", features = ["memory"] }
 
 **Primary Method (Universal - All Platforms & Shells):**
 
+<div align="center">
+
 ```bash
 curl -fsSL https://get.reasonkit.sh | bash
 ```
 
+</div>
+
+**📖 Full Installation Guide:** [docs.reasonkit.sh/getting-started/installation](https://docs.reasonkit.sh/getting-started/installation)
+
 **Platform Support:**
+
 - ✅ **Linux** (all distributions)
 - ✅ **macOS** (Intel & Apple Silicon)
 - ✅ **Windows** (WSL & Native PowerShell)
 - ✅ **FreeBSD** (experimental)
 
 **Shell Support:**
+
 - ✅ **Bash** (auto-detected, PATH configured)
 - ✅ **Zsh** (auto-detected, PATH configured)
 - ✅ **Fish** (auto-detected, PATH configured)
@@ -353,12 +389,15 @@ curl -fsSL https://get.reasonkit.sh | bash
 - ✅ **tcsh/csh/ksh** (basic support)
 
 **Features:**
+
 - 🎨 Beautiful terminal UI with progress visualization
 - ⚡ Fast installation (~30 seconds)
 - 🔒 Secure (HTTPS-only, checksum verification)
 - 🧠 Smart shell detection and PATH configuration
 - 📊 Real-time build progress with ETA
 - 🔄 Automatic Rust installation if needed
+
+**📖 Learn more:** [Installation Guide](https://docs.reasonkit.sh/getting-started/installation) • [Installation Audit Report](.internal/site-docs/INSTALL_AUDIT_2026-01-08.md)
 
 <details>
 <summary><strong>Alternative Methods</strong></summary>
@@ -372,7 +411,10 @@ git clone https://github.com/reasonkit/reasonkit-core
 cd reasonkit-core && cargo build --release
 ```
 
+**📦 Package Links:** [Crates.io](https://crates.io/crates/reasonkit-core) • [Docs.rs](https://docs.rs/reasonkit-core) • [GitHub Releases](https://github.com/reasonkit/reasonkit-core/releases)
+
 **Windows (Native PowerShell):**
+
 ```powershell
 irm https://get.reasonkit.sh/windows | iex
 ```
@@ -386,6 +428,8 @@ Python bindings available via PyO3 (build from source with `--features python`).
 ## How to Use
 
 **Command Structure:** `rk <command> [options] [arguments]`
+
+**📖 Full CLI Reference:** [CLI Documentation](https://docs.reasonkit.sh/reference/cli) • [API Reference](https://docs.rs/reasonkit-core/)
 
 **Standard Operations:**
 
@@ -417,11 +461,15 @@ rk trace list
 rk trace export <id>
 ```
 
+**📖 Learn more:** [RAG Guide](https://docs.reasonkit.sh/memory/rag) • [Memory Layer Documentation](https://docs.reasonkit.sh/memory)
+
 ---
 
 ## Contributing: The 5 Gates of Quality
 
 We demand excellence. All contributions must pass **The 5 Gates of Quality**:
+
+**📖 Contributing Guide:** [CONTRIBUTING.md](CONTRIBUTING.md) • [Quality Gates Documentation](https://docs.reasonkit.sh/contributing/quality-gates)
 
 ![ReasonKit Quality Gates Shield](./brand/readme/quality_gates_shield.png)
 
@@ -440,7 +488,7 @@ cargo bench                  # Gate 5: Performance (<5% regression)
 
 **Quality Score Target:** 8.0/10 minimum for release.
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for complete guidelines.
+**📖 Complete Guidelines:** [CONTRIBUTING.md](CONTRIBUTING.md) • [Quality Metrics](https://docs.reasonkit.sh/contributing/quality-metrics)
 
 ---
 
@@ -452,7 +500,7 @@ If you use ReasonKit in your project, add our badge:
 [![Reasoned By ReasonKit](https://raw.githubusercontent.com/reasonkit/reasonkit-core/main/brand/badges/reasoned-by.svg)](https://reasonkit.sh)
 ```
 
-See [Community Badges](brand/COMMUNITY_BADGES.md) for all variants and usage guidelines.
+**📖 Badge Guide:** [Community Badges](brand/COMMUNITY_BADGES.md) • [All Variants](https://reasonkit.sh/resources/badges)
 
 ---
 
@@ -463,6 +511,8 @@ See [Community Badges](brand/COMMUNITY_BADGES.md) for all variants and usage gui
 - [Motion Guidelines](brand/MOTION_DESIGN_GUIDELINES.md) - Animation system
 - [3D Assets](brand/3D_ASSET_STRATEGY.md) - WebGL integration guide
 - [Integration Guide](brand/BRANDING_INTEGRATION_GUIDE.md) - Complete integration instructions
+
+**📖 Online Resources:** [Brand Guidelines](https://reasonkit.sh/resources/brand) • [Design System](https://reasonkit.sh/resources/design)
 
 ---
 
@@ -488,10 +538,10 @@ See [Community Badges](brand/COMMUNITY_BADGES.md) for all variants and usage gui
 | **ThinkTools Chain** | ✅ Stable     | Core reasoning protocols production-ready              |
 | **MCP Server**       | ✅ Stable     | Model Context Protocol integration                     |
 | **CLI**              | 🔶 Scaffolded | `mcp`, `serve-mcp`, `completions` work; others planned |
-| **Memory Features**  | ✅ Stable     | Via `reasonkit-mem` crate                              |
+| **Memory Features**  | ✅ Stable     | Via [`reasonkit-mem`](https://crates.io/crates/reasonkit-mem) crate                              |
 | **Python Bindings**  | 🔶 Beta       | Build from source with `--features python`             |
 
-**Current Version:** v0.1.2 | [CHANGELOG](CHANGELOG.md) | [Releases](https://github.com/reasonkit/reasonkit-core/releases)
+**Current Version:** v0.1.5 | [CHANGELOG](CHANGELOG.md) | [Releases](https://github.com/reasonkit/reasonkit-core/releases) • [📦 Crates.io](https://crates.io/crates/reasonkit-core) • [📚 Docs.rs](https://docs.rs/reasonkit-core)
 
 ### Verify Installation
 
@@ -506,6 +556,8 @@ rk serve-mcp --help
 OPENAI_API_KEY=your-key rk mcp
 ```
 
+**📖 Troubleshooting:** [Installation Issues](https://docs.reasonkit.sh/getting-started/installation#troubleshooting) • [Common Problems](https://docs.reasonkit.sh/troubleshooting)
+
 ---
 
 ## License
@@ -513,6 +565,8 @@ OPENAI_API_KEY=your-key rk mcp
 **Apache 2.0** - See [LICENSE](https://github.com/reasonkit/reasonkit-core/blob/main/LICENSE)
 
 **Open Source Core:** All core reasoning protocols and ThinkTools are open source under Apache 2.0.
+
+**📖 License Information:** [LICENSE](LICENSE) • [License Strategy](https://reasonkit.sh/about/license)
 
 ---
 
@@ -524,6 +578,8 @@ OPENAI_API_KEY=your-key rk mcp
 
 _Designed, Not Dreamed_
 
-[Website](https://reasonkit.sh) | [Documentation](https://docs.reasonkit.sh) | [GitHub](https://github.com/reasonkit/reasonkit-core)
+[Website](https://reasonkit.sh) | [Pro](https://reasonkit.sh/pro/) | [Docs](https://docs.reasonkit.sh) | [Resources](https://reasonkit.sh/resources/) | [Enterprise](https://reasonkit.sh/enterprise/) | [About](https://reasonkit.sh/about/) | [GitHub](https://github.com/reasonkit/reasonkit-core)
+
+**📦 Package Links:** [Crates.io](https://crates.io/crates/reasonkit-core) • [Docs.rs](https://docs.rs/reasonkit-core) • [PyPI](https://pypi.org/project/reasonkit/)
 
 </div>
