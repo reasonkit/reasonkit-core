@@ -270,8 +270,10 @@ jobs:
           prefix-key: "v2-docs"
           cache-on-failure: true
 
+      # Use --features cli to match docs.rs metadata configuration
+      # (avoids python/arf/local-embeddings which require system deps not in docs.rs)
       - name: Build documentation
-        run: cargo doc --no-deps --all-features --locked
+        run: cargo doc --no-deps --features cli --locked
         env:
           RUSTDOCFLAGS: "-D warnings --cfg docsrs"
 
