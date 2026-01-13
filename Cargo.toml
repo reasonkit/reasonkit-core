@@ -111,7 +111,7 @@ base64 = "0.22"
 web-sys = { version = "0.3.83", features = ["ReadableStream"] }
 
 # PDF Processing
-lopdf = "0.38"
+lopdf = "0.39"
 
 # Text Processing
 pulldown-cmark = "0.13"
