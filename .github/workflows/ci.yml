@@ -320,6 +320,7 @@ jobs:
         # - rayon-core 1.13.0 requires Rust 1.80+, pin to 1.12.1
         # - toml 0.9.7+ / toml_writer 1.0.3+ require Rust 1.76+, pin to MSRV-compatible versions
         # - rangemap 1.7+ requires Rust 1.81+, pin to 1.6.0
+        # - time-core 0.1.5+ requires Rust 1.81+, pin to 0.1.4 (last 1.67+ compatible)
         #
         # Use stable cargo for lockfile generation (can handle edition2024 deps),
         # then pin specific versions down, then use MSRV for the actual check.
@@ -335,6 +336,7 @@ jobs:
           cargo +stable update toml@0.9 --precise 0.9.6
           cargo +stable update toml_writer --precise 1.0.2
           cargo +stable update rangemap --precise 1.6.0
+          cargo +stable update time-core --precise 0.1.4
           cargo +1.75 check --no-default-features --features cli
 
   # ===========================================================================
