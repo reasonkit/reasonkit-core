@@ -771,7 +771,7 @@ async fn handle_unauthenticated_upgrade<V: ApiKeyValidator>(
     };
 
     if let Ok(json) = serde_json::to_string(&auth_result) {
-        let _ = socket.send(Message::Text(json)).await;
+        let _ = socket.send(Message::Text(json.into())).await;
     }
 
     info!(
@@ -797,7 +797,7 @@ async fn send_auth_error(socket: &mut WebSocket, error: &WsAuthError) -> Result<
     };
 
     if let Ok(json) = serde_json::to_string(&result) {
-        socket.send(Message::Text(json)).await?;
+        socket.send(Message::Text(json.into())).await?;
     }
 
     // Send close frame
@@ -877,7 +877,7 @@ async fn handle_authenticated_socket(
                         }
                     });
                     if let Ok(json) = serde_json::to_string(&error_msg) {
-                        let _ = socket.send(Message::Text(json)).await;
+                        let _ = socket.send(Message::Text(json.into())).await;
                     }
                     continue;
                 }

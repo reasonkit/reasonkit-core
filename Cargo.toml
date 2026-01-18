@@ -180,7 +180,9 @@ toml = "0.9"
 num_cpus = "1.16"
 
 # JSON Schema Validation
-jsonschema = "0.38"
+# Note: jsonschema 0.27+ uses idna 1.x which requires icu_normalizer_data 2.1.1 (Rust 1.83+)
+# Pinned to 0.26.x for MSRV 1.75 compatibility
+jsonschema = "0.26"
 
 # File watching (for hot reload)
 notify = "8.2"
