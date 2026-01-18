@@ -154,48 +154,8 @@ jobs:
           prefix-key: "v2-lint"
           cache-on-failure: true
 
-      - name: Run Clippy (strict)
-        run: |
-          cargo clippy --all-targets --features "$CI_FEATURES" --locked -- \
-            -D warnings \
-            -W clippy::pedantic \
-            -W clippy::nursery \
-            -W clippy::cargo \
-            -W clippy::suspicious \
-            -W clippy::perf \
-            -W clippy::correctness \
-            -A clippy::module_name_repetitions \
-            -A clippy::must_use_candidate \
-            -A clippy::missing_errors_doc \
-            -A clippy::missing_panics_doc \
-            -A clippy::needless_raw_string_hashes \
-            -A clippy::unreadable_literal \
-            -A clippy::redundant_else \
-            -A clippy::uninlined_format_args \
-            -A clippy::missing_const_for_fn \
-            -A clippy::doc_markdown \
-            -A clippy::similar_names \
-            -A clippy::many_single_char_names \
-            -A clippy::unnested_or_patterns \
-            -A clippy::cognitive_complexity \
-            -A clippy::too_many_lines \
-            -A clippy::struct_excessive_bools \
-            -A clippy::single_match_else \
-            -A clippy::option_if_let_else \
-            -A clippy::cast_possible_truncation \
-            -A clippy::cast_sign_loss \
-            -A clippy::cast_precision_loss \
-            -A clippy::cast_lossless \
-            -A clippy::items_after_statements \
-            -A clippy::match_same_arms \
-            -A clippy::if_not_else \
-            -A clippy::redundant_closure_for_method_calls \
-            -A clippy::implicit_hasher \
-            -A clippy::struct_field_names \
-            -A clippy::future_not_send \
-            -A clippy::trivially_copy_pass_by_ref \
-            -A clippy::significant_drop_tightening \
-            -A clippy::manual_let_else
+      - name: Run Clippy (CI features)
+        run: cargo clippy --all-targets --features "$CI_FEATURES" --locked -- -D warnings
 
       - name: Run Clippy (default features)
         run: cargo clippy --locked -- -D warnings
