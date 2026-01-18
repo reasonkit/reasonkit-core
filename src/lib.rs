@@ -1,6 +1,6 @@
 #![doc = include_str!("../README.md")]
+// doc_auto_cfg was merged into doc_cfg in Rust 1.92
 #![cfg_attr(docsrs, feature(doc_cfg))]
-#![cfg_attr(docsrs, feature(doc_auto_cfg))]
 
 //! # ReasonKit Core
 //!
