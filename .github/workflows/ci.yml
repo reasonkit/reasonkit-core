@@ -294,7 +294,12 @@ jobs:
     steps:
       - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v4
 
-      - name: Install Rust toolchain (MSRV)
+      - name: Install stable Rust (for lockfile generation)
+        uses: dtolnay/rust-toolchain@f7ccc83f9ed1e5b9c81d8a67d7ad1a747e22a561 # master
+        with:
+          toolchain: stable
+
+      - name: Install MSRV toolchain
         uses: dtolnay/rust-toolchain@f7ccc83f9ed1e5b9c81d8a67d7ad1a747e22a561 # master
         with:
           toolchain: "1.75"
@@ -309,14 +314,21 @@ jobs:
         # arf feature requires Rust 1.82+ (wasmtime uses edition2024)
         # Removed Cargo.lock first because it contains optional deps with higher MSRV
         # Then pin transitive deps that would otherwise resolve to versions requiring newer Rust:
-        # - pest/pest_derive 2.8.5 requires Rust 1.83+, pin to 2.8.4
+        # - pest ecosystem 2.8.5 requires Rust 1.83+, pin all to 2.8.4
+        #   (pest_derive requires matching pest version, so pin all together)
         # - deranged 0.5.5 requires Rust 1.81+, pin to 0.5.4
+        #
+        # Use stable cargo for lockfile generation (can handle edition2024 deps),
+        # then pin specific versions down, then use MSRV for the actual check.
         run: |
-          rm Cargo.lock
-          cargo update pest --precise 2.8.4
-          cargo update pest_derive --precise 2.8.4
-          cargo update deranged --precise 0.5.4
-          cargo check --no-default-features --features cli
+          rm -f Cargo.lock
+          cargo +stable generate-lockfile
+          cargo +stable update pest_derive --precise 2.8.4
+          cargo +stable update pest_generator --precise 2.8.4
+          cargo +stable update pest_meta --precise 2.8.4
+          cargo +stable update pest --precise 2.8.4
+          cargo +stable update deranged --precise 0.5.4
+          cargo +1.75 check --no-default-features --features cli
 
   # ===========================================================================
   # Security Audit
