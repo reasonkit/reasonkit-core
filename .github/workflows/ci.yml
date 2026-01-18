@@ -331,7 +331,7 @@ jobs:
           cargo +stable update pest --precise 2.8.4
           cargo +stable update deranged --precise 0.5.4
           cargo +stable update rayon-core --precise 1.12.1
-          cargo +stable update toml --precise 0.9.6
+          cargo +stable update toml@0.9 --precise 0.9.6
           cargo +1.75 check --no-default-features --features cli
 
   # ===========================================================================
