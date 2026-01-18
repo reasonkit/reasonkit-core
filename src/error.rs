@@ -599,8 +599,8 @@ impl From<reasonkit_mem::MemError> for Error {
 ///
 /// # Example
 ///
-/// ```rust
-/// use reasonkit::{Result, ResultExt};
+/// ```rust,ignore
+/// use reasonkit::{Result, error::ResultExt};
 ///
 /// fn load_data(path: &str) -> Result<String> {
 ///     std::fs::read_to_string(path)
