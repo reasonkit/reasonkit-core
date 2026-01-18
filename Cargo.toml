@@ -191,7 +191,9 @@ num_cpus = "1.16"
 notify = "8.2"
 
 # Rayon for parallel processing
-rayon = "1.10"
+# Note: rayon 1.11+ uses rayon-core 1.13 which requires Rust 1.80
+# Pinned to 1.10.0 for MSRV 1.75 compatibility
+rayon = "=1.10.0"
 
 # Lazy initialization
 once_cell = "1.19"
