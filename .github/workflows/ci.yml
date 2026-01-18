@@ -307,7 +307,10 @@ jobs:
         # Note: Using --no-default-features to avoid optional deps that require newer Rust
         # local-embeddings feature requires Rust 1.82+ (ort uses edition2024)
         # arf feature requires Rust 1.82+ (wasmtime uses edition2024)
-        run: cargo check --no-default-features --features cli
+        # Removed Cargo.lock first because it contains optional deps with higher MSRV
+        run: |
+          rm Cargo.lock
+          cargo check --no-default-features --features cli
 
   # ===========================================================================
   # Security Audit

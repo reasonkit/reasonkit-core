@@ -121,7 +121,9 @@ scraper = "0.25"
 regex = "1.10"
 
 # URL Parsing (for SSRF protection)
-url = "2.5"
+# Note: url 2.5+ uses idna 1.x which requires zerovec 0.11+ (Rust 1.82+)
+# Pinned to 2.4.x for MSRV 1.75 compatibility
+url = "2.4"
 
 # Vector Database (optional - use reasonkit-mem for full memory features)
 qdrant-client = { version = "1.10", optional = true }
@@ -141,7 +143,9 @@ futures = { version = "0.3", default-features = false, features = ["std"] }
 futures-util = { version = "0.3", features = ["std"] }
 
 # HTTP Client
-reqwest = { version = "0.13", features = ["json", "stream"] }
+# Note: reqwest 0.12+ uses url 2.5+ which requires zerovec 0.11+ (Rust 1.82+)
+# Pinned to 0.11.x for MSRV 1.75 compatibility (uses url 2.4 / idna 0.x)
+reqwest = { version = "0.11", features = ["json", "stream", "rustls-tls"], default-features = false }
 
 # CLI
 clap = { version = "4", features = ["derive", "env"] }
@@ -180,10 +184,8 @@ dotenvy = "0.15"
 toml = "0.9"
 num_cpus = "1.16"
 
-# JSON Schema Validation
-# Note: jsonschema 0.27+ uses idna 1.x which requires icu_normalizer_data 2.1.1 (Rust 1.83+)
-# Pinned to 0.26.x for MSRV 1.75 compatibility
-jsonschema = "0.26"
+# JSON Schema Validation - removed as unused and incompatible with MSRV 1.75
+# (jsonschema 0.18+ requires idna 1.x / zerovec 0.11+ which needs Rust 1.82+)
 
 # File watching (for hot reload)
 notify = "8.2"
