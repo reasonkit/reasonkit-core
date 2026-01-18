@@ -176,9 +176,11 @@ sha2 = "0.10"
 secrecy = { version = "0.10", features = ["serde"] }
 
 # SQLite for local telemetry storage
-# Note: rusqlite 0.38+ requires Rust 1.81+ (libsqlite3-sys 0.36+ uses #[expect])
-# Pinned to 0.33 for MSRV 1.75 compatibility
-rusqlite = { version = "0.33", features = ["bundled"] }
+# Note: rusqlite 0.31+ requires newer Rust due to libsqlite3-sys using:
+#   - #[expect] attribute (Rust 1.81+)
+#   - c".." C string literals (Rust 1.77+)
+# Pinned to 0.30 for MSRV 1.75 compatibility
+rusqlite = { version = "0.30", features = ["bundled"] }
 
 # Configuration
 config = "0.15"
