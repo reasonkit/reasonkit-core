@@ -299,11 +299,9 @@ jobs:
         with:
           toolchain: "1.75"
 
-      - name: Cache Rust artifacts
-        uses: Swatinem/rust-cache@779680da715d629ac1d338a641029a2f4372abb5 # v2
-        with:
-          prefix-key: "v2-msrv"
-          cache-on-failure: true
+      # Note: Skipping rust-cache for MSRV check because cargo metadata --all-features
+      # downloads dependencies that require edition2024 (ort, wasmtime) which fails
+      # with Rust 1.75's cargo. Manual dependency download is fast enough.
 
       - name: Check MSRV compatibility
         # Note: Using --no-default-features to avoid optional deps that require newer Rust
