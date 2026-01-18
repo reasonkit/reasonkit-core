@@ -201,6 +201,8 @@ dirs = "6"
 walkdir = "2.4"
 
 # ONNX Runtime for local embeddings (BGE-M3)
+# Note: ort 2.0+ uses edition2024, requires Rust 1.82+
+# local-embeddings feature is excluded from MSRV check
 ort = { version = "2.0.0-rc.10", optional = true }
 
 # HuggingFace tokenizers
