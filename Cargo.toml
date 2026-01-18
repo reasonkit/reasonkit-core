@@ -100,8 +100,9 @@ required-features = ["glm46"]
 # ============================================================================
 
 [dependencies]
-# Python Integration (0.24+ supports Python 3.13) - optional
-pyo3 = { version = "0.27.2", features = ["extension-module"], optional = true }
+# Python Integration - optional
+# Note: pyo3 0.23+ removed ToPyObject trait, code uses 0.22.x API
+pyo3 = { version = "0.22", features = ["extension-module"], optional = true }
 
 # Serialization
 serde = { version = "1.0", features = ["derive"] }
@@ -217,7 +218,8 @@ ndarray = { version = "0.17", optional = true }
 sled = { version = "0.34", optional = true }
 # Note: wasmtime 20+ uses cranelift with edition2024, pinned to 19.x for MSRV 1.75
 wasmtime = { version = "19.0", optional = true }
-sysinfo = { version = "0.37", optional = true }
+# Note: sysinfo 0.32+ changed API (global_cpu_info → cpus), code uses 0.31.x API
+sysinfo = { version = "0.31", optional = true }
 petgraph = { version = "0.8", optional = true, features = ["serde-1"] }
 rust-bert = { version = "0.23", optional = true, features = ["download-libtorch", "hf-tokenizers"], default-features = false }
 parking_lot = { version = "0.12" }  # Used for ws_auth connection tracking
