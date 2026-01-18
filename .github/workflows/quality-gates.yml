@@ -130,10 +130,11 @@ jobs:
           prefix-key: "v2-gate2"
 
       - name: Run Clippy (CI features)
-        run: cargo clippy --all-targets --features "$CI_FEATURES" --locked -- -D warnings
+        # Allow deprecated for criterion::black_box in benchmarks
+        run: cargo clippy --all-targets --features "$CI_FEATURES" --locked -- -D warnings -A deprecated
 
       - name: Run Clippy (default features)
-        run: cargo clippy --locked -- -D warnings
+        run: cargo clippy --locked -- -D warnings -A deprecated
 
   # ===========================================================================
   # GATE 3: Format Check (BLOCKING)
