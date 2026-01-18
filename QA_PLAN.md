@@ -420,5 +420,5 @@ Date: 2025-12-11
 
 ---
 
-*"Quality is not an act, it is a habit." - Aristotle*
-*"Designed, Not Dreamed." - ReasonKit*
+_"Quality is not an act, it is a habit." - Aristotle_
+_"Designed, Not Dreamed." - ReasonKit_

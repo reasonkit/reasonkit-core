@@ -3,7 +3,7 @@
 > **Classification:** ULTIMATE MASTER SOURCE OF TRUTH
 > **Enforcement:** HARD - ALL AI agents and projects MUST comply
 > **Last Updated:** 2025-12-31
-> **Supersedes:** All other BRAND*.md files across RK-PROJECT
+> **Supersedes:** All other BRAND\*.md files across RK-PROJECT
 
 ---
 
@@ -72,38 +72,40 @@ The ReasonKit voice is unique. It is **Competence Porn** in text form. It doesn'
 
 ### The Voice Matrix
 
-| Dimension | Description |
-| :--- | :--- |
-| **Visionary but Grounded** | We talk about AGI and reasoning chains, but we ground every claim in Rust reliability and memory safety. We dream in code, not concepts. |
-| **Authoritative but Not Arrogant** | We don't say we're the best because we say so; we say it because we measured the variance reduction (85% → 28%). Show, don't just tell. |
-| **Technical but Accessible** | We assume intelligence but not specific context. We explain complex architectures with crystal clarity, respecting the reader's time. |
-| **Instructional vs. Conversational** | We don't "chat." We "direct." Our documentation reads like a flight manual, not a blog post. |
+| Dimension                            | Description                                                                                                                              |
+| :----------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------- |
+| **Visionary but Grounded**           | We talk about AGI and reasoning chains, but we ground every claim in Rust reliability and memory safety. We dream in code, not concepts. |
+| **Authoritative but Not Arrogant**   | We don't say we're the best because we say so; we say it because we measured the variance reduction (85% → 28%). Show, don't just tell.  |
+| **Technical but Accessible**         | We assume intelligence but not specific context. We explain complex architectures with crystal clarity, respecting the reader's time.    |
+| **Instructional vs. Conversational** | We don't "chat." We "direct." Our documentation reads like a flight manual, not a blog post.                                             |
 
 ### The "Before & After" Examples
 
-| Context | ❌ Generic AI Brand (Weak) | ✅ ReasonKit Voice (Strong) |
-| :--- | :--- | :--- |
-| **Value Prop** | "ReasonKit helps you get better answers from your AI models effortlessly." | "ReasonKit forces LLMs to abandon probabilistic guessing in favor of structured, auditable reasoning chains." |
-| **Reliability** | "You can trust our system to be safe and secure." | "Auditable by default. If it isn't in the logs, it didn't happen. We trade magic for metrics." |
-| **Speed** | "Blazing fast performance for your apps." | "Core reasoning loops execute in <5ms. Rust supremacy means zero garbage collection pauses." |
-| **Error Handling** | "Oops! Something went wrong." | "Reasoning chain diverged at Step 4. Circuit breaker activated. Retrying with temperature 0.1." |
+| Context            | ❌ Generic AI Brand (Weak)                                                 | ✅ ReasonKit Voice (Strong)                                                                                   |
+| :----------------- | :------------------------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------ |
+| **Value Prop**     | "ReasonKit helps you get better answers from your AI models effortlessly." | "ReasonKit forces LLMs to abandon probabilistic guessing in favor of structured, auditable reasoning chains." |
+| **Reliability**    | "You can trust our system to be safe and secure."                          | "Auditable by default. If it isn't in the logs, it didn't happen. We trade magic for metrics."                |
+| **Speed**          | "Blazing fast performance for your apps."                                  | "Core reasoning loops execute in <5ms. Rust supremacy means zero garbage collection pauses."                  |
+| **Error Handling** | "Oops! Something went wrong."                                              | "Reasoning chain diverged at Step 4. Circuit breaker activated. Retrying with temperature 0.1."               |
 
 ### Key Lexicon & Banned Words
 
 **✅ USE THESE:**
-*   **Protocol:** Implies structure and rules.
-*   **Architecture:** We build systems, not just prompts.
-*   **Determinism:** The ultimate goal.
-*   **Variance Reduction:** The measurable benefit.
-*   **Pipeline / Chain / Tree:** Structural metaphors.
-*   **Inject / Extract / Synthesize:** Active engineering verbs.
+
+- **Protocol:** Implies structure and rules.
+- **Architecture:** We build systems, not just prompts.
+- **Determinism:** The ultimate goal.
+- **Variance Reduction:** The measurable benefit.
+- **Pipeline / Chain / Tree:** Structural metaphors.
+- **Inject / Extract / Synthesize:** Active engineering verbs.
 
 **❌ BAN THESE:**
-*   **Magic:** There is no magic, only unexamined code.
-*   **Hope / Imagine:** We don't hope; we design.
-*   **Seamless:** Nothing is seamless. It is "integrated."
-*   **Game-changer:** Show the delta, don't hype it.
-*   **Empower:** Too vague. Use "enable" or "equip."
+
+- **Magic:** There is no magic, only unexamined code.
+- **Hope / Imagine:** We don't hope; we design.
+- **Seamless:** Nothing is seamless. It is "integrated."
+- **Game-changer:** Show the delta, don't hype it.
+- **Empower:** Too vague. Use "enable" or "equip."
 
 ---
 
@@ -115,24 +117,25 @@ To ensure this voice remains consistent across thousands of commits, we adhere t
 
 We use **Vale** to police our prose.
 
-*   **No Passive Voice:** Active voice is responsible voice.
-    *   *Bad:* "The data was processed." (By whom? The data fairy?)
-    *   *Good:* "The `ReasoningEngine` processed the data."
-*   **No Weasel Words:**
-    *   *Error:* "ReasonKit aims to improve..."
-    *   *Fix:* "ReasonKit improves..."
-*   **Sentence Length:** Keep it punchy. If a sentence has more than 3 commas, break it.
+- **No Passive Voice:** Active voice is responsible voice.
+  - _Bad:_ "The data was processed." (By whom? The data fairy?)
+  - _Good:_ "The `ReasoningEngine` processed the data."
+- **No Weasel Words:**
+  - _Error:_ "ReasonKit aims to improve..."
+  - _Fix:_ "ReasonKit improves..."
+- **Sentence Length:** Keep it punchy. If a sentence has more than 3 commas, break it.
 
 ### 2. Textlint Rules
 
-*   **`textlint-rule-terminology`:** Enforces correct casing (`ReasonKit`, `Rust`, `LLM`, `MCP`).
-*   **`textlint-rule-no-dead-link`:** A broken link is a broken promise.
+- **`textlint-rule-terminology`:** Enforces correct casing (`ReasonKit`, `Rust`, `LLM`, `MCP`).
+- **`textlint-rule-no-dead-link`:** A broken link is a broken promise.
 
 ### 3. ProofGuard in Documentation
 
 Every claim in our documentation must be triangulated.
-*   *Rule:* If you claim "20% faster," you must link to the benchmark.
-*   *Rule:* If you claim "Secure by default," you must reference the specific security protocol (e.g., "Sandboxed WASM execution").
+
+- _Rule:_ If you claim "20% faster," you must link to the benchmark.
+- _Rule:_ If you claim "Secure by default," you must reference the specific security protocol (e.g., "Sandboxed WASM execution").
 
 ---
 
@@ -480,10 +483,10 @@ Need launch SVGs?      → brand/launch-svg/
 
 ## Version History
 
-| Version | Date       | Changes                                                                                                                                                                   |
-| ------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Version | Date       | Changes                                                                                                                                                                        |
+| ------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | 2.0.0   | 2026-01-08 | **MAJOR:** Complete "Brand Voice" overhaul. Added "Competence Porn" strategy, Voice Matrix, and Automated Enforcement sections. Updated philosophy to "Designed, Not Dreamed." |
-| 1.0.0   | 2025-12-31 | Initial BRAND_PLAYBOOK.md - Consolidated all brand assets.                                                                                                                |
+| 1.0.0   | 2025-12-31 | Initial BRAND_PLAYBOOK.md - Consolidated all brand assets.                                                                                                                     |
 
 ---
 
@@ -502,4 +505,4 @@ All AI agents, projects, documentation, and marketing materials MUST:
 
 ---
 
-*"Designed, Not Dreamed" | <https://reasonkit.sh>*
+_"Designed, Not Dreamed" | <https://reasonkit.sh>_

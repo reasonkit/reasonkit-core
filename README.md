@@ -533,13 +533,13 @@ If you use ReasonKit in your project, add our badge:
 
 ## Version & Maturity
 
-| Component            | Status        | Notes                                                  |
-| -------------------- | ------------- | ------------------------------------------------------ |
-| **ThinkTools Chain** | ✅ Stable     | Core reasoning protocols production-ready              |
-| **MCP Server**       | ✅ Stable     | Model Context Protocol integration                     |
-| **CLI**              | 🔶 Scaffolded | `mcp`, `serve-mcp`, `completions` work; others planned |
-| **Memory Features**  | ✅ Stable     | Via [`reasonkit-mem`](https://crates.io/crates/reasonkit-mem) crate                              |
-| **Python Bindings**  | 🔶 Beta       | Build from source with `--features python`             |
+| Component            | Status        | Notes                                                               |
+| -------------------- | ------------- | ------------------------------------------------------------------- |
+| **ThinkTools Chain** | ✅ Stable     | Core reasoning protocols production-ready                           |
+| **MCP Server**       | ✅ Stable     | Model Context Protocol integration                                  |
+| **CLI**              | 🔶 Scaffolded | `mcp`, `serve-mcp`, `completions` work; others planned              |
+| **Memory Features**  | ✅ Stable     | Via [`reasonkit-mem`](https://crates.io/crates/reasonkit-mem) crate |
+| **Python Bindings**  | 🔶 Beta       | Build from source with `--features python`                          |
 
 **Current Version:** v0.1.5 | [CHANGELOG](CHANGELOG.md) | [Releases](https://github.com/reasonkit/reasonkit-core/releases) • [📦 Crates.io](https://crates.io/crates/reasonkit-core) • [📚 Docs.rs](https://docs.rs/reasonkit-core)
 

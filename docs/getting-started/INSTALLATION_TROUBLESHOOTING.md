@@ -1125,13 +1125,13 @@ When opening an issue, include:
 
 ## Installation Methods Summary
 
-| Method               | Command                                           | Best For                       |
-| -------------------- | ------------------------------------------------- | ------------------------------ |
-| **Cargo Install**    | `cargo install reasonkit-core`                    | Rust developers, most reliable |
+| Method               | Command                                       | Best For                       |
+| -------------------- | --------------------------------------------- | ------------------------------ |
+| **Cargo Install**    | `cargo install reasonkit-core`                | Rust developers, most reliable |
 | **Universal Script** | `curl -fsSL https://get.reasonkit.sh \| bash` | Quick setup, auto-detection    |
-| **From Source**      | `git clone ... && cargo build --release`          | Development, customization     |
-| **npm**              | `npm install -g @reasonkit/cli`                   | Node.js ecosystem (wrapper)    |
-| **uv pip**           | `uv pip install reasonkit`                        | Python ecosystem (bindings)    |
+| **From Source**      | `git clone ... && cargo build --release`      | Development, customization     |
+| **npm**              | `npm install -g @reasonkit/cli`               | Node.js ecosystem (wrapper)    |
+| **uv pip**           | `uv pip install reasonkit`                    | Python ecosystem (bindings)    |
 
 ---
 

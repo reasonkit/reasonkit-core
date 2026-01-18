@@ -89,26 +89,26 @@ if daemon::daemon_is_running().await? {
 
 ## Implementation Status
 
-| Component | Status | Notes |
-|-----------|--------|-------|
-| Direct mode | ✓ Code ready | Needs integration |
-| Process mgmt | ✓ Code ready | Unix & Windows |
-| IPC server | ✓ Code ready | Unix sockets |
-| IPC client | ✓ Code ready | Message protocol |
-| Health monitor | ✓ Code ready | 30s interval |
-| Logger | ✓ Code ready | JSON structured |
-| Signal handlers | ✓ Code ready | SIGTERM/SIGINT |
-| CLI integration | ⏳ TODO | Update mcp_cli.rs |
-| Testing | ⏳ TODO | Integration tests |
-| Docs | ✓ Complete | See docs/ |
+| Component       | Status       | Notes             |
+| --------------- | ------------ | ----------------- |
+| Direct mode     | ✓ Code ready | Needs integration |
+| Process mgmt    | ✓ Code ready | Unix & Windows    |
+| IPC server      | ✓ Code ready | Unix sockets      |
+| IPC client      | ✓ Code ready | Message protocol  |
+| Health monitor  | ✓ Code ready | 30s interval      |
+| Logger          | ✓ Code ready | JSON structured   |
+| Signal handlers | ✓ Code ready | SIGTERM/SIGINT    |
+| CLI integration | ⏳ TODO      | Update mcp_cli.rs |
+| Testing         | ⏳ TODO      | Integration tests |
+| Docs            | ✓ Complete   | See docs/         |
 
 ## Platform Support
 
-| Platform | IPC Mechanism | Daemonization | Status |
-|----------|---------------|---------------|--------|
-| Linux | Unix sockets | double-fork | ✓ Implemented |
-| macOS | Unix sockets | double-fork | ✓ Implemented |
-| Windows | Named pipes | Detached process | ✓ Implemented |
+| Platform | IPC Mechanism | Daemonization    | Status        |
+| -------- | ------------- | ---------------- | ------------- |
+| Linux    | Unix sockets  | double-fork      | ✓ Implemented |
+| macOS    | Unix sockets  | double-fork      | ✓ Implemented |
+| Windows  | Named pipes   | Detached process | ✓ Implemented |
 
 ## Configuration
 
@@ -144,11 +144,11 @@ max_files = 5
 
 ## Performance
 
-| Operation | Direct Mode | Daemon Mode | Improvement |
-|-----------|-------------|-------------|-------------|
-| Cold start | ~500ms | ~50ms | **10x faster** |
-| Warm call | ~300ms | ~20ms | **15x faster** |
-| Memory | 20MB/call | 50MB persistent | Shared pool |
+| Operation  | Direct Mode | Daemon Mode     | Improvement    |
+| ---------- | ----------- | --------------- | -------------- |
+| Cold start | ~500ms      | ~50ms           | **10x faster** |
+| Warm call  | ~300ms      | ~20ms           | **15x faster** |
+| Memory     | 20MB/call   | 50MB persistent | Shared pool    |
 
 ## Security
 

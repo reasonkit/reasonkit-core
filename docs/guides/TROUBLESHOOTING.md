@@ -236,17 +236,17 @@ uname -a
 
 ## Quick Reference: Common Fixes
 
-| Problem                      | Quick Fix                               |
-| ---------------------------- | --------------------------------------- |
+| Problem                 | Quick Fix                               |
+| ----------------------- | --------------------------------------- |
 | `rk: command not found` | `export PATH="$HOME/.cargo/bin:$PATH"`  |
-| `API key not found`          | `export ANTHROPIC_API_KEY="sk-ant-..."` |
-| `Rate limit exceeded`        | `rk think "..." --provider groq`   |
-| `cargo not found`            | `curl -sSf https://sh.rustup.rs \| sh`  |
-| `linker not found`           | `xcode-select --install` (macOS)        |
-| `OpenSSL not found`          | `brew install openssl@3` (macOS)        |
-| `Timeout`                    | `--profile quick` or `--budget "5m"`    |
-| `JSON parse error`           | `--format json` flag explicitly         |
-| `Permission denied`          | Don't use `sudo` with cargo             |
+| `API key not found`     | `export ANTHROPIC_API_KEY="sk-ant-..."` |
+| `Rate limit exceeded`   | `rk think "..." --provider groq`        |
+| `cargo not found`       | `curl -sSf https://sh.rustup.rs \| sh`  |
+| `linker not found`      | `xcode-select --install` (macOS)        |
+| `OpenSSL not found`     | `brew install openssl@3` (macOS)        |
+| `Timeout`               | `--profile quick` or `--budget "5m"`    |
+| `JSON parse error`      | `--format json` flag explicitly         |
+| `Permission denied`     | Don't use `sudo` with cargo             |
 
 ---
 
