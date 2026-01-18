@@ -533,13 +533,13 @@ If you use ReasonKit in your project, add our badge:
 
 ## Version & Maturity
 
-| Component            | Status        | Notes                                                  |
-| -------------------- | ------------- | ------------------------------------------------------ |
-| **ThinkTools Chain** | ✅ Stable     | Core reasoning protocols production-ready              |
-| **MCP Server**       | ✅ Stable     | Model Context Protocol integration                     |
-| **CLI**              | 🔶 Scaffolded | `mcp`, `serve-mcp`, `completions` work; others planned |
-| **Memory Features**  | ✅ Stable     | Via [`reasonkit-mem`](https://crates.io/crates/reasonkit-mem) crate                              |
-| **Python Bindings**  | 🔶 Beta       | Build from source with `--features python`             |
+| Component            | Status        | Notes                                                               |
+| -------------------- | ------------- | ------------------------------------------------------------------- |
+| **ThinkTools Chain** | ✅ Stable     | Core reasoning protocols production-ready                           |
+| **MCP Server**       | ✅ Stable     | Model Context Protocol integration                                  |
+| **CLI**              | 🔶 Scaffolded | `mcp`, `serve-mcp`, `completions` work; others planned              |
+| **Memory Features**  | ✅ Stable     | Via [`reasonkit-mem`](https://crates.io/crates/reasonkit-mem) crate |
+| **Python Bindings**  | 🔶 Beta       | Build from source with `--features python`                          |
 
 **Current Version:** v0.1.5 | [CHANGELOG](CHANGELOG.md) | [Releases](https://github.com/reasonkit/reasonkit-core/releases) • [📦 Crates.io](https://crates.io/crates/reasonkit-core) • [📚 Docs.rs](https://docs.rs/reasonkit-core)
 
@@ -566,7 +566,7 @@ OPENAI_API_KEY=your-key rk mcp
 
 **Open Source Core:** All core reasoning protocols and ThinkTools are open source under Apache 2.0.
 
-**📖 License Information:** [LICENSE](LICENSE) • [License Strategy](https://reasonkit.sh/about/license)
+**📖 License Information:** [LICENSE](https://github.com/reasonkit/reasonkit-core/blob/main/LICENSE) • [License Strategy](https://reasonkit.sh/about/license)
 
 ---
 

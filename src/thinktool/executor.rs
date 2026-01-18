@@ -993,7 +993,6 @@ impl ProtocolExecutor {
 
     /// Static version of extract_confidence for use in parallel execution
     fn extract_confidence_static(content: &str) -> Option<f64> {
-        use once_cell::sync::Lazy;
         static CONFIDENCE_RE: Lazy<Regex> = Lazy::new(|| {
             Regex::new(r"(?i)confidence[:\s]+(\d+\.?\d*)").expect("Invalid regex pattern")
         });
@@ -1698,8 +1697,6 @@ impl ProtocolExecutor {
     /// Extract list items from response text
     /// Handles multiple formats: numbered (1. 2. 10.), bullets (- *), bold headers (**item**)
     fn extract_list_items(&self, content: &str) -> Vec<ListItem> {
-        use once_cell::sync::Lazy;
-
         // Compile regexes once (static lifetime)
         static NUMBERED_RE: Lazy<regex::Regex> =
             Lazy::new(|| regex::Regex::new(r"^\d+[\.\)]\s*(.+)$").expect("Invalid regex pattern"));

@@ -10,6 +10,7 @@
 ## Executive Summary
 
 This document describes the architecture for ReasonKit's MCP daemon mode, enabling:
+
 1. **Direct tool invocation** via `rk mcp call-tool` without requiring a persistent server
 2. **Optional background daemon** for persistent connections and improved performance
 3. **Cross-platform IPC** using Unix domain sockets (Linux/macOS) and named pipes (Windows)
@@ -20,12 +21,14 @@ This document describes the architecture for ReasonKit's MCP daemon mode, enabli
 ## Problem Statement
 
 **Current State:**
+
 - `rk mcp call-tool gigathink '{"query": "..."}'` shows "coming soon" message
 - Users must manually start MCP servers
 - No persistent connection pooling
 - Each tool call spawns new process overhead
 
 **Requirements:**
+
 1. Direct tool execution without manual server management
 2. Optional persistent daemon for performance
 3. Health checking and auto-recovery
@@ -78,6 +81,7 @@ This document describes the architecture for ReasonKit's MCP daemon mode, enabli
 ### 1. Mode Selection Strategy
 
 **Decision Tree:**
+
 ```rust
 pub async fn execute_mcp_tool(name: &str, args: &str) -> Result<ToolResult> {
     // 1. Check if daemon is running
@@ -92,6 +96,7 @@ pub async fn execute_mcp_tool(name: &str, args: &str) -> Result<ToolResult> {
 ```
 
 **Benefits:**
+
 - Zero-config operation (direct mode "just works")
 - Optional performance mode (daemon)
 - No breaking changes to existing workflows
@@ -103,6 +108,7 @@ pub async fn execute_mcp_tool(name: &str, args: &str) -> Result<ToolResult> {
 #### Unix Domain Sockets (Linux/macOS)
 
 **Socket Path Strategy:**
+
 ```rust
 pub fn get_socket_path() -> PathBuf {
     // XDG Base Directory Spec compliance
@@ -120,12 +126,14 @@ pub fn get_socket_path() -> PathBuf {
 ```
 
 **Benefits:**
+
 - File permissions for security
 - Auto-cleanup on disconnect
 - Standard Unix convention
 - Fast local IPC
 
 **Socket Permissions:**
+
 ```rust
 use std::os::unix::fs::PermissionsExt;
 
@@ -137,6 +145,7 @@ std::fs::set_permissions(&socket_path, perms)?;
 #### Named Pipes (Windows)
 
 **Pipe Name:**
+
 ```rust
 pub fn get_pipe_name() -> String {
     format!(r"\\.\pipe\reasonkit-mcp-{}", whoami::username())
@@ -144,6 +153,7 @@ pub fn get_pipe_name() -> String {
 ```
 
 **Benefits:**
+
 - Native Windows IPC
 - Per-user isolation
 - Compatible with Windows security model
@@ -614,6 +624,7 @@ reasonkit-core/
 ## Implementation Phases
 
 ### Phase 1: Direct Mode (Week 1)
+
 - [ ] Implement `direct_call_tool()` function
 - [ ] Update `mcp_cli.rs` CallTool command
 - [ ] Add error handling and retries
@@ -622,6 +633,7 @@ reasonkit-core/
 **Deliverable:** `rk mcp call-tool gigathink '{"query": "..."}'` works without daemon
 
 ### Phase 2: Daemon Foundation (Week 2)
+
 - [ ] Create `src/mcp/daemon/` module structure
 - [ ] Implement process management (start/stop/status)
 - [ ] Add PID file handling
@@ -630,6 +642,7 @@ reasonkit-core/
 **Deliverable:** `rk mcp daemon start|stop|status` commands work
 
 ### Phase 3: IPC Implementation (Week 3)
+
 - [ ] Implement Unix domain socket server/client
 - [ ] Implement Windows named pipe server/client
 - [ ] Add message protocol (IpcMessage enum)
@@ -638,6 +651,7 @@ reasonkit-core/
 **Deliverable:** IPC communication works end-to-end
 
 ### Phase 4: Integration (Week 4)
+
 - [ ] Update CLI to auto-detect daemon
 - [ ] Implement fallback logic (daemon → direct)
 - [ ] Add health monitoring
@@ -646,6 +660,7 @@ reasonkit-core/
 **Deliverable:** Seamless mode switching
 
 ### Phase 5: Operations (Week 5)
+
 - [ ] Implement log rotation
 - [ ] Add metrics collection
 - [ ] Create systemd unit file (Linux)
@@ -789,18 +804,21 @@ pub struct DaemonStats {
 ## Testing Strategy
 
 ### Unit Tests
+
 - Process management functions
 - IPC message serialization
 - Health check logic
 - Log rotation
 
 ### Integration Tests
+
 - Full daemon lifecycle (start/stop/restart)
 - IPC communication end-to-end
 - Graceful shutdown
 - Error recovery
 
 ### Performance Tests
+
 - Connection pooling efficiency
 - IPC throughput (requests/sec)
 - Memory footprint over time
@@ -811,16 +829,19 @@ pub struct DaemonStats {
 ## Rollout Strategy
 
 ### Phase 1: Opt-in (v0.2.0)
+
 - Daemon is OFF by default
 - Users explicitly run `rk mcp daemon start`
 - Direct mode is default
 
 ### Phase 2: Opt-out (v0.3.0)
+
 - Daemon auto-starts on first tool call
 - Users can disable with `daemon.enabled = false`
 - Migration guide for existing users
 
 ### Phase 3: Default (v1.0.0)
+
 - Daemon is standard mode
 - Direct mode available as fallback
 - systemd/launchd integration for auto-start

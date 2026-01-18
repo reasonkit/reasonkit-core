@@ -6,7 +6,7 @@
 use crate::error::Result;
 use std::collections::HashMap;
 use std::sync::Arc;
-use sysinfo::{Disks, System};
+use sysinfo::{CpuExt, DiskExt, ProcessExt, System, SystemExt};
 use tokio::sync::RwLock;
 use tokio::time::{self, Duration};
 
@@ -205,11 +205,14 @@ impl ImmuneSystem {
 
     /// Calculate disk usage percentage
     fn calculate_disk_usage() -> f32 {
-        let disks = Disks::new_with_refreshed_list();
+        let mut system = System::new();
+        system.refresh_disks_list();
+        system.refresh_disks();
+
         let mut total_percent = 0.0;
         let mut count = 0u32;
 
-        for disk in disks.iter() {
+        for disk in system.disks() {
             let total = disk.total_space() as f32;
             let available = disk.available_space() as f32;
             if total > 0.0 {

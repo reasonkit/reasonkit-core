@@ -752,14 +752,14 @@ fn json_to_pyobject<'py>(
         }
         serde_json::Value::String(s) => Ok(s.to_object(py).into_bound(py)),
         serde_json::Value::Array(arr) => {
-            let list = PyList::empty(py);
+            let list = PyList::empty_bound(py);
             for item in arr {
                 list.append(json_to_pyobject(py, item)?)?;
             }
             Ok(list.into_any())
         }
         serde_json::Value::Object(map) => {
-            let dict = PyDict::new(py);
+            let dict = PyDict::new_bound(py);
             for (k, v) in map {
                 dict.set_item(k, json_to_pyobject(py, v)?)?;
             }
@@ -781,7 +781,7 @@ pub fn register_bindings(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_class::<StepResultPy>()?;
 
     // Exception
-    m.add("ReasonerError", m.py().get_type::<ReasonerError>())?;
+    m.add("ReasonerError", m.py().get_type_bound::<ReasonerError>())?;
 
     // Convenience functions
     m.add_function(wrap_pyfunction!(run_gigathink, m)?)?;

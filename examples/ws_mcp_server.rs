@@ -35,7 +35,7 @@ use axum::{
     routing::{any, get},
     Json, Router,
 };
-use futures_util::SinkExt;
+// futures_util::SinkExt is used indirectly by axum WebSocket
 use parking_lot::RwLock;
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
@@ -218,6 +218,12 @@ pub struct ServerState {
     tracker: Arc<ConnectionTracker>,
 }
 
+impl Default for ServerState {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl ServerState {
     pub fn new() -> Self {
         let mut keys = HashMap::new();
@@ -277,13 +283,7 @@ impl ServerState {
         headers
             .get("Authorization")
             .and_then(|v| v.to_str().ok())
-            .map(|s| {
-                if s.starts_with("Bearer ") {
-                    s[7..].to_string()
-                } else {
-                    s.to_string()
-                }
-            })
+            .map(|s| s.strip_prefix("Bearer ").unwrap_or(s).to_string())
     }
 }
 
@@ -499,7 +499,7 @@ async fn handle_unauthenticated_socket(
     };
 
     if let Ok(json) = serde_json::to_string(&auth_result) {
-        let _ = socket.send(Message::Text(json.into())).await;
+        let _ = socket.send(Message::Text(json)).await;
     }
 
     info!(
@@ -523,7 +523,7 @@ async fn send_auth_error(socket: &mut WebSocket, error: &str) -> Result<(), axum
     };
 
     if let Ok(json) = serde_json::to_string(&result) {
-        socket.send(Message::Text(json.into())).await?;
+        socket.send(Message::Text(json)).await?;
     }
 
     socket
@@ -552,7 +552,7 @@ async fn handle_mcp_socket(
                 if let Err(e) = tracker.check_rate_limit(connection_id) {
                     let error_resp = JsonRpcResponse::error(None, -32000, e);
                     if let Ok(json) = serde_json::to_string(&error_resp) {
-                        let _ = socket.send(Message::Text(json.into())).await;
+                        let _ = socket.send(Message::Text(json)).await;
                     }
                     continue;
                 }
@@ -569,7 +569,7 @@ async fn handle_mcp_socket(
                         ),
                     );
                     if let Ok(json) = serde_json::to_string(&error_resp) {
-                        let _ = socket.send(Message::Text(json.into())).await;
+                        let _ = socket.send(Message::Text(json)).await;
                     }
                     continue;
                 }
@@ -581,7 +581,7 @@ async fn handle_mcp_socket(
                         let error_resp =
                             JsonRpcResponse::error(None, -32700, format!("Parse error: {}", e));
                         if let Ok(json) = serde_json::to_string(&error_resp) {
-                            let _ = socket.send(Message::Text(json.into())).await;
+                            let _ = socket.send(Message::Text(json)).await;
                         }
                         continue;
                     }
@@ -608,7 +608,7 @@ async fn handle_mcp_socket(
                 };
 
                 if let Ok(json) = serde_json::to_string(&response) {
-                    if socket.send(Message::Text(json.into())).await.is_err() {
+                    if socket.send(Message::Text(json)).await.is_err() {
                         break;
                     }
                 }

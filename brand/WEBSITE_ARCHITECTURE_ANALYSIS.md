@@ -166,4 +166,4 @@ This maintains:
 
 ---
 
-*Analysis performed with PowerCombo (GigaThink → LaserLogic → BedRock → ProofGuard → BrutalHonesty)*
+_Analysis performed with PowerCombo (GigaThink → LaserLogic → BedRock → ProofGuard → BrutalHonesty)_
