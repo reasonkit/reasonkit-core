@@ -326,7 +326,7 @@ jobs:
         # - indexmap 2.12+ requires Rust 1.82+, pin to 2.11.4 (last 1.63+ compatible)
         # - derive_more 2.1+ requires Rust 1.81+, pin to 2.0.1 (last 1.75+ compatible)
         # - rusqlite 0.38+ uses libsqlite3-sys 0.36+ which uses #[expect] requiring Rust 1.81+
-        #   Pin rusqlite to 0.33.0 which uses libsqlite3-sys 0.30.x
+        #   (pinned in Cargo.toml to 0.33 for MSRV compatibility)
         #
         # Use stable cargo for lockfile generation (can handle edition2024 deps),
         # then pin specific versions down, then use MSRV for the actual check.
@@ -348,7 +348,6 @@ jobs:
           cargo +stable update time --precise 0.3.41
           cargo +stable update indexmap@2 --precise 2.11.4
           cargo +stable update derive_more --precise 2.0.1
-          cargo +stable update rusqlite --precise 0.33.0
           cargo +1.75 check --no-default-features --features cli
 
   # ===========================================================================
