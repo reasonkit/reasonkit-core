@@ -44,7 +44,8 @@ env:
   # Override .cargo/config.toml target-cpu=native to prevent SIGILL on different runners
   CARGO_TARGET_X86_64_UNKNOWN_LINUX_GNU_RUSTFLAGS: ""
   # CI-safe features (excludes local-embeddings, arf, python which require system deps)
-  CI_FEATURES: "cli,vibe,embedded-qdrant,code-intelligence,minimax,glm46,aesthetic,daemon"
+  # Also excludes experimental features with incomplete code (code-intelligence, minimax, glm46, vibe)
+  CI_FEATURES: "cli,embedded-qdrant,aesthetic,daemon"
 
 jobs:
   # ===========================================================================
