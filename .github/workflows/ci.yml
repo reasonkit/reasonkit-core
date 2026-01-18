@@ -318,7 +318,8 @@ jobs:
         #   (pest_derive requires matching pest version, so pin all together)
         # - deranged 0.5.5 requires Rust 1.81+, pin to 0.5.4
         # - rayon-core 1.13.0 requires Rust 1.80+, pin to 1.12.1
-        # - toml 0.9.7+ requires Rust 1.76+, pin to 0.9.6
+        # - toml ecosystem 0.9.7+ requires Rust 1.76+, pin entire ecosystem to MSRV-compatible versions
+        #   (toml 0.9.6, toml_edit 0.23.5, toml_writer 1.0.2)
         #
         # Use stable cargo for lockfile generation (can handle edition2024 deps),
         # then pin specific versions down, then use MSRV for the actual check.
@@ -332,6 +333,8 @@ jobs:
           cargo +stable update deranged --precise 0.5.4
           cargo +stable update rayon-core --precise 1.12.1
           cargo +stable update toml@0.9 --precise 0.9.6
+          cargo +stable update toml_edit --precise 0.23.5
+          cargo +stable update toml_writer --precise 1.0.2
           cargo +1.75 check --no-default-features --features cli
 
   # ===========================================================================
