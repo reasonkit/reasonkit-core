@@ -566,7 +566,7 @@ OPENAI_API_KEY=your-key rk mcp
 
 **Open Source Core:** All core reasoning protocols and ThinkTools are open source under Apache 2.0.
 
-**📖 License Information:** [LICENSE](LICENSE) • [License Strategy](https://reasonkit.sh/about/license)
+**📖 License Information:** [LICENSE](https://github.com/reasonkit/reasonkit-core/blob/main/LICENSE) • [License Strategy](https://reasonkit.sh/about/license)
 
 ---
 
