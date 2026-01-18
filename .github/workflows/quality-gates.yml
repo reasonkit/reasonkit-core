@@ -337,9 +337,11 @@ jobs:
           cache-on-failure: true
 
       - name: Build documentation
+        # Note: --cfg docsrs is only used on docs.rs (nightly) for unstable features
+        # We use stable toolchain here so we can't enable it
         run: cargo doc --no-deps --all-features --locked
         env:
-          RUSTDOCFLAGS: "-D warnings --cfg docsrs"
+          RUSTDOCFLAGS: "-D warnings"
 
       - name: Upload documentation
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v4
