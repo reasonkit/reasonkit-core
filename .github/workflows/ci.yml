@@ -263,10 +263,11 @@ jobs:
 
       # Use --features cli to match docs.rs metadata configuration
       # (avoids python/arf/local-embeddings which require system deps not in docs.rs)
+      # Note: --cfg docsrs is only used on docs.rs (nightly) for unstable features
       - name: Build documentation
         run: cargo doc --no-deps --features cli --locked
         env:
-          RUSTDOCFLAGS: "-D warnings --cfg docsrs"
+          RUSTDOCFLAGS: "-D warnings"
 
       - name: Upload documentation
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v4
