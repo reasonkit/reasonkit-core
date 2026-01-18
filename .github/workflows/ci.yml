@@ -339,7 +339,7 @@ jobs:
           cargo +stable update toml_writer --precise 1.0.2
           cargo +stable update rangemap --precise 1.6.0
           cargo +stable update time --precise 0.3.41
-          cargo +stable update indexmap --precise 2.11.4
+          cargo +stable update indexmap@2 --precise 2.11.4
           cargo +1.75 check --no-default-features --features cli
 
   # ===========================================================================
