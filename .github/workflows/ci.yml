@@ -314,7 +314,7 @@ jobs:
         # arf feature requires Rust 1.82+ (wasmtime uses edition2024)
         # Removed Cargo.lock first because it contains optional deps with higher MSRV
         # Then pin transitive deps that would otherwise resolve to versions requiring newer Rust:
-        # - pest ecosystem 2.8.5 requires Rust 1.83+, pin all to 2.8.4
+        # - pest ecosystem 2.8.1+ requires Rust 1.80+, pin all to 2.8.0 (last 1.65+ compatible)
         #   (pest_derive requires matching pest version, so pin all together)
         # - deranged 0.5.5 requires Rust 1.81+, pin to 0.5.4
         # - rayon-core 1.13.0 requires Rust 1.80+, pin to 1.12.1
@@ -325,10 +325,10 @@ jobs:
         run: |
           rm -f Cargo.lock
           cargo +stable generate-lockfile
-          cargo +stable update pest_derive --precise 2.8.4
-          cargo +stable update pest_generator --precise 2.8.4
-          cargo +stable update pest_meta --precise 2.8.4
-          cargo +stable update pest --precise 2.8.4
+          cargo +stable update pest_derive --precise 2.8.0
+          cargo +stable update pest_generator --precise 2.8.0
+          cargo +stable update pest_meta --precise 2.8.0
+          cargo +stable update pest --precise 2.8.0
           cargo +stable update deranged --precise 0.5.4
           cargo +stable update rayon-core --precise 1.12.1
           cargo +stable update toml@0.9 --precise 0.9.6
