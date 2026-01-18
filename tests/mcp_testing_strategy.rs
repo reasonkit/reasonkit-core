@@ -1563,18 +1563,14 @@ impl SchemaValidator {
                             }
 
                             // Check minimum/maximum for integers
-                            if let Some(min) =
-                                prop_schema.get("minimum").and_then(|m| m.as_i64())
-                            {
+                            if let Some(min) = prop_schema.get("minimum").and_then(|m| m.as_i64()) {
                                 if let Some(val) = value.as_i64() {
                                     if val < min {
                                         errors.push(format!("Field '{}' must be >= {}", key, min));
                                     }
                                 }
                             }
-                            if let Some(max) =
-                                prop_schema.get("maximum").and_then(|m| m.as_i64())
-                            {
+                            if let Some(max) = prop_schema.get("maximum").and_then(|m| m.as_i64()) {
                                 if let Some(val) = value.as_i64() {
                                     if val > max {
                                         errors.push(format!("Field '{}' must be <= {}", key, max));
