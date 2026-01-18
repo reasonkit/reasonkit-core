@@ -188,7 +188,9 @@ num_cpus = "1.16"
 # (jsonschema 0.18+ requires idna 1.x / zerovec 0.11+ which needs Rust 1.82+)
 
 # File watching (for hot reload)
-notify = "8.2"
+# Note: notify 7+ uses notify-types 2.0+ which requires Rust 1.77+
+# Pinned to 6.x for MSRV 1.75 compatibility
+notify = "6"
 
 # Rayon for parallel processing
 # Note: rayon 1.11+ uses rayon-core 1.13 which requires Rust 1.80
