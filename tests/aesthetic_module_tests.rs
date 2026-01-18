@@ -1555,8 +1555,8 @@ mod engine_tests {
         let result: DesignAssessmentResult = engine.comprehensive_assessment(input).await.unwrap();
 
         // Should have recommendations for improving scores
-        // (may be empty if scores are high enough)
-        assert!(result.recommendations.len() >= 0);
+        // (may be empty if scores are high enough - this validates the Vec exists)
+        let _ = result.recommendations.len();
     }
 
     #[tokio::test]

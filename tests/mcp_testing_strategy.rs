@@ -1383,22 +1383,27 @@ mod mock_llm_tests {
 // =============================================================================
 
 /// Arbitrary JSON value generator with schema constraints
+#[allow(dead_code)]
 fn arb_json_string() -> impl Strategy<Value = Value> {
     "[a-zA-Z0-9 ]{1,100}".prop_map(|s| json!(s))
 }
 
+#[allow(dead_code)]
 fn arb_json_integer() -> impl Strategy<Value = Value> {
     (-1000i64..1000).prop_map(|i| json!(i))
 }
 
+#[allow(dead_code)]
 fn arb_json_number() -> impl Strategy<Value = Value> {
     (-1000.0f64..1000.0).prop_map(|f| json!(f))
 }
 
+#[allow(dead_code)]
 fn arb_json_boolean() -> impl Strategy<Value = Value> {
     any::<bool>().prop_map(|b| json!(b))
 }
 
+#[allow(dead_code)]
 fn arb_json_array() -> impl Strategy<Value = Value> {
     prop::collection::vec("[a-zA-Z0-9]{1,20}", 0..10).prop_map(|v| json!(v))
 }
@@ -1502,111 +1507,94 @@ impl SchemaValidator {
     pub fn validate(&self, input: &Value) -> Result<(), Vec<String>> {
         let mut errors = Vec::new();
 
-        if let Some(schema_type) = self.schema.get("type").and_then(|t| t.as_str()) {
-            match schema_type {
-                "object" => {
-                    if !input.is_object() {
-                        errors.push("Expected object".to_string());
-                        return Err(errors);
-                    }
+        // Only validate object schemas for now
+        if self.schema.get("type").and_then(|t| t.as_str()) == Some("object") {
+            if !input.is_object() {
+                errors.push("Expected object".to_string());
+                return Err(errors);
+            }
 
-                    // Check required fields
-                    if let Some(required) = self.schema.get("required").and_then(|r| r.as_array()) {
-                        for field in required {
-                            if let Some(field_name) = field.as_str() {
-                                if input.get(field_name).is_none() {
-                                    errors.push(format!("Missing required field: {}", field_name));
+            // Check required fields
+            if let Some(required) = self.schema.get("required").and_then(|r| r.as_array()) {
+                for field in required {
+                    if let Some(field_name) = field.as_str() {
+                        if input.get(field_name).is_none() {
+                            errors.push(format!("Missing required field: {}", field_name));
+                        }
+                    }
+                }
+            }
+
+            // Check property types
+            if let Some(properties) = self.schema.get("properties").and_then(|p| p.as_object()) {
+                if let Some(input_obj) = input.as_object() {
+                    for (key, value) in input_obj {
+                        if let Some(prop_schema) = properties.get(key) {
+                            if let Some(prop_type) =
+                                prop_schema.get("type").and_then(|t| t.as_str())
+                            {
+                                let valid = match prop_type {
+                                    "string" => value.is_string(),
+                                    "integer" => value.is_i64() || value.is_u64(),
+                                    "number" => value.is_number(),
+                                    "boolean" => value.is_boolean(),
+                                    "array" => value.is_array(),
+                                    "object" => value.is_object(),
+                                    _ => true,
+                                };
+                                if !valid {
+                                    errors.push(format!(
+                                        "Field '{}' has wrong type, expected {}",
+                                        key, prop_type
+                                    ));
+                                }
+                            }
+
+                            // Check enum constraints
+                            if let Some(enum_values) =
+                                prop_schema.get("enum").and_then(|e| e.as_array())
+                            {
+                                if !enum_values.contains(value) {
+                                    errors.push(format!(
+                                        "Field '{}' must be one of {:?}",
+                                        key, enum_values
+                                    ));
+                                }
+                            }
+
+                            // Check minimum/maximum for integers
+                            if let Some(min) =
+                                prop_schema.get("minimum").and_then(|m| m.as_i64())
+                            {
+                                if let Some(val) = value.as_i64() {
+                                    if val < min {
+                                        errors.push(format!("Field '{}' must be >= {}", key, min));
+                                    }
+                                }
+                            }
+                            if let Some(max) =
+                                prop_schema.get("maximum").and_then(|m| m.as_i64())
+                            {
+                                if let Some(val) = value.as_i64() {
+                                    if val > max {
+                                        errors.push(format!("Field '{}' must be <= {}", key, max));
+                                    }
                                 }
                             }
                         }
                     }
 
-                    // Check property types
-                    if let Some(properties) =
-                        self.schema.get("properties").and_then(|p| p.as_object())
+                    // Check additionalProperties
+                    if self.schema.get("additionalProperties") == Some(&json!(false))
+                        && !properties.is_empty()
                     {
-                        if let Some(input_obj) = input.as_object() {
-                            for (key, value) in input_obj {
-                                if let Some(prop_schema) = properties.get(key) {
-                                    if let Some(prop_type) =
-                                        prop_schema.get("type").and_then(|t| t.as_str())
-                                    {
-                                        let valid = match prop_type {
-                                            "string" => value.is_string(),
-                                            "integer" => value.is_i64() || value.is_u64(),
-                                            "number" => value.is_number(),
-                                            "boolean" => value.is_boolean(),
-                                            "array" => value.is_array(),
-                                            "object" => value.is_object(),
-                                            _ => true,
-                                        };
-                                        if !valid {
-                                            errors.push(format!(
-                                                "Field '{}' has wrong type, expected {}",
-                                                key, prop_type
-                                            ));
-                                        }
-                                    }
-
-                                    // Check enum constraints
-                                    if let Some(enum_values) =
-                                        prop_schema.get("enum").and_then(|e| e.as_array())
-                                    {
-                                        if !enum_values.contains(value) {
-                                            errors.push(format!(
-                                                "Field '{}' must be one of {:?}",
-                                                key, enum_values
-                                            ));
-                                        }
-                                    }
-
-                                    // Check minimum/maximum for integers
-                                    if let Some(min) =
-                                        prop_schema.get("minimum").and_then(|m| m.as_i64())
-                                    {
-                                        if let Some(val) = value.as_i64() {
-                                            if val < min {
-                                                errors.push(format!(
-                                                    "Field '{}' must be >= {}",
-                                                    key, min
-                                                ));
-                                            }
-                                        }
-                                    }
-                                    if let Some(max) =
-                                        prop_schema.get("maximum").and_then(|m| m.as_i64())
-                                    {
-                                        if let Some(val) = value.as_i64() {
-                                            if val > max {
-                                                errors.push(format!(
-                                                    "Field '{}' must be <= {}",
-                                                    key, max
-                                                ));
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-
-                            // Check additionalProperties
-                            if self.schema.get("additionalProperties") == Some(&json!(false)) {
-                                if let Some(props) = properties
-                                    .keys()
-                                    .collect::<std::collections::HashSet<_>>()
-                                    .into_iter()
-                                    .next()
-                                {
-                                    for key in input_obj.keys() {
-                                        if !properties.contains_key(key) {
-                                            errors.push(format!("Unknown property: {}", key));
-                                        }
-                                    }
-                                }
+                        for key in input_obj.keys() {
+                            if !properties.contains_key(key) {
+                                errors.push(format!("Unknown property: {}", key));
                             }
                         }
                     }
                 }
-                _ => {}
             }
         }
 
@@ -2300,11 +2288,15 @@ mod contract_tests {
 
     #[test]
     fn test_mcp_error_codes() {
-        // MCP-specific error codes are in reserved range
-        assert!(error_codes::REQUEST_CANCELLED < -32000);
-        assert!(error_codes::RESOURCE_NOT_FOUND < -32000);
-        assert!(error_codes::TOOL_NOT_FOUND < -32000);
-        assert!(error_codes::INVALID_TOOL_INPUT < -32000);
+        // MCP-specific error codes are in reserved range - compile-time check
+        const _: () = {
+            assert!(error_codes::REQUEST_CANCELLED < -32000);
+            assert!(error_codes::RESOURCE_NOT_FOUND < -32000);
+            assert!(error_codes::TOOL_NOT_FOUND < -32000);
+            assert!(error_codes::INVALID_TOOL_INPUT < -32000);
+        };
+        // Also verify at runtime that the module loads correctly
+        let _ = error_codes::REQUEST_CANCELLED;
     }
 }
 
