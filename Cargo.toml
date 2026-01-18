@@ -231,7 +231,9 @@ parking_lot = { version = "0.12" }  # Used for ws_auth connection tracking
 md5 = { version = "0.8", optional = true }  # For aesthetic engine config hashing
 
 # Web Framework for WebSocket MCP Server
-axum = { version = "0.8", features = ["ws"] }
+# Note: axum 0.8+ requires axum-core 0.5.5+ which needs Rust 1.78+
+# Pinned to 0.7.x for MSRV 1.75 compatibility
+axum = { version = "0.7", features = ["ws"] }
 tower = "0.5"
 tower-http = { version = "0.6", features = ["cors", "trace"] }
 hyper = "1"
