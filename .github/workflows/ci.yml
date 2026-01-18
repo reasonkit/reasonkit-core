@@ -322,6 +322,7 @@ jobs:
         # - rangemap 1.7+ requires Rust 1.81+, pin to 1.6.0
         # - time 0.3.42+ requires Rust 1.81+, pin to 0.3.41 (last 1.67+ compatible)
         #   (time has exact version pins on time-core, so we must pin time itself)
+        # - indexmap 2.12+ requires Rust 1.82+, pin to 2.11.4 (last 1.63+ compatible)
         #
         # Use stable cargo for lockfile generation (can handle edition2024 deps),
         # then pin specific versions down, then use MSRV for the actual check.
@@ -338,6 +339,7 @@ jobs:
           cargo +stable update toml_writer --precise 1.0.2
           cargo +stable update rangemap --precise 1.6.0
           cargo +stable update time --precise 0.3.41
+          cargo +stable update indexmap --precise 2.11.4
           cargo +1.75 check --no-default-features --features cli
 
   # ===========================================================================
