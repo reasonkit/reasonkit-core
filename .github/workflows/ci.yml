@@ -314,7 +314,7 @@ jobs:
         # - pest_derive 2.8.5 requires Rust 1.83+, pin to 2.8.4
         run: |
           rm Cargo.lock
-          cargo update axum-core --precise 0.5.0
+          cargo update axum-core@0.5.6 --precise 0.5.0
           cargo update deranged --precise 0.5.4
           cargo update pest_derive --precise 2.8.4
           cargo check --no-default-features --features cli
