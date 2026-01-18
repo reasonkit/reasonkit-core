@@ -112,8 +112,10 @@ base64 = "0.22"
 web-sys = { version = "0.3.83", features = ["ReadableStream"] }
 
 # PDF Processing
-# Note: lopdf 0.37+ requires Rust 1.85 (edition2024), pinned to 0.36 for MSRV 1.75
-lopdf = "0.36"
+# Note: lopdf 0.36+ uses try_reserve error handling requiring Rust 1.77+
+# lopdf 0.37+ requires Rust 1.85 (edition2024)
+# Pinned to 0.35 for MSRV 1.75 compatibility
+lopdf = "0.35"
 
 # Text Processing
 pulldown-cmark = "0.13"
