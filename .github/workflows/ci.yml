@@ -340,7 +340,7 @@ jobs:
           cargo +stable update toml@0.9 --precise 0.9.6
           cargo +stable update toml_writer --precise 1.0.2
           cargo +stable update toml_parser --precise 1.0.2
-          cargo +stable update serde_spanned --precise 1.0.1
+          cargo +stable update serde_spanned@1 --precise 1.0.1
           cargo +stable update toml_datetime@0.7 --precise 0.7.1
           cargo +stable update rangemap --precise 1.6.0
           cargo +stable update time --precise 0.3.41
