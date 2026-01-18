@@ -308,8 +308,13 @@ jobs:
         # local-embeddings feature requires Rust 1.82+ (ort uses edition2024)
         # arf feature requires Rust 1.82+ (wasmtime uses edition2024)
         # Removed Cargo.lock first because it contains optional deps with higher MSRV
+        # Then pin transitive deps that would otherwise resolve to versions requiring newer Rust:
+        # - deranged 0.5.5 requires Rust 1.81+, pin to 0.5.4
+        # - pest_derive 2.8.5 requires Rust 1.83+, pin to 2.8.4
         run: |
           rm Cargo.lock
+          cargo update deranged --precise 0.5.4
+          cargo update pest_derive --precise 2.8.4
           cargo check --no-default-features --features cli
 
   # ===========================================================================

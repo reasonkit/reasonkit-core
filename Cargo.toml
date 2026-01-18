@@ -121,9 +121,9 @@ scraper = "0.25"
 regex = "1.10"
 
 # URL Parsing (for SSRF protection)
-# Note: url 2.5+ uses idna 1.x which requires zerovec 0.11+ (Rust 1.82+)
-# Pinned to 2.4.x for MSRV 1.75 compatibility
-url = "2.4"
+# Note: url 2.5+ uses idna 1.x which requires icu_normalizer_data (Rust 1.83+)
+# Pinned to exactly 2.4.1 for MSRV 1.75 compatibility
+url = "=2.4.1"
 
 # Vector Database (optional - use reasonkit-mem for full memory features)
 qdrant-client = { version = "1.10", optional = true }
