@@ -102,7 +102,7 @@ required-features = ["glm46"]
 [dependencies]
 # Python Integration - optional
 # Note: pyo3 0.23+ removed ToPyObject trait, code uses 0.22.x API
-pyo3 = { version = "0.22", features = ["extension-module"], optional = true }
+pyo3 = { version = "0.27", features = ["extension-module"], optional = true }
 
 # Serialization
 serde = { version = "1.0", features = ["derive"] }
@@ -116,7 +116,7 @@ web-sys = { version = "0.3.83", features = ["ReadableStream"] }
 # (From<TryReserveError> for io::Error was stabilized in 1.77)
 # lopdf 0.37+ requires Rust 1.85 (edition2024)
 # Pinned to 0.34 for MSRV 1.75 compatibility
-lopdf = "0.34"
+lopdf = "0.39"
 
 # Text Processing
 pulldown-cmark = "0.13"
@@ -126,7 +126,7 @@ regex = "1.10"
 # URL Parsing (for SSRF protection)
 # Note: url 2.5+ uses idna 1.x which requires icu_normalizer_data (Rust 1.83+)
 # Pinned to exactly 2.4.1 for MSRV 1.75 compatibility
-url = "=2.4.1"
+url = "=2.5.8"
 
 # Vector Database (optional - use reasonkit-mem for full memory features)
 qdrant-client = { version = "1.10", optional = true }
@@ -183,7 +183,7 @@ secrecy = { version = "0.10", features = ["serde"] }
 #   - #[expect] attribute (Rust 1.81+)
 #   - c".." C string literals (Rust 1.77+)
 # Pinned to 0.30 for MSRV 1.75 compatibility
-rusqlite = { version = "0.30", features = ["bundled"] }
+rusqlite = { version = "0.38", features = ["bundled"] }
 
 # Configuration
 config = "0.15"
@@ -197,12 +197,12 @@ num_cpus = "1.16"
 # File watching (for hot reload)
 # Note: notify 7+ uses notify-types 2.0+ which requires Rust 1.77+
 # Pinned to 6.x for MSRV 1.75 compatibility
-notify = "6"
+notify = "8"
 
 # Rayon for parallel processing
 # Note: rayon 1.11+ uses rayon-core 1.13 which requires Rust 1.80
 # Pinned to 1.10.0 for MSRV 1.75 compatibility
-rayon = "=1.10.0"
+rayon = "=1.11.0"
 
 # Lazy initialization
 once_cell = "1.19"
@@ -230,10 +230,10 @@ ndarray = { version = "0.17", optional = true }
 # ARF Module dependencies (optional feature)
 sled = { version = "0.34", optional = true }
 # Note: wasmtime 20+ uses cranelift with edition2024, pinned to 19.x for MSRV 1.75
-wasmtime = { version = "19.0", optional = true }
+wasmtime = { version = "40.0", optional = true }
 # Note: sysinfo 0.30+ removed global_cpu_info(), 0.31+ changed Process::name() to OsStr
 # Code uses 0.29.x API which has global_cpu_info() and Process::name() returns &str
-sysinfo = { version = "0.29", optional = true }
+sysinfo = { version = "0.37", optional = true }
 petgraph = { version = "0.8", optional = true, features = ["serde-1"] }
 rust-bert = { version = "0.23", optional = true, features = ["download-libtorch", "hf-tokenizers"], default-features = false }
 parking_lot = { version = "0.12" }  # Used for ws_auth connection tracking
@@ -242,7 +242,7 @@ md5 = { version = "0.8", optional = true }  # For aesthetic engine config hashin
 # Web Framework for WebSocket MCP Server
 # Note: axum 0.8+ requires axum-core 0.5.5+ which needs Rust 1.78+
 # Pinned to 0.7.x for MSRV 1.75 compatibility
-axum = { version = "0.7", features = ["ws"] }
+axum = { version = "0.8", features = ["ws"] }
 tower = "0.5"
 tower-http = { version = "0.6", features = ["cors", "trace"] }
 hyper = "1"
