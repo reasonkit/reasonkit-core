@@ -107,7 +107,7 @@ jobs:
 
       - name: Upload binary (Linux)
         if: matrix.os == 'ubuntu-latest' && matrix.rust == 'stable' && matrix.features == 'default'
-        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v4
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v4
         with:
           name: rk-linux-x86_64
           path: target/release/rk
@@ -115,7 +115,7 @@ jobs:
 
       - name: Upload binary (macOS)
         if: matrix.os == 'macos-latest' && matrix.rust == 'stable' && matrix.features == 'default'
-        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v4
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v4
         with:
           name: rk-macos-x86_64
           path: target/release/rk
@@ -123,7 +123,7 @@ jobs:
 
       - name: Upload binary (Windows)
         if: matrix.os == 'windows-latest' && matrix.rust == 'stable' && matrix.features == 'default'
-        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v4
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v4
         with:
           name: rk-windows-x86_64
           path: target/release/rk.exe
@@ -271,7 +271,7 @@ jobs:
           RUSTDOCFLAGS: "-D warnings"
 
       - name: Upload documentation
-        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v4
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v4
         with:
           name: documentation
           path: target/doc
@@ -468,7 +468,7 @@ jobs:
 
       - name: Upload benchmark reports
         if: always()
-        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v4
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v4
         with:
           name: benchmark-reports
           path: target/criterion
@@ -505,7 +505,7 @@ jobs:
         continue-on-error: true
 
       - name: Upload coverage HTML report
-        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v4
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v4
         with:
           name: coverage-report
           path: tarpaulin-report.html
@@ -524,7 +524,7 @@ jobs:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v4
 
       - name: Download Linux binary
-        uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v4
+        uses: actions/download-artifact@70fc10c6e5e1ce46ad2ea6f2b72d43f7d47b13c3 # v4
         with:
           name: rk-linux-x86_64
           path: ./bin
@@ -539,7 +539,7 @@ jobs:
           ./bin/rk completions powershell > completions/rk.ps1 2>/dev/null || echo "# PowerShell completions" > completions/rk.ps1
 
       - name: Upload completions
-        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v4
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v4
         with:
           name: shell-completions
           path: completions/
@@ -612,25 +612,25 @@ jobs:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v4
 
       - name: Download Linux binary
-        uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v4
+        uses: actions/download-artifact@70fc10c6e5e1ce46ad2ea6f2b72d43f7d47b13c3 # v4
         with:
           name: rk-linux-x86_64
           path: artifacts/linux
 
       - name: Download macOS binary
-        uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v4
+        uses: actions/download-artifact@70fc10c6e5e1ce46ad2ea6f2b72d43f7d47b13c3 # v4
         with:
           name: rk-macos-x86_64
           path: artifacts/macos
 
       - name: Download Windows binary
-        uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v4
+        uses: actions/download-artifact@70fc10c6e5e1ce46ad2ea6f2b72d43f7d47b13c3 # v4
         with:
           name: rk-windows-x86_64
           path: artifacts/windows
 
       - name: Download shell completions
-        uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v4
+        uses: actions/download-artifact@70fc10c6e5e1ce46ad2ea6f2b72d43f7d47b13c3 # v4
         with:
           name: shell-completions
           path: artifacts/completions

@@ -167,7 +167,7 @@ jobs:
 
       - name: Upload artifact
         if: steps.changes.outputs.brand == 'true'
-        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v4
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v4
         with:
           name: brand-assets-${{ steps.version.outputs.version }}
           path: |
@@ -185,7 +185,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Download artifact
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           pattern: brand-assets-*
           path: artifacts
