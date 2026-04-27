@@ -167,7 +167,7 @@ jobs:
 
       - name: Upload artifact
         if: steps.changes.outputs.brand == 'true'
-        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v4
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v4
         with:
           name: brand-assets-${{ steps.version.outputs.version }}
           path: |
@@ -192,7 +192,7 @@ jobs:
           merge-multiple: true
 
       - name: Upload to GitHub Releases (Draft)
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           tag_name: brand-assets-${{ needs.package-assets.outputs.asset_version }}
           name: Brand Assets v${{ needs.package-assets.outputs.asset_version }}
