@@ -14,14 +14,14 @@
   <img src="./brand/readme/reasonkit-core_tree_hero.png" alt="ReasonKit - The Reasoning Engine - Auditable Reasoning for Production AI" width="100%">
 </picture>
 
-[![CI](https://badges.reasonkit.sh/github/actions/workflow/status/reasonkit/reasonkit-core/ci.yml?branch=main&logo=github&label=CI&color=06b6d4&logoColor=06b6d4)](https://github.com/reasonkit/reasonkit-core/actions/workflows/ci.yml)
-[![Security](https://badges.reasonkit.sh/github/actions/workflow/status/reasonkit/reasonkit-core/security.yml?branch=main&logo=github&label=Security&color=10b981&logoColor=10b981)](https://github.com/reasonkit/reasonkit-core/actions/workflows/security.yml)
-[![Crates.io](https://badges.reasonkit.sh/crates/v/reasonkit-core?logo=rust&color=10b981&logoColor=f9fafb)](https://crates.io/crates/reasonkit-core)
-[![docs.rs](https://badges.reasonkit.sh/docsrs/reasonkit-core?logo=docs.rs&color=06b6d4&logoColor=f9fafb)](https://docs.rs/reasonkit-core)
-[![Downloads](https://badges.reasonkit.sh/crates/d/reasonkit-core?color=ec4899&logo=rust&logoColor=f9fafb)](https://crates.io/crates/reasonkit-core)
-[![License](https://badges.reasonkit.sh/static/v1?label=license&message=Apache%202.0&color=a855f7)](https://github.com/reasonkit/reasonkit-core/blob/main/LICENSE)
-[![Rust](https://badges.reasonkit.sh/static/v1?label=rust&message=1.75%2B&color=f97316&logo=rust&logoColor=f9fafb)](https://www.rust-lang.org/)
-[![MCP](https://badges.reasonkit.sh/static/v1?label=MCP&message=Compatible&color=10b981&logo=data:image/svg%2Bxml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiNmOWZhZmIiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cGF0aCBkPSJNMTIgMnYyME0yIDEyaDIwIi8+PC9zdmc+)](https://modelcontextprotocol.io)
+[![CI](https://badges.reasonkit.sh/github/actions/workflow/status/reasonkit/reasonkit-core/ci.yml?branch=main&logo=github&label=CI&color=accent&logoColor=accent)](https://github.com/reasonkit/reasonkit-core/actions/workflows/ci.yml)
+[![Security](https://badges.reasonkit.sh/github/actions/workflow/status/reasonkit/reasonkit-core/security.yml?branch=main&logo=github&label=Security&color=ok&logoColor=ok)](https://github.com/reasonkit/reasonkit-core/actions/workflows/security.yml)
+[![Crates.io](https://badges.reasonkit.sh/crates/v/reasonkit-core?logo=rust&color=ok)](https://crates.io/crates/reasonkit-core)
+[![docs.rs](https://badges.reasonkit.sh/docsrs/reasonkit-core?logo=docs.rs&color=accent)](https://docs.rs/reasonkit-core)
+[![Downloads](https://badges.reasonkit.sh/crates/d/reasonkit-core?color=signal&logo=rust)](https://crates.io/crates/reasonkit-core)
+[![License](https://badges.reasonkit.sh/static/v1?label=license&message=Apache%202.0&color=pro)](https://github.com/reasonkit/reasonkit-core/blob/main/LICENSE)
+[![Rust](https://badges.reasonkit.sh/static/v1?label=rust&message=1.75%2B&color=ember&logo=rust)](https://www.rust-lang.org/)
+[![MCP](https://badges.reasonkit.sh/static/v1?label=MCP&message=Compatible&color=ok&logo=data:image/svg%2Bxml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiNmOWZhZmIiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cGF0aCBkPSJNMTIgMnYyME0yIDEyaDIwIi8+PC9zdmc+)](https://modelcontextprotocol.io)
 
 [Website](https://reasonkit.sh) | [Pro](https://reasonkit.sh/pro/) | [Docs](https://docs.reasonkit.sh) | [Resources](https://reasonkit.sh/resources/) | [Enterprise](https://reasonkit.sh/enterprise/) | [About](https://reasonkit.sh/about/) | [GitHub](https://github.com/reasonkit/reasonkit-core)
 
@@ -81,7 +81,7 @@ _Agentic CLI. No API key required._
 
 ```bash
 claude mcp add reasonkit -- rk serve-mcp
-claude "Use ReasonKit to analyze: Should we migrate to microservices?"
+claude "Use ReasonKit to analyze: Should we migrate to microservices"
 ```
 
 **Learn more:** [Claude Code Integration](https://docs.reasonkit.sh/integrations/claude-code)
@@ -92,7 +92,7 @@ _Manual MCP Bridge. Injects the reasoning protocol directly into the chat._
 
 ```bash
 # Generate strict protocol
-rk protocol "Should we migrate to microservices?" | pbcopy
+rk protocol "Should we migrate to microservices" | pbcopy
 
 # → Paste into ChatGPT: "Execute this protocol..."
 ```
@@ -105,7 +105,7 @@ _Native CLI integration with Google's latest preview._
 
 ```bash
 export GEMINI_API_KEY=AIza...
-rk think --model gemini-3.0-pro-preview "Should we migrate to microservices?"
+rk think --model gemini-3.0-pro-preview "Should we migrate to microservices"
 ```
 
 **Learn more:** [Google Gemini Integration](https://docs.reasonkit.sh/integrations/google-gemini) • [All Provider Integrations](https://docs.reasonkit.sh/integrations)
@@ -152,10 +152,10 @@ Pre-configured chains for different rigor levels. See [Reasoning Profiles Guide]
 
 ```bash
 # Fast analysis (70% confidence target)
-rk think --profile quick "Is this email phishing?"
+rk think --profile quick "Is this email phishing"
 
 # Standard analysis (80% confidence target)
-rk think --profile balanced "Should we use microservices?"
+rk think --profile balanced "Should we use microservices"
 
 # Thorough analysis (85% confidence target)
 rk think --profile deep "Design A/B test for feature X"
@@ -178,7 +178,7 @@ rk think --profile paranoid "Validate cryptographic implementation"
 ![ReasonKit Terminal Experience](./brand/readme/terminal_mockup.png)
 
 ```text
-$ rk think --profile balanced "Should we migrate to microservices?"
+$ rk think --profile balanced "Should we migrate to microservices"
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ThinkTool Chain: GigaThink → LaserLogic → BedRock → ProofGuard
@@ -435,10 +435,10 @@ Python bindings available via PyO3 (build from source with `--features python`).
 
 ```bash
 # Balanced analysis (5-step protocol)
-rk think --profile balanced "Should we migrate our monolith to microservices?"
+rk think --profile balanced "Should we migrate our monolith to microservices"
 
 # Quick sanity check (2-step protocol)
-rk think --profile quick "Is this email a phishing attempt?"
+rk think --profile quick "Is this email a phishing attempt"
 
 # Maximum rigor (paranoid mode)
 rk think --profile paranoid "Validate this cryptographic implementation"
@@ -454,7 +454,7 @@ rk think --profile scientific "Design A/B test for feature X"
 rk ingest document.pdf
 
 # Query with RAG
-rk query "What are the key findings in the research papers?"
+rk query "What are the key findings in the research papers"
 
 # View execution traces
 rk trace list
